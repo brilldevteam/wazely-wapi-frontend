@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { COUNTRIES } from "@/src/data/Countries";
 import { Button } from "@/src/elements/ui/button";
 import { Input } from "@/src/elements/ui/input";
 import { Label } from "@/src/elements/ui/label";
@@ -10,6 +9,7 @@ import { Switch } from "@/src/elements/ui/switch";
 import { Textarea } from "@/src/elements/ui/textarea";
 import { cn } from "@/src/lib/utils";
 import { useGetTeamsQuery } from "@/src/redux/api/teamApi";
+import { CountryCodeSelect } from "@/src/components/shared/CountryCodeSelect";
 import PlanFeature from "@/src/shared/PlanFeature";
 import { AgentFormdDataProps } from "@/src/types/agent";
 import { AgentSchema } from "@/src/utils/validationSchema";
@@ -32,7 +32,7 @@ const AgentForm: React.FC<AgentFormdDataProps> = ({ agent, onSave, onCancel, isL
       email: agent?.email || "",
       password: "",
       note: agent?.note || "",
-      country_code: agent?.country_code || "+91",
+      country_code: agent?.country_code || "+94",
       phone: agent?.phone || "",
       status: agent?.status ?? true,
       is_phoneno_hide: agent?.is_phoneno_hide ?? false,
@@ -56,15 +56,6 @@ const AgentForm: React.FC<AgentFormdDataProps> = ({ agent, onSave, onCancel, isL
       toast.error("Please fill in all required fields correctly");
     }
   }, [formik.submitCount,formik.errors]);
-
-  const handleCountryChange = (countryCode: string) => {
-    const country = COUNTRIES.find((c) => c.code === countryCode);
-    if (country) {
-      formik.setFieldValue("country_code", country.dial_code);
-    }
-  };
-
-  const selectedCountryCode = COUNTRIES.find((c) => c.dial_code === formik.values.country_code)?.code || "IN";
 
   return (
     <div className="mx-auto animate-in fade-in slide-in-from-bottom-6 duration-700">
@@ -146,21 +137,8 @@ const AgentForm: React.FC<AgentFormdDataProps> = ({ agent, onSave, onCancel, isL
                   Direct Contact (WhatsApp)
                 </Label>
                 <div className="flex gap-4 flex-col sm:flex-row">
-                  <div className="w-27.5 shrink-0">
-                    <Select value={selectedCountryCode} onValueChange={handleCountryChange}>
-                      <SelectTrigger className="h-11 py-5.5 rounded-lg border border-(--input-border-color) dark:border-none bg-slate-50/30 dark:bg-(--page-body-bg) transition-all">
-                        <SelectValue placeholder="Code" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-lg  border dark:bg-(--page-body-bg) border-(--input-border-color) dark:border-none max-h-72 shadow-2xl p-2">
-                        {COUNTRIES.map((country) => (
-                          <SelectItem key={country.code} value={country.code} className="cursor-pointer dark:hover:bg-(--table-hover) rounded-lg mx-1 my-0.5 hover:bg-primary/10 data-[state=checked]:bg-primary/20 transition-colors">
-                            <span className="flex items-center gap-2 py-1">
-                              <span className=" text-sm">{country.dial_code}</span>
-                            </span>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                  <div className="w-full sm:w-36 shrink-0">
+                    <CountryCodeSelect value={formik.values.country_code} onChange={(dialCode) => formik.setFieldValue("country_code", dialCode)} />
                   </div>
                   <div className="relative flex-1 group">
                     <Phone className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 transition-colors" />
