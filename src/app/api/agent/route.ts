@@ -3,6 +3,23 @@ import { authoption } from "../auth/[...nextauth]/authOption";
 import { NextRequest, NextResponse } from "next/server";
 import { PUBLIC_API_URL } from "@/src/constants/route";
 
+async function readApiResponse(response: Response) {
+  const text = await response.text();
+
+  if (!text) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    return {
+      success: false,
+      message: text,
+    };
+  }
+}
+
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authoption);
@@ -18,10 +35,11 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    const data = await response.json();
+    const data = await readApiResponse(response);
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    return NextResponse.json({ error: error || "Failed to fetch agent" }, { status: 500 });
+    const message = error instanceof Error ? error.message : "Failed to fetch agent";
+    return NextResponse.json({ success: false, message }, { status: 500 });
   }
 }
 
@@ -41,12 +59,13 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(body),
     });
 
-    const data = await response.json();
+    const data = await readApiResponse(response);
 
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
     console.error("Error creating agent:", error);
-    return NextResponse.json({ error: "Failed to create agent" }, { status: 500 });
+    const message = error instanceof Error ? error.message : "Failed to create agent";
+    return NextResponse.json({ success: false, message }, { status: 500 });
   }
 }
 
@@ -66,11 +85,12 @@ export async function DELETE(request: NextRequest) {
       body: JSON.stringify(body),
     });
 
-    const data = await response.json();
+    const data = await readApiResponse(response);
 
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
     console.error("Error deleting agents:", error);
-    return NextResponse.json({ error: "Failed to delete agents" }, { status: 500 });
+    const message = error instanceof Error ? error.message : "Failed to delete agents";
+    return NextResponse.json({ success: false, message }, { status: 500 });
   }
 }

@@ -17,7 +17,7 @@ const AgentCreatePage = () => {
       toast.success("Agent activated successfully");
       router.push(ROUTES.Agents);
     } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to onboard agent");
+      toast.error(error?.data?.message || error?.data?.error || "Failed to onboard agent");
     }
   };
 

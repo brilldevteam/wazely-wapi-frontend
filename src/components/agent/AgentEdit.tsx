@@ -25,7 +25,7 @@ const AgentEditPage = () => {
       toast.success("Agent profile synced successfully");
       router.push(ROUTES.Agents);
     } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to sync updates");
+      toast.error(error?.data?.message || error?.data?.error || "Failed to sync updates");
     }
   };
 
