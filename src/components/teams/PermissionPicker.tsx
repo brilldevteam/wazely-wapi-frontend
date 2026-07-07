@@ -1,6 +1,7 @@
 "use client";
 
 import { Badge } from "@/src/elements/ui/badge";
+import { Button } from "@/src/elements/ui/button";
 import { Input } from "@/src/elements/ui/input";
 import { TeamPermission, TeamPermissionGroup } from "@/src/types/components";
 import { Check, Minus, Search, ShieldCheck } from "lucide-react";
@@ -121,6 +122,11 @@ const PermissionPicker = ({ permissions = [], selectedSlugs = [], onChange }: { 
     return { slugToViewSlugMap: slugToView, viewSlugToOtherSlugsMap: viewToOthers };
   }, [permissions]);
 
+  const filteredSlugs = useMemo(() => filteredPermissions.flatMap((perm) => perm.submodules.map((sub) => sub.slug)), [filteredPermissions]);
+  const selectedFilteredCount = useMemo(() => filteredSlugs.filter((slug) => selection.has(slug)).length, [filteredSlugs, selection]);
+  const isAllFilteredSelected = filteredSlugs.length > 0 && selectedFilteredCount === filteredSlugs.length;
+  const isSomeFilteredSelected = selectedFilteredCount > 0 && !isAllFilteredSelected;
+
   const onToggleSlug = useCallback(
     (slug: string) => {
       const next = new Set(selection);
@@ -163,6 +169,20 @@ const PermissionPicker = ({ permissions = [], selectedSlugs = [], onChange }: { 
     [selection, onChange]
   );
 
+  const onToggleAllFiltered = useCallback(() => {
+    if (filteredSlugs.length === 0) return;
+
+    const next = new Set(selection);
+    if (isAllFilteredSelected) {
+      filteredSlugs.forEach((slug) => next.delete(slug));
+    } else {
+      filteredSlugs.forEach((slug) => next.add(slug));
+    }
+
+    setSelection(next);
+    onChange(Array.from(next));
+  }, [filteredSlugs, isAllFilteredSelected, onChange, selection]);
+
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-6">
@@ -171,6 +191,16 @@ const PermissionPicker = ({ permissions = [], selectedSlugs = [], onChange }: { 
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-slate-400" />
             <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Filter by module or action..." className="pl-11 h-12 bg-white dark:bg-(--page-body-bg) border-slate-200 dark:border-none rounded-lg focus:ring-2 focus:ring-primary/20 transition-all font-medium" />
           </div>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onToggleAllFiltered}
+            disabled={filteredSlugs.length === 0}
+            className="h-12 shrink-0 justify-start gap-3 rounded-lg border-slate-200 bg-white px-4 font-semibold text-slate-700 shadow-xs hover:bg-primary/5 hover:text-primary disabled:opacity-50 dark:border-(--card-border-color) dark:bg-(--page-body-bg) dark:text-slate-300"
+          >
+            <CustomCheckbox checked={isAllFilteredSelected} indeterminate={isSomeFilteredSelected} />
+            <span>{isAllFilteredSelected ? "Clear All" : "Select All"}</span>
+          </Button>
           <div className={`flex items-center gap-3 px-4 py-2.5 bg-white dark:bg-(--page-body-bg) rounded-lg border border-slate-200 dark:border-(--card-border-color) shadow-xs transition-opacity duration-300 ${selection.size > 0 ? "opacity-100" : "opacity-50"}`}>
             <Badge className="bg-primary text-white font-bold h-6 min-w-6 flex items-center justify-center rounded-md px-1">{selection.size}</Badge>
             <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Permits Enabled</span>

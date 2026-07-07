@@ -21,6 +21,7 @@ import { Loader2, Phone, X } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import PlanFeature from "@/src/shared/PlanFeature";
+import { CountryCodeSelect } from "@/src/components/shared/CountryCodeSelect";
 
 const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onSave, contact, isLoading }) => {
   const { t } = useTranslation();
@@ -41,7 +42,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onSave, co
 
   // Helper to extract country code and phone
   const extractPhoneInfo = (fullNumber: string) => {
-    if (!fullNumber) return { code: "+91", phone: "" };
+    if (!fullNumber) return { code: "+94", phone: "" };
 
     // Sort countries by dial_code length descending to match the longest one first
     const sortedCountries = [...COUNTRIES].sort((a, b) => b.dial_code.length - a.dial_code.length);
@@ -54,7 +55,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onSave, co
       };
     }
 
-    return { code: "+91", phone: fullNumber };
+    return { code: "+94", phone: fullNumber };
   };
 
   const phoneInfo = extractPhoneInfo(contact?.phone_number || "");
@@ -157,36 +158,9 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onSave, co
                 <Label htmlFor="phone" className="text-sm">
                   {t("mobile_number")}
                 </Label>
-                <div className="flex gap-4">
-                  <div className="w-27.5 shrink-0">
-                    <Select
-                      value={COUNTRIES.find(c => c.dial_code === formik.values.country_code)?.code || "IN"}
-                      onValueChange={(code) => {
-                        const country = COUNTRIES.find(c => c.code === code);
-                        if (country) {
-                          formik.setFieldValue("country_code", country.dial_code);
-                        }
-                      }}
-                    >
-                      <SelectTrigger className="h-11 py-5.5 rounded-lg border border-(--input-border-color) dark:border-none bg-slate-50/30 dark:bg-(--page-body-bg) transition-all">
-                        <SelectValue placeholder="Code" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-lg border dark:bg-(--page-body-bg) border-(--input-border-color) dark:border-none max-h-72 shadow-2xl p-2">
-                        {COUNTRIES.map((country) => (
-                          <SelectItem
-                            key={country.code}
-                            value={country.code}
-                            className="cursor-pointer dark:hover:bg-(--table-hover) rounded-lg mx-1 my-0.5 hover:bg-primary/10 data-[state=checked]:bg-primary/20 transition-colors"
-                          >
-                            <span className="flex items-center gap-2 py-1">
-                              <span className="text-sm">
-                                {country.dial_code}
-                              </span>
-                            </span>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                <div className="flex flex-col gap-4 sm:flex-row">
+                  <div className="w-full shrink-0 sm:w-36">
+                    <CountryCodeSelect value={formik.values.country_code} onChange={(dialCode) => formik.setFieldValue("country_code", dialCode)} />
                   </div>
                   <div className="relative flex-1 group">
                     <Phone className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 transition-colors" />
