@@ -139,8 +139,8 @@ const CampaignsPage = ({ platform }: CampaignsPageProps) => {
           },
           completed_with_errors: {
             icon: AlertCircle,
-            className: "bg-red-50 text-red-600 border-red-100 dark:border-(--card-border-color) dark:bg-(--dark-sidebar) dark:hover:bg-(--table-hover)",
-            label: "Failed",
+            className: "bg-amber-50 text-amber-700 border-amber-100 dark:border-(--card-border-color) dark:bg-(--dark-sidebar) dark:hover:bg-(--table-hover)",
+            label: "Completed with errors",
           },
           cancelled: {
             icon: AlertCircle,
