@@ -147,14 +147,23 @@ const CampaignWizard = ({ platform: platformProp }: CampaignWizardProps) => {
         const hasLocalMediaHeader = !!values.media_file;
         const carouselHasLocalFiles = (values.carousel_cards_data as any[])?.some((card) => card.header?.localFile);
 
+        const unresolvedCarouselBlob = (values.carousel_cards_data as any[])?.findIndex(
+          (card) => String(card.header?.link || "").startsWith("blob:") && !card.header?.localFile
+        ) ?? -1;
+        if (unresolvedCarouselBlob >= 0) {
+          throw new Error(`Carousel card ${unresolvedCarouselBlob + 1} media is only available in this browser. Please select the file again.`);
+        }
+
         let finalPayload: any;
         if (hasLocalMediaHeader || carouselHasLocalFiles) {
           const formData = new FormData();
 
           // Prepare a clean version of carousel_cards_data for JSON stringification
+          const carouselFileIndexes: number[] = [];
           const cleanCarouselCardsData = payload.carousel_cards_data?.length
-            ? (payload.carousel_cards_data as any[])?.map((card: any) => {
+            ? (payload.carousel_cards_data as any[])?.map((card: any, cardIndex: number) => {
               if (card.header?.localFile) {
+                carouselFileIndexes.push(cardIndex);
                 const { localFile: _localFile, ...headerWithoutFile } = card.header;
                 return {
                   ...card,
@@ -191,11 +200,11 @@ const CampaignWizard = ({ platform: platformProp }: CampaignWizardProps) => {
             formData.append("file_url", values.media_file);
           }
 
-          // Append local files in order
-          values.carousel_cards_data?.forEach((card) => {
-            if (card.header?.localFile) {
-              formData.append("carousel_files", card.header.localFile);
-            }
+          // Preserve the card-to-file mapping even when only some cards use local files.
+          formData.append("carousel_file_indexes", JSON.stringify(carouselFileIndexes));
+          carouselFileIndexes.forEach((cardIndex) => {
+            const localFile = values.carousel_cards_data?.[cardIndex]?.header?.localFile;
+            if (localFile) formData.append("carousel_files", localFile);
           });
           finalPayload = formData;
         } else {
@@ -229,7 +238,7 @@ const CampaignWizard = ({ platform: platformProp }: CampaignWizardProps) => {
           }
         }
       } catch (error: any) {
-        toast.error(error?.data?.error || "Failed to create campaign");
+        toast.error(error?.data?.error || error?.message || "Failed to create campaign");
       }
     },
   });
@@ -315,6 +324,16 @@ const CampaignWizard = ({ platform: platformProp }: CampaignWizardProps) => {
       }
       if (template.header?.format === "media" && !formik.values.media_url && !formik.values.media_file) {
         return `Please select ${template.header.media_type || "header"} media for this template`;
+      }
+      if ((template as any).template_type === "carousel_media") {
+        const cards = (formik.values.carousel_cards_data as any[]) || [];
+        const missingCardIndex = cards.findIndex((card) => !card.header?.localFile && !card.header?.link);
+        if (missingCardIndex >= 0) return `Please select media for carousel card ${missingCardIndex + 1}`;
+
+        const invalidBlobIndex = cards.findIndex(
+          (card) => String(card.header?.link || "").startsWith("blob:") && !card.header?.localFile
+        );
+        if (invalidBlobIndex >= 0) return `Please select the media again for carousel card ${invalidBlobIndex + 1}`;
       }
     }
 
