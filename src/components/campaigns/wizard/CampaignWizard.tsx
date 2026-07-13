@@ -313,6 +313,9 @@ const CampaignWizard = ({ platform: platformProp }: CampaignWizardProps) => {
           return "Latitude and Longitude are required for Location templates";
         }
       }
+      if (template.header?.format === "media" && !formik.values.media_url && !formik.values.media_file) {
+        return `Please select ${template.header.media_type || "header"} media for this template`;
+      }
     }
 
     const recipientsStepIndex = isDirectMode ? -1 : 3;
