@@ -1,19 +1,21 @@
 "use client";
 
-import L from "leaflet";
+import { icon } from "@/src/data/botFlow";
 import "leaflet/dist/leaflet.css";
 import { useEffect } from "react";
-import { MapContainer, Marker, TileLayer, useMap, useMapEvents } from "react-leaflet";
+import {
+  MapContainer,
+  Marker,
+  TileLayer,
+  useMap,
+  useMapEvents,
+} from "react-leaflet";
 
-const icon = L.icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-});
-
-function MapEvents({ onChange }: { onChange: (lat: number, lng: number) => void }) {
+function MapEvents({
+  onChange,
+}: {
+  onChange: (lat: number, lng: number) => void;
+}) {
   useMapEvents({
     click(e) {
       onChange(e.latlng.lat, e.latlng.lng);
@@ -54,16 +56,16 @@ export default function InteractiveMap({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <ChangeView center={position} />
-        <Marker 
-          position={position} 
-          icon={icon} 
+        <Marker
+          position={position}
+          icon={icon}
           draggable={true}
           eventHandlers={{
             dragend: (e) => {
               const marker = e.target;
               const { lat, lng } = marker.getLatLng();
               onChange(lat, lng);
-            }
+            },
           }}
         />
         <MapEvents onChange={onChange} />

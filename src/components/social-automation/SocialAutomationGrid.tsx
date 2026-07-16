@@ -29,13 +29,8 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { ReelPreviewProps } from "@/src/types/socialAutomation";
 
-interface ReelPreviewProps {
-  mediaUrl: string;
-  thumbnailUrl?: string;
-  mediaType: string;
-  childrenData?: any[];
-}
 
 const ReelPreview: React.FC<ReelPreviewProps> = ({ mediaUrl, thumbnailUrl, mediaType, childrenData }) => {
   const [isHovered, setIsHovered] = useState(false);

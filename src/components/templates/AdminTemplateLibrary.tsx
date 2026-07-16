@@ -13,14 +13,8 @@ import { AdminTemplateCard } from "./AdminTemplateCard";
 import { SelectWabaModal } from "./list/SelectWabaModal";
 import { TemplatePreviewModal } from "./list/TemplatePreviewModal";
 import { ROUTES } from "@/src/constants";
+import { AdminTemplateLibraryProps } from "@/src/types/components/template";
 
-interface AdminTemplateLibraryProps {
-  selectedSector?: string;
-  selectedCategory?: string;
-  wabaId?: string;
-  onToggleSidebar?: () => void;
-  platform?: string;
-}
 
 const AdminTemplateLibrary = ({ selectedSector: sectorProp, selectedCategory: categoryProp, wabaId: wabaIdProp, onToggleSidebar, platform }: AdminTemplateLibraryProps = {}) => {
   const { t } = useTranslation();

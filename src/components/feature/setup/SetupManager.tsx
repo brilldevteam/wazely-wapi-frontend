@@ -5,14 +5,13 @@ import ApiKeyConfig from "@/src/components/feature/setup/ApiKeyConfig";
 import ConfigurationSummary from "@/src/components/feature/setup/ConfigurationSummary";
 import ModelSelection from "@/src/components/feature/setup/ModelSelection";
 import { Button } from "@/src/elements/ui/button";
+import { Skeleton } from "@/src/elements/ui/skeleton";
 import { useGetAllModelsQuery, useUpdateUserSettingsMutation } from "@/src/redux/api/settingsApi";
 import { useAppSelector } from "@/src/redux/hooks";
 import { Form, Formik } from "formik";
-import { Skeleton } from "@/src/elements/ui/skeleton";
 import { Loader2, Save } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Switch } from "@/src/elements/ui/switch";
 
 const SetupManager = () => {
   const { t } = useTranslation();

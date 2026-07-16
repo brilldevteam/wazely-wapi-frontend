@@ -6,14 +6,9 @@ import { Edit2, Trash2, Tag as TagIcon } from "lucide-react";
 import { Tag } from "@/src/types/components";
 import { cn } from "@/src/lib/utils";
 import Can from "@/src/components/shared/Can";
+import { TagCardProps } from "@/src/types/tags";
 
-interface TagCardProps {
-  tag: Tag;
-  isSelected: boolean;
-  onSelect: (id: string, checked: boolean) => void;
-  onEdit: (tag: Tag) => void;
-  onDelete: (id: string) => void;
-}
+
 
 const TagCard = ({ tag, isSelected, onSelect, onEdit, onDelete }: TagCardProps) => {
   return (

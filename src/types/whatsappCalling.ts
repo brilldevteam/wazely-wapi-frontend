@@ -65,3 +65,21 @@ export interface CallAgentParameter {
   required: boolean;
   description: string;
 }
+
+export interface BulkAssignAgentModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  agentId: string;
+  agentName: string;
+}
+
+export interface CallAgentFormProps {
+  agent?: WhatsappCallAgent;
+  onSave: (values: any) => Promise<void>;
+  isLoading: boolean;
+}
+
+export interface CallSettingsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}

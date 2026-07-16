@@ -14,7 +14,7 @@ export const useInstagramLogin = (onFinish?: (data: any) => void) => {
 
   useEffect(() => {
     const handleMessage = async (event: MessageEvent) => {
-      if (!event.origin.includes("localhost") && !event.origin.includes("ngrok-free.dev")) return;
+      // if (!event.origin.includes("localhost") && !event.origin.includes("ngrok-free.dev")) return;
 
       const { type, payload } = event.data;
 
@@ -34,7 +34,7 @@ export const useInstagramLogin = (onFinish?: (data: any) => void) => {
             code: code,
             redirect_uri: window.location.hostname === 'localhost'
               ? `https://viewless-trang-snodly.ngrok-free.dev/instagram-callback`
-              : `${process.env.NEXT_PUBLIC_STORAGE_URL}/instagram-callback`,
+              : `${process.env.NEXT_PUBLIC_STORAGE_URL}instagram-callback`,
           }).unwrap();
 
           toast.success(response.message || "Instagram connected successfully!");
@@ -72,7 +72,7 @@ export const useInstagramLogin = (onFinish?: (data: any) => void) => {
 
     const redirectUri = window.location.hostname === 'localhost'
       ? `https://viewless-trang-snodly.ngrok-free.dev/instagram-callback`
-      : `${process.env.NEXT_PUBLIC_STORAGE_URL}/instagram-callback`;
+      : `${process.env.NEXT_PUBLIC_STORAGE_URL}instagram-callback`;
     const scopes = [
       "instagram_business_basic",
       "instagram_business_manage_messages",

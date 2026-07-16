@@ -11,7 +11,7 @@ import CommonHeader from "@/src/shared/CommonHeader";
 import ConfirmModal from "@/src/shared/ConfirmModal";
 import { DataTable } from "@/src/shared/DataTable";
 import { cn } from "@/src/utils";
-import { ClipboardList, Edit2, LayoutGrid, List, RefreshCw, Rocket, Trash2 } from "lucide-react";
+import { ClipboardList, Edit2, Info, LayoutGrid, List, RefreshCw, Rocket, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import Can from "../shared/Can";
 import FormCard from "./FormCard";
 import SyncMetaFlowModal from "./SyncMetaFlowModal";
+import FormDetailsModal from "./FormDetailsModal";
 
 const FormBuilderList = () => {
   const { t } = useTranslation();
@@ -33,6 +34,8 @@ const FormBuilderList = () => {
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
   const [sortBy, setSortBy] = useState<string>("created_at");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [selectedForm, setSelectedForm] = useState<any>(null);
   const selectedWorkspace = useSelector((state: RootState) => state.workspace.selectedWorkspace);
   const { hasPermission } = usePermissions();
 
@@ -97,7 +100,7 @@ const FormBuilderList = () => {
     setSortBy(key);
     setSortOrder(order);
     setPage(1);
-  };
+  }; 
 
   const columns = [
     {
@@ -132,7 +135,7 @@ const FormBuilderList = () => {
       cell: (row: any) => {
         const status = row.meta_status || row.status;
         return (
-          <Badge variant={status === "published" ? "default" : status === "draft" ? "secondary" : "default"} className="capitalize text-[10px]">
+          <Badge variant={status == "PUBLISHED" ? "default" : status == "DRAFT" ? "secondary" : status == "ERROR" ? "destructive" : "default"} className="capitalize text-[10px]">
             {status?.toLowerCase()}
           </Badge>
         );
@@ -146,31 +149,41 @@ const FormBuilderList = () => {
     {
       header: "Actions",
       id: "actions",
-      cell: (row: any) => (
-        <div className="flex items-center gap-2">
-          <Can permission="update.form_builder">
-            <Button variant="outline" size="icon" title="Edit Form" className="w-10 h-10 border-none text-primary hover:text-primary hover:bg-primary/10 rounded-lg dark:hover:bg-primary/20 transition-all" onClick={() => router.push(`${ROUTES.WhatsappForm}/${row._id}/edit`)}>
-              <Edit2 size={16} />
-            </Button>
+      cell: (row: any) => {
+        const status = row.meta_status || row.status || "draft";
+        const isDraft = status.toLowerCase() === "draft";
+        return (
+          <div className="flex items-center gap-2">
+            <Can permission="update.form_builder">
+              {isDraft && (
+                <Button variant="outline" size="icon" title="Edit Form" className="w-10 h-10 border-none text-primary hover:text-primary hover:bg-primary/10 rounded-lg dark:hover:bg-primary/20 transition-all" onClick={() => router.push(`${ROUTES.WhatsappForm}/${row._id}/edit`)}>
+                  <Edit2 size={16} />
+                </Button>
+              )}
 
-            {!(row?.meta_status.toLowerCase() == "published" || row?.meta_status.toLowerCase() == "deprecated" || isPublishing) && (
-              <Button variant="outline" size="icon" title="Publish to Meta" className="w-10 h-10 border-none text-yellow-500 hover:text-yellow-500 hover:bg-yellow-50 rounded-lg dark:hover:bg-yellow-900/20 transition-all" onClick={() => handlePublish(row._id)} disabled={row?.meta_status.toLowerCase() == "published" || row?.meta_status.toLowerCase() == "deprecated" || isPublishing}>
-                <Rocket size={16} />
+              {!(status.toLowerCase() == "published" || status.toLowerCase() == "deprecated" || isPublishing) && (
+                <Button variant="outline" size="icon" title="Publish to Meta" className="w-10 h-10 border-none text-yellow-500 hover:text-yellow-500 hover:bg-yellow-50 rounded-lg dark:hover:bg-yellow-900/20 transition-all" onClick={() => handlePublish(row._id)} disabled={status.toLowerCase() == "published" || status.toLowerCase() == "deprecated" || isPublishing}>
+                  <Rocket size={16} />
+                </Button>
+              )}
+
+              <Button variant="outline" size="icon" title="View Submissions" className="h-10 w-10 text-blue-600 hover:text-blue-600 hover:bg-blue-50 border-none" onClick={() => router.push(`${ROUTES.WhatsappForm}/${row._id}/submissions`)}>
+                <ClipboardList size={16} />
               </Button>
-            )}
 
-            <Button variant="outline" size="icon" title="View Submissions" className="h-10 w-10 text-blue-600 hover:text-blue-600 hover:bg-blue-50 border-none" onClick={() => router.push(`${ROUTES.WhatsappForm}/${row._id}/submissions`)}>
-              <ClipboardList size={16} />
-            </Button>
-          </Can>
+              <Button variant="outline" size="icon" title="View Info" className="h-10 w-10 text-slate-500 hover:text-slate-700 hover:bg-slate-50 border-none dark:hover:bg-slate-800" onClick={() => { setSelectedForm(row); setIsInfoModalOpen(true); }}>
+                <Info size={16} />
+              </Button>
+            </Can>
 
-          <Can permission="delete.form_builder">
-            <Button variant="outline" size="icon" title="Delete Form" className="w-10 h-10 border-none text-red-600 hover:text-red-600 dark:text-red-500 hover:bg-red-50 rounded-lg transition-all dark:hover:bg-red-900/20" onClick={() => handleDelete(row._id)} disabled={isDeleting}>
-              <Trash2 size={16} />
-            </Button>
-          </Can>
-        </div>
-      ),
+            <Can permission="delete.form_builder">
+              <Button variant="outline" size="icon" title="Delete Form" className="w-10 h-10 border-none text-red-600 hover:text-red-600 dark:text-red-500 hover:bg-red-50 rounded-lg transition-all dark:hover:bg-red-900/20" onClick={() => handleDelete(row._id)} disabled={isDeleting}>
+                <Trash2 size={16} />
+              </Button>
+            </Can>
+          </div>
+        );
+      },
     },
   ].filter((col) => col.id !== "actions" || hasPermission("update.form_builder") || hasPermission("delete.form_builder"));
 
@@ -182,7 +195,10 @@ const FormBuilderList = () => {
         searchTerm={searchTerm}
         onSearch={setSearchTerm}
         searchPlaceholder="Search forms..."
-        onRefresh={refetch}
+        onRefresh={() => {
+                  refetch();
+                  toast.success("Successfully refreshed Forms");
+                }}
         onSyncStatus={handleSyncStatus}
         isSyncingStatus={isSyncingStatus}
         onAddClick={() => router.push(ROUTES.WhatsappFormCreate)}
@@ -223,7 +239,7 @@ const FormBuilderList = () => {
         ) : (formsData?.data?.length ?? 0) > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
             {formsData?.data?.map((form: any) => (
-              <FormCard key={form._id} form={form} onDelete={handleDelete} onPublish={handlePublish} isPublishing={isPublishing} isDeleting={isDeleting} />
+              <FormCard key={form._id} form={form} onDelete={handleDelete} onPublish={handlePublish} onViewInfo={(selected) => { setSelectedForm(selected); setIsInfoModalOpen(true); }} isPublishing={isPublishing} isDeleting={isDeleting} />
             ))}
           </div>
         ) : (
@@ -237,13 +253,15 @@ const FormBuilderList = () => {
         )
       ) : (
         <div className="bg-white dark:bg-(--card-color) rounded-xl border border-slate-200/60 dark:border-(--card-border-color)  overflow-hidden mt-8">
-          <DataTable columns={columns as any} data={formsData?.data || []} isLoading={isLoading} isFetching={isFetching || isDeleting} totalCount={formsData?.pagination?.totalForms || 0} page={page} limit={limit} onPageChange={setPage} onLimitChange={setLimit} enableSelection={false} getRowId={(item) => item._id} emptyMessage="No forms found. Create your first automated interaction form!" onSortChange={handleSortChange} sortBy={sortBy} sortOrder={sortOrder} />
+          <DataTable columns={columns as any} data={formsData?.data || []} isLoading={isLoading} isFetching={isFetching || isDeleting} totalCount={formsData?.pagination?.totalForms || 0} page={page} limit={limit} onPageChange={setPage} onLimitChange={setLimit} enableSelection={false} getRowId={(item) => item._id} emptyMessage="No forms found. Create your first automated interaction form!" onSortChange={handleSortChange} sortBy={sortBy} sortOrder={sortOrder} actionPermission={["update.form_builder", "delete.form_builder"]} />
         </div>
       )}
 
       {selectedWorkspace?.waba_id && <SyncMetaFlowModal isOpen={isSyncModalOpen} onClose={() => setIsSyncModalOpen(false)} wabaId={selectedWorkspace?.waba_id || ""} />}
 
       <ConfirmModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={confirmDelete} isLoading={isDeleting} title="Delete Form" subtitle="Are you sure you want to delete this form? This action cannot be undone." variant="danger" />
+
+      <FormDetailsModal isOpen={isInfoModalOpen} onClose={() => setIsInfoModalOpen(false)} form={selectedForm} />
     </div>
   );
 };

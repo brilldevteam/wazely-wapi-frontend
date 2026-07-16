@@ -179,7 +179,7 @@ const PlanSlider: React.FC<PlanSliderProps> = ({ plans, activePlanId, mode = "no
                                 ))}
 
                                 {featureEntries.length > FEATURE_LIMIT && (
-                                  <button
+                                  <Button variant="unstyled"
                                     type="button"
                                     onClick={(e) => {
                                       e.stopPropagation();
@@ -201,7 +201,7 @@ const PlanSlider: React.FC<PlanSliderProps> = ({ plans, activePlanId, mode = "no
                                         <ChevronDown className="h-3.5 w-3.5" />
                                       </>
                                     )}
-                                  </button>
+                                  </Button>
                                 )}
                               </>
                             );

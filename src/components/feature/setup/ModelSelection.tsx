@@ -21,7 +21,9 @@ const ModelSelection: React.FC<ModelSelectionProps> = ({ models, selectedModel, 
           <CardDescription>{t("choose_assistant")}</CardDescription>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4 pt-0! max-h-113 overflow-auto custom-scrollbar">
+      
+
+      <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-0! max-h-113 overflow-auto custom-scrollbar">
         {models.map((model) => (
           <div
             key={model._id}

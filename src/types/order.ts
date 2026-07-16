@@ -76,10 +76,6 @@ export interface ParsedSegment {
   isVariable: boolean;
 }
 
-export interface StatusTemplateCardProps {
-  order: Order;
-}
-
 export interface OrderItemsModalProps {
   items: OrderItem[];
   onClose: () => void;
@@ -95,4 +91,21 @@ export interface OrderItemsModalPropsData {
 export interface ParsedSegmentProps {
   text: string;
   isVariable: boolean;
+}
+
+export interface StatusTemplateCardProps {
+  index: number;
+  statusKey: string;
+  label: string;
+  description: string;
+  icon: React.ReactNode;
+  color: string;
+  existing?: StatusTemplate;
+}
+
+export interface UpdateStatusModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  orderId: string | null;
+  currentStatus: string;
 }

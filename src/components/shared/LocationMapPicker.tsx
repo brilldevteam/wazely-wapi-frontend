@@ -3,29 +3,22 @@
 import { Button } from "@/src/elements/ui/button";
 import { Input } from "@/src/elements/ui/input";
 import { Label } from "@/src/elements/ui/label";
+import { LocationMapPickerProps } from "@/src/types/shared";
 import { Loader2, MapPin, Navigation, Search } from "lucide-react";
 import dynamic from "next/dynamic";
 import React, { useCallback, useEffect, useState } from "react";
 
 // Dynamic import of the inner Leaflet map to avoid SSR issues
 const LeafletMapInner = dynamic(
-  () => import("@/src/components/response-resources/sequence-step/LeafletMapInner"),
-  { ssr: false }
+  () =>
+    import("@/src/components/response-resources/sequence-step/LeafletMapInner"),
+  { ssr: false },
 );
 
-export interface LocationData {
-  latitude: string;
-  longitude: string;
-  name?: string;
-  address?: string;
-}
-
-interface LocationMapPickerProps {
-  value: LocationData;
-  onChange: (data: LocationData) => void;
-}
-
-const LocationMapPicker: React.FC<LocationMapPickerProps> = ({ value, onChange }) => {
+const LocationMapPicker: React.FC<LocationMapPickerProps> = ({
+  value,
+  onChange,
+}) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
@@ -50,7 +43,7 @@ const LocationMapPicker: React.FC<LocationMapPickerProps> = ({ value, onChange }
       try {
         const res = await fetch(
           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,
-          { headers: { "User-Agent": "CRM-Chat-App" } }
+          { headers: { "User-Agent": "CRM-Chat-App" } },
         );
         const data = await res.json();
         const displayName: string =
@@ -80,7 +73,7 @@ const LocationMapPicker: React.FC<LocationMapPickerProps> = ({ value, onChange }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [onChange]
+    [onChange],
   );
 
   const handleMapClick = useCallback(
@@ -88,7 +81,7 @@ const LocationMapPicker: React.FC<LocationMapPickerProps> = ({ value, onChange }
       setPosition([lat, lng]);
       fetchAddress(lat, lng);
     },
-    [fetchAddress]
+    [fetchAddress],
   );
 
   const handleSearch = async (e?: React.FormEvent) => {
@@ -98,7 +91,7 @@ const LocationMapPicker: React.FC<LocationMapPickerProps> = ({ value, onChange }
     try {
       const res = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=1`,
-        { headers: { "User-Agent": "CRM-Chat-App" } }
+        { headers: { "User-Agent": "CRM-Chat-App" } },
       );
       const data = await res.json();
       if (data && data.length > 0) {
@@ -131,7 +124,7 @@ const LocationMapPicker: React.FC<LocationMapPickerProps> = ({ value, onChange }
         setIsLocating(false);
       },
       () => setIsLocating(false),
-      { enableHighAccuracy: true }
+      { enableHighAccuracy: true },
     );
   };
 
@@ -145,15 +138,24 @@ const LocationMapPicker: React.FC<LocationMapPickerProps> = ({ value, onChange }
           placeholder="Search for a place or address…"
           className="pl-10 pr-10 h-11 rounded-xl bg-slate-50 dark:bg-(--dark-body) border-slate-200 dark:border-slate-700 focus-visible:ring-primary"
         />
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+        <Search
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+          size={16}
+        />
         {isSearching && (
-          <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 text-primary animate-spin" size={15} />
+          <Loader2
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-primary animate-spin"
+            size={15}
+          />
         )}
       </form>
 
       {/* Leaflet Map */}
       <div className="relative h-60 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-inner">
-        <LeafletMapInner position={position} onLocationSelect={handleMapClick} />
+        <LeafletMapInner
+          position={position}
+          onLocationSelect={handleMapClick}
+        />
 
         {/* GPS button overlay */}
         <div className="absolute top-2 right-2 z-[1000]">

@@ -236,6 +236,7 @@ const ShortLinkTable: React.FC = () => {
               ? `No links found for "${searchTerm}"`
               : "No WhatsApp links generated yet."
           }
+          actionPermission={["update.short_links", "delete.short_links"]}
         />
       </div>
 

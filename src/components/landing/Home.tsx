@@ -58,7 +58,7 @@ const Home: React.FC<HomeProps> = ({ data }) => {
             {/* Left Content */}
             <div className="text-center lg:text-left">
               {data.badge && (
-                <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full bg-primary/10 border border-primary/20">
+                <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full bg-primary/10 tracking-wide uppercase">
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
@@ -71,7 +71,7 @@ const Home: React.FC<HomeProps> = ({ data }) => {
                 {data.title}
               </h1>
 
-              <p className="text-lg text-slate-600 font-medium mb-[calc(12px+(32-12)*((100vw-320px)/(1920-320)))] leading-relaxed max-w-xl mx-auto lg:mx-0">
+              <p className="text-[17px] text-slate-600 font-medium mb-[calc(12px+(32-12)*((100vw-320px)/(1920-320)))] leading-relaxed max-w-xl mx-auto lg:mx-0">
                 {data.description}
               </p>
 
@@ -137,7 +137,7 @@ const Home: React.FC<HomeProps> = ({ data }) => {
                 const isLeft = img.position === "left" || img.position?.includes("left");
                 const positionClass = isLeft
                   ? "absolute -left-8 top-1/4 z-10 max-w-[180px] hidden lg:block"
-                  : "absolute -right-8 top-1/3 z-10 max-w-[180px] hidden lg:block";
+                  : "absolute -right-8 top-[45%] z-10 max-w-[180px] hidden lg:block";
 
                 return (
                   <div key={index} className={positionClass} style={{ animationDelay: `${index * 1.5}s` }}>

@@ -129,7 +129,7 @@ export function ButtonMessageNode({ data, id }: any) {
             <Button size="icon" variant="outline" className="h-8 w-8 shrink-0" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
               <Upload size={14} className="text-gray-500" />
             </Button>
-            <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
+            <Input unstyled type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
           </div>
           
           {previewUrl && (

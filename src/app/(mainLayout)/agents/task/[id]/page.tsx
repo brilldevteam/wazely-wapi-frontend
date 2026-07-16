@@ -14,7 +14,7 @@ const AgentTaskPage = () => {
   return (
     <div className="flex h-[calc(100vh-100px)]  overflow-hidden [@media(max-width:720px)]:flex-col [@media(max-width:720px)]:h-[unset] [@media(max-width:720px)]:gap-2.5 bg-white dark:bg-(--card-color) border border-slate-100 dark:border-(--card-border-color) rounded-lg mt-4 mx-4 animate-in fade-in zoom-in-95 duration-500">
       <aside className="w-96 [@media(max-width:720px)]:w-full [@media(max-width:720px)]:h-150 border-r border-slate-100 dark:border-(--card-border-color) h-full overflow-hidden flex flex-col bg-white/50 backdrop-blur-md">
-        <AgentTaskListSidebar agentId={agentId} />
+        <AgentTaskListSidebar agentId={agentId}/>
       </aside>
 
       <main className="flex-1 h-full overflow-hidden flex flex-col bg-slate-50/10 dark:bg-(--card-color)">

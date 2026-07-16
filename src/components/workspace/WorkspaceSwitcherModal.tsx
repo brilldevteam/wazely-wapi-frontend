@@ -131,7 +131,7 @@ export default function WorkspaceSwitcherModal({ isOpen, onClose }: WorkspaceSwi
                           {isWabaConnected ? "WABA Connected" : hasWabaId ? "WABA Disconnected" : "No WABA"}
                           {hasWabaId && (
                             <div className="flex items-center gap-1">
-                              <span className="border border-slate-200 text-slate-500 bg-slate-50 rounded-lg dark:bg-(--dakr-body) dark:border-(--card-border-color) dark:text-gray-400 px-2">{ws?.waba_type === "baileys" ? "QR Code" : "Business API"}</span>
+                              <span className="border border-slate-200 text-slate-500 bg-slate-50 rounded-lg dark:bg-(--dakr-body) dark:border-(--card-border-color) dark:text-gray-400 px-2">{ws?.waba_type === "baileys" ? "QR Code" : ws?.waba_type === "twilio" ? "Twilio" : "Business API"}</span>
                               <span onClick={(e) => e.stopPropagation()}>
                                 <InfoModal dataKey="workspace_connection" iconSize={12} className="text-slate-400 hover:text-primary transition-colors" />
                               </span>

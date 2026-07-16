@@ -4,13 +4,10 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, Di
 import { ExternalLink, Info } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { Button } from "@/src/elements/ui/button";
-import { INFOMODALDATE } from "@/src/data/InfoModalData";
+import { INFOMODALDATE } from "@/src/data/common";
+import { InfoModalProps } from "@/src/types/common";
 
-interface InfoModalProps {
-  dataKey: keyof typeof INFOMODALDATE;
-  className?: string;
-  iconSize?: number;
-}
+
 
 const InfoModal = ({ dataKey, className, iconSize = 20 }: InfoModalProps) => {
   const data = INFOMODALDATE[dataKey];

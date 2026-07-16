@@ -1,15 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/elements/ui/select";
+import { tabs } from "@/src/data/botFlow";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/src/elements/ui/select";
 import { useGetTeamsQuery } from "@/src/redux/api/teamApi";
+import { AssignMode } from "@/src/types/botFlow";
 import { useReactFlow } from "@xyflow/react";
 import { Shuffle } from "lucide-react";
 import { useState } from "react";
 import { BaseNode } from "./BaseNode";
 import { NodeField } from "./NodeField";
+import { Button } from "@/src/elements/ui/button";
 
-type AssignMode = "all" | "team";
 
 export function AssignRandomAgentNode({ data, id }: any) {
   const { setNodes } = useReactFlow();
@@ -49,11 +57,6 @@ export function AssignRandomAgentNode({ data, id }: any) {
 
   const selectedTeam = teams.find((t) => t._id === data.team_id);
 
-  const tabs: { value: AssignMode; label: string }[] = [
-    { value: "all", label: "All Agents" },
-    { value: "team", label: "From Team" },
-  ];
-
   return (
     <BaseNode
       id={id}
@@ -69,7 +72,7 @@ export function AssignRandomAgentNode({ data, id }: any) {
         {/* Mode Tabs */}
         <div className="flex gap-1 p-1 bg-gray-100 dark:bg-(--page-body-bg) rounded-lg">
           {tabs.map((tab) => (
-            <button
+            <Button variant="unstyled"
               key={tab.value}
               type="button"
               onClick={() => handleModeChange(tab.value)}
@@ -80,7 +83,7 @@ export function AssignRandomAgentNode({ data, id }: any) {
               }`}
             >
               {tab.label}
-            </button>
+            </Button>
           ))}
         </div>
 
@@ -89,7 +92,11 @@ export function AssignRandomAgentNode({ data, id }: any) {
           <NodeField
             label="Select Team"
             required
-            error={(touched || data.forceValidation) && !data.team_id ? "Team selection is required." : ""}
+            error={
+              (touched || data.forceValidation) && !data.team_id
+                ? "Team selection is required."
+                : ""
+            }
           >
             <Select
               value={data.team_id || ""}
@@ -97,11 +104,19 @@ export function AssignRandomAgentNode({ data, id }: any) {
               disabled={teamsLoading}
             >
               <SelectTrigger className="w-full text-sm bg-gray-50 border-gray-200 focus:bg-white dark:focus:bg-(--page-body-bg) dark:bg-(--page-body-bg) dark:border-(--card-border-color)">
-                <SelectValue placeholder={teamsLoading ? "Loading teams..." : "Choose a team"} />
+                <SelectValue
+                  placeholder={
+                    teamsLoading ? "Loading teams..." : "Choose a team"
+                  }
+                />
               </SelectTrigger>
               <SelectContent className="dark:bg-(--card-color)">
                 {teams.map((team) => (
-                  <SelectItem key={team._id} value={team._id} className="dark:hover:bg-(--table-hover)">
+                  <SelectItem
+                    key={team._id}
+                    value={team._id}
+                    className="dark:hover:bg-(--table-hover)"
+                  >
                     {team.name}
                   </SelectItem>
                 ))}
@@ -116,8 +131,8 @@ export function AssignRandomAgentNode({ data, id }: any) {
             {mode === "all"
               ? "A random agent will be picked from all available agents using round-robin rotation."
               : selectedTeam
-              ? `A random agent from the "${selectedTeam.name}" team will be assigned using round-robin rotation.`
-              : "A random agent will be picked from the selected team using round-robin rotation."}
+                ? `A random agent from the "${selectedTeam.name}" team will be assigned using round-robin rotation.`
+                : "A random agent will be picked from the selected team using round-robin rotation."}
           </p>
         </div>
       </div>

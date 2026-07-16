@@ -66,7 +66,7 @@ export function WorkspaceCard({ workspace, isActive, onSelect, onConnectWaba, on
         </div>
         {(isWabaConnected || hasWabaId) && (
           <div className="flex items-center gap-1">
-            <span className="text-[11px] border border-slate-200 text-slate-500 dark:border-(--card-border-color) dark:text-slate-400 bg-slate-50 dark:bg-(--page-body-bg) rounded-2xl px-2">{workspace.waba_type === "baileys" ? "QR Code" : "Business API"}</span>
+            <span className="text-[11px] border border-slate-200 text-slate-500 dark:border-(--card-border-color) dark:text-slate-400 bg-slate-50 dark:bg-(--page-body-bg) rounded-2xl px-2">{workspace.waba_type === "baileys" ? "QR Code" : workspace.waba_type === "twilio" ? "Twilio" : "Business API"}</span>
             <InfoModal dataKey="workspace_connection" iconSize={14} className="text-slate-400 hover:text-primary transition-colors" />
           </div>
         )}

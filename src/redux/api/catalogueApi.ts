@@ -59,7 +59,14 @@ export const catalogueApi = baseApi.enhanceEndpoints({ addTagTypes: ["Catalogue"
       }),
       invalidatesTags: ["Product"],
     }),
+    getUserProducts: builder.query<{ success: boolean; data: { products: Product[]; pagination: Pagination } }, { type?: string; search?: string; page?: number; limit?: number }>({
+      query: (params) => ({
+        url: "/ecommerce-catalog/user/products",
+        params,
+      }),
+      providesTags: ["Product"],
+    }),
   }),
 });
 
-export const { useGetWABACatalogsQuery, useSyncCatalogsMutation, useLinkCatalogToWABAMutation, useGetLinkedCatalogsQuery, useGetProductsFromCatalogQuery, useCreateProductInCatalogMutation, useUpdateProductInCatalogMutation, useDeleteProductFromCatalogMutation } = catalogueApi;
+export const { useGetWABACatalogsQuery, useSyncCatalogsMutation, useLinkCatalogToWABAMutation, useGetLinkedCatalogsQuery, useGetProductsFromCatalogQuery, useCreateProductInCatalogMutation, useUpdateProductInCatalogMutation, useDeleteProductFromCatalogMutation, useGetUserProductsQuery } = catalogueApi;

@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import AgentForm from "@/src/components/agent/AgentForm";
 import { ROUTES } from "@/src/constants";
 import { useCreateAgentMutation } from "@/src/redux/api/agentApi";
+import { AgentInput } from "@/src/types/agent";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -11,7 +11,7 @@ const AgentCreatePage = () => {
   const router = useRouter();
   const [createAgent, { isLoading }] = useCreateAgentMutation();
 
-  const handleSave = async (data: any) => {
+  const handleSave = async (data: AgentInput) => {
     try {
       await createAgent(data).unwrap();
       toast.success("Agent activated successfully");

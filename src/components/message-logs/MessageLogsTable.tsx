@@ -1,20 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { Badge } from "@/src/elements/ui/badge";
+import { Button } from "@/src/elements/ui/button";
 import { useGetMessageLogsQuery } from "@/src/redux/api/whatsappApi";
 import CommonHeader from "@/src/shared/CommonHeader";
 import { DataTable } from "@/src/shared/DataTable";
 import { Column } from "@/src/types/shared";
-import { Smartphone, Eye } from "lucide-react";
+import { Eye, Smartphone } from "lucide-react";
 import React, { useMemo, useState } from "react";
-import { toast } from "sonner";
-import { Badge } from "@/src/elements/ui/badge";
 import { useTranslation } from "react-i18next";
-import { getStatusBadge, getPlatformBadge, getDirectionBadge } from "./MessageLogsBadges";
-import { MessageLogsFilter } from "./MessageLogsFilter";
+import { toast } from "sonner";
+import {
+  getDirectionBadge,
+  getPlatformBadge,
+  getStatusBadge,
+} from "./MessageLogsBadges";
 import { MessageLogsDetailsModal } from "./MessageLogsDetailsModal";
-import { Button } from "@/src/elements/ui/button";
+import { MessageLogsFilter } from "./MessageLogsFilter";
 
+import { initialMessageLogColumns } from "@/src/data/messageLogs";
 import { useAppSelector } from "@/src/redux/hooks";
 
 const MessageLogsTable: React.FC = () => {
@@ -67,21 +72,16 @@ const MessageLogsTable: React.FC = () => {
     toast.success("Filters cleared successfully");
   };
 
-  const initialColumns = [
-    { id: "Recipient", label: "Recipient", isVisible: true },
-    { id: "Platform", label: "Platform", isVisible: true },
-    { id: "Direction", label: "Direction", isVisible: true },
-    { id: "Type", label: "Type", isVisible: true },
-    { id: "Content", label: "Content", isVisible: true },
-    { id: "Status", label: "Status", isVisible: true },
-    { id: "Sent At", label: "Sent At", isVisible: true },
-    { id: "Actions", label: "Actions", isVisible: true },
-  ];
-
-  const [visibleColumns, setVisibleColumns] = useState(initialColumns);
+  const [visibleColumns, setVisibleColumns] = useState(
+    initialMessageLogColumns,
+  );
 
   const handleColumnToggle = (columnId: string) => {
-    setVisibleColumns((prev) => prev.map((col) => (col.id === columnId ? { ...col, isVisible: !col.isVisible } : col)));
+    setVisibleColumns((prev) =>
+      prev.map((col) =>
+        col.id === columnId ? { ...col, isVisible: !col.isVisible } : col,
+      ),
+    );
   };
 
   const columns = useMemo<Column<any>[]>(
@@ -95,7 +95,11 @@ const MessageLogsTable: React.FC = () => {
         cell: (item) => (
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-(--dark-body) flex items-center justify-center text-slate-500 font-bold text-xs border border-slate-200 dark:border-(--card-border-color)">
-              {item.contact ? item.contact.charAt(0).toUpperCase() : <Smartphone size={14} />}
+              {item.contact ? (
+                item.contact.charAt(0).toUpperCase()
+              ) : (
+                <Smartphone size={14} />
+              )}
             </div>
             <div className="flex flex-col">
               <span className="font-bold text-slate-700 dark:text-slate-200 leading-tight">
@@ -125,7 +129,10 @@ const MessageLogsTable: React.FC = () => {
         className: "min-w-[110px]",
         accessorKey: "type",
         cell: (item) => (
-          <Badge variant="outline" className="border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 capitalize font-medium px-2 py-0.5 text-xs">
+          <Badge
+            variant="outline"
+            className="border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 capitalize font-medium px-2 py-0.5 text-xs"
+          >
             {item.type || "text"}
           </Badge>
         ),
@@ -137,7 +144,10 @@ const MessageLogsTable: React.FC = () => {
         cell: (item) => {
           const content = item.content || "";
           return (
-            <div className="max-w-xs truncate text-slate-500 dark:text-slate-400 text-sm font-medium pr-4 break-words" title={content}>
+            <div
+              className="max-w-xs truncate text-slate-500 dark:text-slate-400 text-sm font-medium pr-4 break-words"
+              title={content}
+            >
               {content}
             </div>
           );
@@ -200,11 +210,20 @@ const MessageLogsTable: React.FC = () => {
       {/* Advanced Filters Section */}
       <MessageLogsFilter
         platformFilter={platformFilter}
-        setPlatformFilter={(val) => { setPlatformFilter(val); setPage(1); }}
+        setPlatformFilter={(val) => {
+          setPlatformFilter(val);
+          setPage(1);
+        }}
         statusFilter={statusFilter}
-        setStatusFilter={(val) => { setStatusFilter(val); setPage(1); }}
+        setStatusFilter={(val) => {
+          setStatusFilter(val);
+          setPage(1);
+        }}
         timeFilter={timeFilter}
-        setTimeFilter={(val) => { setTimeFilter(val); setPage(1); }}
+        setTimeFilter={(val) => {
+          setTimeFilter(val);
+          setPage(1);
+        }}
         searchTerm={searchTerm}
         handleClearFilters={handleClearFilters}
       />
@@ -213,7 +232,11 @@ const MessageLogsTable: React.FC = () => {
       <div className="bg-white dark:bg-(--card-color) rounded-lg shadow-sm overflow-hidden">
         <DataTable<any>
           data={response?.data?.logs || []}
-          columns={columns.filter((col) => visibleColumns.find((vc) => vc.label === col.header)?.isVisible !== false)}
+          columns={columns.filter(
+            (col) =>
+              visibleColumns.find((vc) => vc.label === col.header)
+                ?.isVisible !== false,
+          )}
           isLoading={isLoading}
           isFetching={isFetching}
           totalCount={response?.data?.pagination?.totalItems || 0}
@@ -223,10 +246,14 @@ const MessageLogsTable: React.FC = () => {
           onLimitChange={handleLimitChange}
           enableSelection={false}
           emptyMessage={
-            searchTerm || platformFilter !== "all_platforms" || statusFilter !== "all_status" || timeFilter !== "all_time"
+            searchTerm ||
+            platformFilter !== "all_platforms" ||
+            statusFilter !== "all_status" ||
+            timeFilter !== "all_time"
               ? "No message logs found matching these filters."
               : "No message log history available."
           }
+          actionPermission={["view.message_logs"]}
         />
       </div>
 

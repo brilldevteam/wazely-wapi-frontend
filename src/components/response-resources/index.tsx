@@ -3,7 +3,8 @@
 import { ReplyMaterialType } from "@/src/types/replyMaterial";
 import { useState } from "react";
 import ReplyMaterialsContent from "./ReplyMaterialsContent";
-import ReplyMaterialsSidebar, { REPLY_MATERIAL_SIDEBAR_ITEMS } from "./ReplyMaterialsSidebar";
+import ReplyMaterialsSidebar from "./ReplyMaterialsSidebar";
+import { REPLY_MATERIAL_SIDEBAR_ITEMS } from "@/src/data/responseResource";
 
 const ReplyMaterials = () => {
   const [activeType, setActiveType] = useState<ReplyMaterialType>("text");

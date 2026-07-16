@@ -12,7 +12,7 @@ import { GoogleAccount } from "@/src/types/google";
 import { Column } from "@/src/types/shared";
 import useDebounce from "@/src/utils/hooks/useDebounce";
 import dayjs from "dayjs";
-import { Calendar, CheckCircle2, Clock, FileSpreadsheet, Link2, Mail, Trash2 } from "lucide-react";
+import { Calendar, CheckCircle2, Clock, FileSpreadsheet, Link2, Mail, Trash2, ClipboardList } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -141,6 +141,11 @@ const GoogleAccountList: React.FC = () => {
             <Can permission="update.google_account">
               <Button variant="outline" size="sm" className="w-10 h-10 border-none text-emerald-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all dark:hover:bg-emerald-900/20 shadow-xs" onClick={() => router.push(`${ROUTES.GoogleAccount}/${item._id}/sheets`)} title={t("google_account_view_sheets")}>
                 <FileSpreadsheet size={16} />
+              </Button>
+            </Can>
+            <Can permission="update.google_account">
+              <Button variant="outline" size="sm" className="w-10 h-10 border-none text-purple-600 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all dark:hover:bg-purple-900/20 shadow-xs" onClick={() => router.push(`${ROUTES.GoogleAccount}/${item._id}/forms`)} title={t("google_account_view_forms")}>
+                <ClipboardList size={16} />
               </Button>
             </Can>
             <Can permission="delete.google_account">

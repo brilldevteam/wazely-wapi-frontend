@@ -1,7 +1,13 @@
-import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { NextRequest, NextResponse } from "next/server";
+import { authoption } from "../../auth/[...nextauth]/authOption";
 
-export async function POST(request: Request) {
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+export async function POST(request: NextRequest) {
   try {
+    const session = await getServerSession(authoption);
+    const token = session?.accessToken as string;
     const body = await request.json();
     const { workspace_id, contact_ids } = body;
 
@@ -12,17 +18,27 @@ export async function POST(request: Request) {
       );
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    return NextResponse.json({
-      success: true,
-      message: `${contact_ids.length} chat(s) deleted successfully.`,
+    const response = await fetch(`${BACKEND_API_URL}/whatsapp/delete-chat`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify(body),
     });
-  } catch (error) {
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return NextResponse.json(
+        { message: data.error || data.message || "Delete chat failed" },
+        { status: response.status }
+      );
+    }
+
+    return NextResponse.json(data, { status: 200 });
+  } catch (error: unknown) {
     console.error("Error in delete-chat API route:", error);
-    return NextResponse.json(
-      { success: false, message: "Internal server error." },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }

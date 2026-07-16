@@ -17,7 +17,7 @@ export const usePermissions = () => {
   }, [permissions]);
 
   const hasPermission = useCallback(
-    (slug: string | undefined, overridePermissions?: string[]): boolean => {
+    (slug?: string, overridePermissions?: string[]): boolean => {
       if (!isAuthenticated) return false;
       if (!slug) return true;
 

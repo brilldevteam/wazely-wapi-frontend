@@ -9,14 +9,17 @@ import { useRef } from "react";
 import { toast } from "sonner";
 import CharacterCountWrapper from "@/src/shared/CharacterCountWrapper";
 import { Button } from "@/src/elements/ui/button";
+import { useAppSelector } from "@/src/redux/hooks";
 
 export const CarouselMediaSection = ({ buttonTemplates, cards, onAddButtonTemplate, onRemoveButtonTemplate, onAddCard, onRemoveCard, onUpdateCard, onUpdateCardButtonValue }: CarouselMediaSectionProps) => {
+  const { setting } = useAppSelector((state) => state.setting);
   const fileRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const handleFileChange = (cardId: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) return toast.error("File size exceeds 5MB limit");
+    const maxLimitMB = setting?.image_file_limit || 5;
+    if (file.size > maxLimitMB * 1024 * 1024) return toast.error(`File size exceeds ${maxLimitMB}MB limit`);
     onUpdateCard(cardId, { file });
   };
 
@@ -115,7 +118,7 @@ export const CarouselMediaSection = ({ buttonTemplates, cards, onAddButtonTempla
                   <div onClick={() => fileRefs.current[card.id]?.click()} className="border-2 border-dashed border-slate-200 dark:border-(--card-border-color) rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer hover:border-primary hover:bg-emerald-50/20 dark:hover:bg-(--table-hover) transition-all">
                     <ImageIcon size={24} className="text-slate-300 mb-2" />
                     <p className="text-xs font-bold text-slate-400">Click to upload image</p>
-                    <p className="text-[10px] text-slate-400">JPG, PNG (Max 5MB)</p>
+                    <p className="text-[10px] text-slate-400">JPG, PNG (Max {setting?.image_file_limit || 5}MB)</p>
                   </div>
                 )}
               </div>

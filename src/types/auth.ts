@@ -215,3 +215,7 @@ export interface AuthPageSetupResponse {
   success: boolean;
   data: AuthPageSetup;
 }
+
+export interface OTPVerificationPageProps {
+  type?: "forgot_password" | "signup";
+}

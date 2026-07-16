@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useEffect, useCallback, useRef } from "react";
+import React, { useEffect, useCallback, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { isToday, isYesterday } from "date-fns";
 import { safeFormat, safeParseDate } from "../safeDate";
 import { toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
-import { chatApi, useGetRecentChatsQuery } from "@/src/redux/api/chatApi";
+import { chatApi, useGetRecentChatsQuery, useMarkMessageAsReadMutation } from "@/src/redux/api/chatApi";
 import { socket } from "@/src/services/socket-setup";
 import { ROUTES, SOCKET } from "@/src/constants";
 import { ChatMessage, DateGroupedMessages, MessageGroup } from "@/src/types/components/chat";
@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { whatsappApi } from "@/src/redux/api/whatsappApi";
 import { useGetWorkspacesQuery } from "@/src/redux/api/workspaceApi";
 import { setWorkspace } from "@/src/redux/reducers/workspaceSlice";
+import { MessageSquareWarning, AlertTriangle, X } from "lucide-react";
 
 const groupNewMessage = (existingData: DateGroupedMessages[], newMessage: ChatMessage) => {
   let foundExisting = false;
@@ -58,23 +59,45 @@ const groupNewMessage = (existingData: DateGroupedMessages[], newMessage: ChatMe
       }
       if (reactionHandled) break;
     }
-    if (reactionHandled) return;
+    return;
   }
 
+
+  if (newMessage.reply_message_id && !newMessage.reply_message) {
+    let foundReply = null;
+    for (const dateGroup of existingData) {
+      for (const group of dateGroup.messageGroups) {
+        const found = group.messages.find(
+          (m) => m.wa_message_id === newMessage.reply_message_id || m.id === newMessage.reply_message_id
+        );
+        if (found) {
+          foundReply = found;
+          break;
+        }
+      }
+      if (foundReply) break;
+    }
+    if (foundReply) {
+      newMessage.reply_message = foundReply;
+    }
+  }
 
   for (const dateGroup of existingData) {
     for (const group of dateGroup.messageGroups) {
       const idx = group.messages.findIndex((m) => {
         if (m.id === newMessage.id) return true;
 
-        const isTypeMatch = m.messageType === newMessage.messageType || (m.messageType === "payment_link" && newMessage.messageType === "text");
+        const isTypeMatch =
+          m.messageType === newMessage.messageType ||
+          (m.messageType === "payment_link" && newMessage.messageType === "text") ||
+          (m.messageType === "google_meet" && newMessage.messageType === "text");
 
         if (m.id.startsWith("temp-") && m.direction === newMessage.direction && isTypeMatch) {
           const timeDiff = Math.abs(safeParseDate(m.createdAt).getTime() - safeParseDate(newMessage.createdAt).getTime());
           if (m.messageType === "text" && newMessage.messageType === "text") {
             return m.content === newMessage.content && timeDiff < 60000;
           }
-          if (m.messageType === "payment_link") {
+          if (m.messageType === "payment_link" || m.messageType === "google_meet") {
             return timeDiff < 60000;
           }
           return timeDiff < 60000;
@@ -83,7 +106,13 @@ const groupNewMessage = (existingData: DateGroupedMessages[], newMessage: ChatMe
       });
 
       if (idx !== -1) {
-        group.messages[idx] = newMessage;
+        const existingMessage = group.messages[idx];
+        const mergedMessage = {
+          ...newMessage,
+          reply_message: newMessage.reply_message || existingMessage.reply_message,
+          reply_message_id: newMessage.reply_message_id || existingMessage.reply_message_id || (existingMessage.reply_message ? (existingMessage.reply_message.wa_message_id || existingMessage.reply_message.id) : undefined),
+        };
+        group.messages[idx] = mergedMessage;
         if (group.senderId === "current-user") {
           group.senderId = newMessage.sender.id;
           group.sender = newMessage.sender;
@@ -137,6 +166,7 @@ const groupNewMessage = (existingData: DateGroupedMessages[], newMessage: ChatMe
 export const useSocketHandler = () => {
   const dispatch = useAppDispatch();
   const pathname = usePathname();
+  const [markMessageAsRead] = useMarkMessageAsReadMutation();
   const { selectedChat, selectedPhoneNumberId } = useAppSelector((state) => state.chat);
   const { userSetting } = useAppSelector((state) => state.setting);
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
@@ -147,6 +177,12 @@ export const useSocketHandler = () => {
   });
   const router = useRouter();
   const unreadCountRef = useRef(0);
+
+  const queries = useAppSelector((state: any) => state.api?.queries);
+  const queriesRef = useRef(queries);
+  useEffect(() => {
+    queriesRef.current = queries;
+  }, [queries]);
 
   const botFetchTimer1 = useRef<ReturnType<typeof setTimeout> | null>(null);
   const botFetchTimer2 = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -175,113 +211,124 @@ export const useSocketHandler = () => {
 
   const updateChatArea = useCallback(
     (newMessage: ChatMessage) => {
-      if (!selectedChat || !selectedPhoneNumberId) return;
 
-      const activeContactId = String(selectedChat.contact.id);
-      const activeContactNumber = String(selectedChat.contact.number);
+      const msgContactId = String(newMessage.contact_id);
       const msgSenderId = String(newMessage.sender.id);
       const msgRecipientId = String(newMessage.recipient.id);
-      const msgContactId = String(newMessage.contact_id);
-      const targetPhoneId = newMessage.whatsapp_phone_number_id || selectedPhoneNumberId;
 
-      const isRelevant = msgSenderId === activeContactId || msgRecipientId === activeContactId || msgSenderId === activeContactNumber || msgRecipientId === activeContactNumber || (msgContactId && msgContactId !== "undefined" && msgContactId === activeContactId);
+      const activeQueries = Object.values(queriesRef.current || {});
+      activeQueries.forEach((query: any) => {
+        if (query?.endpointName === "getMessages" && query?.status === "fulfilled") {
+          const originalArgs = query.originalArgs;
+          const queryContactId = String(originalArgs.contact_id);
 
-      if (!isRelevant) return;
+          const matchContactId =
+            queryContactId === msgContactId ||
+            queryContactId === msgSenderId ||
+            queryContactId === msgRecipientId;
 
-      let updated = false;
 
-      const cacheParams = [
-        { contact_id: selectedChat.contact.id, whatsapp_phone_number_id: targetPhoneId, start_date: undefined, end_date: undefined },
-        { contact_id: activeContactId, whatsapp_phone_number_id: String(targetPhoneId), start_date: undefined, end_date: undefined },
-      ];
-
-      cacheParams.forEach((params) => {
-        if (updated) return;
-        dispatch(
-          chatApi.util.updateQueryData("getMessages", params as any, (draft) => {
-            if (!draft || !draft.messages) return;
-            groupNewMessage(draft.messages, newMessage);
-            updated = true;
-          })
-        );
+          if (matchContactId) {
+            dispatch(
+              chatApi.util.updateQueryData("getMessages", originalArgs, (draft) => {
+                if (!draft || !draft.messages) return;
+                if (newMessage.messageType === "system_messages" && (newMessage.content === "Chat cleared" || (newMessage as any).messageText === "Chat cleared")) {
+                  draft.messages = [];
+                  return;
+                }
+                groupNewMessage(draft.messages, newMessage);
+              })
+            );
+          }
+        }
       });
+
+      const isMedia = ["image", "video", "audio", "document", "location"].includes(newMessage.messageType) || !!newMessage.fileUrl;
+      if (isMedia && newMessage.contact_id) {
+        dispatch(
+          chatApi.util.invalidateTags([{ type: "Chats", id: newMessage.contact_id }])
+        );
+      }
     },
-    [dispatch, selectedChat, selectedPhoneNumberId]
+    [dispatch]
   );
 
   const updateSidebar = useCallback(
     (newMessage: ChatMessage) => {
+      if (newMessage.messageType === "reaction") {
+        return;
+      }
+
       const targetPhoneId = newMessage.whatsapp_phone_number_id || selectedPhoneNumberId;
-      if (!targetPhoneId) return;
+      if (!targetPhoneId) {
+        return;
+      }
 
-      let updated = false;
-      const cacheParams = [
-        {
-          whatsapp_phone_number_id: targetPhoneId,
-          search: undefined,
-          start_date: undefined,
-          end_date: undefined,
-          tags: undefined,
-          has_notes: undefined,
-        },
-        {
-          whatsapp_phone_number_id: String(targetPhoneId),
-          search: undefined,
-          start_date: undefined,
-          end_date: undefined,
-          tags: undefined,
-          has_notes: undefined,
-        },
-      ];
+      const activeQueries = Object.values(queriesRef.current || {});
+      
+      let chatFoundInAnyQuery = false;
 
-      let foundInCache = false;
-
-      cacheParams.forEach((params) => {
-        if (updated) return;
-        dispatch(
-          chatApi.util.updateQueryData("getRecentChats", params as any, (draft) => {
-            if (!draft || !draft.data) return;
-
-            const targetIdentifier = newMessage.direction === "inbound" ? String(newMessage.sender.id) : String(newMessage.recipient.id);
-            const msgContactId = String(newMessage.contact_id);
-            const chatIndex = draft.data.findIndex((c) => String(c.contact.id) === targetIdentifier || String(c.contact.number) === targetIdentifier || (msgContactId && msgContactId !== "undefined" && String(c.contact.id) === msgContactId));
-
-            if (chatIndex !== -1) {
-              foundInCache = true;
-              const chat = draft.data[chatIndex];
-              const isViewing = selectedChat && (String(selectedChat.contact.id) === String(chat.contact.id) || String(selectedChat.contact.number) === String(chat.contact.number));
-
-              if (chat.lastMessage.id === newMessage.id) {
-                updated = true;
+      activeQueries.forEach((query: any) => {
+        if (query?.endpointName === "getRecentChats" && query?.status === "fulfilled") {
+          const originalArgs = query.originalArgs;
+          dispatch(
+            chatApi.util.updateQueryData("getRecentChats", originalArgs, (draft) => {
+              if (!draft || !draft.data) {
                 return;
               }
 
-              chat.lastMessage = {
-                id: newMessage.id,
-                content: newMessage.content || (newMessage.messageType === "text" ? "" : `[${newMessage.messageType}]`),
-                messageType: newMessage.messageType,
-                createdAt: newMessage.createdAt,
-                unreadCount: chat.lastMessage.unreadCount,
-              };
+              const targetIdentifier = newMessage.direction === "inbound" ? String(newMessage.sender.id) : String(newMessage.recipient.id);
+              const msgContactId = String(newMessage.contact_id);
+              const chatIndex = draft.data.findIndex((c) => 
+                String(c.contact.id) === targetIdentifier || 
+                String(c.contact.number) === targetIdentifier || 
+                (msgContactId && msgContactId !== "undefined" && String(c.contact.id) === msgContactId)
+              );
 
-              if (!isViewing && newMessage.direction === "inbound") {
-                const currentCount = parseInt(chat.lastMessage.unreadCount || "0");
-                chat.lastMessage.unreadCount = (currentCount + 1).toString();
-              }
+              if (chatIndex !== -1) {
+                chatFoundInAnyQuery = true;
+                const chat = draft.data[chatIndex];
+                const isViewing = selectedChat && (
+                  String(selectedChat.contact.id) === String(chat.contact.id) || 
+                  String(selectedChat.contact.number) === String(chat.contact.number)
+                );
 
-              if (chatIndex > 0) {
-                draft.data.splice(chatIndex, 1);
-                draft.data.unshift(chat);
+                if (chat.lastMessage.id === newMessage.id) {
+                  return;
+                }
+
+                chat.lastMessage = {
+                  id: newMessage.id,
+                  content: newMessage.content || (newMessage.messageType === "text" ? "" : `[${newMessage.messageType}]`),
+                  messageType: newMessage.messageType,
+                  createdAt: newMessage.createdAt,
+                  unreadCount: chat.lastMessage.unreadCount,
+                };
+
+                if (!isViewing && newMessage.direction === "inbound") {
+                  const rawCount = chat.lastMessage.unreadCount;
+                  const currentCount = (rawCount && rawCount !== "null" && rawCount !== "undefined") ? parseInt(rawCount) : 0;
+                  const nextCount = isNaN(currentCount) ? 1 : currentCount + 1;
+                  chat.lastMessage.unreadCount = nextCount.toString();
+                }
+
+                if (chatIndex > 0) {
+                  draft.data.splice(chatIndex, 1);
+                  draft.data.unshift(chat);
+                }
               }
-              updated = true;
-            }
-          })
-        );
+            })
+          );
+        }
       });
 
-      if (!foundInCache && newMessage.direction === "inbound") {
-        dispatch(chatApi.util.invalidateTags(["Chats"]));
+
+      const isMediaMsg = ["image", "video", "audio", "document", "location"].includes(newMessage.messageType || (newMessage as any).message_type);
+      if (isMediaMsg && newMessage.contact_id) {
+        dispatch(chatApi.util.invalidateTags([{ type: "Chats", id: newMessage.contact_id }]));
       }
+
+      dispatch(chatApi.util.invalidateTags(["Chats"]));
     },
     [dispatch, selectedPhoneNumberId, selectedChat]
   );
@@ -300,56 +347,91 @@ export const useSocketHandler = () => {
 
   const handleStatusUpdate = useCallback(
     (updatedMessage: ChatMessage) => {
-      const isCorrectUser = !updatedMessage.user_id || updatedMessage.user_id === user?.id;
+      const isCorrectUser = !updatedMessage.user_id || updatedMessage.user_id === user?.id || updatedMessage.user_id === selectedWorkspace?.user_id;
       if (!isCorrectUser) return;
 
-      if (!selectedChat || !selectedPhoneNumberId) return;
+      // Invalidate Chats tag to keep sidebar in sync if an inbound message status changed to read
+      if (updatedMessage.direction === "inbound" && (updatedMessage.is_seen || updatedMessage.read_status === "read")) {
+        dispatch(chatApi.util.invalidateTags(["Chats"]));
+      }
 
-      const activeContactId = String(selectedChat.contact.id);
-      const activeContactNumber = String(selectedChat.contact.number);
+      // Update getRecentChats cache for this contact to set unreadCount to "0"
+      if (updatedMessage.direction === "inbound" && (updatedMessage.is_seen || updatedMessage.read_status === "read")) {
+        const targetPhoneId = updatedMessage.whatsapp_phone_number_id || selectedPhoneNumberId;
+        if (targetPhoneId) {
+          const activeQueries = Object.values(queriesRef.current || {});
+          activeQueries.forEach((query: any) => {
+            if (query?.endpointName === "getRecentChats" && query?.status === "fulfilled") {
+              const originalArgs = query.originalArgs;
+              dispatch(
+                chatApi.util.updateQueryData("getRecentChats", originalArgs, (draft) => {
+                  if (!draft || !draft.data) return;
+                  const contactIdStr = String(updatedMessage.sender.id);
+                  const msgContactId = String(updatedMessage.contact_id);
+                  const chat = draft.data.find(
+                    (c) => String(c.contact.id) === contactIdStr || String(c.contact.number) === contactIdStr || (msgContactId && msgContactId !== "undefined" && String(c.contact.id) === msgContactId)
+                  );
+                  if (chat) {
+                    chat.lastMessage.unreadCount = "0";
+                  }
+                })
+              );
+            }
+          });
+        }
+      }
+
+      const msgContactId = String(updatedMessage.contact_id);
       const msgSenderId = String(updatedMessage.sender.id);
       const msgRecipientId = String(updatedMessage.recipient.id);
-      const msgContactId = String(updatedMessage.contact_id);
 
-      const isRelevant = msgSenderId === activeContactId || msgRecipientId === activeContactId || msgSenderId === activeContactNumber || msgRecipientId === activeContactNumber || (msgContactId && msgContactId !== "undefined" && msgContactId === activeContactId);
+      const activeQueries = Object.values(queriesRef.current || {});
+      activeQueries.forEach((query: any) => {
+        if (query?.endpointName === "getMessages" && query?.status === "fulfilled") {
+          const originalArgs = query.originalArgs;
+          const queryContactId = String(originalArgs.contact_id);
 
-      if (!isRelevant) return;
+          const matchContactId =
+            queryContactId === msgContactId ||
+            queryContactId === msgSenderId ||
+            queryContactId === msgRecipientId;
 
-      const cacheParams = [
-        { contact_id: selectedChat.contact.id, whatsapp_phone_number_id: selectedPhoneNumberId, start_date: undefined, end_date: undefined },
-        { contact_id: activeContactId, whatsapp_phone_number_id: String(selectedPhoneNumberId), start_date: undefined, end_date: undefined },
-      ];
+          if (matchContactId) {
+            dispatch(
+              chatApi.util.updateQueryData("getMessages", originalArgs, (draft) => {
+                if (!draft || !draft.messages) return;
 
-      cacheParams.forEach((params) => {
-        dispatch(
-          chatApi.util.updateQueryData("getMessages", params as any, (draft) => {
-            if (!draft || !draft.messages) return;
-
-            for (const dateGroup of draft.messages) {
-              for (const group of dateGroup.messageGroups) {
-                const msg = group.messages.find((m) => m.id === updatedMessage.id);
-                if (msg) {
-                  msg.is_delivered = updatedMessage.is_delivered;
-                  msg.delivered_at = updatedMessage.delivered_at;
-                  msg.is_seen = updatedMessage.is_seen;
-                  msg.seen_at = updatedMessage.seen_at;
-                  msg.wa_status = updatedMessage.wa_status;
-                  msg.delivery_status = updatedMessage.delivery_status;
-                  return;
+                for (const dateGroup of draft.messages) {
+                  for (const group of dateGroup.messageGroups) {
+                    const msg = group.messages.find(
+                      (m) =>
+                        m.id === updatedMessage.id ||
+                        (m.wa_message_id && updatedMessage.wa_message_id && m.wa_message_id === updatedMessage.wa_message_id)
+                    );
+                    if (msg) {
+                      msg.is_delivered = updatedMessage.is_delivered;
+                      msg.delivered_at = updatedMessage.delivered_at;
+                      msg.is_seen = updatedMessage.is_seen;
+                      msg.seen_at = updatedMessage.seen_at;
+                      msg.wa_status = updatedMessage.wa_status;
+                      msg.delivery_status = updatedMessage.delivery_status;
+                      return;
+                    }
+                  }
                 }
-              }
-            }
-          })
-        );
+              })
+            );
+          }
+        }
       });
     },
-    [dispatch, selectedChat, selectedPhoneNumberId, user]
+    [dispatch, user, selectedWorkspace]
   );
 
   const handleMessage = useCallback(
     (newMessage: ChatMessage) => {
       try {
-        const isCorrectUser = !newMessage.user_id || newMessage.user_id === user?.id;
+        const isCorrectUser = !newMessage.user_id || newMessage.user_id === user?.id || newMessage.user_id === selectedWorkspace?.user_id;
         if (!isCorrectUser) {
           console.warn("Received message for a different user, ignoring.");
           return;
@@ -366,12 +448,17 @@ export const useSocketHandler = () => {
 
         const isChatPage = pathname === ROUTES.WAChat;
         const isCurrentChat = selectedChat && (String(selectedChat.contact.id) === String(newMessage.sender.id) || String(selectedChat.contact.number) === String(newMessage.sender.id) || (newMessage.contact_id && String(selectedChat.contact.id) === String(newMessage.contact_id)));
+
+        if (isChatPage && isCurrentChat && document.hasFocus()) {
+          markMessageAsRead({ messageId: newMessage.id });
+        }
+
         const notificationSettings = userSetting?.data;
         const notificationsEnabled = notificationSettings?.notifications_enabled ?? true;
         const selectedTone = notificationSettings?.notification_tone || "default";
 
         if (notificationsEnabled && (!isChatPage || !isCurrentChat || !document.hasFocus())) {
-          const isCorrectUser = !newMessage.user_id || newMessage.user_id === user?.id;
+          const isCorrectUser = !newMessage.user_id || newMessage.user_id === user?.id || newMessage.user_id === selectedWorkspace?.user_id;
           if (!isCorrectUser) return;
 
           unreadCountRef.current += 1;
@@ -435,12 +522,12 @@ export const useSocketHandler = () => {
         }
       }
     },
-    [updateSidebar, updateChatArea, scheduleBotReplyFetch, pathname, selectedChat, sendNotification, startBlinking, dispatch, router, selectedPhoneNumberId, userSetting, user]
+    [updateSidebar, updateChatArea, scheduleBotReplyFetch, pathname, selectedChat, sendNotification, startBlinking, dispatch, router, selectedPhoneNumberId, userSetting, user, selectedWorkspace]
   );
 
   const handleConnectionUpdate = useCallback(
     async (data: any) => {
-      const isCorrectUser = !data.user_id || data.user_id === user?.id;
+      const isCorrectUser = !data.user_id || data.user_id === user?.id || data.user_id === selectedWorkspace?.user_id;
       if (!isCorrectUser) return;
 
       dispatch(
@@ -481,17 +568,173 @@ export const useSocketHandler = () => {
     [dispatch, refetchWorkspaces, selectedWorkspace, user]
   );
 
+  const handleSnoozeReminder = useCallback((data: { contact_id: string, contact_name?: string, contact_number?: string, user_id?: string, message: string, isDanger: boolean, snooze_count: number, timestamp?: string }) => {
+    const isCorrectUser = !data.user_id || data.user_id === user?.id || data.user_id === selectedWorkspace?.user_id;
+    if (!isCorrectUser) return;
+
+    const arrivalTime = new Date(data.timestamp || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+
+    try {
+      const selectedTone = userSetting?.data?.notification_tone || "default";
+      const toneFile = selectedTone === "default" ? "/assets/sounds/default.mp3" : `/assets/sounds/${selectedTone}.mp3`;
+      const audio = new Audio(toneFile);
+      audio.play().catch(() => {});
+    } catch {}
+
+    const handleClick = (tId: string | number) => {
+      window.focus();
+      router.push(ROUTES.WAChat);
+      if (data.contact_id) {
+        let cachedChat = recentChatsRef.current?.find((c: any) => String(c.contact.id) === String(data.contact_id) || String(c.contact.number) === String(data.contact_id));
+        
+        if (!cachedChat) {
+          cachedChat = {
+            contact: {
+              id: data.contact_id,
+              name: data.contact_name || "Unknown Contact",
+              number: data.contact_number || "",
+              avatar: null,
+              labels: []
+            },
+            lastMessage: {
+              id: "",
+              content: "",
+              messageType: "text",
+              createdAt: new Date().toISOString(),
+              unreadCount: "0"
+            }
+          } as any;
+        }
+        dispatch(selectChat(cachedChat));
+      }
+      toast.dismiss(tId);
+    };
+
+    const CustomToast = ({ tId, isDanger, message }: { tId: string | number, isDanger: boolean, message: string }) => {
+      return React.createElement(
+        "div",
+        {
+          className: `p-4 w-full rounded-xl border shadow-xl overflow-hidden relative ${isDanger ? 'bg-white dark:bg-(--card-color) border-red-200 dark:border-red-900/50' : 'bg-white dark:bg-(--card-color) border-amber-200 dark:border-amber-900/50'}`
+        },
+        React.createElement("div", {
+          className: `absolute top-0 left-0 w-1.5 h-full ${isDanger ? 'bg-red-500' : 'bg-amber-500'}`
+        }),
+        React.createElement(
+          "div",
+          { className: "flex items-start gap-3 pl-1 relative z-10" },
+          React.createElement(
+            "div",
+            {
+              className: `p-2.5 rounded-full mt-0.5 shrink-0 ${isDanger ? 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400' : 'bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400'}`
+            },
+            React.createElement(isDanger ? AlertTriangle : MessageSquareWarning, { size: 22 })
+          ),
+          React.createElement(
+            "div",
+            { className: "flex-1" },
+            React.createElement(
+              "h4",
+              {
+                className: `font-bold text-sm mb-1 ${isDanger ? 'text-red-600 dark:text-red-400' : 'text-amber-600 dark:text-amber-400'}`
+              },
+              isDanger ? '🚨 Priority Request' : '⏰ Chat Reminder'
+            ),
+            React.createElement(
+              "p",
+              { className: "text-slate-600 dark:text-slate-300 text-sm leading-relaxed mt-2" },
+              message
+            ),
+            React.createElement(
+              "span",
+              { className: "text-[10px] text-slate-400 dark:text-slate-500 block text-right mt-1.5 font-medium" },
+              arrivalTime
+            )
+          ),
+          React.createElement(
+            "div",
+            { className: "absolute top-0 right-0 flex items-center gap-1.5" },
+            React.createElement(
+              "button",
+              {
+                onClick: () => handleClick(tId),
+                className: `px-2.5 py-1 text-xs font-bold rounded-lg transition-all shrink-0 ${isDanger ? 'bg-red-50 hover:bg-red-100 text-red-700 dark:bg-red-900/30 dark:hover:bg-red-900/50 dark:text-red-300' : 'bg-amber-50 hover:bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:hover:bg-amber-900/50 dark:text-amber-300'}`
+              },
+              "View Chat"
+            ),
+            React.createElement(
+              "button",
+              {
+                onClick: () => toast.dismiss(tId),
+                className: "p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors shrink-0"
+              },
+              React.createElement(X, { size: 16 })
+            )
+          )
+        )
+      );
+    };
+
+    if (data.isDanger) {
+      toast.custom((tId) => React.createElement(CustomToast, { tId, isDanger: true, message: data.message }), {
+        duration: Infinity,
+        position: "top-center",
+      });
+      sendNotification("🚨 Priority Request", { 
+         body: data.message,
+         tag: `snooze-${data.contact_id}`,
+         force: true,
+         onClick: () => handleClick("system-notification")
+      } as any);
+    } else {
+      toast.custom((tId) => React.createElement(CustomToast, { tId, isDanger: false, message: data.message }), {
+        duration: Infinity,
+        position: "top-right",
+      });
+      sendNotification("⏰ Chat Reminder", { 
+         body: data.message,
+         tag: `snooze-${data.contact_id}`,
+         force: true,
+         onClick: () => handleClick("system-notification")
+      } as any);
+    }
+  }, [router, sendNotification, userSetting, dispatch, user, selectedWorkspace]);
+
+  const handleAgentEscalation = useCallback((data: { contact_id: string, user_id?: string, message: string }) => {
+    const isCorrectUser = !data.user_id || data.user_id === user?.id || data.user_id === selectedWorkspace?.user_id;
+    if (!isCorrectUser) return;
+
+    if (data.contact_id) {
+      dispatch(chatApi.util.invalidateTags([{ type: "Chats", id: data.contact_id }]));
+      dispatch(chatApi.util.invalidateTags(["Chats"]));
+
+      toast.info(`Human Handoff`, {
+        description: data.message || "A conversation has been transferred to a human agent.",
+        duration: 5000,
+        position: "top-right",
+        style: {
+          background: "var(--card-color)",
+          color: "var(--foreground)",
+          border: "1px solid var(--border)",
+        },
+      });
+    }
+  }, [dispatch, user, selectedWorkspace]);
+
   useEffect(() => {
     socket.on(SOCKET.Listeners.Whatsapp_Message, handleMessage);
     socket.on(SOCKET.Listeners.Whatsapp_Status, handleStatusUpdate);
     socket.on(SOCKET.Listeners.Whatsapp_Connection_Update, handleConnectionUpdate);
+    socket.on('snooze_reminder', handleSnoozeReminder);
+    socket.on('agent:escalation', handleAgentEscalation);
 
     return () => {
       socket.off(SOCKET.Listeners.Whatsapp_Message, handleMessage);
       socket.off(SOCKET.Listeners.Whatsapp_Status, handleStatusUpdate);
       socket.off(SOCKET.Listeners.Whatsapp_Connection_Update, handleConnectionUpdate);
+      socket.off('snooze_reminder', handleSnoozeReminder);
+      socket.off('agent:escalation', handleAgentEscalation);
     };
-  }, [handleMessage, handleStatusUpdate, handleConnectionUpdate]);
+  }, [handleMessage, handleStatusUpdate, handleConnectionUpdate, handleSnoozeReminder, handleAgentEscalation]);
 
   useEffect(() => {
     return () => {

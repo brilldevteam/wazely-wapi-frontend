@@ -57,14 +57,69 @@ const TemplateMessage: React.FC<TemplateMessageProps> = ({ message, isWindowExpi
     }
   };
 
+  const getRenderedBody = () => {
+    let body = template.message_body || "";
+    const variables = (message as any).metadata?.variables;
+    if (variables) {
+      if (Array.isArray(variables)) {
+        variables.forEach((val: any, idx: number) => {
+          const placeholder = `{{${idx + 1}}}`;
+          body = body.replaceAll(placeholder, String(val ?? ""));
+        });
+      } else if (typeof variables === "object") {
+        Object.entries(variables).forEach(([key, val]) => {
+          const placeholder = `{{${key}}}`;
+          body = body.replaceAll(placeholder, String(val ?? ""));
+        });
+      }
+    }
+    return body;
+  };
+
+  const getRenderedHeader = () => {
+    if (!template.header || template.header.format !== "text" || !template.header.text) return null;
+    let headerText = template.header.text;
+    const variables = (message as any).metadata?.variables;
+    if (variables) {
+      if (Array.isArray(variables)) {
+        variables.forEach((val: any, idx: number) => {
+          const placeholder = `{{${idx + 1}}}`;
+          headerText = headerText.replaceAll(placeholder, String(val ?? ""));
+        });
+      } else if (typeof variables === "object") {
+        Object.entries(variables).forEach(([key, val]) => {
+          const placeholder = `{{${key}}}`;
+          headerText = headerText.replaceAll(placeholder, String(val ?? ""));
+        });
+      }
+    }
+    return headerText;
+  };
+
   const renderHeaderMedia = () => {
     if (!template.header || template.header.format === "text" || template.header.format === "location") return null;
 
-    const mediaUrl = template.header.media_url || message.fileUrl;
+    const mediaUrl = message.fileUrl || template.header.media_url;
     if (!mediaUrl) return null;
 
     const resolvedUrl = getResolvedImageUrl(mediaUrl);
-    const format = template.header.format;
+    let format: string | undefined = undefined;
+    if (mediaUrl) {
+      const ext = mediaUrl.split(".").pop()?.toLowerCase().split("?")[0] || "";
+      if (["jpg", "jpeg", "png", "webp", "gif"].includes(ext)) {
+        format = "image";
+      } else if (["mp4", "mov", "avi", "mkv", "webm", "ogg"].includes(ext)) {
+        format = "video";
+      } else if (["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "zip"].includes(ext)) {
+        format = "document";
+      }
+    }
+    if (!format) {
+      const rawFormat = template.header.format === "media" ? template.header.media_type : template.header.format;
+      format = rawFormat?.toLowerCase();
+    } else {
+      format = format.toLowerCase();
+    }
     const fileName = mediaUrl.split("/").pop() || "Document";
 
     if (format === "image") {
@@ -109,7 +164,7 @@ const TemplateMessage: React.FC<TemplateMessageProps> = ({ message, isWindowExpi
   };
   return (
     <BaseMessage message={message} isWindowExpired={isWindowExpired}>
-      <div className={`flex flex-col -mx-3 sm:-mx-4 -my-1.5 mb-1.5 min-w-50 overflow-hidden ${isOutgoing ? "rounded-lg rounded-te-none" : "rounded-lg rounded-ts-none"}`}>
+      <div className={`flex flex-col -mx-3 sm:-mx-4 -my-1.5 mb-1.5 min-w-50 max-w-[300px] overflow-hidden ${isOutgoing ? "rounded-lg rounded-te-none" : "rounded-lg rounded-ts-none"}`}>
         {isLimitedTimeOffer && (
           <div className="dark:bg-(--card-color) p-3 border-b border-slate-100 dark:border-(--card-border-color) rounded-t-lg">
             <div className="flex items-start gap-3">
@@ -163,7 +218,7 @@ const TemplateMessage: React.FC<TemplateMessageProps> = ({ message, isWindowExpi
           <>
             {template.header.format === "text" && template.header.text && (
               <div className="ps-4 pe-3 py-3 border-b border-slate-200 dark:border-(--card-border-color)">
-                <h4 className="font-bold text-[14px] leading-tight dark:text-white">{template.header.text}</h4>
+                <h4 className="font-bold text-[14px] leading-tight dark:text-white">{getRenderedHeader()}</h4>
               </div>
             )}
             {renderHeaderMedia()}
@@ -176,7 +231,7 @@ const TemplateMessage: React.FC<TemplateMessageProps> = ({ message, isWindowExpi
         )}
 
         <div className="ps-4 pe-3 py-2">
-          <p className="whitespace-normal break-all leading-normal text-[13.5px] dark:text-white">{template.message_body}</p>
+          <p className="whitespace-normal break-all leading-normal text-[13.5px] dark:text-white">{getRenderedBody()}</p>
         </div>
 
         {template.footer_text && (
@@ -194,7 +249,7 @@ const TemplateMessage: React.FC<TemplateMessageProps> = ({ message, isWindowExpi
               const mediaUrl = header?.media_url || header?.handle || null;
 
               return (
-                <div key={idx} className="shrink-0 w-50 bg-white dark:bg-(--card-color) rounded-lg shadow-md border border-slate-100 dark:border-(--card-border-color) overflow-hidden flex flex-col">
+                <div key={idx} className="shrink-0 w-[260px] bg-white dark:bg-(--card-color) rounded-lg shadow-md border border-slate-100 dark:border-(--card-border-color) overflow-hidden flex flex-col">
                   <div className="h-32 bg-slate-100 dark:bg-(--card-color) flex items-center justify-center text-slate-300 relative overflow-hidden shrink-0">{mediaUrl ? <Images src={mediaUrl} alt={`Card ${idx + 1}`} fill className="object-cover" unoptimized /> : isCarouselProduct ? <ShoppingBag size={32} /> : <BookImage size={32} />}</div>
 
                   <div className="p-3 flex-1 flex flex-col min-h-0 dark:bg-(--dark-body)">

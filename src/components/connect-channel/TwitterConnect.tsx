@@ -12,6 +12,8 @@ import { ArrowRight, Check, Link2Off, Loader2, RefreshCw } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { TwitterConnectModal } from "./TwitterConnectModal";
+import Image from "next/image";
+
 
 const TwitterIcon = () => (
   <svg className="w-7 h-7 text-[#000000] dark:text-white" viewBox="0 0 24 24" fill="currentColor">
@@ -123,7 +125,7 @@ const TwitterConnect = () => {
                   <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Connected Account</p>
                   <div className="flex items-center gap-3">
                     {twitterConn.profile_image_url && (
-                      <img src={twitterConn.profile_image_url} alt="Twitter" className="w-10 h-10 rounded-full" />
+                      <Image unoptimized width={1000} height={1000} src={twitterConn.profile_image_url} alt="Twitter" className="w-10 h-10 rounded-full" />
                     )}
                     <div>
                       <p className="text-sm font-bold text-slate-900 dark:text-white">@{twitterConn.username || "twitter_user"}</p>

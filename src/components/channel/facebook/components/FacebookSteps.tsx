@@ -1,21 +1,9 @@
 "use client";
 
+import { FacebookStepsProps } from "@/src/types/channel";
 import React from "react";
 
-interface Step {
-  title: string;
-  description: string;
-}
 
-interface FacebookStepsProps {
-  stepsSection: {
-    badge?: string;
-    title: string;
-    subtitle?: string;
-    steps: Step[];
-  };
-  fbGradient: string;
-}
 
 export default function FacebookSteps({ stepsSection, fbGradient }: FacebookStepsProps) {
   if (stepsSection.steps.length === 0) return null;
@@ -33,7 +21,7 @@ export default function FacebookSteps({ stepsSection, fbGradient }: FacebookStep
             {stepsSection.title}
           </h2>
           {stepsSection.subtitle && (
-            <p className="text-[17px] font-medium text-slate-600 leading-relaxed">
+            <p className="text-[15px] font-medium text-slate-600 leading-relaxed">
               {stepsSection.subtitle}
             </p>
           )}

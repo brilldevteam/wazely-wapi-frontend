@@ -1,22 +1,26 @@
-import { ChannelInfo } from "@/src/data/ChannelConnectionInfo";
+import { ChannelConnectionGuideProps } from "@/src/types/channel";
 import { Info, Lightbulb } from "lucide-react";
 
-interface ChannelConnectionGuideProps {
-  info: ChannelInfo;
-}
-
-export const ChannelConnectionGuide = ({ info }: ChannelConnectionGuideProps) => {
+export const ChannelConnectionGuide = ({
+  info,
+}: ChannelConnectionGuideProps) => {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
       {/* Brand Card with subtle gradient */}
-      <div className={`sm:p-6 p-4 rounded-lg bg-gradient-to-br ${info.gradientClass} border border-slate-200/60 dark:border-white/5 shadow-sm`}>
+      <div
+        className={`sm:p-6 p-4 rounded-lg bg-gradient-to-br ${info.gradientClass} border border-slate-200/60 dark:border-white/5 shadow-sm`}
+      >
         <div className="flex items-center gap-3">
           <div className="p-3 bg-white dark:bg-(--dark-body) rounded-lg shadow-sm border border-slate-100 dark:border-(--card-border-color)">
             {info.icon}
           </div>
           <div>
-            <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100">{info.title}</h4>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">{info.subtitle}</p>
+            <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100">
+              {info.title}
+            </h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+              {info.subtitle}
+            </p>
           </div>
         </div>
 
@@ -38,7 +42,9 @@ export const ChannelConnectionGuide = ({ info }: ChannelConnectionGuideProps) =>
 
       {/* Steps List (Vertical Timeline Style) */}
       <div className="sm:p-6 p-4 rounded-lg bg-white dark:bg-(--card-color) border border-slate-200/60 dark:border-(--card-border-color) shadow-sm">
-        <h5 className="text-sm font-bold text-slate-800 dark:text-slate-200 mb-6">Connection Steps</h5>
+        <h5 className="text-sm font-bold text-slate-800 dark:text-slate-200 mb-6">
+          Connection Steps
+        </h5>
         <div className="relative pl-6 rtl:pl-0 rtl:pr-6 border-l-2 rtl:border-l-0 rtl:border-r-2 border-slate-100 dark:border-(--card-border-color) space-y-6">
           {info.steps.map((step, idx) => (
             <div key={idx} className="relative group">
@@ -50,8 +56,12 @@ export const ChannelConnectionGuide = ({ info }: ChannelConnectionGuideProps) =>
                 <span className="text-xs font-bold text-primary bg-primary/10 dark:bg-primary/20 px-2 py-0.5 rounded-full">
                   Step {idx + 1}
                 </span>
-                <h6 className="text-sm font-bold text-slate-700 dark:text-slate-200 mt-1.5">{step.title}</h6>
-                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mt-1 break-all whitespace-normal ">{step.description}</p>
+                <h6 className="text-sm font-bold text-slate-700 dark:text-slate-200 mt-1.5">
+                  {step.title}
+                </h6>
+                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mt-1 break-all whitespace-normal ">
+                  {step.description}
+                </p>
               </div>
             </div>
           ))}
@@ -60,15 +70,24 @@ export const ChannelConnectionGuide = ({ info }: ChannelConnectionGuideProps) =>
 
       {/* Features Grid */}
       <div className="sm:p-6 p-4 rounded-lg bg-white dark:bg-(--card-color) border border-slate-200/60 dark:border-(--card-border-color) shadow-sm">
-        <h5 className="text-sm font-bold text-slate-800 dark:text-slate-200 mb-4">What's Unlocked?</h5>
+        <h5 className="text-sm font-bold text-slate-800 dark:text-slate-200 mb-4">
+          What's Unlocked?
+        </h5>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {info.features.map((feat, idx) => (
-            <div key={idx} className="p-4 rounded-lg bg-slate-50 dark:bg-white/2 border border-slate-100 dark:border-(--card-border-color) space-y-2 hover:-translate-y-0.5 transition-all duration-300">
+            <div
+              key={idx}
+              className="p-4 rounded-lg bg-slate-50 dark:bg-white/2 border border-slate-100 dark:border-(--card-border-color) space-y-2 hover:-translate-y-0.5 transition-all duration-300"
+            >
               <div className="p-2 bg-white dark:bg-(--dark-body) w-fit rounded-lg shadow-sm border border-slate-100 dark:border-(--card-border-color)">
                 {feat.icon}
               </div>
-              <h6 className="text-sm font-bold text-slate-800 dark:text-slate-200">{feat.title}</h6>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-normal">{feat.description}</p>
+              <h6 className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                {feat.title}
+              </h6>
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-normal">
+                {feat.description}
+              </p>
             </div>
           ))}
         </div>

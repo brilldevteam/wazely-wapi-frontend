@@ -1,28 +1,13 @@
 "use client";
 
 import { PROTIPSSHORTCON, PROTIPSSHORTLINK } from "@/src/data";
+import { steps } from "@/src/data/shortLink";
 import { ShortLinkStepsProps } from "@/src/types/shortLink";
 import { Check, Layout, Lightbulb, Target } from "lucide-react";
 import React from "react";
 
 const ShortLinkSteps: React.FC<ShortLinkStepsProps> = ({ variant = "horizontal" }) => {
-  const steps = [
-    {
-      id: 1,
-      title: "Configure WhatsApp Number",
-      description: "Select your country to automatically apply the correct dial code. Enter your active WhatsApp phone number without any leading zeros or special characters for a seamless connection.",
-    },
-    {
-      id: 2,
-      title: "Add Custom Welcome Message",
-      description: "Draft a personalized message that will be pre-filled in your customer's input field when they click your link. This makes it easier for them to start the conversation with you.",
-    },
-    {
-      id: 3,
-      title: "Generate & Deploy Link",
-      description: "Once generated, you'll receive a professional short link and a scan-ready QR code. You can now copy the link or download the QR code to use across your marketing channels.",
-    },
-  ];
+  
 
   if (variant === "vertical") {
     return (

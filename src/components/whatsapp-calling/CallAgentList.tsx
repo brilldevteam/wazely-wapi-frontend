@@ -38,12 +38,12 @@ const CallAgentList = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const [visibleColumns, setVisibleColumns] = useState([
-    { id: "Agent Name", label: "Agent Name", isVisible: true },
-    { id: "AI Model", label: "AI Model", isVisible: true },
-    { id: "Voice config", label: "Voice config", isVisible: true },
-    { id: "Status", label: "Status", isVisible: true },
-    { id: "Created", label: "Created", isVisible: true },
-    { id: "Actions", label: "Actions", isVisible: true },
+    { id: "Agent Name", label: t("column_header_agent_name", "Agent Name"), isVisible: true },
+    { id: "AI Model", label: t("column_header_ai_model", "AI Model"), isVisible: true },
+    { id: "Voice config", label: t("column_header_voice_config", "Voice config"), isVisible: true },
+    { id: "Status", label: t("column_header_status", "Status"), isVisible: true },
+    { id: "Created", label: t("column_header_created", "Created"), isVisible: true },
+    { id: "Actions", label: t("column_header_actions", "Actions"), isVisible: true },
   ]);
 
   const {
@@ -70,14 +70,18 @@ const CallAgentList = () => {
     setLocalStatuses((prev) => ({ ...prev, [id]: !currentStatus }));
     try {
       await updateCallAgent({ id, body: { is_active: !currentStatus } }).unwrap();
-      toast.success(`Agent ${!currentStatus ? "activated" : "deactivated"} successfully`);
+      toast.success(
+        !currentStatus
+          ? t("agent_activated_success", "Agent activated successfully")
+          : t("agent_deactivated_success", "Agent deactivated successfully")
+      );
     } catch (error: any) {
       setLocalStatuses((prev) => {
         const next = { ...prev };
         delete next[id];
         return next;
       });
-      toast.error(error?.data?.message || "Failed to update status");
+      toast.error(error?.data?.message || t("failed_update_status", "Failed to update status"));
     }
   };
 
@@ -85,10 +89,10 @@ const CallAgentList = () => {
     if (deleteId) {
       try {
         await deleteCallAgents([deleteId]).unwrap();
-        toast.success("Agent deleted successfully");
+        toast.success(t("agent_deleted_success", "Agent deleted successfully"));
         setDeleteId(null);
       } catch (error: any) {
-        toast.error(error?.data?.message || "Failed to delete agent");
+        toast.error(error?.data?.message || t("failed_delete_agent", "Failed to delete agent"));
       }
     }
   };
@@ -96,10 +100,10 @@ const CallAgentList = () => {
   const confirmBulkDelete = async () => {
     try {
       await deleteCallAgents(selectedIds).unwrap();
-      toast.success(`${selectedIds.length} agents deleted successfully`);
+      toast.success(t("agents_deleted_success", "{{count}} agents deleted successfully", { count: selectedIds.length }));
       setSelectedIds([]);
     } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to delete agents");
+      toast.error(error?.data?.message || t("failed_delete_agents", "Failed to delete agents"));
     } finally {
       setBulkConfirmOpen(false);
     }
@@ -107,7 +111,7 @@ const CallAgentList = () => {
 
   const columns: Column<WhatsappCallAgent>[] = [
     {
-      header: "Agent Name",
+      header: t("column_header_agent_name", "Agent Name"),
       sortable: true,
       sortKey: "name",
       cell: (row) => (
@@ -123,7 +127,7 @@ const CallAgentList = () => {
       ),
     },
     {
-      header: "AI Model",
+      header: t("column_header_ai_model", "AI Model"),
       cell: (row) => (
         <Badge variant="outline" className="bg-blue-50 text-blue-600 dark:border-(--card-border-color) border-blue-100 dark:bg-blue-500/10 dark:text-blue-400">
           {row.ai_config.model_id}
@@ -131,7 +135,7 @@ const CallAgentList = () => {
       ),
     },
     {
-      header: "Voice config",
+      header: t("column_header_voice_config", "Voice config"),
       cell: (row) => (
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-1.5 text-xs text-slate-500 italic">
@@ -144,7 +148,7 @@ const CallAgentList = () => {
       ),
     },
     {
-      header: "Status",
+      header: t("column_header_status", "Status"),
       sortable: true,
       sortKey: "is_active",
       cell: (row) => (
@@ -154,16 +158,16 @@ const CallAgentList = () => {
       ),
     },
     {
-      header: "Created",
+      header: t("column_header_created", "Created"),
       sortable: true,
       sortKey: "created_at",
       cell: (row) => <span className="text-slate-500 text-sm">{formatDate(row.created_at)}</span>,
     },
     {
-      header: "Actions",
+      header: t("column_header_actions", "Actions"),
       cell: (row) => (
         <div className="flex justify-end gap-2">
-          <Button variant="outline" size="icon" className="shadow-xs h-10 w-10 dark:bg-(--page-body-bg) text-primary hover:text-primary hover:bg-primary/10 border-none" onClick={() => router.push(`${ROUTES.AICallLogs}?agentId=${row._id}`)} title="Call Recording History">
+          <Button variant="outline" size="icon" className="shadow-xs h-10 w-10 dark:bg-(--page-body-bg) text-primary hover:text-primary hover:bg-primary/10 border-none" onClick={() => router.push(`${ROUTES.AICallLogs}?agentId=${row._id}`)} title={t("call_recording_history_tooltip", "Call Recording History")}>
             <History size={16} />
           </Button>
           <Button
@@ -174,7 +178,7 @@ const CallAgentList = () => {
               setBulkAssignAgent({ id: row._id, name: row.name });
               setIsBulkAssignOpen(true);
             }}
-            title="Bulk Assign to Contacts/Tags"
+            title={t("bulk_assign_tooltip", "Bulk Assign to Contacts/Tags")}
           >
             <UserPlus size={16} />
           </Button>
@@ -203,16 +207,16 @@ const CallAgentList = () => {
           setPage(1);
         }}
         searchTerm={searchTerm}
-        searchPlaceholder="Search agents by name..."
+        searchPlaceholder={t("search_agents_placeholder", "Search agents by name...")}
         onRefresh={refetch}
         onAddClick={() => router.push(ROUTES.AICallAgentsCreate)}
-        addLabel="Create Call Assistant"
+        addLabel={t("create_call_assistant", "Create Call Assistant")}
         addPermission="create.whatsapp_calling"
         rightContent={
           <Can permission="update.whatsapp_calling">
             <Button variant="outline" onClick={() => setIsSettingsOpen(true)} className="flex items-center gap-2.5 px-4.5! py-5 bg-white dark:bg-(--card-color) border-slate-200 dark:border-(--card-border-color) h-12 rounded-lg font-bold transition-all active:scale-95 group shadow-sm text-slate-700 dark:text-gray-300 hover:bg-slate-50 dark:hover:bg-(--table-hover)">
               <Settings2 className="w-5 h-5 transition-transform group-hover:rotate-45" />
-              <span className="inline">Call Settings</span>
+              <span className="inline">{t("call_settings_btn", "Call Settings")}</span>
             </Button>
           </Can>
         }
@@ -227,7 +231,7 @@ const CallAgentList = () => {
       <div className="bg-white dark:bg-(--card-color) rounded-xl border border-slate-200/60 dark:border-(--card-border-color) shadow-sm overflow-hidden mt-8">
         <DataTable
           data={agents}
-          columns={columns.filter((col) => visibleColumns.find((vc) => vc.id === col.header)?.isVisible !== false)}
+          columns={columns.filter((col, idx) => visibleColumns[idx]?.isVisible !== false)}
           isLoading={isLoading}
           isFetching={isFetching || isDeleting}
           totalCount={totalCount}
@@ -239,18 +243,19 @@ const CallAgentList = () => {
           selectedIds={selectedIds}
           onSelectionChange={setSelectedIds}
           getRowId={(item) => item._id}
-          emptyMessage={searchTerm ? `No agents found matching "${searchTerm}"` : "No AI call agents configured. Start by creating one!"}
+          emptyMessage={searchTerm ? t("no_agents_found_matching", 'No agents found matching "{{search}}"', { search: searchTerm }) : t("no_agents_configured", "No AI call agents configured. Start by creating one!")}
           onSortChange={(key, order) => {
             setSortBy(key);
             setSortOrder(order);
             setPage(1);
           }}
+          actionPermission={["update.whatsapp_calling", "delete.whatsapp_calling"]}
         />
       </div>
 
-      <ConfirmModal isOpen={!!deleteId} onClose={() => setDeleteId(null)} onConfirm={handleDelete} isLoading={isDeleting} title="Delete Call Agent?" subtitle="This will permanently delete the agent. You won't be able to recover it." confirmText="Delete Agent" variant="danger" />
+      <ConfirmModal isOpen={!!deleteId} onClose={() => setDeleteId(null)} onConfirm={handleDelete} isLoading={isDeleting} title={t("delete_call_agent_title", "Delete Call Agent?")} subtitle={t("delete_call_agent_subtitle", "This will permanently delete the agent. You won't be able to recover it.")} confirmText={t("delete_agent_confirm", "Delete Agent")} variant="danger" />
 
-      <ConfirmModal isOpen={bulkConfirmOpen} onClose={() => setBulkConfirmOpen(false)} onConfirm={confirmBulkDelete} isLoading={isDeleting} title="Bulk Delete Agents?" subtitle={`You are about to delete ${selectedIds.length} call agents. This action cannot be undone.`} confirmText="Delete Selected" variant="danger" />
+      <ConfirmModal isOpen={bulkConfirmOpen} onClose={() => setBulkConfirmOpen(false)} onConfirm={confirmBulkDelete} isLoading={isDeleting} title={t("bulk_delete_agents_title", "Bulk Delete Agents?")} subtitle={t("bulk_delete_agents_subtitle", "You are about to delete {{count}} call agents. This action cannot be undone.", { count: selectedIds.length })} confirmText={t("delete_selected_confirm", "Delete Selected")} variant="danger" />
 
       {bulkAssignAgent && <BulkAssignAgentModal isOpen={isBulkAssignOpen} onClose={() => setIsBulkAssignOpen(false)} agentId={bulkAssignAgent.id} agentName={bulkAssignAgent.name} />}
 

@@ -1,31 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React from "react";
-import type { ApexOptions } from "apexcharts";
-import dynamic from "next/dynamic";
-import { TrendingUp, Activity } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { useTheme } from "next-themes";
 import { Card } from "@/src/elements/ui/card";
+import { InsightsTrendChartProps } from "@/src/types/facebook";
+import type { ApexOptions } from "apexcharts";
+import { Activity, TrendingUp } from "lucide-react";
+import { useTheme } from "next-themes";
+import dynamic from "next/dynamic";
+import React from "react";
+import { useTranslation } from "react-i18next";
 
-const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
+const ReactApexChart = dynamic(() => import("react-apexcharts"), {
+  ssr: false,
+});
 
-interface ChartDataPoint {
-  date: string;
-  spend: number;
-  impressions: number;
-  reach: number;
-  clicks: number;
-  conversions: number;
-}
-
-interface InsightsTrendChartProps {
-  data?: ChartDataPoint[];
-  isLoading: boolean;
-}
-
-const InsightsTrendChart: React.FC<InsightsTrendChartProps> = ({ data = [], isLoading }) => {
+const InsightsTrendChart: React.FC<InsightsTrendChartProps> = ({
+  data = [],
+  isLoading,
+}) => {
   const { t } = useTranslation();
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
@@ -163,10 +155,17 @@ const InsightsTrendChart: React.FC<InsightsTrendChartProps> = ({ data = [], isLo
       <div className="min-h-[300px] relative outline-none">
         {isLoading ? (
           <div className="absolute inset-0 bg-slate-100/50 dark:bg-(--card-color) rounded-lg animate-pulse flex items-center justify-center">
-            <p className="text-slate-400 font-bold">{t("loading_charts", "Loading charts...")}</p>
+            <p className="text-slate-400 font-bold">
+              {t("loading_charts", "Loading charts...")}
+            </p>
           </div>
         ) : (
-          <ReactApexChart options={options} series={series} type="line" height={300} />
+          <ReactApexChart
+            options={options}
+            series={series}
+            type="line"
+            height={300}
+          />
         )}
       </div>
     </Card>

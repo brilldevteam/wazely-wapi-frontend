@@ -63,3 +63,47 @@ export interface ShopifyProductsResponse {
     };
   };
 }
+
+export interface SecretInputProps {
+  id: string;
+  label: string;
+  value: string;
+  placeholder?: string;
+  onChange: (v: string) => void;
+  disabled?: boolean;
+}
+
+export interface FormState {
+  shop_domain: string;
+  admin_api_access_token: string;
+  client_id: string;
+  client_secret: string;
+  is_active: boolean;
+}
+
+export interface ShopifyConfigFormProps {
+  form: FormState;
+  isDirty: boolean;
+  isConnected: boolean;
+  isSaving: boolean;
+  onChange: (field: keyof FormState, value: string | boolean) => void;
+  onSave: () => void;
+  onDisconnectClick: () => void;
+  onRefresh: () => void;
+}
+
+export interface FormState {
+  shop_domain: string;
+  admin_api_access_token: string;
+  client_id: string;
+  client_secret: string;
+  is_active: boolean;
+}
+
+export const EMPTY_FORM: FormState = {
+  shop_domain: "",
+  admin_api_access_token: "",
+  client_id: "",
+  client_secret: "",
+  is_active: true,
+};

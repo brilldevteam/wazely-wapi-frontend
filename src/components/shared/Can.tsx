@@ -1,16 +1,16 @@
-import React from "react";
 import { usePermissions } from "@/src/hooks/usePermissions";
+import React from "react";
+import { CanProps } from "@/src/types/shared";
 
-interface CanProps {
-  permission?: string;
-  anyPermission?: string[];
-  module?: string;
-  children: React.ReactNode;
-  fallback?: React.ReactNode;
-}
-
-const Can: React.FC<CanProps> = ({ permission, anyPermission, module, children, fallback = null }) => {
-  const { hasPermission, hasAnyPermission, hasModulePermission } = usePermissions();
+const Can: React.FC<CanProps> = ({
+  permission,
+  anyPermission,
+  module,
+  children,
+  fallback = null,
+}) => {
+  const { hasPermission, hasAnyPermission, hasModulePermission } =
+    usePermissions();
 
   let allowed = false;
   if (permission) {

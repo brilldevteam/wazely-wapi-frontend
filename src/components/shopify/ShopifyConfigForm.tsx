@@ -1,32 +1,21 @@
 "use client";
 
-import React from "react";
-import { AlertTriangle, Loader2, RefreshCw, Store, Trash2, Zap } from "lucide-react";
 import { Button } from "@/src/elements/ui/button";
+import { Card, CardContent } from "@/src/elements/ui/card";
 import { Input } from "@/src/elements/ui/input";
 import { Label } from "@/src/elements/ui/label";
 import { Switch } from "@/src/elements/ui/switch";
-import { Card, CardContent } from "@/src/elements/ui/card";
+import { ShopifyConfigFormProps } from "@/src/types/shopify";
+import {
+  AlertTriangle,
+  Loader2,
+  RefreshCw,
+  Store,
+  Trash2,
+  Zap,
+} from "lucide-react";
+import React from "react";
 import { SecretInput } from "./SecretInput";
-
-interface FormState {
-  shop_domain: string;
-  admin_api_access_token: string;
-  client_id: string;
-  client_secret: string;
-  is_active: boolean;
-}
-
-interface ShopifyConfigFormProps {
-  form: FormState;
-  isDirty: boolean;
-  isConnected: boolean;
-  isSaving: boolean;
-  onChange: (field: keyof FormState, value: string | boolean) => void;
-  onSave: () => void;
-  onDisconnectClick: () => void;
-  onRefresh: () => void;
-}
 
 export const ShopifyConfigForm: React.FC<ShopifyConfigFormProps> = ({
   form,
@@ -44,8 +33,12 @@ export const ShopifyConfigForm: React.FC<ShopifyConfigFormProps> = ({
         {/* Card header */}
         <div className="flex items-start justify-between pb-4 border-b border-gray-100 dark:border-(--card-border-color)">
           <div className="space-y-1">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-300">Store Configuration</h3>
-            <p className="text-gray-500 text-sm">Configure your Shopify integration settings below.</p>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-300">
+              Store Configuration
+            </h3>
+            <p className="text-gray-500 text-sm">
+              Configure your Shopify integration settings below.
+            </p>
           </div>
           <Button
             type="button"
@@ -62,7 +55,10 @@ export const ShopifyConfigForm: React.FC<ShopifyConfigFormProps> = ({
 
         {/* Shop Domain */}
         <div className="space-y-2">
-          <Label htmlFor="shop_domain" className="text-sm font-semibold text-gray-700 dark:text-gray-400 flex items-center gap-1.5">
+          <Label
+            htmlFor="shop_domain"
+            className="text-sm font-semibold text-gray-700 dark:text-gray-400 flex items-center gap-1.5"
+          >
             <Store size={14} className="text-primary" />
             Shop Domain
           </Label>
@@ -76,7 +72,11 @@ export const ShopifyConfigForm: React.FC<ShopifyConfigFormProps> = ({
             className="h-11 border-(--input-border-color) bg-(--input-color) dark:border-(--card-border-color) focus-visible:ring-primary focus-visible:border-primary"
           />
           <p className="text-xs text-slate-500 dark:text-gray-400 ml-0.5">
-            Your store&apos;s Shopify domain. Do not include <code className="bg-slate-100 dark:bg-(--dark-body) px-1 rounded">https://</code>.
+            Your store&apos;s Shopify domain. Do not include{" "}
+            <code className="bg-slate-100 dark:bg-(--dark-body) px-1 rounded">
+              https://
+            </code>
+            .
           </p>
         </div>
 
@@ -113,8 +113,12 @@ export const ShopifyConfigForm: React.FC<ShopifyConfigFormProps> = ({
         {/* Active Toggle */}
         <div className="flex items-center justify-between p-4 rounded-xl bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) dark:border-(--card-border-color)">
           <div>
-            <p className="text-sm font-bold text-slate-800 dark:text-white">Activate Integration</p>
-            <p className="text-xs text-slate-400 mt-0.5">Enable or pause the Shopify connection.</p>
+            <p className="text-sm font-bold text-slate-800 dark:text-white">
+              Activate Integration
+            </p>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Enable or pause the Shopify connection.
+            </p>
           </div>
           <Switch
             checked={form.is_active}
@@ -132,9 +136,14 @@ export const ShopifyConfigForm: React.FC<ShopifyConfigFormProps> = ({
             className="flex-1 h-11 rounded-lg font-bold gap-2 bg-primary text-white shadow-md shadow-primary/20 disabled:opacity-50"
           >
             {isSaving ? (
-              <><Loader2 size={16} className="animate-spin" /> Saving…</>
+              <>
+                <Loader2 size={16} className="animate-spin" /> Saving…
+              </>
             ) : (
-              <><Zap size={16} /> {isConnected ? "Update Configuration" : "Connect Shopify"}</>
+              <>
+                <Zap size={16} />{" "}
+                {isConnected ? "Update Configuration" : "Connect Shopify"}
+              </>
             )}
           </Button>
 

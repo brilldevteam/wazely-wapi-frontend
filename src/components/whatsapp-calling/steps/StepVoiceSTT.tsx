@@ -8,11 +8,14 @@ import { useFormikContext } from "formik";
 import { History, Mic } from "lucide-react";
 import InfoModal from "../../common/InfoModal";
 
+import { useTranslation } from "react-i18next";
+
 const StepVoiceSTT = () => {
+  const { t } = useTranslation();
   const { values, getFieldProps } = useFormikContext<any>();
   const STEPVOICESTTLIST = [
-    { label: "Speech-to-Text Provider", value: values.voice_config.stt_provider, badge: "Deep Analysis" },
-    { label: "Text-to-Speech Provider", value: values.voice_config.tts_provider, badge: "Crystal Clear" },
+    { label: t("stt_provider", "Speech-to-Text Provider"), value: values.voice_config.stt_provider, badge: t("deep_analysis", "Deep Analysis") },
+    { label: t("tts_provider", "Text-to-Speech Provider"), value: values.voice_config.tts_provider, badge: t("crystal_clear", "Crystal Clear") },
   ];
 
   return (
@@ -21,24 +24,24 @@ const StepVoiceSTT = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-primary font-semibold text-lg">
             <Mic size={22} />
-            <span>Voice & STT (ElevenLabs)</span>
+            <span>{t("voice_stt_title", "Voice & STT (ElevenLabs)")}</span>
           </div>
           <InfoModal dataKey="voice_stt" iconSize={22} className="text-gray-400 hover:text-primary transition-colors" />
         </div>
-        <p className="text-sm text-muted-foreground">Define how your assistant sounds and how it listens to callers.</p>
+        <p className="text-sm text-muted-foreground">{t("define_assistant_sounds_desc", "Define how your assistant sounds and how it listens to callers.")}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <div className="space-y-6">
           <div className="space-y-2">
-            <Label className="text-sm font-semibold">ElevenLabs API Key</Label>
+            <Label className="text-sm font-semibold">{t("elevenlabs_api_key", "ElevenLabs API Key")}</Label>
             <Input type="password" placeholder="••••••••••••••••" {...getFieldProps("voice_config.api_key")} className="h-11 rounded-lg shadow-inner bg-slate-50/50" />
-            <p className="text-[11px] text-slate-500">Your secure key for text-to-speech generation.</p>
+            <p className="text-[11px] text-slate-500">{t("secure_key_tts_desc", "Your secure key for text-to-speech generation.")}</p>
           </div>
 
           <div className="flex items-center gap-4 sm:p-5 p-2 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-100 dark:border-amber-900/50">
             <History size={20} className="text-amber-600 shrink-0" />
-            <p className="text-xs text-amber-700 dark:text-amber-200">Transcription is enabled by default for all calls to ensure accuracy and history retrieval.</p>
+            <p className="text-xs text-amber-700 dark:text-amber-200">{t("transcription_enabled_desc", "Transcription is enabled by default for all calls to ensure accuracy and history retrieval.")}</p>
           </div>
         </div>
 

@@ -26,6 +26,16 @@ const ProfileContactSummary = ({ profileData, onDelete, onOpenTagModal, onRemove
         {profileData?.contact?.avatar ? <Image src={profileData?.contact?.avatar} alt={profileData?.contact?.name} width={64} height={64} className="object-cover" unoptimized /> : getInitials(app_name || "W")}
       </div>
       <h3 className="font-bold text-slate-900 dark:text-white truncate">{isAgent && user?.is_phoneno_hide ? "Customer" : maskSensitiveData(profileData?.contact?.phone_number, "phone", is_demo_mode)}</h3>
+      {profileData?.contact?.whatsapp_username && (
+        <span className="text-xs text-slate-400 dark:text-gray-400 mt-0.5">
+          @{profileData.contact.whatsapp_username}
+        </span>
+      )}
+      {profileData?.contact?.whatsapp_bsuid && (
+        <span className="text-xs text-slate-400 dark:text-gray-400 mt-0.5">
+          ID: {profileData.contact.whatsapp_bsuid}
+        </span>
+      )}
       <p className="text-sm text-slate-500 dark:text-gray-500 truncate">{profileData?.contact?.status}</p>
       {!isAgent && (
         <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-8 w-8 text-rose-500 hover:text-rose-600 bg-rose-50 hover:bg-rose-50 dark:bg-red-900/20 dark:hover:bg-rose-500/10 rounded-lg" onClick={onDelete}>

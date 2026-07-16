@@ -1,29 +1,38 @@
 "use client";
 
-import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/src/elements/ui/dialog";
 import { Button } from "@/src/elements/ui/button";
-import { useTranslation } from "react-i18next";
-import { PlayCircle, PauseCircle, Archive, Trash2, AlertCircle, Check } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/src/elements/ui/dialog";
 import { cn } from "@/src/lib/utils";
-
-interface CampaignStatusModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: (status: string) => void;
-  isLoading?: boolean;
-  currentStatus?: string;
-}
+import { CampaignStatusModalProps } from "@/src/types/facebook";
+import {
+  AlertCircle,
+  Archive,
+  Check,
+  PauseCircle,
+  PlayCircle,
+  Trash2,
+} from "lucide-react";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const CampaignStatusModal: React.FC<CampaignStatusModalProps> = ({
   isOpen,
   onClose,
   onConfirm,
   isLoading,
-  currentStatus
+  currentStatus,
 }) => {
   const { t } = useTranslation();
-  const [selectedStatus, setSelectedStatus] = useState<string>(currentStatus?.toLowerCase() || "active");
+  const [selectedStatus, setSelectedStatus] = useState<string>(
+    currentStatus?.toLowerCase() || "active",
+  );
 
   const statuses = [
     {
@@ -54,7 +63,10 @@ const CampaignStatusModal: React.FC<CampaignStatusModalProps> = ({
       bg: "bg-slate-50 dark:bg-slate-500/10",
       border: "border-slate-200 dark:border-slate-500/20",
       activeBg: "bg-slate-500 text-white",
-      desc: t("status_archived_desc", "Campaign is archived for long-term storage."),
+      desc: t(
+        "status_archived_desc",
+        "Campaign is archived for long-term storage.",
+      ),
     },
     {
       id: "deleted",
@@ -86,7 +98,10 @@ const CampaignStatusModal: React.FC<CampaignStatusModalProps> = ({
             {t("update_campaign_status", "Update Campaign Status")}
           </DialogTitle>
           <DialogDescription className="text-slate-500 font-medium">
-            {t("select_new_status", "Choose the target status for this campaign on Facebook.")}
+            {t(
+              "select_new_status",
+              "Choose the target status for this campaign on Facebook.",
+            )}
           </DialogDescription>
         </DialogHeader>
 
@@ -99,27 +114,40 @@ const CampaignStatusModal: React.FC<CampaignStatusModalProps> = ({
                 className={cn(
                   "relative group cursor-pointer p-4 rounded-lg border transition-all active:scale-[0.98]",
                   selectedStatus === status.id
-                    ? cn(status.border, "bg-white dark:bg-(--card-color) shadow-lg")
-                    : "border-(--input-border-color) dark:border-(--card-border-color) hover:border-slate-100 dark:hover:border-(--table-hover) bg-slate-50/50 dark:bg-(--page-body-bg) hover:bg-white dark:hover:bg-(--table-hover)"
+                    ? cn(
+                        status.border,
+                        "bg-white dark:bg-(--card-color) shadow-lg",
+                      )
+                    : "border-(--input-border-color) dark:border-(--card-border-color) hover:border-slate-100 dark:hover:border-(--table-hover) bg-slate-50/50 dark:bg-(--page-body-bg) hover:bg-white dark:hover:bg-(--table-hover)",
                 )}
               >
                 <div className="flex items-center gap-4">
-                  <div className={cn(
-                    "p-3 rounded-xl transition-colors",
-                    selectedStatus === status.id ? status.activeBg : cn(status.bg, status.color)
-                  )}>
+                  <div
+                    className={cn(
+                      "p-3 rounded-xl transition-colors",
+                      selectedStatus === status.id
+                        ? status.activeBg
+                        : cn(status.bg, status.color),
+                    )}
+                  >
                     {status.icon}
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <span className={cn(
-                        "font-bold tracking-tight",
-                        selectedStatus === status.id ? "text-slate-900 dark:text-white" : "text-slate-600 dark:text-slate-400"
-                      )}>
+                      <span
+                        className={cn(
+                          "font-bold tracking-tight",
+                          selectedStatus === status.id
+                            ? "text-slate-900 dark:text-white"
+                            : "text-slate-600 dark:text-slate-400",
+                        )}
+                      >
                         {status.label}
                       </span>
                       {selectedStatus === status.id && (
-                        <div className={cn("p-1 rounded-full", status.activeBg)}>
+                        <div
+                          className={cn("p-1 rounded-full", status.activeBg)}
+                        >
                           <Check className="w-3 h-3" />
                         </div>
                       )}
@@ -144,10 +172,14 @@ const CampaignStatusModal: React.FC<CampaignStatusModalProps> = ({
           </Button>
           <Button
             onClick={() => onConfirm(selectedStatus)}
-            disabled={isLoading || selectedStatus === currentStatus?.toLowerCase()}
+            disabled={
+              isLoading || selectedStatus === currentStatus?.toLowerCase()
+            }
             className="rounded-lg px-8 h-11 font-semibold bg-primary text-white hover:bg-primary/90 shadow-md shadow-primary/20 transition-all active:scale-95"
           >
-            {isLoading ? t("updating", "Updating...") : t("update_status", "Update Status")}
+            {isLoading
+              ? t("updating", "Updating...")
+              : t("update_status", "Update Status")}
           </Button>
         </DialogFooter>
       </DialogContent>

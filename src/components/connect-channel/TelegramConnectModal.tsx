@@ -1,28 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useState } from "react";
+import { Button } from "@/src/elements/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/src/elements/ui/dialog";
-import { Button } from "@/src/elements/ui/button";
 import { Input } from "@/src/elements/ui/input";
 import { Label } from "@/src/elements/ui/label";
-import { toast } from "sonner";
-import { Info, Loader2, Send } from "lucide-react";
 import { useConnectChannelMutation } from "@/src/redux/api/channelsApi";
-
-interface TelegramConnectModalProps {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  workspaceId: string;
-  onSuccess: () => void;
-}
+import { TelegramConnectModalProps } from "@/src/types/channel";
+import { Info, Loader2, Send } from "lucide-react";
+import React, { useState } from "react";
+import { toast } from "sonner";
 
 export const TelegramConnectModal: React.FC<TelegramConnectModalProps> = ({
   isOpen,
@@ -31,7 +25,8 @@ export const TelegramConnectModal: React.FC<TelegramConnectModalProps> = ({
   onSuccess,
 }) => {
   const [botToken, setBotToken] = useState("");
-  const [connectChannel, { isLoading: isConnectingTelegram }] = useConnectChannelMutation();
+  const [connectChannel, { isLoading: isConnectingTelegram }] =
+    useConnectChannelMutation();
 
   const handleConnectTelegram = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +43,9 @@ export const TelegramConnectModal: React.FC<TelegramConnectModalProps> = ({
       }).unwrap();
 
       if (response.success) {
-        toast.success(response.message || "Telegram Bot connected successfully!");
+        toast.success(
+          response.message || "Telegram Bot connected successfully!",
+        );
         onOpenChange(false);
         setBotToken("");
         onSuccess();
@@ -56,7 +53,9 @@ export const TelegramConnectModal: React.FC<TelegramConnectModalProps> = ({
         toast.error(response.error || "Failed to connect Telegram Bot");
       }
     } catch (err: any) {
-      toast.error(err?.data?.error || "Failed to validate or connect Telegram Bot");
+      toast.error(
+        err?.data?.error || "Failed to validate or connect Telegram Bot",
+      );
     }
   };
 
@@ -73,12 +72,16 @@ export const TelegramConnectModal: React.FC<TelegramConnectModalProps> = ({
                 Connect Telegram Bot
               </DialogTitle>
               <DialogDescription className="text-slate-500 dark:text-gray-400 text-sm">
-                Enter your HTTP API bot token to configure custom webhook events and start handling Telegram chats.
+                Enter your HTTP API bot token to configure custom webhook events
+                and start handling Telegram chats.
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-2.5">
-              <Label htmlFor="bot_token" className="text-sm font-bold text-slate-800 dark:text-slate-200">
+              <Label
+                htmlFor="bot_token"
+                className="text-sm font-bold text-slate-800 dark:text-slate-200"
+              >
                 Bot Token <span className="text-red-500">*</span>
               </Label>
               <Input
@@ -96,9 +99,12 @@ export const TelegramConnectModal: React.FC<TelegramConnectModalProps> = ({
               <div className="flex items-start gap-3">
                 <Info className="w-5 h-5 text-[#229ED9] shrink-0 mt-0.5" />
                 <div className="space-y-1">
-                  <span className="text-sm font-extrabold text-slate-800 dark:text-slate-200">How to get a Bot Token?</span>
+                  <span className="text-sm font-extrabold text-slate-800 dark:text-slate-200">
+                    How to get a Bot Token?
+                  </span>
                   <p className="text-xs text-slate-500 dark:text-gray-400 leading-relaxed">
-                    Follow these quick steps on Telegram to obtain your HTTP API bot credential:
+                    Follow these quick steps on Telegram to obtain your HTTP API
+                    bot credential:
                   </p>
                 </div>
               </div>
@@ -117,10 +123,15 @@ export const TelegramConnectModal: React.FC<TelegramConnectModalProps> = ({
                   account.
                 </li>
                 <li>
-                  Send the command <code className="px-1.5 py-0.5 bg-slate-200 dark:bg-(--dark-body) rounded font-semibold text-slate-800 dark:text-slate-100 font-mono text-[11px]">/newbot</code> and select a display name and unique username.
+                  Send the command{" "}
+                  <code className="px-1.5 py-0.5 bg-slate-200 dark:bg-(--dark-body) rounded font-semibold text-slate-800 dark:text-slate-100 font-mono text-[11px]">
+                    /newbot
+                  </code>{" "}
+                  and select a display name and unique username.
                 </li>
                 <li>
-                  Copy the generated **HTTP API Token** and paste it in the field above.
+                  Copy the generated **HTTP API Token** and paste it in the
+                  field above.
                 </li>
               </ol>
             </div>

@@ -1,23 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import {
+  useDeleteFbAdMutation,
+  useGetAdsByAdSetQuery,
+} from "@/src/redux/api/facebookApi";
+import CommonHeader from "@/src/shared/CommonHeader";
+import ConfirmModal from "@/src/shared/ConfirmModal";
+import { DataTable } from "@/src/shared/DataTable";
+import useDebounce from "@/src/utils/hooks/useDebounce";
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { DataTable } from "@/src/shared/DataTable";
-import { useGetAdsByAdSetQuery, useDeleteFbAdMutation } from "@/src/redux/api/facebookApi";
-import { getAdColumns } from "../columns";
 import { toast } from "sonner";
-import ConfirmModal from "@/src/shared/ConfirmModal";
-import CommonHeader from "@/src/shared/CommonHeader";
-import useDebounce from "@/src/utils/hooks/useDebounce";
+import { getAdColumns } from "../columns";
 
+import { AdListProps } from "@/src/types/facebook";
 import { useRouter } from "next/navigation";
-
-interface AdListProps {
-  adsetId: string;
-  rightContent?: React.ReactNode;
-  backBtn?: boolean;
-}
 
 const AdList: React.FC<AdListProps> = ({ adsetId, rightContent, backBtn }) => {
   const { t } = useTranslation();
@@ -41,7 +39,7 @@ const AdList: React.FC<AdListProps> = ({ adsetId, rightContent, backBtn }) => {
       search: debouncedSearch,
       sortBy,
       sortOrder,
-    }
+    },
   });
 
   const handleDelete = async () => {
@@ -55,26 +53,34 @@ const AdList: React.FC<AdListProps> = ({ adsetId, rightContent, backBtn }) => {
     }
   };
 
-  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({});
+  const [columnVisibility, setColumnVisibility] = useState<
+    Record<string, boolean>
+  >({});
 
-  const sourceColumns = useMemo(() => getAdColumns(
-    t,
-    router,
-    (id) => setDeleteId(id)
-  ), [t, router]);
+  const sourceColumns = useMemo(
+    () => getAdColumns(t, router, (id) => setDeleteId(id)),
+    [t, router],
+  );
 
-  const visibleColumnsState = useMemo(() => sourceColumns.map(c => ({
-    id: c.header,
-    label: c.header,
-    isVisible: columnVisibility[c.header] ?? true
-  })), [sourceColumns, columnVisibility]);
+  const visibleColumnsState = useMemo(
+    () =>
+      sourceColumns.map((c) => ({
+        id: c.header,
+        label: c.header,
+        isVisible: columnVisibility[c.header] ?? true,
+      })),
+    [sourceColumns, columnVisibility],
+  );
 
-  const activeColumns = useMemo(() => sourceColumns.filter(c => columnVisibility[c.header] ?? true), [sourceColumns, columnVisibility]);
+  const activeColumns = useMemo(
+    () => sourceColumns.filter((c) => columnVisibility[c.header] ?? true),
+    [sourceColumns, columnVisibility],
+  );
 
   const handleColumnToggle = (columnId: string) => {
-    setColumnVisibility(prev => ({
+    setColumnVisibility((prev) => ({
       ...prev,
-      [columnId]: !(prev[columnId] ?? true)
+      [columnId]: !(prev[columnId] ?? true),
     }));
   };
 
@@ -120,7 +126,10 @@ const AdList: React.FC<AdListProps> = ({ adsetId, rightContent, backBtn }) => {
         sortBy={sortBy}
         sortOrder={sortOrder}
         getRowId={(item) => item.id || item._id}
-        emptyMessage={searchTerm ? t("no_results_for", { searchTerm }) : t("no_ads_found")}
+        emptyMessage={
+          searchTerm ? t("no_results_for", { searchTerm }) : t("no_ads_found")
+        }
+        actionPermission={["update.facebook_ads", "delete.facebook_ads"]}
       />
 
       <ConfirmModal

@@ -4,13 +4,32 @@
 import { Button } from "@/src/elements/ui/button";
 import { Skeleton } from "@/src/elements/ui/skeleton";
 import { useGetAgentDataQuery } from "@/src/redux/api/agentApi";
-import { useAddChatNoteMutation, useAddChatTagMutation, useAssignAgentMutation, useClearChatMutation, useDeleteChatNoteMutation, useDeleteChatTagMutation, useGetContactProfileQuery, useUnassignAgentMutation } from "@/src/redux/api/chatApi";
+import {
+  useAddChatNoteMutation,
+  useAddChatTagMutation,
+  useAssignAgentMutation,
+  useClearChatMutation,
+  useDeleteChatNoteMutation,
+  useDeleteChatTagMutation,
+  useGetContactProfileQuery,
+  useUnassignAgentMutation,
+  useAssignChatbotMutation,
+  useUnassignChatbotMutation,
+} from "@/src/redux/api/chatApi";
+import { useGetChatbotsQuery } from "@/src/redux/api/chatbotApi";
 import { useDeleteContactMutation } from "@/src/redux/api/contactApi";
 import { useCreateTagMutation } from "@/src/redux/api/tagsApi";
-import { useAssignAgentToContactMutation, useGetCallAgentsQuery, useRemoveAgentFromContactMutation } from "@/src/redux/api/whatsappCallingApi";
+import {
+  useAssignAgentToContactMutation,
+  useGetCallAgentsQuery,
+  useRemoveAgentFromContactMutation,
+} from "@/src/redux/api/whatsappCallingApi";
 import { useGetConnectedChannelsQuery } from "@/src/redux/api/channelsApi";
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
-import { setProfileToggle } from "@/src/redux/reducers/messenger/chatSlice";
+import {
+  selectChat,
+  setProfileToggle,
+} from "@/src/redux/reducers/messenger/chatSlice";
 import { RootState } from "@/src/redux/store";
 import ConfirmModal from "@/src/shared/ConfirmModal";
 import { X } from "lucide-react";
@@ -21,6 +40,7 @@ import { toast } from "sonner";
 import TagModal from "../tags/TagModal";
 import ProfileAssignAgent from "./profile/ProfileAssignAgent";
 import ProfileAssignAICallAgent from "./profile/ProfileAssignAICallAgent";
+import ProfileAssignChatbot from "./profile/ProfileAssignChatbot";
 import ProfileChatNote from "./profile/ProfileChatNote";
 import ProfileClearChat from "./profile/ProfileClearChat";
 import ProfileContactSummary from "./profile/ProfileContactSummary";
@@ -31,44 +51,74 @@ import { useFeatureAccess } from "@/src/hooks/useFeatureAccess";
 const ChatProfile = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const { selectedChat, selectedPhoneNumberId } = useSelector((state: RootState) => state.chat);
+  const { selectedChat, selectedPhoneNumberId } = useSelector(
+    (state: RootState) => state.chat,
+  );
   const contactId = selectedChat?.contact?.id;
   const { isFeatureEnabled } = useFeatureAccess();
   const { selectedWorkspace } = useAppSelector((state) => state.workspace);
 
   const { data: connectedChannelsResult } = useGetConnectedChannelsQuery(
     { workspace_id: selectedWorkspace?._id || "" },
-    { skip: !selectedWorkspace?._id }
+    { skip: !selectedWorkspace?._id },
   );
 
   const activeConnection = connectedChannelsResult?.connections?.find(
-    (c: any) => String(c.id) === String(selectedPhoneNumberId)
+    (c: any) => String(c.id) === String(selectedPhoneNumberId),
   );
-  const isWhatsApp = !activeConnection || activeConnection.platform === "whatsapp";
+  const isWhatsApp =
+    !activeConnection || activeConnection.platform === "whatsapp";
 
-  const { data: profileData, isLoading: isLoadingProfile } = useGetContactProfileQuery({ contact_id: contactId as string, whatsapp_phone_number_id: selectedPhoneNumberId as string }, { skip: !contactId });
+  const {
+    data: profileData,
+    isLoading: isLoadingProfile,
+    refetch: refetchProfile,
+  } = useGetContactProfileQuery(
+    {
+      contact_id: contactId as string,
+      whatsapp_phone_number_id: selectedPhoneNumberId as string,
+    },
+    { skip: !contactId },
+  );
   const { data: agentsData } = useGetAgentDataQuery({ status: "active" });
-  const { data: aiAgentsData } = useGetCallAgentsQuery({ limit: 100 }, { skip: !isFeatureEnabled("whatsapp_calling") || !isWhatsApp });
+  const { data: aiAgentsData } = useGetCallAgentsQuery(
+    { limit: 100 },
+    { skip: !isFeatureEnabled("whatsapp_calling") || !isWhatsApp },
+  );
   const agents = agentsData?.data?.agents || [];
   const aiAgents = aiAgentsData?.data || [];
+  const { data: chatbotsResult } = useGetChatbotsQuery(
+    { waba_id: selectedPhoneNumberId as string },
+    { skip: !selectedPhoneNumberId }
+  );
+  const chatbots = chatbotsResult?.data || [];
   const { user } = useAppSelector((state) => state.auth);
   const isAgent = user?.role === "agent";
 
   const [addChatNote, { isLoading: isAddingNote }] = useAddChatNoteMutation();
   const [deleteChatNote] = useDeleteChatNoteMutation();
-  const [assignAgent, { isLoading: isAssigningAgent }] = useAssignAgentMutation();
-  const [unassignAgent, { isLoading: isUnassigningAgent }] = useUnassignAgentMutation();
+  const [assignAgent, { isLoading: isAssigningAgent }] =
+    useAssignAgentMutation();
+  const [unassignAgent, { isLoading: isUnassigningAgent }] =
+    useUnassignAgentMutation();
   const [deleteContact] = useDeleteContactMutation();
   const [createTag, { isLoading: isCreatingTag }] = useCreateTagMutation();
   const [addChatTag, { isLoading: isAddingChatTag }] = useAddChatTagMutation();
   const [deleteChatTag] = useDeleteChatTagMutation();
   const [clearChat, { isLoading: isClearingChat }] = useClearChatMutation();
 
-  const [assignAIAgent, { isLoading: isAssigningAIAgent }] = useAssignAgentToContactMutation();
-  const [removeAIAgent, { isLoading: isRemovingAIAgent }] = useRemoveAgentFromContactMutation();
+  const [assignAIAgent, { isLoading: isAssigningAIAgent }] =
+    useAssignAgentToContactMutation();
+  const [removeAIAgent, { isLoading: isRemovingAIAgent }] =
+    useRemoveAgentFromContactMutation();
+  const [assignChatbot, { isLoading: isAssigningChatbot }] =
+    useAssignChatbotMutation();
+  const [unassignChatbot, { isLoading: isUnassigningChatbot }] =
+    useUnassignChatbotMutation();
 
   const [isTagModalOpen, setIsTagModalOpen] = useState(false);
-  const [isDeletingContactModalOpen, setIsDeletingContactModalOpen] = useState(false);
+  const [isDeletingContactModalOpen, setIsDeletingContactModalOpen] =
+    useState(false);
   const [isDeletingContact, setIsDeletingContact] = useState(false);
   const { userSetting } = useAppSelector((state) => state.setting);
   const userSettingData = userSetting?.data;
@@ -94,7 +144,10 @@ const ChatProfile = () => {
 
   const handleDeleteNote = async (noteId: string) => {
     try {
-      await deleteChatNote({ ids: [noteId], contact_id: contactId as string }).unwrap();
+      await deleteChatNote({
+        ids: [noteId],
+        contact_id: contactId as string,
+      }).unwrap();
       toast.success("Note deleted successfully");
     } catch {
       toast.error("Failed to delete note");
@@ -120,6 +173,7 @@ const ChatProfile = () => {
         contact_id: contactId as string,
         whatsapp_phone_number_id: selectedPhoneNumberId as string,
       }).unwrap();
+      await refetchProfile();
       toast.success("Agent unassigned successfully");
     } catch {
       toast.error("Failed to unassign agent");
@@ -147,6 +201,29 @@ const ChatProfile = () => {
     }
   };
 
+  const handleAssignChatbot = async (chatbotId: string) => {
+    try {
+      await assignChatbot({
+        contact_id: contactId as string,
+        chatbot_id: chatbotId,
+      }).unwrap();
+      toast.success(t("chatbot_assigned_success", { defaultValue: "Chatbot assigned successfully" }));
+    } catch {
+      toast.error(t("failed_to_assign_chatbot", { defaultValue: "Failed to assign chatbot" }));
+    }
+  };
+
+  const handleUnassignChatbot = async () => {
+    try {
+      await unassignChatbot({
+        contact_id: contactId as string,
+      }).unwrap();
+      toast.success(t("chatbot_unassigned_success", { defaultValue: "Chatbot unassigned successfully" }));
+    } catch {
+      toast.error(t("failed_to_unassign_chatbot", { defaultValue: "Failed to unassign chatbot" }));
+    }
+  };
+
   const handleDeleteContact = () => {
     setIsDeletingContactModalOpen(true);
   };
@@ -156,6 +233,7 @@ const ChatProfile = () => {
     try {
       await deleteContact([contactId as string]).unwrap();
       toast.success("Contact deleted");
+      dispatch(selectChat(null));
       onToggleProfile();
     } catch {
       toast.error("Failed to delete contact");
@@ -191,7 +269,11 @@ const ChatProfile = () => {
       }
     }
     if (successCount > 0) {
-      toast.success(successCount > 1 ? `${successCount} labels added successfully` : "Label added successfully");
+      toast.success(
+        successCount > 1
+          ? `${successCount} labels added successfully`
+          : "Label added successfully",
+      );
     }
     return lastResponse;
   };
@@ -215,17 +297,38 @@ const ChatProfile = () => {
         contact_id: contactId as string,
         connection_id: selectedPhoneNumberId as string,
       }).unwrap();
-      toast.success("Chat history cleared successfully");
+      toast.success(t("chat_history_cleared_success", { defaultValue: "Chat history cleared successfully" }));
     } catch (error: any) {
-      toast.error(error?.data?.message || error?.data?.error || "Failed to clear chat history");
+      toast.error(
+        error?.data?.message ||
+          error?.data?.error ||
+          t("failed_to_clear_chat_history", { defaultValue: "Failed to clear chat history" }),
+      );
     }
   };
 
   return (
-    <div className="w-full max-w-[364px] sm:min-w-[364px] sm:max-w-[364px] border rounded-lg border-gray-100 dark:bg-(--card-color)! dark:border-(--card-border-color) h-full flex flex-col [@media(max-width:1539px)]:absolute [@media(max-width:1539px)]:z-50 [@media(max-width:1539px)]:right-0 [@media(max-width:1539px)]:h-[calc(100vh-114px)] [@media(max-width:639px)]:right-0 [@media(max-width:639px)]:h-[calc(100vh-107px)] [@media(max-width:375px)]:max-w-[calc(100%-20px)]" style={{ backgroundColor: userSettingData?.bg_color == "null" ? "var(--background)" : userSettingData?.bg_color ? "color-mix(in srgb, var(--chat-theme-color) , white 92%)" : "var(--chat-bg-color)" }}>
+    <div
+      className="w-full max-w-[364px] sm:min-w-[364px] sm:max-w-[364px] border rounded-lg border-gray-100 dark:bg-(--card-color)! dark:border-(--card-border-color) h-full flex flex-col [@media(max-width:1539px)]:absolute [@media(max-width:1539px)]:z-50 [@media(max-width:1539px)]:right-0 [@media(max-width:1539px)]:h-[calc(100vh-114px)] [@media(max-width:639px)]:right-0 [@media(max-width:639px)]:h-[calc(100vh-107px)] [@media(max-width:375px)]:max-w-[calc(100%-20px)]"
+      style={{
+        backgroundColor:
+          userSettingData?.bg_color == "null"
+            ? "var(--background)"
+            : userSettingData?.bg_color
+              ? "color-mix(in srgb, var(--chat-theme-color) , white 92%)"
+              : "var(--chat-bg-color)",
+      }}
+    >
       <div className="h-14 flex items-center justify-between gap-3 px-6 border-b border-gray-200 dark:border-(--card-border-color) shrink-0 sticky top-0 z-20">
-        <span className="font-bold text-slate-800 dark:text-white text-lg">{t("contact_overview")}</span>
-        <Button variant="ghost" size="icon" onClick={onToggleProfile} className="rounded-lg hover:bg-slate-100 dark:hover:bg-(--table-hover) hover:text-(--chat-theme-color)">
+        <span className="font-bold text-slate-800 dark:text-white text-lg">
+          {t("contact_overview")}
+        </span>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onToggleProfile}
+          className="rounded-lg hover:bg-slate-100 dark:hover:bg-(--table-hover) hover:text-(--chat-theme-color)"
+        >
           <X size={20} className="text-slate-500 dark:text-gray-200" />
         </Button>
       </div>
@@ -271,28 +374,111 @@ const ChatProfile = () => {
         </div>
       ) : (
         <div className="space-y-4 overflow-y-auto custom-scrollbar">
-          <ProfileContactSummary profileData={profileData} onDelete={handleDeleteContact} onOpenTagModal={() => setIsTagModalOpen(true)} onRemoveLabel={handleRemoveLabel} />
+          <ProfileContactSummary
+            profileData={profileData}
+            onDelete={handleDeleteContact}
+            onOpenTagModal={() => setIsTagModalOpen(true)}
+            onRemoveLabel={handleRemoveLabel}
+          />
 
           <PlanFeature feature="staff">
-            {!isAgent && <ProfileAssignAgent agents={agents?.map((a: any) => ({ id: a?._id, name: a?.name, email: a?.email })) || []} selectedAgentId={profileData?.assigned_agent?._id || profileData?.contact?.assigned_agent} onAssign={handleAssignAgent} onUnassign={handleUnassignAgent} isLoading={isAssigningAgent} isUnassigning={isUnassigningAgent} />}
+            {!isAgent && (
+              <ProfileAssignAgent
+                agents={
+                  agents?.map((a: any) => ({
+                    id: a?._id,
+                    name: a?.name,
+                    email: a?.email,
+                  })) || []
+                }
+                selectedAgentId={
+                  profileData?.assigned_agent?._id ||
+                  profileData?.contact?.assigned_agent
+                }
+                onAssign={handleAssignAgent}
+                onUnassign={handleUnassignAgent}
+                isLoading={isAssigningAgent}
+                isUnassigning={isUnassigningAgent}
+              />
+            )}
           </PlanFeature>
 
-          <PlanFeature feature="whatsapp_calling">
-            {!isAgent && isWhatsApp && <ProfileAssignAICallAgent agents={aiAgents} selectedAgentId={profileData?.contact?.assigned_call_agent_id || profileData?.assigned_call_agent_id || profileData?.assigned_call_agent?._id} assignedAgent={profileData?.assigned_call_agent} onAssign={handleAssignAIAgent} onUnassign={handleRemoveAIAgent} isLoading={isAssigningAIAgent} isUnassigning={isRemovingAIAgent} />}
+          {selectedWorkspace?.waba_type !== "baileys" &&
+            <PlanFeature feature="whatsapp_calling">
+            {!isAgent && isWhatsApp && (
+              <ProfileAssignAICallAgent
+                agents={aiAgents}
+                selectedAgentId={
+                  profileData?.contact?.assigned_call_agent_id ||
+                  profileData?.assigned_call_agent_id ||
+                  profileData?.assigned_call_agent?._id
+                }
+                assignedAgent={profileData?.assigned_call_agent}
+                onAssign={handleAssignAIAgent}
+                onUnassign={handleRemoveAIAgent}
+                isLoading={isAssigningAIAgent}
+                isUnassigning={isRemovingAIAgent}
+              />
+            )}
           </PlanFeature>
+            }
 
-          <ProfileChatNote notes={profileData?.notes || []} onSave={handleSaveNote} onDelete={handleDeleteNote} isLoading={isAddingNote} />
+          {!isAgent && (
+            <ProfileAssignChatbot
+              chatbots={chatbots}
+              selectedChatbotId={
+                profileData?.assigned_chatbot?._id ||
+                profileData?.assigned_chatbot ||
+                profileData?.contact?.assigned_chatbot?._id ||
+                profileData?.contact?.assigned_chatbot
+              }
+              assignedChatbot={
+                profileData?.assigned_chatbot ||
+                profileData?.contact?.assigned_chatbot
+              }
+              onAssign={handleAssignChatbot}
+              onUnassign={handleUnassignChatbot}
+              isLoading={isAssigningChatbot}
+              isUnassigning={isUnassigningChatbot}
+            />
+          )}
 
-          <ProfileClearChat onClearChat={handleClearChat} isLoading={isClearingChat} />
+          <ProfileChatNote
+            notes={profileData?.notes || []}
+            onSave={handleSaveNote}
+            onDelete={handleDeleteNote}
+            isLoading={isAddingNote}
+          />
+
+          <ProfileClearChat
+            onClearChat={handleClearChat}
+            isLoading={isClearingChat}
+          />
 
           <ProfileMediaAssets media={profileData?.media || {}} />
         </div>
       )}
 
       <PlanFeature feature="tags">
-        <TagModal isOpen={isTagModalOpen} onClose={() => setIsTagModalOpen(false)} onSave={handleCreateLabel} onAssign={handleAddLabel} isLoading={isCreatingTag || isAddingChatTag} fromProfile />
+        <TagModal
+          isOpen={isTagModalOpen}
+          onClose={() => setIsTagModalOpen(false)}
+          onSave={handleCreateLabel}
+          onAssign={handleAddLabel}
+          isLoading={isCreatingTag || isAddingChatTag}
+          fromProfile
+        />
       </PlanFeature>
-      <ConfirmModal isOpen={isDeletingContactModalOpen} onClose={() => setIsDeletingContactModalOpen(false)} onConfirm={handleConfirmDeleteContact} isLoading={isDeletingContact} title="Delete Contact" subtitle="Are you sure you want to delete this contact? This action cannot be undone." confirmText="Delete" variant="danger" />
+      <ConfirmModal
+        isOpen={isDeletingContactModalOpen}
+        onClose={() => setIsDeletingContactModalOpen(false)}
+        onConfirm={handleConfirmDeleteContact}
+        isLoading={isDeletingContact}
+        title="Delete Contact"
+        subtitle="Are you sure you want to delete this contact? This action cannot be undone."
+        confirmText="Delete"
+        variant="danger"
+      />
     </div>
   );
 };

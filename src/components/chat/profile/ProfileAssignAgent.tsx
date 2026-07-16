@@ -28,15 +28,15 @@ const ProfileAssignAgent = ({ agents, selectedAgentId, onAssign, onUnassign, isL
           onClick={() => window.open("/agents/create", "_blank")}
           className="text-[10px]! h-5.75! font-bold! text-primary! bg-primary/5! px-2! py-1! rounded! hover:bg-primary/10! transition-colors shrink-0"
         >
-          + Add Agent
+          {t("add_agent", { defaultValue: "+ Add Agent" })}
         </Button>
       </div>
 
       <div className="space-y-1.5 relative">
-        <Label className="text-[10px] font-medium text-slate-400 absolute -top-2 left-3 bg-white dark:bg-(--page-body-bg) px-1 z-10">Agents</Label>
-        <Select value={selectedAgentId} onValueChange={onAssign} disabled={isLoading}>
+        <Label className="text-[10px] font-medium text-slate-400 absolute -top-2 left-3 bg-white dark:bg-(--page-body-bg) px-1 z-10">{t("agents", { defaultValue: "Agents" })}</Label>
+        <Select key={selectedAgentId ?? "empty"} value={selectedAgentId} onValueChange={onAssign} disabled={isLoading}>
           <SelectTrigger className="w-full h-11 py-7 bg-(--input-color) dark:bg-(--page-body-bg) dark:border-none border-gray-200 dark:hover:bg-(--page-body-bg) dark:border-(--card-border-color) rounded-lg focus:ring-0">
-            <SelectValue placeholder="Select agent" />
+            <SelectValue placeholder={t("select_agent", { defaultValue: "Select agent" })} />
           </SelectTrigger>
           <SelectContent className="rounded-lg border-gray-200 dark:bg-(--page-body-bg) dark:border-(--card-border-color)">
             {agents.map((agent) => (
@@ -61,13 +61,13 @@ const ProfileAssignAgent = ({ agents, selectedAgentId, onAssign, onUnassign, isL
         <div className="flex items-center justify-between px-1">
           <p className="text-[11px] text-slate-500 dark:text-gray-400">
             <span className="font-semibold" style={isCustom ? { color: userSettingData?.theme_color == "null" ? "var(--primary)" : "var(--chat-theme-color)" } : {}}>
-              Assigned:
+              {t("assigned", { defaultValue: "Assigned:" })}
             </span>{" "}
             {agents.find((a) => a.id === selectedAgentId)?.name}
             {agents.find((a) => a.id === selectedAgentId)?.phone && ` (${agents.find((a) => a.id === selectedAgentId)?.phone})`}
           </p>
           <Button variant="ghost" size="sm" onClick={onUnassign} disabled={isUnassigning} className="h-6 w-14 text-[10px] text-rose-500 hover:text-rose-600 dark:hover:bg-rose-950/20 hover:bg-rose-50 p-0">
-            {isUnassigning ? <Loader2 className="animate-spin h-3 w-3" /> : "Remove"}
+            {isUnassigning ? <Loader2 className="animate-spin h-3 w-3" /> : t("remove", { defaultValue: "Remove" })}
           </Button>
         </div>
       )}

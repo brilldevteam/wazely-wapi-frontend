@@ -12,6 +12,7 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Flag } from "../shared/Flag";
+import { getResolvedImageUrl } from "@/src/utils/image";
 
 const LANGUAGE_STORAGE_KEY = "selected_language";
 const ImageBaseUrl = process.env.NEXT_PUBLIC_STORAGE_URL ?? "";
@@ -67,7 +68,7 @@ const LanguageDropdown = ({ onDark = false }: { onDark?: boolean }) => {
             <Loader2 size={20} className="animate-spin" />
           ) : currentLang?.flag ? (
             <div className="w-6 h-4 relative rounded-xs overflow-hidden border border-slate-200 dark:border-slate-700 shrink-0">
-              <Image src={`${ImageBaseUrl}/${currentLang.flag}`} alt={currentLang.name} fill className="object-cover" unoptimized />
+              <Image src={getResolvedImageUrl(currentLang.flag)} alt={currentLang.name} fill className="object-cover" unoptimized />
             </div>
           ) : (
             <Flag countryCode={currentLang?.locale === "en" ? "us" : currentLang?.locale || ""} size={18} />
@@ -84,7 +85,7 @@ const LanguageDropdown = ({ onDark = false }: { onDark?: boolean }) => {
             const isActive = currentLocale.toLowerCase() === lang.locale.toLowerCase();
             return (
               <DropdownMenuItem key={lang._id} disabled={isChanging} onClick={() => handleLanguageChange(lang.locale, lang._id, lang.is_rtl)} className={`cursor-pointer rounded-md flex items-center gap-2.5 p-2 mb-0.5 last:mb-0 transition-colors ${isActive ? "bg-green-50 text-primary dark:bg-emerald-900/20 dark:text-emerald-400 focus:bg-green-50 dark:focus:bg-emerald-900/20" : "hover:bg-slate-50 dark:hover:bg-(--dark-sidebar) focus:bg-slate-50 dark:focus:bg-(--focus-bg-color)/30"}`}>
-                <div className="w-6 h-4 relative rounded-xs overflow-hidden border border-slate-200 dark:border-slate-700 shrink-0">{lang.flag ? <Image src={`${ImageBaseUrl}/${lang.flag}`} alt={lang.name} fill className="object-cover" unoptimized /> : <Flag countryCode={lang.locale === "en" ? "us" : lang.locale} size={18} />}</div>
+                <div className="w-6 h-4 relative rounded-xs overflow-hidden border border-slate-200 dark:border-slate-700 shrink-0">{lang.flag ? <Image src={getResolvedImageUrl(lang.flag)} alt={lang.name} fill className="object-cover" unoptimized /> : <Flag countryCode={lang.locale === "en" ? "us" : lang.locale} size={18} />}</div>
 
                 <span className="flex-1 text-sm font-medium">{lang.name}</span>
 

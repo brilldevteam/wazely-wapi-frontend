@@ -1,26 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import {
+  useDeleteFbAdCampaignMutation,
+  useGetFbAdCampaignsQuery,
+  useUpdateFbAdCampaignStatusMutation,
+} from "@/src/redux/api/facebookApi";
+import CommonHeader from "@/src/shared/CommonHeader";
+import ConfirmModal from "@/src/shared/ConfirmModal";
+import { DataTable } from "@/src/shared/DataTable";
+import useDebounce from "@/src/utils/hooks/useDebounce";
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { DataTable } from "@/src/shared/DataTable";
-import { useGetFbAdCampaignsQuery, useDeleteFbAdCampaignMutation, useUpdateFbAdCampaignStatusMutation } from "@/src/redux/api/facebookApi";
-import { getCampaignColumns } from "../columns";
 import { toast } from "sonner";
-import ConfirmModal from "@/src/shared/ConfirmModal";
+import { getCampaignColumns } from "../columns";
 import CampaignStatusModal from "./CampaignStatusModal";
-import CommonHeader from "@/src/shared/CommonHeader";
-import useDebounce from "@/src/utils/hooks/useDebounce";
 
+import { CampaignListProps } from "@/src/types/facebook";
 import { useRouter } from "next/navigation";
 
-interface CampaignListProps {
-  accountId: string;
-  rightContent?: React.ReactNode;
-  backBtn?: boolean;
-}
-
-const CampaignList: React.FC<CampaignListProps> = ({ accountId, rightContent, backBtn }) => {
+const CampaignList: React.FC<CampaignListProps> = ({
+  accountId,
+  rightContent,
+  backBtn,
+}) => {
   const router = useRouter();
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
@@ -31,10 +34,12 @@ const CampaignList: React.FC<CampaignListProps> = ({ accountId, rightContent, ba
 
   const debouncedSearch = useDebounce(searchTerm, 500);
 
-  const [deleteCampaign, { isLoading: isDeleting }] = useDeleteFbAdCampaignMutation();
+  const [deleteCampaign, { isLoading: isDeleting }] =
+    useDeleteFbAdCampaignMutation();
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const [updateStatus, { isLoading: isUpdatingStatus }] = useUpdateFbAdCampaignStatusMutation();
+  const [updateStatus, { isLoading: isUpdatingStatus }] =
+    useUpdateFbAdCampaignStatusMutation();
   const [selectedCampaign, setSelectedCampaign] = useState<any>(null);
 
   const { data, isLoading, isFetching, refetch } = useGetFbAdCampaignsQuery({
@@ -61,34 +66,52 @@ const CampaignList: React.FC<CampaignListProps> = ({ accountId, rightContent, ba
     if (!selectedCampaign) return;
     try {
       await updateStatus({ id: selectedCampaign._id, status }).unwrap();
-      toast.success(t("status_updated_success", "Campaign status updated successfully"));
+      toast.success(
+        t("status_updated_success", "Campaign status updated successfully"),
+      );
       setSelectedCampaign(null);
     } catch (err: any) {
-      toast.error(err?.data?.message || t("status_update_failed", "Failed to update status"));
+      toast.error(
+        err?.data?.message ||
+          t("status_update_failed", "Failed to update status"),
+      );
     }
   };
 
-  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({});
+  const [columnVisibility, setColumnVisibility] = useState<
+    Record<string, boolean>
+  >({});
 
-  const sourceColumns = useMemo(() => getCampaignColumns(
-    t,
-    router,
-    (id) => setDeleteId(id),
-    (item) => setSelectedCampaign(item)
-  ), [t, router]);
+  const sourceColumns = useMemo(
+    () =>
+      getCampaignColumns(
+        t,
+        router,
+        (id) => setDeleteId(id),
+        (item) => setSelectedCampaign(item),
+      ),
+    [t, router],
+  );
 
-  const visibleColumnsState = useMemo(() => sourceColumns.map(c => ({
-    id: c.header,
-    label: c.header,
-    isVisible: columnVisibility[c.header] ?? true
-  })), [sourceColumns, columnVisibility]);
+  const visibleColumnsState = useMemo(
+    () =>
+      sourceColumns.map((c) => ({
+        id: c.header,
+        label: c.header,
+        isVisible: columnVisibility[c.header] ?? true,
+      })),
+    [sourceColumns, columnVisibility],
+  );
 
-  const activeColumns = useMemo(() => sourceColumns.filter(c => columnVisibility[c.header] ?? true), [sourceColumns, columnVisibility]);
+  const activeColumns = useMemo(
+    () => sourceColumns.filter((c) => columnVisibility[c.header] ?? true),
+    [sourceColumns, columnVisibility],
+  );
 
   const handleColumnToggle = (columnId: string) => {
-    setColumnVisibility(prev => ({
+    setColumnVisibility((prev) => ({
       ...prev,
-      [columnId]: !(prev[columnId] ?? true)
+      [columnId]: !(prev[columnId] ?? true),
     }));
   };
 
@@ -134,7 +157,12 @@ const CampaignList: React.FC<CampaignListProps> = ({ accountId, rightContent, ba
         sortBy={sortBy}
         sortOrder={sortOrder}
         getRowId={(item) => item.id || item._id}
-        emptyMessage={searchTerm ? t("no_results_for", { searchTerm }) : t("no_campaigns_found")}
+        emptyMessage={
+          searchTerm
+            ? t("no_results_for", { searchTerm })
+            : t("no_campaigns_found")
+        }
+        actionPermission={["update.facebook_ads", "delete.facebook_ads"]}
       />
 
       <ConfirmModal

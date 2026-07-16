@@ -27,49 +27,49 @@ const WabaRequired: React.FC<WabaRequiredProps> = ({ title, description, classNa
     switch (platform) {
       case "telegram":
         return {
-          title: title || "Telegram Connection Required",
-          description: description || "To manage Telegram campaigns and templates, you first need to connect a Telegram bot.",
+          title: title || t("telegram_connection_required_title"),
+          description: description || t("telegram_connection_required_desc"),
           route: ROUTES.TelegramConnect,
-          btnText: "Connect Telegram",
+          btnText: t("connect_telegram"),
           icon: <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
         };
       case "facebook":
         return {
-          title: title || "Facebook Connection Required",
-          description: description || "To manage Facebook campaigns and templates, you first need to connect a Facebook Page.",
+          title: title || t("facebook_connection_required_title"),
+          description: description || t("facebook_connection_required_desc"),
           route: ROUTES.FacebookConnect,
-          btnText: "Connect Facebook",
+          btnText: t("connect_facebook"),
           icon: <Facebook size={18} className="group-hover:scale-110 transition-transform" />
         };
       case "instagram":
         return {
-          title: title || "Instagram Connection Required",
-          description: description || "To manage Instagram campaigns and templates, you first need to connect an Instagram Account.",
+          title: title || t("instagram_connection_required_title"),
+          description: description || t("instagram_connection_required_desc"),
           route: ROUTES.InstagramConnect,
-          btnText: "Connect Instagram",
+          btnText: t("connect_instagram"),
           icon: <Instagram size={18} className="group-hover:scale-110 transition-transform" />
         };
       case "shopify":
         return {
-          title: title || "Shopify Connection Required",
-          description: description || "To manage Shopify products and orders, you first need to connect a Shopify Store.",
+          title: title || t("shopify_connection_required_title"),
+          description: description || t("shopify_connection_required_desc"),
           route: ROUTES.ShopifyConnect,
-          btnText: "Connect Shopify",
+          btnText: t("connect_shopify"),
           icon: <ShoppingBag size={18} className="group-hover:scale-110 transition-transform" />
         };
       case "any":
         return {
-          title: title || "Channel Connection Required",
-          description: description || "You must have to connect any one channel.",
+          title: title || t("channel_connection_required_title"),
+          description: description || t("channel_connection_required_desc"),
           route: ROUTES.WABAConnection,
-          btnText: "Connect A Channel",
+          btnText: t("connect_channel"),
           icon: <Phone size={18} className="group-hover:rotate-12 transition-transform" />
         };
       case "whatsapp":
       default:
         return {
-          title: title || t("waba_connection_required"),
-          description: description || t("waba_required_desc"),
+          title: title || t("waba_connection_required_title"),
+          description: description || t("waba_connection_required_desc"),
           route: ROUTES.WABAConnection,
           btnText: t("connect_waba_now"),
           icon: <Phone size={18} className="group-hover:rotate-12 transition-transform" />

@@ -29,8 +29,8 @@ export const useNotifications = () => {
     return result;
   }, []);
 
-  const sendNotification = useCallback((title: string, options?: NotificationOptions & { onClick?: () => void }) => {
-    if (permissionRef.current !== "granted" || document.hasFocus()) return;
+  const sendNotification = useCallback((title: string, options?: NotificationOptions & { onClick?: () => void; force?: boolean }) => {
+    if (permissionRef.current !== "granted" || (!options?.force && document.hasFocus())) return;
 
     try {
       if (!("Notification" in window)) return;

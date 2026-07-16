@@ -3,6 +3,7 @@
 import React from "react";
 import { BookOpen, KeyRound, ChevronRight, AlertTriangle, ExternalLink } from "lucide-react";
 import { Card, CardContent } from "@/src/elements/ui/card";
+import { permissionScope } from "@/src/data/shopify";
 
 /** Single info card component */
 const InfoCard = ({
@@ -68,12 +69,7 @@ export const ShopifyInstructions: React.FC = () => {
         title="Required API Scopes"
       >
         <p className="mb-2">Grant the following scopes when configuring your custom app:</p>
-        {[
-          { scope: "read_products", desc: "Sync product catalog" },
-          { scope: "write_products", desc: "Push products to catalog" },
-          { scope: "read_orders", desc: "Read order information" },
-          { scope: "read_customers", desc: "Fetch customer data" },
-        ].map(({ scope, desc }) => (
+        {permissionScope.map(({ scope, desc }) => (
           <div key={scope} className="flex items-center gap-2 py-1.5 border-b border-slate-100 dark:border-(--card-border-color) last:border-0">
             <ChevronRight size={11} className="text-primary shrink-0" />
             <code className="text-xs bg-slate-100 dark:bg-(--dark-body) px-1.5 py-0.5 rounded font-mono">{scope}</code>

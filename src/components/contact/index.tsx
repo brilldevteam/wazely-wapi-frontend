@@ -36,14 +36,9 @@ import ContactImportModal from "./ContactImportModal";
 import ContactModal from "./ContactModal";
 import ContactKanbanActionModal from "./ContactKanbanActionModal";
 import PlanFeature from "@/src/shared/PlanFeature";
+import { CHANNELS } from "@/src/data/components";
 
-const CHANNELS = [
-  { value: "all", label: "All Channels", icon: Filter, iconColor: "text-slate-400" },
-  { value: "whatsapp", label: "WhatsApp", icon: MessageCircle, iconColor: "text-[#25D366]" },
-  { value: "telegram", label: "Telegram", icon: Send, iconColor: "text-[#229ED9]" },
-  { value: "facebook", label: "Facebook", icon: Facebook, iconColor: "text-[#1877F2]" },
-  { value: "instagram", label: "Instagram", icon: Instagram, iconColor: "text-[#E1306C]" },
-];
+
 
 const getSourceBadgeClass = (source: string) => {
   const src = source?.toLowerCase() || "";
@@ -635,7 +630,7 @@ const ContactPage = () => {
       />
 
       <div className="bg-white dark:bg-(--card-color) rounded-lg border border-slate-200/60 mt-8 dark:border-(--card-border-color) shadow-sm overflow-hidden">
-        <DataTable data={contacts} columns={allColumns.filter((col) => visibleColumns.find((vc) => vc.id === col.header)?.isVisible !== false)} isLoading={isLoading || isFieldsLoading} isFetching={isFetching || isDeleting} totalCount={totalCount} page={page} limit={limit} onPageChange={handlePageChange} onLimitChange={handleLimitChange} enableSelection={true} selectedIds={selectedIds} onSelectionChange={setSelectedIds} getRowId={(item) => item._id} emptyMessage={searchTerm ? `No contacts found matching "${searchTerm}"` : "No contacts found. Add your first contact."} className="border-none shadow-none rounded-none" onSortChange={handleSortChange} />
+        <DataTable data={contacts} columns={allColumns.filter((col) => visibleColumns.find((vc) => vc.id === col.header)?.isVisible !== false)} isLoading={isLoading || isFieldsLoading} isFetching={isFetching || isDeleting} totalCount={totalCount} page={page} limit={limit} onPageChange={handlePageChange} onLimitChange={handleLimitChange} enableSelection={true} selectedIds={selectedIds} onSelectionChange={setSelectedIds} getRowId={(item) => item._id} emptyMessage={searchTerm ? `No contacts found matching "${searchTerm}"` : "No contacts found. Add your first contact."} className="border-none shadow-none rounded-none" onSortChange={handleSortChange} actionPermission={['create.campaigns','update.kanban_funnel','update.contacts','delete.contacts']}/>
       </div>
 
       <ContactModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onSave={handleSave} contact={editingContact} isLoading={isCreating || isUpdating} />

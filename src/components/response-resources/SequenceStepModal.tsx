@@ -16,8 +16,8 @@ import { DelayUnit, ReplyMaterialSourceType, SendDay } from "@/src/types/sequenc
 import { useGetCustomFieldsQuery } from "@/src/redux/api/customFieldApi";
 import { SequenceStepModalProps } from "@/src/types/replyMaterial";
 import { getTemplateVariables, isMarketingTemplate } from "@/src/utils/template";
+import { useAppSelector } from "@/src/redux/hooks";
 import Image from "next/image";
-import { CampaignCard, CarouselProduct, CONTACT_SYSTEM_FIELDS, TemplateCarouselCard } from "../campaigns/wizard/types";
 import { MaterialPreviewModal } from "../shared/MaterialPreviewModal";
 import MaterialPicker from "./sequence-step/MaterialPicker";
 import SchedulingConfig from "./sequence-step/SchedulingConfig";
@@ -25,20 +25,24 @@ import SourceTypeSelector from "./sequence-step/SourceTypeSelector";
 import TemplateConfig from "./sequence-step/TemplateConfig";
 import TimingConfig from "./sequence-step/TimingConfig";
 import { Label } from "@/src/elements/ui/label";
+import { CONTACT_SYSTEM_FIELDS } from "@/src/data/campaign";
+import { CampaignCard, CarouselProduct, TemplateCarouselCard } from "@/src/types/campaign";
 
 const SequenceStepModal: React.FC<SequenceStepModalProps> = ({ isOpen, onClose, sequenceId, wabaId, editStep, onSuccess, nextSort, platform = "whatsapp" }) => {
   const isEdit = !!editStep;
+  const { selectedWorkspace } = useAppSelector((state) => state.workspace);
+  const effectiveWabaId = wabaId || selectedWorkspace?.waba_id || "";
 
-  const { data: materialsData, isLoading: loadingMaterials } = useGetReplyMaterialsQuery({ waba_id: wabaId }, { skip: !isOpen });
+  const { data: materialsData, isLoading: loadingMaterials } = useGetReplyMaterialsQuery({ waba_id: effectiveWabaId }, { skip: !isOpen });
   const { data: templatesData, isLoading: loadingTemplates } = useGetTemplatesQuery(
     { 
-      waba_id: wabaId, 
+      waba_id: effectiveWabaId, 
       status: "approved",
       ...(platform && platform !== "all" ? { platform } : {})
     }, 
     { skip: !isOpen }
   );
-  const { data: catalogsData, isLoading: loadingCatalogs } = useGetLinkedCatalogsQuery({ waba_id: wabaId }, { skip: !isOpen });
+  const { data: catalogsData, isLoading: loadingCatalogs } = useGetLinkedCatalogsQuery({ waba_id: effectiveWabaId }, { skip: !isOpen });
 
   const [createStep, { isLoading: isCreating }] = useCreateSequenceStepMutation();
   const [updateStep, { isLoading: isUpdating }] = useUpdateSequenceStepMutation();
@@ -205,10 +209,6 @@ const SequenceStepModal: React.FC<SequenceStepModalProps> = ({ isOpen, onClose, 
           return;
         }
       }
-      if (isMarketingTemplate(selectedMaterial) && !couponCode) {
-        toast.error("Coupon code is required");
-        return;
-      }
     }
 
     const payload = {
@@ -277,7 +277,7 @@ const SequenceStepModal: React.FC<SequenceStepModalProps> = ({ isOpen, onClose, 
             <div className="space-y-6 pt-4 border-t border-slate-100 dark:border-(--card-border-color) animate-in fade-in slide-in-from-top-2 duration-300">
               {sourceType !== "ReplyMaterial" && <Label className="text-[11px] font-black uppercase tracking-widest text-slate-400">2. Configuration</Label>}
 
-              {sourceType === "Template" && <TemplateConfig template={selectedMaterial} wabaId={wabaId} variablesMapping={variablesMapping} onVariableChange={(key, val) => setVariablesMapping((prev) => ({ ...prev, [key]: val }))} mediaUrl={templateMediaUrl} onMediaUrlChange={setTemplateMediaUrl} hasMediaHeader={hasMediaHeader} couponCode={couponCode} onCouponCodeChange={setCouponCode} offerExpirationMinutes={offerExpirationMinutes} onOfferExpirationMinutesChange={setOfferExpirationMinutes} thumbnailProductRetailerId={thumbnailProductRetailerId} onThumbnailProductRetailerIdChange={setThumbnailProductRetailerId} carouselCardsData={carouselCardsData} onCarouselCardsDataChange={setCarouselCardsData} carouselProducts={carouselProducts} onCarouselProductsChange={setCarouselProducts} mappingOptions={mappingOptions} />}
+              {sourceType === "Template" && <TemplateConfig template={selectedMaterial} wabaId={effectiveWabaId} variablesMapping={variablesMapping} onVariableChange={(key, val) => setVariablesMapping((prev) => ({ ...prev, [key]: val }))} mediaUrl={templateMediaUrl} onMediaUrlChange={setTemplateMediaUrl} hasMediaHeader={hasMediaHeader} couponCode={couponCode} onCouponCodeChange={setCouponCode} offerExpirationMinutes={offerExpirationMinutes} onOfferExpirationMinutesChange={setOfferExpirationMinutes} thumbnailProductRetailerId={thumbnailProductRetailerId} onThumbnailProductRetailerIdChange={setThumbnailProductRetailerId} carouselCardsData={carouselCardsData} onCarouselCardsDataChange={setCarouselCardsData} carouselProducts={carouselProducts} onCarouselProductsChange={setCarouselProducts} mappingOptions={mappingOptions} />}
 
               {sourceType === "ReplyMaterial" && (selectedMaterial as any).type !== "text" && (
                 <div className="p-3 bg-slate-50 dark:bg-(--dark-body) rounded-xl flex items-center gap-3 border border-slate-100 dark:border-slate-800/60">

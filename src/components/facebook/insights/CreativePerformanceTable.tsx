@@ -1,29 +1,26 @@
 "use client";
 
-import React from "react";
-import { Card } from "@/src/elements/ui/card";
-import { useTranslation } from "react-i18next";
-import Image from "next/image";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/src/elements/ui/table";
 import { Badge } from "@/src/elements/ui/badge";
+import { Card } from "@/src/elements/ui/card";
 import { Skeleton } from "@/src/elements/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/src/elements/ui/table";
+import { CreativePerformanceTableProps } from "@/src/types/facebook";
 import { Image as ImageIcon } from "lucide-react";
+import Image from "next/image";
+import React from "react";
+import { useTranslation } from "react-i18next";
 
-interface CreativePerformance {
-  ad_id: string;
-  name: string;
-  image: string | null;
-  spend: number;
-  results: number;
-  cost_per_result: number;
-}
-
-interface CreativePerformanceTableProps {
-  data?: CreativePerformance[];
-  isLoading: boolean;
-}
-
-const CreativePerformanceTable: React.FC<CreativePerformanceTableProps> = ({ data = [], isLoading }) => {
+const CreativePerformanceTable: React.FC<CreativePerformanceTableProps> = ({
+  data = [],
+  isLoading,
+}) => {
   const { t } = useTranslation();
 
   if (isLoading) {
@@ -56,7 +53,10 @@ const CreativePerformanceTable: React.FC<CreativePerformanceTableProps> = ({ dat
           {t("creative_performance", "Creative Performance")}
         </h4>
         <p className="text-[11px] sm:text-sm text-slate-400 font-bold">
-          {t("ad_level_metrics", "Performance breakdown by individual ad creative")}
+          {t(
+            "ad_level_metrics",
+            "Performance breakdown by individual ad creative",
+          )}
         </p>
       </div>
 
@@ -64,23 +64,42 @@ const CreativePerformanceTable: React.FC<CreativePerformanceTableProps> = ({ dat
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent border-slate-100 dark:border-(--card-border-color)">
-              <TableHead className="font-bold text-[12px] capitalize text-slate-500">{t("creative", "Creative")}</TableHead>
-              <TableHead className="font-bold text-[12px] capitalize text-slate-500">{t("ad_id", "Ad ID")}</TableHead>
-              <TableHead className="font-bold text-[12px] capitalize text-slate-500 text-right">{t("spend", "Spend")}</TableHead>
-              <TableHead className="font-bold text-[12px] capitalize text-slate-500 text-right">{t("results", "Results")}</TableHead>
-              <TableHead className="font-bold text-[12px] capitalize text-slate-500 text-right">{t("cpr", "CPR")}</TableHead>
+              <TableHead className="font-bold text-[12px] capitalize text-slate-500">
+                {t("creative", "Creative")}
+              </TableHead>
+              <TableHead className="font-bold text-[12px] capitalize text-slate-500">
+                {t("ad_id", "Ad ID")}
+              </TableHead>
+              <TableHead className="font-bold text-[12px] capitalize text-slate-500 text-right">
+                {t("spend", "Spend")}
+              </TableHead>
+              <TableHead className="font-bold text-[12px] capitalize text-slate-500 text-right">
+                {t("results", "Results")}
+              </TableHead>
+              <TableHead className="font-bold text-[12px] capitalize text-slate-500 text-right">
+                {t("cpr", "CPR")}
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {data.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="h-32 text-center text-slate-400 font-bold">
-                  {t("no_creative_data", "No creative performance data available")}
+                <TableCell
+                  colSpan={5}
+                  className="h-32 text-center text-slate-400 font-bold"
+                >
+                  {t(
+                    "no_creative_data",
+                    "No creative performance data available",
+                  )}
                 </TableCell>
               </TableRow>
             ) : (
               data.map((ad) => (
-                <TableRow key={ad.ad_id} className="border-slate-100 dark:border-(--card-border-color) hover:bg-slate-50/50 dark:hover:bg-(--table-hover) transition-colors">
+                <TableRow
+                  key={ad.ad_id}
+                  className="border-slate-100 dark:border-(--card-border-color) hover:bg-slate-50/50 dark:hover:bg-(--table-hover) transition-colors"
+                >
                   <TableCell>
                     <div className="flex items-center gap-4">
                       <div className="relative w-12 h-12 rounded-lg bg-slate-100 dark:bg-(--dark-body) overflow-hidden shrink-0 flex items-center justify-center">
@@ -111,7 +130,10 @@ const CreativePerformanceTable: React.FC<CreativePerformanceTableProps> = ({ dat
                     </span>
                   </TableCell>
                   <TableCell className="text-right">
-                    <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-black">
+                    <Badge
+                      variant="secondary"
+                      className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-black"
+                    >
                       {ad.results}
                     </Badge>
                   </TableCell>

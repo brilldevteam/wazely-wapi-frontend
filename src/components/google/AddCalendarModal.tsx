@@ -1,24 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Button } from "@/src/elements/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/src/elements/ui/dialog";
-import { Button } from "@/src/elements/ui/button";
 import { Input } from "@/src/elements/ui/input";
 import { Label } from "@/src/elements/ui/label";
-
-interface AddCalendarModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: (summary: string) => void;
-  isLoading: boolean;
-}
+import { AddCalendarModalProps } from "@/src/types/google";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const AddCalendarModal: React.FC<AddCalendarModalProps> = ({
   isOpen,
@@ -57,10 +51,19 @@ const AddCalendarModal: React.FC<AddCalendarModalProps> = ({
           </div>
         </div>
         <DialogFooter>
-          <Button className="h-11" variant="outline" onClick={onClose} disabled={isLoading}>
+          <Button
+            className="h-11"
+            variant="outline"
+            onClick={onClose}
+            disabled={isLoading}
+          >
             {t("cancel")}
           </Button>
-          <Button className="text-white h-11" onClick={handleConfirm} disabled={isLoading || !summary.trim()}>
+          <Button
+            className="text-white h-11"
+            onClick={handleConfirm}
+            disabled={isLoading || !summary.trim()}
+          >
             {isLoading ? t("creating") : t("google_account_add_calendar_btn")}
           </Button>
         </DialogFooter>

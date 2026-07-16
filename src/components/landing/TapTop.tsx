@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { ArrowUp } from "lucide-react";
 import { Button } from "@/src/elements/ui/button";
 
-
 const TapTop = () => {
   const [visible, setVisible] = useState(false);
   const [hover, setHover] = useState(false);

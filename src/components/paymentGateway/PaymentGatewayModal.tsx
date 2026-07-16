@@ -2,24 +2,37 @@
 "use client";
 
 import { Button } from "@/src/elements/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/src/elements/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/src/elements/ui/dialog";
 import { Input } from "@/src/elements/ui/input";
 import { Label } from "@/src/elements/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/elements/ui/select";
-import { PaymentGateway, PaymentGatewayType } from "@/src/types/paymentGateway";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/src/elements/ui/select";
+import {
+  PaymentGatewayModalProps,
+  PaymentGatewayType
+} from "@/src/types/paymentGateway";
 import { ExternalLink, Info } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-interface PaymentGatewayModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: (data: any) => void;
-  isLoading: boolean;
-  editData?: PaymentGateway | null;
-}
-
-const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({ isOpen, onClose, onConfirm, isLoading, editData }) => {
+const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  isLoading,
+  editData,
+}) => {
   const { t } = useTranslation();
   const [displayName, setDisplayName] = useState("");
   const [gateway, setGateway] = useState<PaymentGatewayType>("razorpay");
@@ -59,7 +72,8 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({ isOpen, onClo
 
       Object.keys(credentials).forEach((key) => {
         const val = credentials[key];
-        const oldVal = editData.credentials?.[key as keyof typeof editData.credentials];
+        const oldVal =
+          editData.credentials?.[key as keyof typeof editData.credentials];
 
         if (val !== "****" && val !== oldVal) {
           changedCredentials[key] = val;
@@ -95,11 +109,26 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({ isOpen, onClo
     <>
       <div className="grid gap-2">
         <Label htmlFor="key_id">{t("gateway_key_id")}</Label>
-        <Input className="h-11" id="key_id" value={credentials.key_id || ""} onChange={(e) => handleCredentialChange("key_id", e.target.value)} placeholder="rzp_test_..." disabled={isLoading} />
+        <Input
+          className="h-11"
+          id="key_id"
+          value={credentials.key_id || ""}
+          onChange={(e) => handleCredentialChange("key_id", e.target.value)}
+          placeholder="rzp_test_..."
+          disabled={isLoading}
+        />
       </div>
       <div className="grid gap-2">
         <Label htmlFor="key_secret">{t("gateway_key_secret")}</Label>
-        <Input className="h-11" id="key_secret" type="password" value={credentials.key_secret || ""} onChange={(e) => handleCredentialChange("key_secret", e.target.value)} placeholder={editData ? "••••••••" : "Key Secret"} disabled={isLoading} />
+        <Input
+          className="h-11"
+          id="key_secret"
+          type="password"
+          value={credentials.key_secret || ""}
+          onChange={(e) => handleCredentialChange("key_secret", e.target.value)}
+          placeholder={editData ? "••••••••" : "Key Secret"}
+          disabled={isLoading}
+        />
       </div>
     </>
   );
@@ -108,11 +137,26 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({ isOpen, onClo
     <>
       <div className="grid gap-2">
         <Label htmlFor="publishable_key">{t("gateway_publishable_key")}</Label>
-        <Input id="publishable_key" value={credentials.publishable_key || ""} onChange={(e) => handleCredentialChange("publishable_key", e.target.value)} placeholder="pk_test_..." disabled={isLoading} />
+        <Input
+          id="publishable_key"
+          value={credentials.publishable_key || ""}
+          onChange={(e) =>
+            handleCredentialChange("publishable_key", e.target.value)
+          }
+          placeholder="pk_test_..."
+          disabled={isLoading}
+        />
       </div>
       <div className="grid gap-2">
         <Label htmlFor="secret_key">{t("gateway_secret_key")}</Label>
-        <Input id="secret_key" type="password" value={credentials.secret_key || ""} onChange={(e) => handleCredentialChange("secret_key", e.target.value)} placeholder={editData ? "••••••••" : "sk_test_..."} disabled={isLoading} />
+        <Input
+          id="secret_key"
+          type="password"
+          value={credentials.secret_key || ""}
+          onChange={(e) => handleCredentialChange("secret_key", e.target.value)}
+          placeholder={editData ? "••••••••" : "sk_test_..."}
+          disabled={isLoading}
+        />
       </div>
     </>
   );
@@ -121,21 +165,49 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({ isOpen, onClo
     <>
       <div className="grid gap-2">
         <Label htmlFor="client_id">{t("gateway_client_id")}</Label>
-        <Input className="h-11" id="client_id" value={credentials.client_id || ""} onChange={(e) => handleCredentialChange("client_id", e.target.value)} placeholder="Client ID" disabled={isLoading} />
+        <Input
+          className="h-11"
+          id="client_id"
+          value={credentials.client_id || ""}
+          onChange={(e) => handleCredentialChange("client_id", e.target.value)}
+          placeholder="Client ID"
+          disabled={isLoading}
+        />
       </div>
       <div className="grid gap-2">
         <Label htmlFor="client_secret">{t("gateway_client_secret")}</Label>
-        <Input className="h-11" id="client_secret" type="password" value={credentials.client_secret || ""} onChange={(e) => handleCredentialChange("client_secret", e.target.value)} placeholder={editData ? "••••••••" : "Client Secret"} disabled={isLoading} />
+        <Input
+          className="h-11"
+          id="client_secret"
+          type="password"
+          value={credentials.client_secret || ""}
+          onChange={(e) =>
+            handleCredentialChange("client_secret", e.target.value)
+          }
+          placeholder={editData ? "••••••••" : "Client Secret"}
+          disabled={isLoading}
+        />
       </div>
       <div className="grid gap-2">
         <Label htmlFor="mode">{t("gateway_mode")}</Label>
-        <Select value={credentials.mode || "sandbox"} onValueChange={(value) => handleCredentialChange("mode", value)} disabled={isLoading}>
+        <Select
+          value={credentials.mode || "sandbox"}
+          onValueChange={(value) => handleCredentialChange("mode", value)}
+          disabled={isLoading}
+        >
           <SelectTrigger id="mode">
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="dark:bg-(--card-color)">
-            <SelectItem className="dark:hover:bg-(--table-hover)" value="sandbox">{t("gateway_mode_sandbox")}</SelectItem>
-            <SelectItem className="dark:hover:bg-(--table-hover)" value="live">{t("gateway_mode_live")}</SelectItem>
+            <SelectItem
+              className="dark:hover:bg-(--table-hover)"
+              value="sandbox"
+            >
+              {t("gateway_mode_sandbox")}
+            </SelectItem>
+            <SelectItem className="dark:hover:bg-(--table-hover)" value="live">
+              {t("gateway_mode_live")}
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -195,15 +267,19 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({ isOpen, onClo
       const isNameChanged = displayName !== editData.display_name;
       const isCredChanged = Object.keys(credentials).some((key) => {
         const val = credentials[key];
-        const oldVal = editData.credentials?.[key as keyof typeof editData.credentials];
+        const oldVal =
+          editData.credentials?.[key as keyof typeof editData.credentials];
         return val !== "****" && val !== oldVal;
       });
       return isNameChanged || isCredChanged;
     }
 
-    if (gateway === "razorpay") return !!(credentials.key_id && credentials.key_secret);
-    if (gateway === "stripe") return !!(credentials.publishable_key && credentials.secret_key);
-    if (gateway === "paypal") return !!(credentials.client_id && credentials.client_secret);
+    if (gateway === "razorpay")
+      return !!(credentials.key_id && credentials.key_secret);
+    if (gateway === "stripe")
+      return !!(credentials.publishable_key && credentials.secret_key);
+    if (gateway === "paypal")
+      return !!(credentials.client_id && credentials.client_secret);
     return false;
   };
 
@@ -211,12 +287,22 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({ isOpen, onClo
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-md! max-w-[calc(100%-2rem)]! max-h-[90dvh] overflow-y-auto no-scrollbar dark:bg-(--card-color) dark:border-(--card-border-color)">
         <DialogHeader>
-          <DialogTitle>{editData ? t("edit_gateway") : t("add_gateway")}</DialogTitle>
+          <DialogTitle>
+            {editData ? t("edit_gateway") : t("add_gateway")}
+          </DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label htmlFor="displayName">{t("gateway_display_name")}</Label>
-            <Input className="h-11" id="displayName" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder={t("gateway_display_name")} disabled={isLoading} autoFocus />
+            <Input
+              className="h-11"
+              id="displayName"
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              placeholder={t("gateway_display_name")}
+              disabled={isLoading}
+              autoFocus
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="gateway">{t("gateway_provider")}</Label>
@@ -232,9 +318,24 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({ isOpen, onClo
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="dark:bg-(--card-color)">
-                <SelectItem className="dark:hover:bg-(--table-hover)" value="razorpay">{t("gateway_razorpay")}</SelectItem>
-                <SelectItem className="dark:hover:bg-(--table-hover)" value="stripe">{t("gateway_stripe")}</SelectItem>
-                <SelectItem className="dark:hover:bg-(--table-hover)" value="paypal">{t("gateway_paypal")}</SelectItem>
+                <SelectItem
+                  className="dark:hover:bg-(--table-hover)"
+                  value="razorpay"
+                >
+                  {t("gateway_razorpay")}
+                </SelectItem>
+                <SelectItem
+                  className="dark:hover:bg-(--table-hover)"
+                  value="stripe"
+                >
+                  {t("gateway_stripe")}
+                </SelectItem>
+                <SelectItem
+                  className="dark:hover:bg-(--table-hover)"
+                  value="paypal"
+                >
+                  {t("gateway_paypal")}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -246,10 +347,19 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({ isOpen, onClo
           {renderHelpSection()}
         </div>
         <DialogFooter>
-          <Button className="h-11 " variant="outline" onClick={onClose} disabled={isLoading}>
+          <Button
+            className="h-11 "
+            variant="outline"
+            onClick={onClose}
+            disabled={isLoading}
+          >
             {t("cancel")}
           </Button>
-          <Button onClick={handleConfirm} disabled={isLoading || !isFormValid()} className="bg-primary h-11 text-white">
+          <Button
+            onClick={handleConfirm}
+            disabled={isLoading || !isFormValid()}
+            className="bg-primary h-11 text-white"
+          >
             {isLoading ? t("saving") : editData ? t("update") : t("create")}
           </Button>
         </DialogFooter>

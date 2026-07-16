@@ -1,6 +1,6 @@
 "use client";
 
-import Logo1 from "@/public/assets/logos/logo1.png";
+import Logo3 from "@/public/assets/logos/logo3.png";
 import { ROUTES } from "@/src/constants";
 import { useAppSelector } from "@/src/redux/hooks";
 import Images from "@/src/shared/Image";
@@ -56,7 +56,7 @@ const Footer: React.FC<FooterProps> = ({ data }) => {
     { icon: <Facebook size={18} />, label: "Facebook", href: socialLinks?.facebook || "#" },
     { icon: <Instagram size={18} />, label: "Instagram", href: socialLinks?.instagram || "#" },
     { icon: <Linkedin size={18} />, label: "LinkedIn", href: socialLinks?.linkedin || "#" },
-  ].filter((link) => link.href !== "#" || link.label === "Twitter");
+  ].filter((link) => link.href !== "#");
 
   return (
     <footer className="relative bg-slate-900 text-white overflow-hidden">
@@ -69,7 +69,7 @@ const Footer: React.FC<FooterProps> = ({ data }) => {
           {/* Brand Column */}
           <div className={`${publicPages.length > 0 ? "lg:col-span-4" : "lg:col-span-6"} space-y-6`}>
             <div className="flex items-center gap-3">
-              <Images src={logo_dark_url || Logo1} alt={`${app_name || t("app_name")} logo`} className="h-8 object-contain brightness-0 invert" width={100} height={40} />
+              <Images src={logo_dark_url || Logo3} alt={`${app_name || t("app_name")} logo`} className="h-8 object-contain" width={100} height={40} />
             </div>
             
             <h3 className="text-xl lg:text-2xl font-black leading-tight">
@@ -180,12 +180,12 @@ const Footer: React.FC<FooterProps> = ({ data }) => {
       </div>
 
       {/* Back to Top */}
-      {/* <button
+      {/* <Button variant="unstyled"
         onClick={scrollToTop}
         className="absolute bottom-8 right-8 flex items-center justify-center w-12 h-12 rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg transition-all hover:scale-110 active:scale-95"
       >
         <ArrowUp size={20} />
-      </button> */}
+      </Button> */}
     </footer>
   );
 };

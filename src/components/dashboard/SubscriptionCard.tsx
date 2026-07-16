@@ -212,4 +212,4 @@ const SubscriptionCard = () => {
   );
 };
 
-export default SubscriptionCard;
+export default SubscriptionCard; 

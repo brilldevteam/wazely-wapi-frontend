@@ -10,24 +10,33 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/src/elements/ui/dialog";
-import { useGetSubmissionFunnelsQuery, useGetSubmissionKanbanStatusQuery, useHandleSubmissionKanbanActionMutation } from "@/src/redux/api/submissionApi";
-import { Submission } from "@/src/types/submission";
+import { Label } from "@/src/elements/ui/label";
+import {
+  useGetSubmissionFunnelsQuery,
+  useGetSubmissionKanbanStatusQuery,
+  useHandleSubmissionKanbanActionMutation,
+} from "@/src/redux/api/submissionApi";
+import { SubmissionKanbanActionModalProps } from "@/src/types/formBuilder";
+import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-import FunnelStageDropdown, { FunnelStageAction } from "../../shared/FunnelStageDropdown";
-import { Loader2 } from "lucide-react";
-import { Label } from "@/src/elements/ui/label";
+import FunnelStageDropdown from "../../shared/FunnelStageDropdown";
+import { FunnelStageAction } from "@/src/types/shared";
 
-interface SubmissionKanbanActionModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  submission: Submission | null;
-}
-
-const SubmissionKanbanActionModal: React.FC<SubmissionKanbanActionModalProps> = ({ isOpen, onClose, submission }) => {
-  const { data: funnelsData, isLoading: loadingFunnels } = useGetSubmissionFunnelsQuery(undefined, { skip: !isOpen });
-  const { data: statusData, isLoading: loadingStatus, refetch: refetchStatus } = useGetSubmissionKanbanStatusQuery(submission?._id || submission?.id, { skip: !isOpen || (!submission?._id && !submission?.id) });
-  const [handleAction, { isLoading: isSubmitting }] = useHandleSubmissionKanbanActionMutation();
+const SubmissionKanbanActionModal: React.FC<
+  SubmissionKanbanActionModalProps
+> = ({ isOpen, onClose, submission }) => {
+  const { data: funnelsData, isLoading: loadingFunnels } =
+    useGetSubmissionFunnelsQuery(undefined, { skip: !isOpen });
+  const {
+    data: statusData,
+    isLoading: loadingStatus,
+    refetch: refetchStatus,
+  } = useGetSubmissionKanbanStatusQuery(submission?._id || submission?.id, {
+    skip: !isOpen || (!submission?._id && !submission?.id),
+  });
+  const [handleAction, { isLoading: isSubmitting }] =
+    useHandleSubmissionKanbanActionMutation();
 
   const [actions, setActions] = useState<FunnelStageAction[]>([]);
 
@@ -35,7 +44,7 @@ const SubmissionKanbanActionModal: React.FC<SubmissionKanbanActionModalProps> = 
     if (isOpen && statusData?.success && statusData.data) {
       const existingActions = statusData.data.map((item: any) => ({
         funnelId: item.funnelId,
-        toStageId: item.stageId
+        toStageId: item.stageId,
       }));
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setActions(existingActions);
@@ -49,7 +58,7 @@ const SubmissionKanbanActionModal: React.FC<SubmissionKanbanActionModalProps> = 
     try {
       await handleAction({
         globalItemId: submission._id || submission.id,
-        actions: actions
+        actions: actions,
       }).unwrap();
       toast.success("Pipeline stages updated successfully");
       refetchStatus();
@@ -61,7 +70,9 @@ const SubmissionKanbanActionModal: React.FC<SubmissionKanbanActionModalProps> = 
 
   const getSubmissionName = () => {
     if (!submission) return "Lead";
-    const nameField = (submission.fields || []).find((f: any) => /name/i.test(f.label || ''))?.value;
+    const nameField = (submission.fields || []).find((f: any) =>
+      /name/i.test(f.label || ""),
+    )?.value;
     return nameField || "New Lead";
   };
 
@@ -90,7 +101,11 @@ const SubmissionKanbanActionModal: React.FC<SubmissionKanbanActionModalProps> = 
           <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
             Cancel
           </Button>
-          <Button className="text-white" onClick={handleSubmit} disabled={isSubmitting || loadingFunnels || loadingStatus}>
+          <Button
+            className="text-white"
+            onClick={handleSubmit}
+            disabled={isSubmitting || loadingFunnels || loadingStatus}
+          >
             {isSubmitting && <Loader2 className="animate-spin mr-2 h-4 w-4" />}
             Save Changes
           </Button>

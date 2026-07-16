@@ -14,10 +14,10 @@ import InboxFeatures from "./components/InboxFeatures";
 import InboxTeam from "./components/InboxTeam";
 import InboxCounter from "./components/InboxCounter";
 import InboxFAQs from "./components/InboxFAQs";
+import { SharedInboxPageProps } from "@/src/types/product";
+import { inboxCard, inboxCounter, inboxTeam } from "@/src/data/product";
 
-interface SharedInboxPageProps {
-  pageData?: any;
-}
+
 
 const SharedInboxPage = ({ pageData }: SharedInboxPageProps) => {
   const router = useRouter();
@@ -46,24 +46,14 @@ const SharedInboxPage = ({ pageData }: SharedInboxPageProps) => {
   const features = {
     badge: dc.features?.badge || "Engineered for Results",
     title: dc.features?.title || "Everything You Need to Automate Customer Success",
-    cards: Array.isArray(dc.features?.cards) ? dc.features.cards : [
-      { icon: "Inbox", title: "Unified Inbox Dashboard", description: "Consolidate customer message streams from WhatsApp API, Instagram DMs, and Facebook Messenger into one view." },
-      { icon: "Users", title: "Smart Agent Routing", description: "Assign conversations manually or setup automated routing parameters to balance workflow queues instantly." },
-      { icon: "Brain", title: "AI Suggested Replies", description: "Generate context-appropriate answers dynamically in the text area based on user ticket histories." },
-      { icon: "Sparkles", title: "Transform Message Tones", description: "Improve message copy drafts. Rephrase drafts instantly to sound highly professional, friendly, or compact." },
-      { icon: "MessageSquare", title: "Private Internal Notes", description: "Discuss issues directly on the client timeline. Leave private mentions completely hidden from customers." },
-      { icon: "ShieldAlert", title: "Customer Number Masking", description: "Secure business data. Mask client telephone numbers from agents to protect databases and reduce leakage." }
-    ]
+    cards: Array.isArray(dc.features?.cards) ? dc.features.cards : inboxCard
   };
 
   const team = {
     badge: dc.team?.badge || "Team Collaboration",
     title: dc.team?.title || "Build Better Collaborations Behind the Scenes",
     description: dc.team?.description || "Enable your agents to coordinate on customer issues in real-time. Share labels, leave private internal instructions, and track agent activity logs without switching windows.",
-    cards: Array.isArray(dc.team?.cards) ? dc.team.cards : [
-      { icon: "Layers", title: "Prevent Collision & Duplicate Replies", description: "See who is viewing or replying to a chat in real-time to avoid sending overlapping answers." },
-      { icon: "Tag", title: "Assign Shared Tags & Filters", description: "Classify contacts using global tags like \"Refund\" or \"VIP Inquirer\" so any agent can search and filters queues." }
-    ],
+    cards: Array.isArray(dc.team?.cards) ? dc.team.cards : inboxTeam,
     side_image: dc.team?.side_image || null,
   };
 
@@ -71,11 +61,7 @@ const SharedInboxPage = ({ pageData }: SharedInboxPageProps) => {
     badge: dc.counter?.badge || "Performance Impact",
     title: dc.counter?.title || "Grow Your Business on Solid Numbers",
     subtitle: dc.counter?.subtitle || "See how adding a multi-agent Shared Inbox affects key business performance indicators. By automating drafts and routing chats instantly, teams respond faster and keep customers happier.",
-    counters: Array.isArray(dc.counter?.counters) ? dc.counter.counters : [
-      { counts: "75%", title: "Quicker Response Times", description: "AI drafting tools and canned templates help agents resolve customer queries in seconds." },
-      { counts: "10x", title: "Productivity Boost", description: "Multiple support agents work simultaneously under a single profile number." },
-      { counts: "0", title: "Missed Messages", description: "Shared visibility prevents messages from slipping through shifts unhandled." }
-    ]
+    counters: Array.isArray(dc.counter?.counters) ? dc.counter.counters : inboxCounter
   };
 
   const faqs = {

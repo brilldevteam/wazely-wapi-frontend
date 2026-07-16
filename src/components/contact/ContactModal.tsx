@@ -155,7 +155,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onSave, co
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="phone" className="text-sm">
-                  {t("mobile_number")}
+                  {t("mobile_number")} <span className="text-red-500">*</span>
                 </Label>
                 <div className="flex gap-4">
                   <div className="w-27.5 shrink-0">
@@ -215,7 +215,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onSave, co
 
               <div className="space-y-2">
                 <Label htmlFor="name" className="text-sm">
-                  {t("name")}
+                  {t("name")} <span className="text-red-500">*</span>
                 </Label>
                 <Input id="name" name="name" placeholder={t("name_placeholder")} value={formik.values.name} onChange={formik.handleChange} onBlur={formik.handleBlur} className={`h-11 ${formik.touched.name && formik.errors.name ? "border-red-500 bg-(--input-color)" : "bg-(--input-color)"}`} />
                 {formik.touched.name && formik.errors.name && <p className="text-xs text-red-500">{formik.errors.name}</p>}
@@ -280,10 +280,9 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onSave, co
                   {t("status")} <span className="text-red-500">*</span>
                 </Label>
                 <Select
-                  value={formik.values.status}
+                  value={formik.values.status || undefined}
                   onValueChange={(val) => {
                     formik.setFieldValue("status", val);
-                    formik.setFieldTouched("status", true);
                   }}
                 >
                   <SelectTrigger className={cn("w-full h-11 py-5 bg-(--input-color) dark:border-none dark:bg-(--page-body-bg) dark:focus:bg-(--page-body-bg) dark:hover:bg-(--page-body-bg) transition-all focus:ring-1", formik.touched.status && formik.errors.status ? "border-red-500 ring-red-500/10 focus:ring-red-500/20" : "focus:ring-primary/20")}>
@@ -321,10 +320,9 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onSave, co
                       {fieldType === "SELECT" ? (
                         <div className="space-y-1">
                           <Select
-                            value={formik.values.custom_fields?.[field.name] || ""}
+                            value={formik.values.custom_fields?.[field.name] || undefined}
                             onValueChange={(val) => {
                               handleCustomFieldChange(field.name, val);
-                              formik.setFieldTouched(`custom_fields.${field.name}`, true);
                             }}
                           >
                             <SelectTrigger className={cn("w-full h-12 py-5 bg-(--input-color) dark:bg-(--page-body-bg)", showMessage ? "border-red-500 ring-red-500/10" : "dark:border-none")}>
@@ -360,7 +358,6 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onSave, co
                               checked={Boolean(formik.values.custom_fields?.[field.name])}
                               onCheckedChange={(checked) => {
                                 handleCustomFieldChange(field.name, checked === true);
-                                formik.setFieldTouched(`custom_fields.${field.name}`, true);
                               }}
                               className={cn(showMessage && "border-red-500 data-[state=checked]:bg-red-500")}
                             />

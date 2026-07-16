@@ -3,10 +3,10 @@
 import { Badge } from "@/src/elements/ui/badge";
 import { Button } from "@/src/elements/ui/button";
 import { Template } from "@/src/types/components";
-import { Edit3, Trash2, Eye } from "lucide-react";
+import { Edit3, Trash2, Eye, Send } from "lucide-react";
 import Can from "@/src/components/shared/Can";
 
-export const TemplateCard = ({ template, onPreview, onEdit, onDelete, getStatusBadge }: { template: Template; onSelect: (template: Template) => void; onPreview: (template: Template) => void; onEdit: (id: string) => void; onDelete: (id: string) => void; getStatusBadge: (status: string) => React.ReactNode }) => {
+export const TemplateCard = ({ template, onPreview, onEdit, onDelete, onPublish, getStatusBadge }: { template: Template; onSelect: (template: Template) => void; onPreview: (template: Template) => void; onEdit: (id: string) => void; onDelete: (id: string) => void; onPublish?: (id: string) => void; getStatusBadge: (status: string) => React.ReactNode }) => {
   return (
     <div className="group relative bg-white dark:border-none dark:bg-(--card-color) rounded-lg border border-slate-100 dark:border-neutral-800 shadow-sm hover:shadow-xl hover:border-emerald-500/50 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer h-full flex flex-col" onClick={() => onPreview(template)}>
       <div className="p-5 flex items-center justify-between gap-3 border-b border-slate-50 dark:border-(--card-border-color)">
@@ -38,6 +38,22 @@ export const TemplateCard = ({ template, onPreview, onEdit, onDelete, getStatusB
         >
           <Eye size={18} />
         </Button>
+        {template.status?.toLowerCase() === "draft" && template && onPublish && (
+          <Can permission="update.template">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-10 w-10 rounded-lg border-slate-200 bg-white shadow-lg hover:border-amber-500 hover:text-amber-500 hover:bg-amber-50 hover:scale-110 transition-all"
+              onClick={(e) => {
+                e.stopPropagation();
+                onPublish(template._id);
+              }}
+              title="Publish Template"
+            >
+              <Send size={18} />
+            </Button>
+          </Can>
+        )}
         <Can permission="update.template">
           <Button
             variant="outline"

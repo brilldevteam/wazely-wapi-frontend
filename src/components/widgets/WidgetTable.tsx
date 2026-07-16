@@ -271,6 +271,7 @@ const WidgetTable: React.FC = () => {
               : "No widgets found. Go ahead and create one!"
           }
           className="border-none shadow-none rounded-none"
+          actionPermission={["update.short_links", "delete.short_links"]}
         />
       </div>
 

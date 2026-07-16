@@ -2,8 +2,19 @@
 "use client";
 
 import { Badge } from "@/src/elements/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/elements/ui/select";
-import { useDeleteTemplateMutation, useGetTemplatesQuery, useSyncTemplatesStatusMutation } from "@/src/redux/api/templateApi";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/src/elements/ui/select";
+import {
+  useDeleteTemplateMutation,
+  useGetTemplatesQuery,
+  useSyncTemplatesStatusMutation,
+  usePublishTemplateMutation,
+} from "@/src/redux/api/templateApi";
 import { useGetConnectionsQuery } from "@/src/redux/api/whatsappApi";
 import CommonHeader from "@/src/shared/CommonHeader";
 import ConfirmModal from "@/src/shared/ConfirmModal";
@@ -36,7 +47,12 @@ const getPlatformColor = (platform?: string) => {
   }
 };
 
-const MessageTemplates = ({ wabaId, statusFilter: statusFilterProp, onToggleSidebar, platform = "whatsapp" }: MessageTemplatesProps) => {
+const MessageTemplates = ({
+  wabaId,
+  statusFilter: statusFilterProp,
+  onToggleSidebar,
+  platform = "whatsapp",
+}: MessageTemplatesProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
@@ -45,13 +61,23 @@ const MessageTemplates = ({ wabaId, statusFilter: statusFilterProp, onToggleSide
 
   const isWhatsApp = platform === "whatsapp";
 
-  const { data: connectionsResponse } = useGetConnectionsQuery({ limit: 100 }, { skip: !isWhatsApp });
+  const { data: connectionsResponse } = useGetConnectionsQuery(
+    { limit: 100 },
+    { skip: !isWhatsApp },
+  );
   const connections: WABAConnection[] = connectionsResponse?.data || [];
 
-  const [syncTemplatesStatus, { isLoading: isSyncingStatus }] = useSyncTemplatesStatusMutation();
-  const [deleteTemplate, { isLoading: isDeleting }] = useDeleteTemplateMutation();
+  const [syncTemplatesStatus, { isLoading: isSyncingStatus }] =
+    useSyncTemplatesStatusMutation();
+  const [deleteTemplate, { isLoading: isDeleting }] =
+    useDeleteTemplateMutation();
+  const [publishTemplate, { isLoading: isPublishing }] =
+    usePublishTemplateMutation();
 
-  const resolvedStatus = statusFilterProp && statusFilterProp !== "all" ? statusFilterProp : undefined;
+  const resolvedStatus =
+    statusFilterProp && statusFilterProp !== "all"
+      ? statusFilterProp
+      : undefined;
 
   const {
     data: response,
@@ -96,19 +122,57 @@ const MessageTemplates = ({ wabaId, statusFilter: statusFilterProp, onToggleSide
     }
   };
 
+  const [publishTemplateId, setPublishTemplateId] = useState<string | null>(
+    null,
+  );
+
+  const handleConfirmPublish = async () => {
+    if (!publishTemplateId) return;
+    try {
+      const response = await publishTemplate(publishTemplateId).unwrap();
+      toast.success(response.message || "Template published successfully");
+      setPublishTemplateId(null);
+    } catch (error: any) {
+      console.error("Publish error:", error);
+      toast.error(
+        error?.data?.message ||
+          error?.data?.error ||
+          error?.error ||
+          "Failed to publish template",
+      );
+      setPublishTemplateId(null);
+    }
+  };
+
   const templates: Template[] = response?.data || [];
 
   const getStatusBadge = (status: string) => {
     const s = status?.toUpperCase();
     switch (s) {
       case "APPROVED":
-        return <Badge className="bg-emerald-50 text-primary border-emerald-100 dark:border-primary dark:bg-transparent hover:bg-emerald-50 px-2 py-0.5 text-[10px] font-bold">APPROVED</Badge>;
+        return (
+          <Badge className="bg-emerald-50 text-primary border-emerald-100 dark:border-primary dark:bg-transparent hover:bg-emerald-50 px-2 py-0.5 text-[10px] font-bold">
+            APPROVED
+          </Badge>
+        );
       case "PENDING":
-        return <Badge className="bg-amber-50 dark:bg-(--card-color)! dark:border-(--card-border-color) text-amber-600 border-amber-100 hover:bg-amber-50 px-2 py-0.5 text-[10px] font-bold">PENDING</Badge>;
+        return (
+          <Badge className="bg-amber-50 dark:bg-(--card-color)! dark:border-(--card-border-color) text-amber-600 border-amber-100 hover:bg-amber-50 px-2 py-0.5 text-[10px] font-bold">
+            PENDING
+          </Badge>
+        );
       case "REJECTED":
-        return <Badge className="bg-rose-50 text-rose-600 border-rose-100 dark:bg-(--card-color)! dark:border-(--card-border-color) hover:bg-rose-50 px-2 py-0.5 text-[10px] font-bold">REJECTED</Badge>;
+        return (
+          <Badge className="bg-rose-50 text-rose-600 border-rose-100 dark:bg-(--card-color)! dark:border-(--card-border-color) hover:bg-rose-50 px-2 py-0.5 text-[10px] font-bold">
+            REJECTED
+          </Badge>
+        );
       default:
-        return <Badge className="bg-slate-50 text-slate-600 border-slate-100 hover:bg-slate-50 px-2 py-0.5 text-[10px] font-bold">{s || "DRAFT"}</Badge>;
+        return (
+          <Badge className="bg-slate-50 dark:bg-(--page-body-bg) dark:border-(--card-border-color) text-slate-600 border-slate-100 hover:bg-slate-50 px-2 py-0.5 text-[10px] font-bold">
+            {s || "DRAFT"}
+          </Badge>
+        );
     }
   };
 
@@ -122,8 +186,12 @@ const MessageTemplates = ({ wabaId, statusFilter: statusFilterProp, onToggleSide
         <Database className="w-4 h-4 text-primary" />
       </div>
       <div className="flex flex-col">
-        <span className="text-[10px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-wider leading-none mb-0.5">Connected WABA ID</span>
-        <span className="text-sm font-semibold text-slate-700 dark:text-amber-50 leading-tight">{currentWaba?.whatsapp_business_account_id}</span>
+        <span className="text-[10px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-wider leading-none mb-0.5">
+          Connected WABA ID
+        </span>
+        <span className="text-sm font-semibold text-slate-700 dark:text-amber-50 leading-tight">
+          {currentWaba?.whatsapp_business_account_id}
+        </span>
       </div>
     </div>
   ) : null;
@@ -149,14 +217,18 @@ const MessageTemplates = ({ wabaId, statusFilter: statusFilterProp, onToggleSide
         rightContent={
           <div className="flex items-center flex-col sm:flex-row gap-3">
             {WabaDisplay}
-            <button
-              onClick={() => router.push(`${ROUTES.MessageTemplates}/${wabaId}/create?platform=${platform}`)}
+            <Button variant="unstyled"
+              onClick={() =>
+                router.push(
+                  `${ROUTES.MessageTemplates}/${wabaId}/create?platform=${platform}`,
+                )
+              }
               className="flex items-center gap-2.5 px-4.5 h-12 rounded-lg font-bold text-white cursor-pointer transition-all hover:opacity-90 active:scale-95 shadow-sm text-sm"
               style={{ backgroundColor: getPlatformColor(platform) }}
             >
               <Plus className="w-4 h-4 text-white" />
               <span>{t("create_new_template")}</span>
-            </button>
+            </Button>
           </div>
         }
         onToggleSidebar={onToggleSidebar}
@@ -180,26 +252,72 @@ const MessageTemplates = ({ wabaId, statusFilter: statusFilterProp, onToggleSide
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-32 gap-3">
             <Loader2 className="w-10 h-10 animate-spin text-primary" />
-            <p className="text-sm text-slate-500 font-medium tracking-wide">Fetching templates...</p>
+            <p className="text-sm text-slate-500 font-medium tracking-wide">
+              Fetching templates...
+            </p>
           </div>
         ) : templates.length === 0 ? (
           <div className="text-center py-32 bg-white/50 dark:bg-(--card-color) rounded-lg border border-dashed border-slate-200 dark:border-(--card-border-color)">
-            <p className="text-sm text-slate-500 dark:text-amber-50">No templates found matching your criteria</p>
+            <p className="text-sm text-slate-500 dark:text-amber-50">
+              No templates found matching your criteria
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 pb-4">
             {templates.map((template) => (
-              <TemplateCard key={template._id} template={template} onSelect={(t) => setPreviewTemplate(t)} onPreview={(t) => setPreviewTemplate(t)} onEdit={(id) => router.push(`${ROUTES.MessageTemplates}/${wabaId}/edit/${id}?platform=${platform}`)} onDelete={(id) => setDeleteTemplateId(id)} getStatusBadge={getStatusBadge} />
+              <TemplateCard
+                key={template._id}
+                template={template}
+                onSelect={(t) => setPreviewTemplate(t)}
+                onPreview={(t) => setPreviewTemplate(t)}
+                onEdit={(id) =>
+                  router.push(
+                    `${ROUTES.MessageTemplates}/${wabaId}/edit/${id}?platform=${platform}`,
+                  )
+                }
+                onDelete={(id) => setDeleteTemplateId(id)}
+                onPublish={(id) => setPublishTemplateId(id)}
+                getStatusBadge={getStatusBadge}
+              />
             ))}
           </div>
         )}
       </div>
 
-      <TemplatePreviewModal isOpen={!!previewTemplate} onClose={() => setPreviewTemplate(null)} template={previewTemplate} />
+      <TemplatePreviewModal
+        isOpen={!!previewTemplate}
+        onClose={() => setPreviewTemplate(null)}
+        template={previewTemplate}
+      />
 
-      <ConfirmModal isOpen={!!deleteTemplateId} onClose={() => setDeleteTemplateId(null)} onConfirm={handleConfirmDelete} isLoading={isDeleting} title="Delete Template" subtitle="Are you sure you want to delete this template? This action will remove it permanently from WhatsApp." confirmText="Yes, delete it" variant="danger" />
+      <ConfirmModal
+        isOpen={!!deleteTemplateId}
+        onClose={() => setDeleteTemplateId(null)}
+        onConfirm={handleConfirmDelete}
+        isLoading={isDeleting}
+        title="Delete Template"
+        subtitle="Are you sure you want to delete this template? This action will remove it permanently from WhatsApp."
+        confirmText="Yes, delete it"
+        variant="danger"
+      />
 
-      <SyncTemplateModal isOpen={isSyncModalOpen} onClose={() => setIsSyncModalOpen(false)} wabaId={wabaId} onSuccess={() => refetch()} />
+      <ConfirmModal
+        isOpen={!!publishTemplateId}
+        onClose={() => setPublishTemplateId(null)}
+        onConfirm={handleConfirmPublish}
+        isLoading={isPublishing}
+        title="Publish Template"
+        subtitle="Are you sure you want to publish this draft? This will submit it for approval if required."
+        confirmText="Yes, publish it"
+        variant="primary"
+      />
+
+      <SyncTemplateModal
+        isOpen={isSyncModalOpen}
+        onClose={() => setIsSyncModalOpen(false)}
+        wabaId={wabaId}
+        onSuccess={() => refetch()}
+      />
     </div>
   );
 };

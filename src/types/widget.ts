@@ -98,3 +98,9 @@ export interface WidgetWizardFormProps {
   isStandalone?: boolean;
   onBodyBgImageChange?: (previewUrl: string | null, file: File | null) => void;
 }
+
+export interface EmbedCodeButtonProps {
+  code: string;
+  iconOnly?: boolean;
+  className?: string;
+}

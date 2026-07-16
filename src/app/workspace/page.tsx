@@ -106,8 +106,12 @@ export default function WorkspacePage() {
     if (!url) return getUrlWithBasePath("/assets/logos/logo1.png");
 
     const API_URL = process.env.NEXT_PUBLIC_STORAGE_URL ?? "";
-    const resolved = url.startsWith("http") ? url : `${API_URL}${url}`;
-    return getUrlWithBasePath(resolved);
+    if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:")) {
+      return getUrlWithBasePath(url);
+    }
+    const cleanUrl = url.replace(/\\/g, "/").startsWith("/") ? url.replace(/\\/g, "/") : `/${url.replace(/\\/g, "/")}`;
+    const baseUrl = API_URL.endsWith("/") ? API_URL.slice(0, -1) : API_URL;
+    return getUrlWithBasePath(`${baseUrl}${cleanUrl}`);
   }, [mounted, theme, logo_light_url, logo_dark_url]);
 
   const initials = user?.name?.charAt(0)?.toUpperCase() ?? "?";

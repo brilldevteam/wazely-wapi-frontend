@@ -224,3 +224,41 @@ export interface AdminTemplateCardProps {
   onUse: (templateId: string) => void;
   isUsing: boolean;
 }
+
+export interface TemplateSettingsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export interface AdminTemplateLibraryProps {
+  selectedSector?: string;
+  selectedCategory?: string;
+  wabaId?: string;
+  onToggleSidebar?: () => void;
+  platform?: string;
+}
+ 
+export type TemplateView = "custom" | "explore";
+export interface TemplatesSidebarState {
+  activeView: TemplateView;
+  selectedSector: string;
+  selectedCategory: string;
+  selectedStatus: string;
+}
+
+export interface TemplatesSidebarProps extends TemplatesSidebarState {
+  onViewChange: (view: TemplateView) => void;
+  onSectorChange: (sector: string) => void;
+  onCategoryChange: (category: string) => void;
+  onStatusChange: (status: string) => void;
+  onClose?: () => void;
+  platform?: string;
+}
+
+export interface NavItemProps {
+  icon: React.ReactNode;
+  label: string;
+  description: string;
+  isActive: boolean;
+  onClick: () => void;
+}

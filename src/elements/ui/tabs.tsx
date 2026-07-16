@@ -4,6 +4,7 @@ import * as React from "react";
 import { cn } from "@/src/utils";
 import { Button } from "@/src/elements/ui/button";
 
+
 const Tabs = ({ children, className }: { children: React.ReactNode; className?: string }) => (
   <div className={cn("space-y-4", className)}>{children}</div>
 );
@@ -30,14 +31,14 @@ const TabsTrigger = ({
   onClick: () => void;
   className?: string;
 }) => (
-  <Button
+  <Button variant="unstyled"
     type="button"
     onClick={onClick}
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-lg px-6 py-2 text-sm font-medium transition-all focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+      "inline-flex items-center justify-center whitespace-nowrap rounded-md px-6 py-2 text-sm font-semibold transition-all focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
       active
-        ? "bg-white text-primary shadow-sm dark:bg-(--page-body-bg) dark:text-amber-50"
-        : "hover:bg-white/50 hover:text-slate-700 dark:hover:bg-(--table-hover) dark:hover:text-slate-200",
+        ? "bg-primary text-white shadow-xs"
+        : "text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:text-gray-400 dark:hover:bg-(--table-hover) dark:hover:text-slate-200",
       className
     )}
   >

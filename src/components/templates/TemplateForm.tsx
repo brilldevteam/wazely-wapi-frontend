@@ -4,7 +4,7 @@
 import { Button } from "@/src/elements/ui/button";
 import { TemplateFormProps } from "@/src/types/components/template";
 import { ArrowLeft, Eye, Loader2, Phone, Plus, Sparkles, X } from "lucide-react";
-import { CATEGORIES, INTERACTIVE_ACTIONS, LANGUAGES, TEMPLATE_TYPES } from "@/src/data/Templates";
+import { CATEGORIES, INTERACTIVE_ACTIONS, LANGUAGES, TEMPLATE_TYPES } from "@/src/data/templates";
 import AITemplateModal from "./form/AITemplateModal";
 import { FormLivePreview } from "./form/FormLivePreview";
 import { useTemplateForm } from "./form/hooks/useTemplateForm";
@@ -101,16 +101,25 @@ const TemplateForm = ({ wabaId, templateId, adminTemplateId }: TemplateFormProps
                     <Sparkles size={20} /> Build with AI
                   </span>
                 </Button>
-                <button
+                <Button variant="unstyled"
                   type="button"
-                  onClick={onSubmit}
+                  onClick={(e) => onSubmit(e, true)}
+                  disabled={isCreating || isEditing || isInvalidButtons}
+                  className="rounded-lg text-slate-700 bg-white border border-slate-200 dark:bg-(--card-color) dark:text-slate-300 dark:border-(--card-border-color) font-bold transition-all disabled:opacity-50 whitespace-nowrap px-6 py-3.5 flex items-center justify-center gap-2 cursor-pointer hover:bg-slate-50 dark:hover:bg-(--table-hover) active:scale-95 shadow-sm text-sm"
+                >
+                  {isCreating || isEditing ? <Loader2 className="animate-spin" size={18} /> : null}
+                  <span>Save as Draft</span>
+                </Button>
+                <Button variant="unstyled"
+                  type="button"
+                  onClick={(e) => onSubmit(e, false)}
                   disabled={isCreating || isEditing || isInvalidButtons}
                   className="rounded-lg text-white font-bold transition-all disabled:opacity-50 whitespace-nowrap px-6 py-3.5 flex items-center justify-center gap-2 cursor-pointer hover:opacity-90 active:scale-95 shadow-sm text-sm"
                   style={{ backgroundColor: getPlatformColor(platform) }}
                 >
                   {isCreating || isEditing ? <Loader2 className="animate-spin" size={18} /> : <Plus className="w-4 h-4 text-white" />}
-                  <span>{templateId ? "Save Changes" : "Submit Template"}</span>
-                </button>
+                  <span>{templateId ? "Save & Publish" : "Submit & Publish"}</span>
+                </Button>
               </div>
             </div>
 
@@ -120,7 +129,7 @@ const TemplateForm = ({ wabaId, templateId, adminTemplateId }: TemplateFormProps
               <AuthenticationSection authData={authData} setAuthData={setAuthData} isLoading={isCreating || isEditing} />
             ) : (
               <div className="space-y-10">
-                {!hideHeaderFooter && <HeaderSection templateType={formData.template_type} setTemplateType={(val) => setFormData((p: any) => ({ ...p, template_type: val }))} headerText={formData.header_text} setHeaderText={(val) => setFormData((p: any) => ({ ...p, header_text: val }))} templateTypes={TEMPLATE_TYPES} setHeaderFile={setHeaderFile} headerFile={headerFile} mediaUrl={formData.header_url} />}
+                {!hideHeaderFooter && <HeaderSection templateType={formData.template_type} setTemplateType={(val) => setFormData((p: any) => ({ ...p, template_type: val, header_url: "" }))} headerText={formData.header_text} setHeaderText={(val) => setFormData((p: any) => ({ ...p, header_text: val }))} templateTypes={TEMPLATE_TYPES} setHeaderFile={setHeaderFile} headerFile={headerFile} mediaUrl={formData.header_url} />}
 
                 <BodySection messageBody={formData.message_body} handleBodyChange={handleBodyChange} addVariable={addVariable} setEditor={setEditor} variables_example={formData.variables_example} updateVariable={updateVariable} />
 
@@ -154,16 +163,25 @@ const TemplateForm = ({ wabaId, templateId, adminTemplateId }: TemplateFormProps
               <Button variant="ghost" onClick={() => router.back()} className="px-8 h-12 rounded-lg font-bold text-slate-500 transition-all dark:hover:bg-(--table-hover) dark:bg-(--card-color) bg-gray-100 dark:text-amber-50 dark:hover:text-amber-50 hover:bg-slate-100">
                 Discard Changes
               </Button>
-              <button
+              <Button variant="unstyled"
                 type="button"
-                onClick={onSubmit}
+                onClick={(e) => onSubmit(e, true)}
+                disabled={isCreating || isEditing || isInvalidButtons}
+                className="px-8 h-12 rounded-lg text-slate-700 bg-white border border-slate-200 dark:bg-(--card-color) dark:text-slate-300 dark:border-(--card-border-color) font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer hover:bg-slate-50 dark:hover:bg-(--table-hover) active:scale-95 shadow-sm text-sm"
+              >
+                {isCreating || isEditing ? <Loader2 className="animate-spin" size={18} /> : null}
+                <span>Save as Draft</span>
+              </Button>
+              <Button variant="unstyled"
+                type="button"
+                onClick={(e) => onSubmit(e, false)}
                 disabled={isCreating || isEditing || isInvalidButtons}
                 className="px-10 h-12 rounded-lg text-white font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer hover:opacity-90 active:scale-95 shadow-sm text-sm"
                 style={{ backgroundColor: getPlatformColor(platform) }}
               >
                 {isCreating || isEditing ? <Loader2 className="animate-spin" size={18} /> : <Plus className="w-5 h-5 text-white" />}
-                <span>{templateId ? "Save Changes" : "Submit Template"}</span>
-              </button>
+                <span>{templateId ? "Save & Publish" : "Submit & Publish"}</span>
+              </Button>
             </div>
           </div>
         </div>

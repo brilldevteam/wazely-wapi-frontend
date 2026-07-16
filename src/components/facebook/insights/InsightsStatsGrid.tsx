@@ -6,20 +6,9 @@ import { DollarSign, Eye, MousePointer2, Target, TrendingUp } from "lucide-react
 import { useTranslation } from "react-i18next";
 import { Skeleton } from "@/src/elements/ui/skeleton";
 import CountUp from "react-countup";
+import { InsightsStatsGridProps } from "@/src/types/facebook";
 
-interface InsightsSummary {
-  total_spend: number;
-  total_impressions: number;
-  total_reach: number;
-  total_clicks: number;
-  total_conversions: number;
-  cost_per_result: number;
-}
 
-interface InsightsStatsGridProps {
-  summary?: InsightsSummary;
-  isLoading: boolean;
-}
 
 const InsightsStatsGrid: React.FC<InsightsStatsGridProps> = ({ summary, isLoading }) => {
   const { t } = useTranslation();

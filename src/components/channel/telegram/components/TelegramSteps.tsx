@@ -1,40 +1,29 @@
 "use client";
 
-import React from "react";
-import { Cpu, Layers, FileText, Zap } from "lucide-react";
+import { defaultTelegramSteps } from "@/src/data/ChannelConnectionInfo";
+import { TelegramStepsProps } from "@/src/types/channel";
+import { Cpu, FileText, Layers, Zap } from "lucide-react";
 
-interface Step {
-  title: string;
-  description: string;
-}
-
-interface TelegramStepsProps {
-  stepsSection: {
-    badge?: string;
-    title?: string;
-    subtitle?: string;
-    steps?: Step[];
-  };
-  primaryColor: string;
-  tgGradient: string;
-}
-
-export default function TelegramSteps({ stepsSection, primaryColor, tgGradient }: TelegramStepsProps) {
-  const defaultSteps = [
-    { title: "Link Your Chat", description: "Enter your Telegram account link details to connect your chat securely in one second." },
-    { title: "Choose Reply Words", description: "Pick key words that customers often ask (like 'price', 'delivery') so your chat knows what to answer." },
-    { title: "Create Answers", description: "Type out your answer messages and add helpful quick buttons for customers to click." },
-    { title: "Start Answering", description: "Your chat assistant is ready! It will automatically reply to customer questions 24 hours a day." }
-  ];
-
-  const steps = Array.isArray(stepsSection.steps) && stepsSection.steps.length > 0 ? stepsSection.steps : defaultSteps;
+export default function TelegramSteps({
+  stepsSection,
+  primaryColor,
+  tgGradient,
+}: TelegramStepsProps) {
+  const steps =
+    Array.isArray(stepsSection.steps) && stepsSection.steps.length > 0
+      ? stepsSection.steps
+      : defaultTelegramSteps;
 
   const getStepIcon = (idx: number) => {
     switch (idx) {
-      case 0: return <Cpu size={20} className="text-[#0088cc]" />;
-      case 1: return <Layers size={20} className="text-[#0088cc]" />;
-      case 2: return <FileText size={20} className="text-[#0088cc]" />;
-      default: return <Zap size={20} className="text-[#0088cc]" />;
+      case 0:
+        return <Cpu size={20} className="text-[#0088cc]" />;
+      case 1:
+        return <Layers size={20} className="text-[#0088cc]" />;
+      case 2:
+        return <FileText size={20} className="text-[#0088cc]" />;
+      default:
+        return <Zap size={20} className="text-[#0088cc]" />;
     }
   };
 
@@ -52,7 +41,7 @@ export default function TelegramSteps({ stepsSection, primaryColor, tgGradient }
             {stepsSection.title || "Start in under 2 minutes."}
           </h2>
           {stepsSection.subtitle && (
-            <p className=" text-[17px] font-semibold text-slate-600 leading-relaxed">
+            <p className=" text-[15px] font-medium text-slate-600 leading-relaxed">
               {stepsSection.subtitle}
             </p>
           )}
@@ -61,7 +50,10 @@ export default function TelegramSteps({ stepsSection, primaryColor, tgGradient }
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 max-w-7xl mx-auto">
           {steps.map((step: any, idx: number) => {
             return (
-              <div key={idx} className="bg-white border border-slate-200/60 rounded-lg p-[calc(10px+(24-10)*((100vw-320px)/(1920-320)))] pt-[calc(14px+(36-14)*((100vw-320px)/(1920-320)))] shadow-xs relative flex flex-col justify-between text-left transition-all duration-300 hover:shadow-md">
+              <div
+                key={idx}
+                className="bg-white border border-slate-200/60 rounded-lg p-[calc(10px+(24-10)*((100vw-320px)/(1920-320)))] pt-[calc(14px+(36-14)*((100vw-320px)/(1920-320)))] shadow-xs relative flex flex-col justify-between text-left transition-all duration-300 hover:shadow-md"
+              >
                 <div
                   className="absolute -top-2 left-6 px-3 py-0.5 text-[9.5px] font-black uppercase tracking-wider text-white rounded-full"
                   style={{ background: tgGradient }}
@@ -69,10 +61,18 @@ export default function TelegramSteps({ stepsSection, primaryColor, tgGradient }
                   Step {idx + 1}
                 </div>
                 <div>
-                  <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-5" style={{ background: "color-mix(in oklab, oklch(0.72 0.13 235) 12%, white)" }}>
+                  <div
+                    className="w-12 h-12 rounded-lg flex items-center justify-center mb-5"
+                    style={{
+                      background:
+                        "color-mix(in oklab, oklch(0.72 0.13 235) 12%, white)",
+                    }}
+                  >
                     {getStepIcon(idx)}
                   </div>
-                  <h4 className="text-[17px] font-black text-slate-900 mb-2 leading-tight">{step.title}</h4>
+                  <h4 className="text-[17px] font-black text-slate-900 mb-2 leading-tight">
+                    {step.title}
+                  </h4>
                   <p className="text-[13px] font-medium text-slate-500 leading-relaxed">
                     {step.description}
                   </p>

@@ -2,26 +2,44 @@
 "use client";
 
 import { Button } from "@/src/elements/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/src/elements/ui/dialog";
-import { useGetContactFunnelsQuery, useGetContactKanbanStatusQuery, useHandleContactKanbanActionMutation } from "@/src/redux/api/contactApi";
-import { Contact } from "@/src/types/components";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/src/elements/ui/dialog";
+import { Label } from "@/src/elements/ui/label";
+import {
+  useGetContactFunnelsQuery,
+  useGetContactKanbanStatusQuery,
+  useHandleContactKanbanActionMutation,
+} from "@/src/redux/api/contactApi";
+import { ContactKanbanActionModalProps } from "@/src/types/components";
+import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-import FunnelStageDropdown, { FunnelStageAction } from "../shared/FunnelStageDropdown";
-import { Loader2 } from "lucide-react";
-import { Label } from "@/src/elements/ui/label";
+import FunnelStageDropdown  from "../shared/FunnelStageDropdown";
+import { FunnelStageAction } from "@/src/types/shared";
 
-interface ContactKanbanActionModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  contact: Contact | null;
-}
-
-const ContactKanbanActionModal: React.FC<ContactKanbanActionModalProps> = ({ isOpen, onClose, contact }) => {
-  const { data: funnelsData, isLoading: loadingFunnels } = useGetContactFunnelsQuery(undefined, { skip: !isOpen });
-  const { data: statusData, isLoading: loadingStatus, refetch: refetchStatus } = useGetContactKanbanStatusQuery(contact?._id, { skip: !isOpen || !contact?._id });
+const ContactKanbanActionModal: React.FC<ContactKanbanActionModalProps> = ({
+  isOpen,
+  onClose,
+  contact,
+}) => {
+  const { data: funnelsData, isLoading: loadingFunnels } =
+    useGetContactFunnelsQuery(undefined, { skip: !isOpen });
+  const {
+    data: statusData,
+    isLoading: loadingStatus,
+    refetch: refetchStatus,
+  } = useGetContactKanbanStatusQuery(contact?._id, {
+    skip: !isOpen || !contact?._id,
+  });
   console.log("statusData", statusData);
-  const [handleAction, { isLoading: isSubmitting }] = useHandleContactKanbanActionMutation();
+  const [handleAction, { isLoading: isSubmitting }] =
+    useHandleContactKanbanActionMutation();
 
   const [actions, setActions] = useState<FunnelStageAction[]>([]);
 
@@ -58,17 +76,36 @@ const ContactKanbanActionModal: React.FC<ContactKanbanActionModalProps> = ({ isO
       <DialogContent className="sm:max-w-md! max-w-[calc(100%-2rem)]! dark:bg-(--card-color)!">
         <DialogHeader>
           <DialogTitle>Manage Pipeline: {contact?.name}</DialogTitle>
-          <DialogDescription>Assign this contact to specific stages across your funnels.</DialogDescription>
+          <DialogDescription>
+            Assign this contact to specific stages across your funnels.
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
-          <Label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Funnels & Stages</Label>
-          <FunnelStageDropdown funnels={funnelsData?.data || []} selectedActions={actions} onChange={setActions} isLoading={loadingFunnels || loadingStatus} placeholder="Choose funnel stages..." />
+          <Label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+            Funnels & Stages
+          </Label>
+          <FunnelStageDropdown
+            funnels={funnelsData?.data || []}
+            selectedActions={actions}
+            onChange={setActions}
+            isLoading={loadingFunnels || loadingStatus}
+            placeholder="Choose funnel stages..."
+          />
         </div>
-        <DialogFooter >
-          <Button className="text-white h-11 px-4.5! py-5!" variant="outline" onClick={onClose} disabled={isSubmitting}>
+        <DialogFooter>
+          <Button
+            className="h-11 px-4.5! py-5!"
+            variant="outline"
+            onClick={onClose}
+            disabled={isSubmitting}
+          >
             Cancel
           </Button>
-          <Button className="text-white h-11 px-4.5! py-5!" onClick={handleSubmit} disabled={isSubmitting || loadingFunnels || loadingStatus}>
+          <Button
+            className="text-white h-11 px-4.5! py-5!"
+            onClick={handleSubmit}
+            disabled={isSubmitting || loadingFunnels || loadingStatus}
+          >
             {isSubmitting && <Loader2 className="animate-spin mr-2 h-4 w-4" />}
             Save Changes
           </Button>

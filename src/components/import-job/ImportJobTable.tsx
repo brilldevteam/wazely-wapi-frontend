@@ -310,7 +310,7 @@ const ImportJobTable: React.FC = () => {
       />
 
       <div className="bg-white dark:bg-(--card-color) rounded-lg shadow-sm overflow-hidden">
-        <DataTable<ImportJobData> data={response?.data?.import_jobs || []} columns={columns.filter((col) => visibleColumns.find((vc) => vc.label === col.header)?.isVisible !== false)} isLoading={isLoading} isFetching={isFetching} totalCount={response?.data?.pagination?.totalItems || 0} page={page} limit={limit} onPageChange={handlePageChange} onLimitChange={handleLimitChange} onSortChange={handleSortChange} enableSelection selectedIds={selectedIds} onSelectionChange={setSelectedIds} getRowId={(item) => item._id} emptyMessage={searchTerm ? `No import jobs found for "${searchTerm}"` : "No import tasks found."} />
+        <DataTable<ImportJobData> data={response?.data?.import_jobs || []} columns={columns.filter((col) => visibleColumns.find((vc) => vc.label === col.header)?.isVisible !== false)} isLoading={isLoading} isFetching={isFetching} totalCount={response?.data?.pagination?.totalItems || 0} page={page} limit={limit} onPageChange={handlePageChange} onLimitChange={handleLimitChange} onSortChange={handleSortChange} enableSelection selectedIds={selectedIds} onSelectionChange={setSelectedIds} getRowId={(item) => item._id} emptyMessage={searchTerm ? `No import jobs found for "${searchTerm}"` : "No import tasks found."} actionPermission={["delete.import_jobs"]} />
       </div>
 
       <ConfirmModal isOpen={!!deleteId} onClose={() => setDeleteId(null)} onConfirm={handleSingleDelete} isLoading={isBulkDeleting} title="Delete Import Job" subtitle="Are you sure you want to delete this import job history? This will not affect imported contacts." variant="danger" />

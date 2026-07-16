@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Input } from "@/src/elements/ui/input";
@@ -9,8 +8,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 import MediaSelectionModal from "../../chat/MediaSelectionModal";
-import { CampaignCard, TemplateCarouselCard } from "./types";
 import { Button } from "@/src/elements/ui/button";
+import { CampaignCard, TemplateCarouselCard } from "@/src/types/campaign";
 
 const CardHeaderMedia = ({ cardIndex, headerFormat, link, localFile, onHeaderChange }: { cardIndex: number; headerFormat: string; link: string; localFile?: File; onHeaderChange: (val: { link: string; localFile?: File }) => void }) => {
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
@@ -58,7 +57,7 @@ const CardHeaderMedia = ({ cardIndex, headerFormat, link, localFile, onHeaderCha
             <CloudUpload size={20} className="text-primary" />
           </div>
           <p className="text-xs font-bold text-slate-600 dark:text-slate-300">Select {headerFormat} from media library</p>
-          <p className="text-[10px] text-slate-400">Choose from your uploaded media</p>
+          <p className="text-[10px] text-slate-405">Choose from your uploaded media</p>
         </div>
       )}
 
@@ -76,7 +75,7 @@ const CardHeaderMedia = ({ cardIndex, headerFormat, link, localFile, onHeaderCha
 };
 
 export const CarouselMediaEditor = ({ cards, templateCards, onChange }: { cards: CampaignCard[]; templateCards: TemplateCarouselCard[]; onChange: (cards: CampaignCard[]) => void }) => {
-  const updateCard = (i: number, field: string, value: any) => {
+  const updateCard = (i: number, field: "header", value: { link: string; localFile?: File }) => {
     const next = cards.map((c, idx) => {
       if (idx !== i) return c;
       if (field === "header") return { ...c, header: { ...c.header, ...value } };
@@ -91,14 +90,14 @@ export const CarouselMediaEditor = ({ cards, templateCards, onChange }: { cards:
         const card = cards[i];
         if (!card) return null;
 
-        const headerComp = tCard.components?.find((c: any) => c.type === "header");
+        const headerComp = tCard.components?.find((c) => c.type === "header");
         const headerFormat = headerComp?.format || "image";
 
         return (
           <div key={i} className="rounded-lg border border-slate-100 dark:bg-(--page-body-bg) dark:border-none overflow-hidden">
             <div className="flex items-center justify-between px-5 py-3 bg-slate-50 dark:bg-(--page-body-bg) border-b border-slate-100 dark:border-(--card-border-color)">
               <span className="text-[11px] font-black uppercase tracking-widest text-slate-500">Card {i + 1}</span>
-              <span className="text-[10px] font-medium text-slate-400 italic">Header: {headerFormat}</span>
+              <span className="text-[10px] font-medium text-slate-405 italic">Header: {headerFormat}</span>
             </div>
             <div className="p-5 space-y-4">
               <div className="space-y-1.5">
