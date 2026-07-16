@@ -16,20 +16,43 @@ const API_URL = process.env.NEXT_PUBLIC_STORAGE_URL ?? "";
 
 const resolveUrl = (url?: string): string => {
   if (!url) return "";
-  return url.startsWith("http") ? url : `${API_URL}${url}`;
+  if (url.startsWith("http") || url.startsWith("https") || url.startsWith("data:")) return url;
+
+  const baseUrl = (API_URL || "").endsWith("/") ? API_URL.slice(0, -1) : API_URL;
+
+  if (url.startsWith("/uploads/")) {
+    return `${baseUrl}${url}`;
+  }
+  if (url.startsWith("uploads/")) {
+    return `${baseUrl}/${url}`;
+  }
+  if (url.startsWith("/")) {
+    return getUrlWithBasePath(url);
+  }
+  return getUrlWithBasePath(`/${url}`);
 };
 
-const DEFAULT_FAVICON = "/assets/logos/sidebarLogo.png";
+const DEFAULT_FAVICON = getUrlWithBasePath("/assets/logos/sidebarLogo.png");
+
+const normalizeHref = (href?: string | null) => {
+  if (!href) return "";
+  try {
+    return new URL(href, window.location.origin).href;
+  } catch {
+    return "";
+  }
+};
 
 function applyFavicon(href: string) {
   if (typeof window === "undefined" || !href) return;
 
   const links = document.querySelectorAll("link[rel*='icon']");
-  const normalizedHref = href.startsWith("http") ? href : new URL(href, window.location.origin).href;
+  const normalizedHref = normalizeHref(href);
+  if (!normalizedHref) return;
 
   if (links.length > 0) {
     links.forEach((link: any) => {
-      const normalizedLinkHref = new URL(link.href, window.location.origin).href;
+      const normalizedLinkHref = normalizeHref(link.getAttribute("href") || link.href);
       if (normalizedLinkHref !== normalizedHref) {
         link.href = href;
       }
@@ -113,7 +136,7 @@ const DynamicSettingsProvider = ({ children }: DynamicSettingsProviderProps) => 
   useEffect(() => {
     if (!mounted) return;
 
-    const faviconHref = getUrlWithBasePath(resolveUrl(favicon_url) || DEFAULT_FAVICON);
+    const faviconHref = resolveUrl(favicon_url) || DEFAULT_FAVICON;
 
     // Title update
     const baseTitle = app_name || t("app_name");
