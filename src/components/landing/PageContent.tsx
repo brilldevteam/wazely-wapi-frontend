@@ -1,14 +1,11 @@
 "use client";
 
+import { PageContentProps } from "@/src/types/landingPage";
 import React from "react";
-
-interface PageContentProps {
-  content: string;
-}
 
 const PageContent: React.FC<PageContentProps> = ({ content }) => {
   return (
-    <div 
+    <div
       className="dynamic-content max-w-none"
       dangerouslySetInnerHTML={{ __html: content }}
     />

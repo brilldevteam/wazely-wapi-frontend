@@ -59,7 +59,7 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
 
   // Authentication form state
   const [authData, setAuthData] = useState<AuthFormData>({
-    message_body: "Your verification code is {{code}}. Valid for {{expires time}} minutes.",
+    message_body: "{{code}} is your verification code. For your security, do not share this code.",
     footer_text: "",
     add_security_recommendation: true,
     code_expiration_minutes: 10,
@@ -111,7 +111,13 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
       header_text: template.header?.text || "",
       message_body: template.message_body || "",
       footer_text: template.footer_text || "",
-      interactive_type: template.buttons?.length ? "cta" : "none",
+      interactive_type: template.buttons?.length
+        ? (template.buttons.some((b: any) => b.type === "quick_reply" || b.type === "catalog")
+            ? (template.buttons.some((b: any) => b.type === "url" || b.type === "website" || b.type === "phone_call" || b.type === "copy_code")
+                ? "all"
+                : "quick_reply")
+            : "cta")
+        : "none",
       buttons: (template.buttons || []).map((btn: any) => ({ ...btn, id: makeId() })),
       variables_example: template.body_variables || template.variables_example || template.variables || [],
       marketing_type,
@@ -177,7 +183,7 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
       // Populate auth data if editing an AUTHENTICATION template
       if (template.category === "AUTHENTICATION") {
         setAuthData({
-          message_body: "Your verification code is {{code}}. Valid for {{expires time}} minutes.",
+          message_body: "{{code}} is your verification code. For your security, do not share this code.",
           footer_text: template.footer_text || "",
           add_security_recommendation: (template as any).add_security_recommendation ?? true,
           code_expiration_minutes: (template as any).code_expiration_minutes ?? 10,
@@ -255,7 +261,7 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
 
       if (template.category === "AUTHENTICATION") {
         setAuthData({
-          message_body: "Your verification code is {{code}}. Valid for {{expires time}} minutes.",
+          message_body: "{{code}} is your verification code. For your security, do not share this code.",
           footer_text: template.footer_text || "",
           add_security_recommendation: (template as any).add_security_recommendation ?? true,
           code_expiration_minutes: (template as any).code_expiration_minutes ?? 10,
@@ -413,8 +419,8 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
   };
 
   // Submit
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (e?: React.FormEvent, isDraft = false) => {
+    if (e) e.preventDefault();
     if (!formData.language) return toast.error("Language is required");
     if (!formData.category) return toast.error("Category is required");
     if (!formData.template_name) return toast.error("Template name is required");
@@ -442,6 +448,8 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
         otp_code_length: authData.otp_code_length !== "" ? authData.otp_code_length : undefined,
         otp_buttons: authData.otp_buttons,
         variable_examples: authData.variables_example,
+        save_as_draft: isDraft,
+        should_update_on_meta: !isDraft,
       };
       try {
         if (templateId) await updateTemplate({ id: templateId, data: payload }).unwrap();
@@ -467,6 +475,8 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
         variable_examples: formData.variables_example,
         template_type: "catalog",
         buttons: [{ type: "catalog", text: formData.catalog_button_text || "View catalog" }],
+        save_as_draft: isDraft,
+        should_update_on_meta: !isDraft,
       };
       try {
         if (templateId) await updateTemplate({ id: templateId, data: payload }).unwrap();
@@ -493,6 +503,8 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
         variable_examples: formData.variables_example,
         template_type: "call_permission",
         call_permission: true,
+        save_as_draft: isDraft,
+        should_update_on_meta: !isDraft,
       };
       try {
         if (templateId) await updateTemplate({ id: templateId, data: payload }).unwrap();
@@ -522,6 +534,8 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
             { type: "buttons", buttons: [{ type: "spm", text: card.button_text || "View" }] },
           ],
         })),
+        save_as_draft: isDraft,
+        should_update_on_meta: !isDraft,
       };
       try {
         if (templateId) await updateTemplate({ id: templateId, data: payload }).unwrap();
@@ -544,6 +558,8 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
       payload.append("category", "MARKETING");
       payload.append("template_type", "carousel_media");
       payload.append("message_body", messageBody);
+      payload.append("save_as_draft", String(isDraft));
+      payload.append("should_update_on_meta", String(!isDraft));
       if (formData.variables_example?.[0]) payload.append("variable_examples", JSON.stringify(formData.variables_example[0]));
 
       const cardsPayload = mediaCards.map((card) => ({
@@ -608,6 +624,8 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
         payload.append("offer_text", formData.offer_text);
         payload.append("has_expiration", "true");
       }
+      payload.append("save_as_draft", String(isDraft));
+      payload.append("should_update_on_meta", String(!isDraft));
       payload.append("file", headerFile);
     } else {
       payload = {
@@ -616,7 +634,7 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
         template_name: formData.template_name,
         category: formData.category,
         language: formData.language,
-        template_type: formData.template_type,
+        template_type: ["none", "text"].includes(formData.template_type) ? "standard" : formData.template_type,
         message_body: messageBody,
         header_text: formData.header_text || "",
         footer_text: formData.footer_text || "",
@@ -625,6 +643,8 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
         is_limited_time_offer: isLimitedTimeOffer,
         offer_text: isLimitedTimeOffer ? formData.offer_text : undefined,
         has_expiration: isLimitedTimeOffer ? true : undefined,
+        save_as_draft: isDraft,
+        should_update_on_meta: !isDraft,
       };
     }
 

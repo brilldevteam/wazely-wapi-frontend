@@ -66,14 +66,14 @@ const WebhookPage = () => {
     setLocalStatuses((prev) => ({ ...prev, [id]: !currentStatus }));
     try {
       await toggleWebhook(id).unwrap();
-      toast.success("Webhook status updated successfully");
+      toast.success(t("webhook_status_updated_successfully", "Webhook status updated successfully"));
     } catch (error: any) {
       setLocalStatuses((prev) => {
         const next = { ...prev };
         delete next[id];
         return next;
       });
-      toast.error(error?.data?.message || "Failed to toggle status");
+      toast.error(error?.data?.message || t("failed_to_toggle_status", "Failed to toggle status"));
     }
   };
 
@@ -88,15 +88,15 @@ const WebhookPage = () => {
         const id = (typeof selectedWebhook._id === "string" ? selectedWebhook._id : selectedWebhook._id?.$oid) || selectedWebhook.id;
         if (id) {
           await updateWebhook({ id, body: formData }).unwrap();
-          toast.success("Webhook updated successfully");
+          toast.success(t("webhook_updated_successfully", "Webhook updated successfully"));
         }
       } else {
         await createWebhook(formData).unwrap();
-        toast.success("Webhook created successfully");
+        toast.success(t("webhook_created_successfully", "Webhook created successfully"));
       }
       setIsModalOpen(false);
     } catch (error: any) {
-      toast.error(error?.data?.message || "Something went wrong");
+      toast.error(error?.data?.message || t("something_went_wrong", "Something went wrong"));
     }
   };
 
@@ -107,10 +107,10 @@ const WebhookPage = () => {
 
     try {
       await deleteWebhook(id).unwrap();
-      toast.success("Webhook deleted successfully");
+      toast.success(t("webhook_deleted_successfully", "Webhook deleted successfully"));
       setIsDeleteModalOpen(false);
     } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to delete webhook");
+      toast.error(error?.data?.message || t("failed_to_delete_webhook", "Failed to delete webhook"));
     }
   };
 
@@ -127,39 +127,15 @@ const WebhookPage = () => {
         onSearch={setSearchTerm}
         searchTerm={searchTerm}
         featureKey="whatsapp_webhook_used"
-        searchPlaceholder="Search webhooks..."
+        searchPlaceholder={t("search_webhooks_placeholder", "Search webhooks...")}
         onRefresh={() => {
           refetch();
-          toast.success("Webhooks refreshed successfully");
+          toast.success(t("webhooks_refreshed_successfully", "Webhooks refreshed successfully"));
         }}
         onAddClick={handleAddClick}
-        addLabel="Create Event Notification"
+        addLabel={t("create_event_notification", "Create Event Notification")}
         addPermission="create.ecommerce_webhooks"
         isLoading={isLoading}
-      // rightContent={
-      //   <div className="flex items-center gap-3">
-      //     <div className="flex items-center bg-slate-100 dark:bg-(--page-body-bg) p-1 rounded-lg border border-slate-200 dark:border-(--card-border-color) shadow-inner mr-2">
-      //       <Button
-      //         variant="ghost"
-      //         size="sm"
-      //         onClick={() => setViewMode("table")}
-      //         className={cn("h-9 px-3 rounded-lg gap-2 transition-all", viewMode === "table" ? "bg-white dark:bg-(--card-color) text-primary shadow-sm font-bold" : "text-slate-400 hover:text-slate-600")}
-      //       >
-      //         <List size={16} />
-      //         <span className="text-xs tracking-wider">{t("table")}</span>
-      //       </Button>
-      //       <Button
-      //         variant="ghost"
-      //         size="sm"
-      //         onClick={() => setViewMode("grid")}
-      //         className={cn("h-9 px-3 rounded-lg gap-2 transition-all", viewMode === "grid" ? "bg-white dark:bg-(--card-color) text-primary shadow-sm font-bold" : "text-slate-400 hover:text-slate-600")}
-      //       >
-      //         <LayoutGrid size={16} />
-      //         <span className="text-xs tracking-wider">{t("grid")}</span>
-      //       </Button>
-      //     </div>
-      //   </div>
-      // }
       />
 
       {viewMode === "grid" ? (
@@ -181,8 +157,8 @@ const WebhookPage = () => {
             <div className="bg-slate-50 dark:bg-(--dark-sidebar) p-6 rounded-full mb-4">
               <LayoutGrid className="h-12 w-12 text-slate-300" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-800 dark:text-amber-50">No webhooks found</h3>
-            <p className="text-slate-500 dark:text-gray-400 max-w-xs mt-2">{"You haven't created any webhooks yet. Click the button above to get started."}</p>
+            <h3 className="text-xl font-semibold text-slate-800 dark:text-amber-50">{t("no_webhooks_found", "No webhooks found")}</h3>
+            <p className="text-slate-500 dark:text-gray-400 max-w-xs mt-2">{t("no_webhooks_yet_desc", "You haven't created any webhooks yet. Click the button above to get started.")}</p>
           </div>
         )
       ) : (
@@ -193,7 +169,7 @@ const WebhookPage = () => {
 
       <WebhookPayloadModal isOpen={isPayloadModalOpen} onClose={() => setIsPayloadModalOpen(false)} webhook={selectedWebhook || undefined} />
 
-      <ConfirmModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={confirmDelete} isLoading={isDeleting} title="Delete Webhook" subtitle={`Are you sure you want to delete "${selectedWebhook?.webhook_name}"? This action cannot be undone.`} confirmText="Delete" variant="danger" />
+      <ConfirmModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={confirmDelete} isLoading={isDeleting} title={t("delete_webhook", "Delete Webhook")} subtitle={t("delete_webhook_confirm", "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.", { name: selectedWebhook?.webhook_name })} confirmText={t("delete", "Delete")} variant="danger" />
     </div>
   );
 };

@@ -60,7 +60,7 @@ const ContactImportModal = ({ isOpen, onClose, onImport, isLoading }: ContactImp
               <p className="text-xs text-slate-400 font-medium">{t("import_contacts_desc")}</p>
             </div>
           </div>
-          <Button onClick={handleClose} disabled={isLoading} className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-(--table-hover) text-slate-400 hover:text-slate-600 transition-colors">
+          <Button onClick={handleClose} disabled={isLoading} className="p-2 rounded-lg bg-slate-50 dark:bg-(--dark-body) hover:bg-slate-100 dark:hover:bg-(--table-hover) text-slate-400 hover:text-slate-600 transition-colors">
             <X size={18} />
           </Button>
         </div>

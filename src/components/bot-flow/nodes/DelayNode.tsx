@@ -23,7 +23,8 @@ export function DelayNode({ data, id }: any) {
     );
   };
 
-  const delayMs = data.delay_ms || 1000;
+  const delayMs = data.delay_ms !== undefined && data.delay_ms !== null ? data.delay_ms : 1000;
+  const displaySec = typeof delayMs === "number" ? (delayMs / 1000).toFixed(1) : "0.0";
 
   return (
     <BaseNode
@@ -48,7 +49,7 @@ export function DelayNode({ data, id }: any) {
           />
           <div className="flex flex-col">
             <span className="text-[10px] font-bold text-amber-600 uppercase tracking-tight leading-none mb-0.5">Duration</span>
-            <span className="text-xs text-gray-500 font-medium leading-none">{(delayMs / 1000).toFixed(1)}s</span>
+            <span className="text-xs text-gray-500 font-medium leading-none">{displaySec}s</span>
           </div>
         </div>
         <p className="mt-2 text-[10px] text-gray-400 italic">This will pause the execution of the next step</p>

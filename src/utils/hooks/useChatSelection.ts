@@ -2,6 +2,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useDeleteChatMutation } from "@/src/redux/api/chatApi";
 import { RecentChatResponseItem } from "@/src/types/components/chat";
+import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
+import { selectChat } from "@/src/redux/reducers/messenger/chatSlice";
+import { RootState } from "@/src/redux/store";
 
 interface UseChatSelectionProps {
   workspaceId?: string;
@@ -9,6 +12,8 @@ interface UseChatSelectionProps {
 }
 
 export const useChatSelection = ({ workspaceId, sortedChats }: UseChatSelectionProps) => {
+  const dispatch = useAppDispatch();
+  const { selectedChat } = useAppSelector((state: RootState) => state.chat);
   const [isSelectionMode, setIsSelectionMode] = useState(false);
   const [selectedContactIds, setSelectedContactIds] = useState<string[]>([]);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -47,6 +52,11 @@ export const useChatSelection = ({ workspaceId, sortedChats }: UseChatSelectionP
 
       if (response.success) {
         toast.success(response.message || "Chats deleted successfully");
+        
+        if (selectedChat && selectedContactIds.includes(selectedChat.contact.id)) {
+          dispatch(selectChat(null));
+        }
+
         setIsDeleteModalOpen(false);
         setIsSelectionMode(false);
         setSelectedContactIds([]);

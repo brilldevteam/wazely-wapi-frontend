@@ -16,7 +16,6 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DynamicLogo } from "./common/DynamicLogo";
 import { Skeleton } from "@/src/elements/ui/skeleton";
-
 import { AuthControls } from "./common/AuthControls";
 
 export const LoginPage = () => {

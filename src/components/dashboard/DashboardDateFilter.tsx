@@ -11,14 +11,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/src/elements/ui/popov
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/elements/ui/select";
 import { cn } from "@/src/lib/utils";
 import { DashboardDateFilterData } from "@/src/types/dashboard";
+import { presets } from "@/src/data/dashboard";
 
-export const presets = [
-  { label: "Today", value: "today" },
-  { label: "This Week", value: "this_week" },
-  { label: "This Month", value: "this_month" },
-  { label: "This Year", value: "this_year" },
-  { label: "Custom", value: "custom" },
-];
+
 
 export function DashboardDateFilter({ onFilterChange }: DashboardDateFilterData) {
   const [dateRange, setDateRange] = React.useState<string>("this_year");

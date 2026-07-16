@@ -1,29 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
-import { useAppSelector } from "@/src/redux/hooks";
-import { CookieIcon, ShieldAlertIcon, SettingsIcon } from "lucide-react";
 import { Button } from "@/src/elements/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/src/elements/ui/dialog";
 import { Switch } from "@/src/elements/ui/switch";
+import { useAppSelector } from "@/src/redux/hooks";
+import { CookieIcon, SettingsIcon, ShieldAlertIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
+import { COOKIE_CONSENT_KEY } from "@/src/data/shared";
 import { useLogCookieConsentMutation } from "@/src/redux/api/settingsApi";
-
-const COOKIE_CONSENT_KEY = "wapi-cookie-consent";
-
-interface CookiePreferences {
-  essential: boolean;
-  analytical: boolean;
-  marketing: boolean;
-}
+import { CookiePreferences } from "@/src/types/shared";
 
 export default function CookieConsent() {
   const pathname = usePathname();
@@ -69,7 +63,7 @@ export default function CookieConsent() {
 
   const handleConsent = async (
     type: "accept" | "decline" | "preferences",
-    customPrefs?: CookiePreferences
+    customPrefs?: CookiePreferences,
   ) => {
     const consentId = `consent_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
     const finalPrefs = customPrefs || {
@@ -104,7 +98,9 @@ export default function CookieConsent() {
 
     // Dispatch global event for custom scripts listening to consent updates
     if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("cookie-consent-updated", { detail: finalPrefs }));
+      window.dispatchEvent(
+        new CustomEvent("cookie-consent-updated", { detail: finalPrefs }),
+      );
     }
   };
 
@@ -122,7 +118,10 @@ export default function CookieConsent() {
                 Cookie Preferences
               </h3>
               <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
-                We use cookies to enhance your browsing experience, serve personalized ads or content, and analyze our traffic. By clicking &quot;Accept All&quot;, you consent to our use of cookies.
+                We use cookies to enhance your browsing experience, serve
+                personalized ads or content, and analyze our traffic. By
+                clicking &quot;Accept All&quot;, you consent to our use of
+                cookies.
               </p>
             </div>
           </div>
@@ -165,7 +164,8 @@ export default function CookieConsent() {
               Customize Consent Preferences
             </DialogTitle>
             <DialogDescription className="text-xs text-zinc-500 dark:text-zinc-400">
-              You can choose which categories of cookies you want to accept or decline. Essential cookies cannot be disabled.
+              You can choose which categories of cookies you want to accept or
+              decline. Essential cookies cannot be disabled.
             </DialogDescription>
           </DialogHeader>
 
@@ -177,7 +177,8 @@ export default function CookieConsent() {
                   Strictly Necessary Cookies (Always Active)
                 </span>
                 <span className="text-[10px] text-zinc-400 dark:text-zinc-500">
-                  These cookies are essential for website security, user authentication, and basic functions.
+                  These cookies are essential for website security, user
+                  authentication, and basic functions.
                 </span>
               </div>
               <Switch checked disabled size="sm" />
@@ -190,7 +191,8 @@ export default function CookieConsent() {
                   Analytical/Performance Cookies
                 </span>
                 <span className="text-[10px] text-zinc-400 dark:text-zinc-500">
-                  These allow us to count visits, analyze traffic sources, and monitor platform performance to improve user experience.
+                  These allow us to count visits, analyze traffic sources, and
+                  monitor platform performance to improve user experience.
                 </span>
               </div>
               <Switch
@@ -209,7 +211,8 @@ export default function CookieConsent() {
                   Marketing/Advertising Cookies
                 </span>
                 <span className="text-[10px] text-zinc-400 dark:text-zinc-500">
-                  These track users across websites to enable display of relevant ads, campaigns, and audience segmentation.
+                  These track users across websites to enable display of
+                  relevant ads, campaigns, and audience segmentation.
                 </span>
               </div>
               <Switch

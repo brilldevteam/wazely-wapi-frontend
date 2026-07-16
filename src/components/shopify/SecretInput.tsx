@@ -1,18 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
-import { Eye, EyeOff, KeyRound } from "lucide-react";
 import { Input } from "@/src/elements/ui/input";
 import { Label } from "@/src/elements/ui/label";
+import { SecretInputProps } from "@/src/types/shopify";
+import { Eye, EyeOff, KeyRound } from "lucide-react";
+import React, { useState } from "react";
+import { Button } from "@/src/elements/ui/button";
 
-interface SecretInputProps {
-  id: string;
-  label: string;
-  value: string;
-  placeholder?: string;
-  onChange: (v: string) => void;
-  disabled?: boolean;
-}
 
 export const SecretInput: React.FC<SecretInputProps> = ({
   id,
@@ -25,7 +19,10 @@ export const SecretInput: React.FC<SecretInputProps> = ({
   const [revealed, setRevealed] = useState(false);
   return (
     <div className="space-y-2">
-      <Label htmlFor={id} className="text-sm font-semibold text-gray-700 dark:text-gray-400 flex items-center gap-1.5">
+      <Label
+        htmlFor={id}
+        className="text-sm font-semibold text-gray-700 dark:text-gray-400 flex items-center gap-1.5"
+      >
         <KeyRound size={14} className="text-primary" />
         {label}
       </Label>
@@ -39,7 +36,7 @@ export const SecretInput: React.FC<SecretInputProps> = ({
           disabled={disabled}
           className="pr-10 h-11 border-(--input-border-color) bg-(--input-color) dark:border-(--card-border-color) focus-visible:ring-primary focus-visible:border-primary font-mono text-sm"
         />
-        <button
+        <Button variant="unstyled"
           type="button"
           tabIndex={-1}
           onClick={() => setRevealed((r) => !r)}
@@ -47,7 +44,7 @@ export const SecretInput: React.FC<SecretInputProps> = ({
           disabled={disabled}
         >
           {revealed ? <EyeOff size={15} /> : <Eye size={15} />}
-        </button>
+        </Button>
       </div>
     </div>
   );

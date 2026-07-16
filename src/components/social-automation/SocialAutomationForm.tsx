@@ -20,7 +20,6 @@ import { useGetChatbotsQuery } from "@/src/redux/api/chatbotApi";
 import { useGetCustomFieldsQuery } from "@/src/redux/api/customFieldApi";
 import { REPLY_TYPES } from "@/src/data/KeywordActionData";
 import { getTemplateVariables, isMarketingTemplate } from "@/src/utils/template";
-import { CONTACT_SYSTEM_FIELDS } from "../campaigns/wizard/types";
 import { CampaignCard, CarouselProduct, TemplateCarouselCard } from "@/src/types/campaign";
 import TemplateConfig from "../response-resources/sequence-step/TemplateConfig";
 import { MaterialPreviewModal } from "../shared/MaterialPreviewModal";
@@ -38,6 +37,7 @@ import { Step1KeywordsOptions } from "./Step1KeywordsOptions";
 import { Step2ReplyMaterial } from "./Step2ReplyMaterial";
 import { SidebarSummary } from "./SidebarSummary";
 import { SocialAutomationSkeleton } from "./SocialAutomationSkeleton";
+import { CONTACT_SYSTEM_FIELDS } from "@/src/data/campaign";
 
 const SocialAutomationForm: React.FC = () => {
   const { t } = useTranslation();
@@ -124,10 +124,9 @@ const SocialAutomationForm: React.FC = () => {
   const [autoLikeComment, setAutoLikeComment] = useState(false);
   const [autoHideComment, setAutoHideComment] = useState(false);
   const [autoReplyText, setAutoReplyText] = useState("");
-  const [hideConditionType, setHideConditionType] = useState<"keywords" | "chatbot">("keywords");
+  const [hideConditionType, setHideConditionType] = useState<"keywords" | "aimodel">("keywords");
   const [hideKeywords, setHideKeywords] = useState<string[]>([]);
   const [hideKeywordInput, setHideKeywordInput] = useState("");
-  const [hideChatbotId, setHideChatbotId] = useState("");
   const [requiresFollowing, setRequiresFollowing] = useState(false);
   const [followGateMessage, setFollowGateMessage] = useState("");
   const [followGateButtonYes, setFollowGateButtonYes] = useState("");
@@ -191,15 +190,10 @@ const SocialAutomationForm: React.FC = () => {
 
   const activeTypeConfig = filteredReplyTypes[activeTypeIndex] || REPLY_TYPES[0];
 
-  // Queries for reply materials
-  const skip = !wabaId;
-  const { data: materialsData, isLoading: loadingMaterials } = useGetReplyMaterialsQuery({ waba_id: wabaId }, { skip });
-  const { data: templatesData } = useGetTemplatesQuery(
-    { waba_id: wabaId, status: "approved", platform },
-    { skip }
-  );
-  const { data: sequencesData } = useGetSequencesQuery({ waba_id: wabaId }, { skip });
-  const { data: chatbotsData } = useGetChatbotsQuery({ waba_id: wabaId }, { skip });
+  const { data: materialsData, isLoading: loadingMaterials } = useGetReplyMaterialsQuery({ waba_id: wabaId || "" });
+  const { data: templatesData } = useGetTemplatesQuery({ waba_id: wabaId || "", status: "approved", platform });
+  const { data: sequencesData } = useGetSequencesQuery({ waba_id: wabaId || "" });
+  const { data: chatbotsData } = useGetChatbotsQuery({ waba_id: wabaId || "" });
   const { data: customFieldsResult } = useGetCustomFieldsQuery({});
 
   const [createSocialAutomation, { isLoading: isCreating }] = useCreateSocialAutomationMutation();
@@ -376,9 +370,6 @@ const SocialAutomationForm: React.FC = () => {
       }
       if (auto.hide_keywords && auto.hide_keywords.length > 0) {
         setHideKeywords(auto.hide_keywords);
-      }
-      if (auto.hide_chatbot_id) {
-        setHideChatbotId(auto.hide_chatbot_id);
       }
       if (auto.requires_following !== undefined) {
         setRequiresFollowing(auto.requires_following);
@@ -565,7 +556,6 @@ const SocialAutomationForm: React.FC = () => {
       ...(autoHideComment ? {
         hide_condition_type: hideConditionType,
         hide_keywords: hideConditionType === 'keywords' ? hideKeywords : undefined,
-        hide_chatbot_id: hideConditionType === 'chatbot' ? hideChatbotId : undefined,
       } : {}),
       requires_following: requiresFollowing,
       follow_gate_message: requiresFollowing ? followGateMessage : undefined,
@@ -617,7 +607,6 @@ const SocialAutomationForm: React.FC = () => {
         for (const v of vars) {
           if (!variablesMapping[v]) return `Variable {{${v}}} is required`;
         }
-        if (isMarketingTemplate(selectedMaterial) && !couponCode) return "Coupon code is required";
       }
     }
     return null;
@@ -712,9 +701,6 @@ const SocialAutomationForm: React.FC = () => {
               setHideKeywords={setHideKeywords}
               hideKeywordInput={hideKeywordInput}
               setHideKeywordInput={setHideKeywordInput}
-              hideChatbotId={hideChatbotId}
-              setHideChatbotId={setHideChatbotId}
-              chatbotsData={chatbotsData?.data || []}
               delaySeconds={delaySeconds}
               setDelaySeconds={setDelaySeconds}
               handleKeyDown={handleKeyDown}
@@ -747,6 +733,7 @@ const SocialAutomationForm: React.FC = () => {
               handleMaterialSelect={handleMaterialSelect}
               handlePreview={handlePreview}
               activeTypeConfig={activeTypeConfig}
+              platform={platform}
             />
           )}
 

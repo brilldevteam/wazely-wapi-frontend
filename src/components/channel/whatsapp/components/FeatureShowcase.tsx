@@ -1,31 +1,12 @@
 "use client";
 
-import React from "react";
-import { Check } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
-import Image from "next/image";
+import { FeatureShowcaseProps } from "@/src/types/channel";
 import { getResolvedImageUrl } from "@/src/utils/image";
+import { AnimatePresence, motion } from "framer-motion";
+import { Check } from "lucide-react";
+import Image from "next/image";
+import { Button } from "@/src/elements/ui/button";
 
-interface Feature {
-  title: string;
-  description: string;
-  bullets?: string[];
-  image?: string;
-}
-
-interface FeatureShowcaseProps {
-  featuresSection: {
-    badge?: string;
-    title: string;
-    sub_title?: string;
-    features: Feature[];
-  };
-  activeFeatureIndex: number;
-  setActiveFeatureIndex: (idx: number) => void;
-  imageError: boolean;
-  setImageError: (err: boolean) => void;
-  getWhatsAppIcon: (idx: number) => React.ReactNode;
-}
 
 export default function FeatureShowcase({
   featuresSection,
@@ -41,7 +22,6 @@ export default function FeatureShowcase({
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f080_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f080_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
 
       <div className="container mx-auto px-[calc(8px+(24-8)*((100vw-320px)/(1920-320)))] md:px-12 xl:px-16 relative z-10">
-
         <div className="text-center max-w-3xl mx-auto mb-[calc(14px+(64-14)*((100vw-320px)/(1920-320)))]">
           {featuresSection.badge && (
             <span className="text-[12px] font-bold text-primary uppercase tracking-wide  bg-primary/15 px-4.5 py-1.5 rounded-full inline-block mb-3.5">
@@ -52,14 +32,13 @@ export default function FeatureShowcase({
             {featuresSection.title}
           </h2>
           {featuresSection.sub_title && (
-            <p className="mt-4 text-[17px] font-medium text-slate-600 leading-relaxed">
+            <p className="mt-4 text-[15px] font-medium text-slate-600 leading-relaxed">
               {featuresSection.sub_title}
             </p>
           )}
         </div>
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1.1fr_2.1fr] rounded-lg border border-slate-200/80 bg-white overflow-hidden shadow-2xl shadow-slate-100/90 min-h-[500px]">
-
           <div className="border-r border-slate-200 sm:p-6 p-4 flex flex-col justify-start gap-2 bg-slate-50/60">
             <div className="pb-3 mb-4 border-b border-slate-200 text-[14px] font-black text-slate-600">
               Select Capabilities
@@ -68,32 +47,33 @@ export default function FeatureShowcase({
               {featuresSection.features.map((feat: any, index: number) => {
                 const isActive = activeFeatureIndex === index;
                 return (
-                  <button
+                  <Button variant="unstyled"
                     key={index}
                     onClick={() => setActiveFeatureIndex(index)}
-                    className={`w-full flex items-center gap-3.5 sm:px-5 px-4 py-4 rounded-lg cursor-pointer transition-all duration-300 text-left border-none ${isActive
-                      ? "bg-primary! text-white! font-extrabold shadow-sm border-l-4 border-[#25D366]"
-                      : "bg-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-100/80"
-                      }`}
+                    className={`w-full flex items-center gap-3.5 sm:px-5 px-4 py-4 rounded-lg cursor-pointer transition-all duration-300 text-left border-none ${
+                      isActive
+                        ? "bg-primary! text-white! font-extrabold shadow-sm border-l-4 border-[#25D366]"
+                        : "bg-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-100/80"
+                    }`}
                   >
-                    <div className={`shrink-0 transition-colors ${isActive ? "text-white" : "text-slate-455"}`}>
+                    <div
+                      className={`shrink-0 transition-colors ${isActive ? "text-white" : "text-slate-455"}`}
+                    >
                       {getWhatsAppIcon(index)}
                     </div>
-                    <span className="text-[14.5px] font-extrabold tracking-tight">{feat.title}</span>
-                  </button>
+                    <span className="text-[14.5px] font-extrabold tracking-tight">
+                      {feat.title}
+                    </span>
+                  </Button>
                 );
               })}
             </div>
           </div>
 
           <div className="p-[calc(14px+(32-14)*((100vw-320px)/(1920-320)))]  flex flex-col justify-between bg-white relative">
-
             <div className="w-full mb-[calc(16px+(32-16)*((100vw-320px)/(1920-320)))] relative z-10">
               <div className="bg-white rounded-2xl shadow-xl shadow-slate-100/60 overflow-hidden">
-
-               
-
-                <div className="relative aspect-[16/9] md:aspect-[16/9] w-full bg-slate-50 flex items-center justify-center overflow-hidden border-t border-slate-100">
+                <div className="relative aspect-[16/9] md:aspect-[16/9] w-full bg-slate-50 flex items-center justify-center overflow-hidden ">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeFeatureIndex}
@@ -104,7 +84,8 @@ export default function FeatureShowcase({
                       className="w-full h-full"
                     >
                       {(() => {
-                        const feat = featuresSection.features[activeFeatureIndex];
+                        const feat =
+                          featuresSection.features[activeFeatureIndex];
                         return (
                           <Image
                             src={getResolvedImageUrl(feat?.image)}
@@ -139,23 +120,28 @@ export default function FeatureShowcase({
                     {featuresSection.features[activeFeatureIndex]?.description}
                   </p>
 
-                  {Array.isArray(featuresSection.features[activeFeatureIndex]?.bullets) && (
+                  {Array.isArray(
+                    featuresSection.features[activeFeatureIndex]?.bullets,
+                  ) && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2">
-                      {featuresSection.features[activeFeatureIndex].bullets.map((bullet: string, bIdx: number) => (
-                        <div key={bIdx} className="flex items-center gap-2.5 text-[13px] font-bold text-slate-600">
-                          <Check size={15} className="text-[#25D366]" />
-                          <span>{bullet}</span>
-                        </div>
-                      ))}
+                      {featuresSection.features[activeFeatureIndex].bullets.map(
+                        (bullet: string, bIdx: number) => (
+                          <div
+                            key={bIdx}
+                            className="flex items-center gap-2.5 text-[13px] font-bold text-slate-600"
+                          >
+                            <Check size={15} className="text-[#25D366]" />
+                            <span>{bullet}</span>
+                          </div>
+                        ),
+                      )}
                     </div>
                   )}
                 </motion.div>
               </AnimatePresence>
             </div>
-
           </div>
         </div>
-
       </div>
     </section>
   );

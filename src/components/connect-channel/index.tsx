@@ -182,8 +182,8 @@ const ConnectChannel = () => {
                   onClick={() => setIsTelegramModalOpen(true)}
                   disabled={isTelegramConnected}
                   className={`h-11 px-6 font-bold shadow-lg transition-all rounded-md ${isTelegramConnected
-                      ? "bg-slate-200 dark:bg-slate-800/40 text-slate-500 dark:text-slate-600 shadow-none border-none cursor-not-allowed"
-                      : "bg-[#229ED9] hover:bg-[#1f93cb] text-white shadow-blue-500/10 active:scale-95"
+                    ? "bg-slate-200 dark:bg-slate-800/40 text-slate-500 dark:text-slate-600 shadow-none border-none cursor-not-allowed"
+                    : "bg-[#229ED9] hover:bg-[#1f93cb] text-white shadow-blue-500/10 active:scale-95"
                     }`}
                 >
                   {isTelegramConnected ? (
@@ -344,79 +344,79 @@ const ConnectChannel = () => {
         </div>
       </div>
 
-        <div className="col-span-1 flex flex-col">
-          {/* Twitter Card */}
-          <Card className="overflow-hidden border border-slate-200/60 dark:border-(--card-border-color) hover:border-black/30 dark:hover:border-white/30 hover:shadow-xl hover:shadow-black/8 transition-all duration-300 rounded-xl flex flex-col justify-between h-full bg-gradient-to-br from-black/6 via-white/4 to-black/6 dark:from-white/6 dark:via-(--card-color) dark:to-white/6">
-            <CardContent className="p-8 flex flex-col h-full justify-between gap-6">
-              <div className="space-y-6">
-                {/* Card Top Branding & Status */}
-                <div className="flex items-center justify-between">
-                  <div className="relative flex items-center justify-center w-14 h-14 bg-black/10 dark:bg-white/10 rounded-2xl hover:scale-105 transition-transform duration-300">
-                    <div className="absolute inset-0 bg-black/10 dark:bg-white/10 blur-md rounded-2xl opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div className="relative">
-                      <TwitterIcon />
-                    </div>
+      <div className="col-span-1 flex flex-col">
+        {/* Twitter Card */}
+        <Card className="overflow-hidden border border-slate-200/60 dark:border-(--card-border-color) hover:border-black/30 dark:hover:border-white/30 hover:shadow-xl hover:shadow-black/8 transition-all duration-300 rounded-xl flex flex-col justify-between h-full bg-gradient-to-br from-black/6 via-white/4 to-black/6 dark:from-white/6 dark:via-(--card-color) dark:to-white/6">
+          <CardContent className="p-8 flex flex-col h-full justify-between gap-6">
+            <div className="space-y-6">
+              {/* Card Top Branding & Status */}
+              <div className="flex items-center justify-between">
+                <div className="relative flex items-center justify-center w-14 h-14 bg-black/10 dark:bg-white/10 rounded-2xl hover:scale-105 transition-transform duration-300">
+                  <div className="absolute inset-0 bg-black/10 dark:bg-white/10 blur-md rounded-2xl opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="relative">
+                    <TwitterIcon />
                   </div>
-
-                  {isTwitterConnected ? (
-                    <Badge variant="success" className="px-3.5 py-1.5 gap-1.5 flex items-center bg-green-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 border border-green-100 dark:border-emerald-500/20 font-bold text-xs tracking-wider rounded-full">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                      Connected
-                    </Badge>
-                  ) : (
-                    <Badge variant="secondary" className="px-3.5 py-1.5 dark:bg-(--dark-body) flex items-center font-bold text-xs tracking-wider rounded-full border border-slate-100 dark:border-slate-800">
-                      Not Connected
-                    </Badge>
-                  )}
                 </div>
 
-                {/* Title & Description */}
-                <div className="space-y-2">
-                  <h3 className="text-xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight flex items-center gap-2">
-                    Twitter (X) Account
-                  </h3>
-                  <p className="text-slate-500 dark:text-gray-400 text-sm leading-relaxed">
-                    Connect your Twitter account to manage DMs, automate responses, and engage with your audience directly.
-                  </p>
-                </div>
-              </div>
-
-              {/* Action Area */}
-              <div className="flex items-center justify-end gap-3 mt-auto">
-                {isTwitterConnected && twitterConnectionId && (
-                  <Button
-                    onClick={() => setDisconnectId(twitterConnectionId)}
-                    disabled={isDisconnecting}
-                    variant="outline"
-                    size="icon"
-                    className="h-11 w-11 flex items-center justify-center rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-(--card-color) text-slate-500 dark:text-slate-400 hover:text-red-600 hover:border-red-200 dark:hover:border-red-900 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all active:scale-95 shadow-sm shrink-0"
-                    title="Disconnect Twitter Account"
-                  >
-                    {isDisconnecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Link2Off className="w-4 h-4" />}
-                  </Button>
+                {isTwitterConnected ? (
+                  <Badge variant="success" className="px-3.5 py-1.5 gap-1.5 flex items-center bg-green-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 border border-green-100 dark:border-emerald-500/20 font-bold text-xs tracking-wider rounded-full">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    Connected
+                  </Badge>
+                ) : (
+                  <Badge variant="secondary" className="px-3.5 py-1.5 dark:bg-(--dark-body) flex items-center font-bold text-xs tracking-wider rounded-full border border-slate-100 dark:border-slate-800">
+                    Not Connected
+                  </Badge>
                 )}
-                <Button
-                  onClick={() => setIsTwitterModalOpen(true)}
-                  disabled={isTwitterConnected}
-                  className={`h-11 px-6 font-bold shadow-lg transition-all rounded-md ${isTwitterConnected
-                      ? "bg-slate-200 dark:bg-slate-800/40 text-slate-500 dark:text-slate-600 shadow-none border-none cursor-not-allowed"
-                      : "bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black shadow-gray-500/10 active:scale-95"
-                    }`}
-                >
-                  {isTwitterConnected ? (
-                    <span className="flex items-center gap-1.5">
-                      <Check size={16} strokeWidth={3} /> Connected
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-1.5">
-                      Connect <ArrowRight size={16} />
-                    </span>
-                  )}
-                </Button>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+
+              {/* Title & Description */}
+              <div className="space-y-2">
+                <h3 className="text-xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight flex items-center gap-2">
+                  Twitter (X) Account
+                </h3>
+                <p className="text-slate-500 dark:text-gray-400 text-sm leading-relaxed">
+                  Connect your Twitter account to manage DMs, automate responses, and engage with your audience directly.
+                </p>
+              </div>
+            </div>
+
+            {/* Action Area */}
+            <div className="flex items-center justify-end gap-3 mt-auto">
+              {isTwitterConnected && twitterConnectionId && (
+                <Button
+                  onClick={() => setDisconnectId(twitterConnectionId)}
+                  disabled={isDisconnecting}
+                  variant="outline"
+                  size="icon"
+                  className="h-11 w-11 flex items-center justify-center rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-(--card-color) text-slate-500 dark:text-slate-400 hover:text-red-600 hover:border-red-200 dark:hover:border-red-900 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all active:scale-95 shadow-sm shrink-0"
+                  title="Disconnect Twitter Account"
+                >
+                  {isDisconnecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Link2Off className="w-4 h-4" />}
+                </Button>
+              )}
+              <Button
+                onClick={() => setIsTwitterModalOpen(true)}
+                disabled={isTwitterConnected}
+                className={`h-11 px-6 font-bold shadow-lg transition-all rounded-md ${isTwitterConnected
+                  ? "bg-slate-200 dark:bg-slate-800/40 text-slate-500 dark:text-slate-600 shadow-none border-none cursor-not-allowed"
+                  : "bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black shadow-gray-500/10 active:scale-95"
+                  }`}
+              >
+                {isTwitterConnected ? (
+                  <span className="flex items-center gap-1.5">
+                    <Check size={16} strokeWidth={3} /> Connected
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1.5">
+                    Connect <ArrowRight size={16} />
+                  </span>
+                )}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Telegram Connection Modal Component */}
       <TelegramConnectModal

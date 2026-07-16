@@ -1,20 +1,20 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Input } from "@/src/elements/ui/input";
 import { Label } from "@/src/elements/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/elements/ui/select";
 import { useGetProductsFromCatalogQuery, useGetWABACatalogsQuery } from "@/src/redux/api/catalogueApi";
+import { CarouselProduct, TemplateCarouselCard } from "@/src/types/campaign";
+import { AvailableCatalogue, Product } from "@/src/types/components/catalogue";
 import { Loader2, Package, ShoppingBag, Store } from "lucide-react";
 import { useState } from "react";
-import { CarouselProduct, TemplateCarouselCard } from "./types";
 
 export const CarouselProductEditor = ({ products, templateCards, wabaId, onChange }: { products: CarouselProduct[]; templateCards: TemplateCarouselCard[]; wabaId: string; onChange: (p: CarouselProduct[]) => void }) => {
   const [selectedCatalogId, setSelectedCatalogId] = useState<string>("");
 
   const { data: catalogsResult, isLoading: loadingCatalogs } = useGetWABACatalogsQuery({ waba_id: wabaId }, { skip: !wabaId });
   const catalogs = catalogsResult?.data?.data || [];
-  const catalogId = catalogs.find((item: any) => item.catalog_id === selectedCatalogId);
+  const catalogId = catalogs.find((item) => item.catalog_id === selectedCatalogId);
   const { data: productsResult, isLoading: loadingProducts } = useGetProductsFromCatalogQuery({ catalog_id: catalogId?._id || selectedCatalogId, limit: 100 }, { skip: !selectedCatalogId });
 
   const availableProducts = productsResult?.data?.products || [];
@@ -39,7 +39,7 @@ export const CarouselProductEditor = ({ products, templateCards, wabaId, onChang
               <SelectValue placeholder="Choose a catalogue..." />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
-              {catalogs.map((cat: any) => (
+              {catalogs.map((cat) => (
                 <SelectItem key={cat.catalog_id} value={cat.catalog_id}>
                   <div className="flex items-center gap-2">
                     <Store size={13} className="text-slate-400" />
@@ -86,7 +86,7 @@ export const CarouselProductEditor = ({ products, templateCards, wabaId, onChang
                           <SelectValue placeholder="Choose a product..." />
                         </SelectTrigger>
                         <SelectContent className="rounded-xl">
-                          {availableProducts.map((prod: any) => (
+                          {availableProducts.map((prod) => (
                             <SelectItem key={prod._id} value={prod.retailer_id}>
                               <div className="flex items-center gap-2">
                                 <Package size={13} className="text-slate-400" />

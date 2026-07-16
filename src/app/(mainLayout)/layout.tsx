@@ -3,7 +3,6 @@
 import ContactImportProgressPopup from "@/src/components/contact/ContactImportProgressPopup";
 import Header from "@/src/components/layouts/Header";
 import ImpersonationBanner from "@/src/components/layouts/ImpersonationBanner";
-import SelfTenantBanner from "@/src/components/layouts/SelfTenantBanner";
 import Sidebar from "@/src/components/layouts/Sidebar";
 import ChatThemeProvider from "@/src/components/providers/ChatThemeProvider";
 import { useContactImportProgress } from "@/src/hooks/useContactImportProgress";
@@ -20,6 +19,7 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useRef } from "react";
 
 import HeaderBanner from "@/src/components/layouts/HeaderBanner";
+import AnnouncementModal from "@/src/components/shared/AnnouncementModal";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   useContactImportProgress();
@@ -72,10 +72,24 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       return;
     }
 
-    const isValid = workspaces.some((ws) => ws._id === selectedWorkspace._id);
-    if (!isValid) {
+    const currentWs = workspaces.find((ws) => ws._id === selectedWorkspace._id);
+    if (!currentWs) {
       dispatch(clearWorkspace());
       router.replace("/workspace");
+    } else {
+      const isOutdated =
+        (currentWs.name || "") !== (selectedWorkspace.name || "") ||
+        (currentWs.description || "") !== (selectedWorkspace.description || "") ||
+        (currentWs.waba_id || null) !== (selectedWorkspace.waba_id || null) ||
+        (currentWs.waba_type || null) !== (selectedWorkspace.waba_type || null) ||
+        (currentWs.connection_status || null) !== (selectedWorkspace.connection_status || null) ||
+        (currentWs.whatsapp_connection_id || null) !== (selectedWorkspace.whatsapp_connection_id || null) ||
+        (currentWs.telegram_connection_id || null) !== (selectedWorkspace.telegram_connection_id || null) ||
+        (currentWs.instagram_connection_id || null) !== (selectedWorkspace.instagram_connection_id || null) ||
+        (currentWs.facebook_connection_id || null) !== (selectedWorkspace.facebook_connection_id || null);
+      if (isOutdated) {
+        dispatch(setWorkspace(currentWs));
+      }
     }
   }, [isAuthenticated, selectedWorkspace, workspacesData, workspacesLoading, router, dispatch, user, pathname]);
 
@@ -141,11 +155,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     }
   }, [dispatch, isSuccess, settingData]);
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      localStorage.removeItem("announcement_popup_dismissed");
+    }
+  }, [isAuthenticated]);
+
   return (
     <div className="flex flex-col h-screen bg-white dark:bg-(--dark-body) transition-colors duration-300 overflow-hidden">
       <HeaderBanner />
       <ImpersonationBanner />
-      <SelfTenantBanner />
       <div className="flex flex-1 overflow-hidden relative">
         <Sidebar />
         <main className="flex-1 flex flex-col min-w-0 h-full relative overflow-hidden">
@@ -155,6 +174,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </ChatThemeProvider>
         </main>
         <ContactImportProgressPopup />
+        <AnnouncementModal />
       </div>
     </div>
   );

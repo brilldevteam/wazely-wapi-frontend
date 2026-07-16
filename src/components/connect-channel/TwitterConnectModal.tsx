@@ -1,37 +1,52 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/src/elements/ui/dialog";
 import { Button } from "@/src/elements/ui/button";
-import { Loader2, Key } from "lucide-react";
-import { useLazyGetTwitterConfigQuery, useConnectChannelMutation } from "@/src/redux/api/channelsApi";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/src/elements/ui/dialog";
+import {
+  useConnectChannelMutation,
+  useLazyGetTwitterConfigQuery,
+} from "@/src/redux/api/channelsApi";
+import { TwitterConnectModalProps } from "@/src/types/channel";
+import { Key, Loader2 } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { Label } from "@/src/elements/ui/label";
+import { Input } from "@/src/elements/ui/input";
 
-interface TwitterConnectModalProps {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  workspaceId: string;
-  onSuccess: () => void;
-}
+
 
 function generateCodeVerifier() {
   const array = new Uint8Array(32);
   crypto.getRandomValues(array);
-  return btoa(String.fromCharCode(...array)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+  return btoa(String.fromCharCode(...array))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=/g, "");
 }
 
 async function generateCodeChallenge(verifier: string) {
   const encoder = new TextEncoder();
   const data = encoder.encode(verifier);
   const digest = await crypto.subtle.digest("SHA-256", data);
-  return btoa(String.fromCharCode(...new Uint8Array(digest))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+  return btoa(String.fromCharCode(...new Uint8Array(digest)))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=/g, "");
 }
 
 function generateState() {
   const array = new Uint8Array(16);
   crypto.getRandomValues(array);
-  return Array.from(array).map((b) => b.toString(16).padStart(2, "0")).join("");
+  return Array.from(array)
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 export const TwitterConnectModal: React.FC<TwitterConnectModalProps> = ({
@@ -41,7 +56,8 @@ export const TwitterConnectModal: React.FC<TwitterConnectModalProps> = ({
   onSuccess,
 }) => {
   const [getTwitterConfig] = useLazyGetTwitterConfigQuery();
-  const [connectChannel, { isLoading: isConnecting }] = useConnectChannelMutation();
+  const [connectChannel, { isLoading: isConnecting }] =
+    useConnectChannelMutation();
 
   const [isStartingOAuth, setIsStartingOAuth] = useState(false);
   const [activeTab, setActiveTab] = useState<"oauth2" | "sdk">("oauth2");
@@ -107,7 +123,9 @@ export const TwitterConnectModal: React.FC<TwitterConnectModalProps> = ({
           toast.error(response.error || "Failed to connect Twitter");
         }
       } catch (err: any) {
-        toast.error(err?.data?.error || "An error occurred while connecting Twitter");
+        toast.error(
+          err?.data?.error || "An error occurred while connecting Twitter",
+        );
       } finally {
         setIsStartingOAuth(false);
       }
@@ -135,7 +153,10 @@ export const TwitterConnectModal: React.FC<TwitterConnectModalProps> = ({
       // 1. Fetch config from backend (clientId, redirectUri, scope)
       const configRes = await getTwitterConfig().unwrap();
       if (!configRes.success || !configRes.data) {
-        toast.error(configRes.error || "Twitter is not configured. Please contact your administrator.");
+        toast.error(
+          configRes.error ||
+            "Twitter is not configured. Please contact your administrator.",
+        );
         setIsStartingOAuth(false);
         return;
       }
@@ -166,10 +187,15 @@ export const TwitterConnectModal: React.FC<TwitterConnectModalProps> = ({
       const authUrl = `https://twitter.com/i/oauth2/authorize?${params.toString()}`;
 
       // 5. Open popup
-      const width = 600, height = 700;
+      const width = 600,
+        height = 700;
       const left = window.screenX + (window.outerWidth - width) / 2;
       const top = window.screenY + (window.outerHeight - height) / 2;
-      const popup = window.open(authUrl, "twitter_oauth", `width=${width},height=${height},left=${left},top=${top}`);
+      const popup = window.open(
+        authUrl,
+        "twitter_oauth",
+        `width=${width},height=${height},left=${left},top=${top}`,
+      );
       popupRef.current = popup;
 
       // Poll for popup closure (user closed without completing)
@@ -210,12 +236,17 @@ export const TwitterConnectModal: React.FC<TwitterConnectModalProps> = ({
         toast.success(response.message || "Twitter connected successfully!");
         onOpenChange(false);
         onSuccess();
-        setClientId(""); setClientSecret(""); setAccessToken(""); setAccessTokenSecret("");
+        setClientId("");
+        setClientSecret("");
+        setAccessToken("");
+        setAccessTokenSecret("");
       } else {
         toast.error(response.error || "Failed to connect Twitter");
       }
     } catch (err: any) {
-      toast.error(err?.data?.error || "An error occurred while connecting Twitter");
+      toast.error(
+        err?.data?.error || "An error occurred while connecting Twitter",
+      );
     }
   };
 
@@ -235,13 +266,14 @@ export const TwitterConnectModal: React.FC<TwitterConnectModalProps> = ({
             Connect Twitter (X) Account
           </DialogTitle>
           <DialogDescription>
-            Choose a connection method to authorize your Twitter account for DMs.
+            Choose a connection method to authorize your Twitter account for
+            DMs.
           </DialogDescription>
         </DialogHeader>
 
         {/* Tabs */}
         <div className="flex border-b border-slate-200 dark:border-slate-800 mb-1">
-          <button
+          <Button variant="unstyled"
             onClick={() => setActiveTab("oauth2")}
             className={`flex-1 pb-3 text-sm font-semibold border-b-2 transition-all ${
               activeTab === "oauth2"
@@ -250,8 +282,8 @@ export const TwitterConnectModal: React.FC<TwitterConnectModalProps> = ({
             }`}
           >
             OAuth 2.0 (App Login)
-          </button>
-          <button
+          </Button>
+          <Button variant="unstyled"
             onClick={() => setActiveTab("sdk")}
             className={`flex-1 pb-3 text-sm font-semibold border-b-2 transition-all ${
               activeTab === "sdk"
@@ -261,7 +293,7 @@ export const TwitterConnectModal: React.FC<TwitterConnectModalProps> = ({
           >
             <Key className="inline w-3.5 h-3.5 mr-1 -mt-0.5" />
             SDK / Direct Keys
-          </button>
+          </Button>
         </div>
 
         {activeTab === "oauth2" ? (
@@ -279,7 +311,8 @@ export const TwitterConnectModal: React.FC<TwitterConnectModalProps> = ({
 
             <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800">
               <p className="text-xs text-amber-700 dark:text-amber-300">
-                ⚠️ Credentials are managed by your administrator. Ensure the app has <strong>DM</strong> permissions enabled.
+                ⚠️ Credentials are managed by your administrator. Ensure the app
+                has <strong>DM</strong> permissions enabled.
               </p>
             </div>
 
@@ -290,30 +323,69 @@ export const TwitterConnectModal: React.FC<TwitterConnectModalProps> = ({
                 className="w-full h-12 font-bold bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black rounded-xl transition-all active:scale-[0.98]"
               >
                 {isStartingOAuth ? (
-                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Opening Twitter…</>
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Opening Twitter…
+                  </>
                 ) : (
                   <>
-                    <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                    <svg
+                      className="w-5 h-5 mr-2"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
                       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                     </svg>
                     Authorize with Twitter
                   </>
                 )}
               </Button>
-              <Button onClick={handleClose} variant="outline" className="w-full h-10 rounded-xl">Cancel</Button>
+              <Button
+                onClick={handleClose}
+                variant="outline"
+                className="w-full h-10 rounded-xl"
+              >
+                Cancel
+              </Button>
             </div>
           </div>
         ) : (
           <form onSubmit={handleSdkConnect} className="space-y-3">
             {[
-              { label: "API Key (Consumer Key)", value: clientId, setter: setClientId, type: "text", placeholder: "API Key / Client ID" },
-              { label: "API Secret (Consumer Secret)", value: clientSecret, setter: setClientSecret, type: "password", placeholder: "API Secret" },
-              { label: "Access Token", value: accessToken, setter: setAccessToken, type: "text", placeholder: "Access Token" },
-              { label: "Access Token Secret", value: accessTokenSecret, setter: setAccessTokenSecret, type: "password", placeholder: "Access Token Secret" },
+              {
+                label: "API Key (Consumer Key)",
+                value: clientId,
+                setter: setClientId,
+                type: "text",
+                placeholder: "API Key / Client ID",
+              },
+              {
+                label: "API Secret (Consumer Secret)",
+                value: clientSecret,
+                setter: setClientSecret,
+                type: "password",
+                placeholder: "API Secret",
+              },
+              {
+                label: "Access Token",
+                value: accessToken,
+                setter: setAccessToken,
+                type: "text",
+                placeholder: "Access Token",
+              },
+              {
+                label: "Access Token Secret",
+                value: accessTokenSecret,
+                setter: setAccessTokenSecret,
+                type: "password",
+                placeholder: "Access Token Secret",
+              },
             ].map(({ label, value, setter, type, placeholder }) => (
               <div key={label} className="space-y-1">
-                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{label}</label>
-                <input
+                <Label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                  {label}
+                </Label>
+                <Input unstyled
                   type={type}
                   value={value}
                   onChange={(e) => setter(e.target.value)}
@@ -324,10 +396,28 @@ export const TwitterConnectModal: React.FC<TwitterConnectModalProps> = ({
               </div>
             ))}
             <div className="flex flex-col gap-3 pt-2">
-              <Button type="submit" disabled={isConnecting} className="w-full h-12 font-bold bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black rounded-xl transition-all active:scale-[0.98]">
-                {isConnecting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Connecting…</> : "Connect with SDK Credentials"}
+              <Button
+                type="submit"
+                disabled={isConnecting}
+                className="w-full h-12 font-bold bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black rounded-xl transition-all active:scale-[0.98]"
+              >
+                {isConnecting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Connecting…
+                  </>
+                ) : (
+                  "Connect with SDK Credentials"
+                )}
               </Button>
-              <Button type="button" onClick={handleClose} variant="outline" className="w-full h-10 rounded-xl">Cancel</Button>
+              <Button
+                type="button"
+                onClick={handleClose}
+                variant="outline"
+                className="w-full h-10 rounded-xl"
+              >
+                Cancel
+              </Button>
             </div>
           </form>
         )}

@@ -217,6 +217,7 @@ const FacebookAccountList: React.FC = () => {
             sortOrder={sortOrder}
             getRowId={(item) => item._id}
             emptyMessage={searchTerm ? t("no_results_for", { searchTerm }) : t("facebook_account_no_pages")}
+            actionPermission={["update.waba_configuration"]}
           />
         )}
 
@@ -239,6 +240,7 @@ const FacebookAccountList: React.FC = () => {
             sortOrder={sortOrder}
             getRowId={(item) => item._id || item.ad_account_id}
             emptyMessage={searchTerm ? t("no_results_for", { searchTerm }) : t("facebook_account_no_ads")}
+            actionPermission={["view.facebook_ads"]}
           />
         )}
       </div>

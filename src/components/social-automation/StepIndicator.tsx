@@ -1,13 +1,7 @@
-import React from "react";
-import { Check } from "lucide-react";
 import { cn } from "@/src/lib/utils";
-
-interface StepIndicatorProps {
-  current: number;
-  total: number;
-  labels: string[];
-  onStepClick: (index: number) => void;
-}
+import { StepIndicatorProps } from "@/src/types/socialAutomation";
+import { Check } from "lucide-react";
+import React from "react";
 
 export const StepIndicator: React.FC<StepIndicatorProps> = ({
   current,
@@ -21,7 +15,7 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
         <div
           className={cn(
             "flex items-center gap-2 cursor-pointer group transition-all",
-            s > current && "opacity-60 hover:opacity-100"
+            s > current && "opacity-60 hover:opacity-100",
           )}
           onClick={() => onStepClick(s)}
         >
@@ -31,8 +25,8 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
               s < current
                 ? "bg-primary text-white"
                 : s === current
-                ? "bg-primary text-white ring-4 ring-primary/20"
-                : "bg-slate-100 dark:bg-(--dark-body) text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700"
+                  ? "bg-primary text-white ring-4 ring-primary/20"
+                  : "bg-slate-100 dark:bg-(--dark-body) text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700",
             )}
           >
             {s < current ? <Check size={14} strokeWidth={3} /> : s}
@@ -40,7 +34,9 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
           <span
             className={cn(
               "text-sm font-semibold hidden sm:block",
-              s === current ? "text-primary" : "text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300"
+              s === current
+                ? "text-primary"
+                : "text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300",
             )}
           >
             {labels[s - 1]}
@@ -50,7 +46,9 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
           <div
             className={cn(
               "flex-1 h-0.5 mx-4 rounded-full min-w-8",
-              s < current ? "bg-primary" : "bg-slate-100 dark:bg-(--page-body-bg)"
+              s < current
+                ? "bg-primary"
+                : "bg-slate-100 dark:bg-(--page-body-bg)",
             )}
           />
         )}

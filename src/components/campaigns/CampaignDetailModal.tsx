@@ -103,7 +103,7 @@ const CampaignDetailModal = ({ isOpen, onClose, campaignId }: { isOpen: boolean;
                 active={activeTab === "overview"}
               />
               <MessagesTab
-                recipients={campaign.recipients || []}
+                campaignId={campaignId || ""}
                 active={activeTab === "messages"}
               />
             </Tabs>

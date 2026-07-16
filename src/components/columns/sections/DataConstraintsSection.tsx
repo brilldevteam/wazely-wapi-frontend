@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
 import { Button } from "@/src/elements/ui/button";
 import { Input } from "@/src/elements/ui/input";
 import { Label } from "@/src/elements/ui/label";
@@ -10,17 +9,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/elements/ui/select";
-import { Plus, X, Type as TypeIcon, ListPlus, Scale, Hash, Settings2 } from "lucide-react";
-import { CustomFieldType } from "@/src/types/components";
-
-interface DataConstraintsSectionProps {
-  formik: any;
-  fieldTypes: CustomFieldType[];
-  newOption: string;
-  setNewOption: (val: string) => void;
-  handleAddOption: () => void;
-  handleRemoveOption: (index: number) => void;
-}
+import {
+  DataConstraintsSectionProps
+} from "@/src/types/components";
+import {
+  Hash,
+  ListPlus,
+  Plus,
+  Scale,
+  Settings2,
+  Type as TypeIcon,
+  X,
+} from "lucide-react";
+import React from "react";
 
 const DataConstraintsSection: React.FC<DataConstraintsSectionProps> = ({
   formik,
@@ -34,7 +35,10 @@ const DataConstraintsSection: React.FC<DataConstraintsSectionProps> = ({
     <div className="bg-white dark:bg-(--page-body-bg) p-4 rounded-lg border border-(--input-border-color) dark:border-(--card-border-color) shadow-sm space-y-4 relative overflow-hidden">
       <div className="flex items-center gap-2 mb-1">
         <div className="p-1.5 bg-purple-100 dark:bg-purple-900/40 rounded-md">
-          <Settings2 size={16} className="text-purple-600 dark:text-purple-400" />
+          <Settings2
+            size={16}
+            className="text-purple-600 dark:text-purple-400"
+          />
         </div>
         <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200">
           Data Constraints
@@ -156,49 +160,49 @@ const DataConstraintsSection: React.FC<DataConstraintsSectionProps> = ({
 
       {(formik.values.type.toUpperCase() === "TEXT" ||
         formik.values.type.toUpperCase() === "TEXTAREA") && (
-          <div className="grid grid-cols-2 gap-3 pt-2 border-t border-(--input-border-color) dark:border-(--card-border-color)">
-            <div className="space-y-1.5">
-              <Label className="text-xs font-semibold flex items-center gap-1.5 text-gray-700 dark:text-gray-300">
-                <Scale size={12} className="text-gray-400" />
-                Min Length
-              </Label>
-              <Input
-                type="number"
-                name="min_length"
-                placeholder="0"
-                value={formik.values.min_length ?? ""}
-                onChange={(e) =>
-                  formik.setFieldValue(
-                    "min_length",
-                    e.target.value ? Number(e.target.value) : undefined,
-                  )
-                }
-                className="h-10 text-sm focus:border-none focus-visible:ring-1 focus-visible:ring-primary bg-gray-50 dark:bg-(--card-color) border-(--input-border-color) dark:border-(--card-border-color)"
-                min="0"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs font-semibold flex items-center gap-1.5 text-gray-700 dark:text-gray-300">
-                <Scale size={12} className="text-gray-400" />
-                Max Length
-              </Label>
-              <Input
-                type="number"
-                name="max_length"
-                placeholder="Unlimited"
-                value={formik.values.max_length ?? ""}
-                onChange={(e) =>
-                  formik.setFieldValue(
-                    "max_length",
-                    e.target.value ? Number(e.target.value) : undefined,
-                  )
-                }
-                className="h-10 text-sm focus:border-none focus-visible:ring-1 focus-visible:ring-primary bg-gray-50 dark:bg-(--card-color) border-(--input-border-color) dark:border-(--card-border-color)"
-                min="0"
-              />
-            </div>
+        <div className="grid grid-cols-2 gap-3 pt-2 border-t border-(--input-border-color) dark:border-(--card-border-color)">
+          <div className="space-y-1.5">
+            <Label className="text-xs font-semibold flex items-center gap-1.5 text-gray-700 dark:text-gray-300">
+              <Scale size={12} className="text-gray-400" />
+              Min Length
+            </Label>
+            <Input
+              type="number"
+              name="min_length"
+              placeholder="0"
+              value={formik.values.min_length ?? ""}
+              onChange={(e) =>
+                formik.setFieldValue(
+                  "min_length",
+                  e.target.value ? Number(e.target.value) : undefined,
+                )
+              }
+              className="h-10 text-sm focus:border-none focus-visible:ring-1 focus-visible:ring-primary bg-gray-50 dark:bg-(--card-color) border-(--input-border-color) dark:border-(--card-border-color)"
+              min="0"
+            />
           </div>
-        )}
+          <div className="space-y-1.5">
+            <Label className="text-xs font-semibold flex items-center gap-1.5 text-gray-700 dark:text-gray-300">
+              <Scale size={12} className="text-gray-400" />
+              Max Length
+            </Label>
+            <Input
+              type="number"
+              name="max_length"
+              placeholder="Unlimited"
+              value={formik.values.max_length ?? ""}
+              onChange={(e) =>
+                formik.setFieldValue(
+                  "max_length",
+                  e.target.value ? Number(e.target.value) : undefined,
+                )
+              }
+              className="h-10 text-sm focus:border-none focus-visible:ring-1 focus-visible:ring-primary bg-gray-50 dark:bg-(--card-color) border-(--input-border-color) dark:border-(--card-border-color)"
+              min="0"
+            />
+          </div>
+        </div>
+      )}
 
       {formik.values.type.toUpperCase() === "NUMBER" && (
         <div className="grid grid-cols-2 gap-3 pt-2 border-t border-(--input-border-color) dark:border-(--card-border-color)">

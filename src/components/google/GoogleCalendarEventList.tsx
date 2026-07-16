@@ -13,9 +13,13 @@ import {
 import CommonHeader from "@/src/shared/CommonHeader";
 import ConfirmModal from "@/src/shared/ConfirmModal";
 import { DataTable } from "@/src/shared/DataTable";
-import { GoogleEvent } from "@/src/types/google";
+import { GoogleCalendarEventListProps, GoogleEvent } from "@/src/types/google";
 import { Column } from "@/src/types/shared";
 import useDebounce from "@/src/utils/hooks/useDebounce";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import FullCalendar from "@fullcalendar/react";
+import timeGridPlugin from "@fullcalendar/timegrid";
 import dayjs from "dayjs";
 import {
   Calendar as CalendarIcon,
@@ -29,23 +33,20 @@ import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import EventModal from "./EventModal";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import FullCalendar from "@fullcalendar/react";
-import timeGridPlugin from "@fullcalendar/timegrid";
 
-interface GoogleCalendarEventListProps {
-  calendarId: string;
-}
-
-const GoogleCalendarEventList: React.FC<GoogleCalendarEventListProps> = ({ calendarId }) => {
+const GoogleCalendarEventList: React.FC<GoogleCalendarEventListProps> = ({
+  calendarId,
+}) => {
   const { t } = useTranslation();
   const [viewMode, setViewMode] = useState<"table" | "calendar">("table");
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [sortConfig, setSortConfig] = useState<{ key: string; order: "asc" | "desc" }>({ key: "start", order: "desc" });
+  const [sortConfig, setSortConfig] = useState<{
+    key: string;
+    order: "asc" | "desc";
+  }>({ key: "start", order: "desc" });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<GoogleEvent | null>(null);
@@ -79,10 +80,19 @@ const GoogleCalendarEventList: React.FC<GoogleCalendarEventListProps> = ({ calen
     setIsModalOpen(true);
   };
 
-  const handleConfirmEvent = async (formData: { summary: string; description?: string; start: string; end: string }) => {
+  const handleConfirmEvent = async (formData: {
+    summary: string;
+    description?: string;
+    start: string;
+    end: string;
+  }) => {
     try {
       if (selectedEvent && selectedEvent.id) {
-        await updateEvent({ calendarId, eventId: selectedEvent.id, ...formData }).unwrap();
+        await updateEvent({
+          calendarId,
+          eventId: selectedEvent.id,
+          ...formData,
+        }).unwrap();
         toast.success(t("google_account_event_update_success"));
       } else {
         await createEvent({ calendarId, ...formData }).unwrap();
@@ -135,7 +145,11 @@ const GoogleCalendarEventList: React.FC<GoogleCalendarEventListProps> = ({ calen
   };
 
   const initialColumns = [
-    { id: "Summary", label: t("google_account_event_summary"), isVisible: true },
+    {
+      id: "Summary",
+      label: t("google_account_event_summary"),
+      isVisible: true,
+    },
     { id: "Start", label: t("google_account_event_start"), isVisible: true },
     { id: "End", label: t("google_account_event_end"), isVisible: true },
     { id: "Status", label: t("google_account_event_status"), isVisible: true },
@@ -186,7 +200,11 @@ const GoogleCalendarEventList: React.FC<GoogleCalendarEventListProps> = ({ calen
         sortKey: "start",
         cell: (item) => {
           const start = item.start.dateTime || item.start.date;
-          return <div className="text-sm font-medium text-slate-700 dark:text-slate-300">{dayjs(start).format("DD MMM YYYY, hh:mm A")}</div>;
+          return (
+            <div className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              {dayjs(start).format("DD MMM YYYY, hh:mm A")}
+            </div>
+          );
         },
       },
       {
@@ -218,7 +236,8 @@ const GoogleCalendarEventList: React.FC<GoogleCalendarEventListProps> = ({ calen
       },
       {
         header: t("actions"),
-        className: "text-right min-w-[120px] [@media(max-width:991px)]:min-w-[180px]",
+        className:
+          "text-right min-w-[120px] [@media(max-width:991px)]:min-w-[180px]",
         cell: (item) => (
           <div className="flex items-center justify-end gap-2">
             <Button
@@ -256,7 +275,8 @@ const GoogleCalendarEventList: React.FC<GoogleCalendarEventListProps> = ({ calen
           className={cn(
             "px-3 py-3 h-auto rounded-md transition-all gap-2",
             viewMode === "table"
-              ? "bg-white dark:bg-(--card-color) text-emerald-600 shadow-sm font-bold" : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200",
+              ? "bg-white dark:bg-(--card-color) text-emerald-600 shadow-sm font-bold"
+              : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200",
           )}
         >
           <List size={16} />
@@ -269,7 +289,8 @@ const GoogleCalendarEventList: React.FC<GoogleCalendarEventListProps> = ({ calen
           className={cn(
             "px-3 py-3 h-auto rounded-md transition-all gap-2",
             viewMode === "calendar"
-              ? "bg-white dark:bg-(--card-color) text-emerald-600 shadow-sm font-bold" : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200",
+              ? "bg-white dark:bg-(--card-color) text-emerald-600 shadow-sm font-bold"
+              : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200",
           )}
         >
           <LayoutGrid size={16} />
@@ -289,7 +310,6 @@ const GoogleCalendarEventList: React.FC<GoogleCalendarEventListProps> = ({ calen
   return (
     <div className="space-y-6">
       <div className="mt-[-27px] sticky mb-5! pt-0! pb-2! bg-(--page-body-bg) pt-0! top-0 z-20 dark:bg-(--dark-body) -mx-4 sm:-mx-8 px-4 sm:px-8 transition-all duration-300">
-
         <CommonHeader
           title={t("google_account_calendar_events_title")}
           description={t("google_account_calendar_events_desc")}

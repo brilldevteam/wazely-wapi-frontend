@@ -5,22 +5,9 @@ import TagCard from "./TagCard";
 import { Pagination } from "@/src/shared/Pagination";
 import { Tag as TagIcon } from "lucide-react";
 import { Skeleton } from "@/src/elements/ui/skeleton";
+import { TagGridProps } from "@/src/types/tags";
 
-interface TagGridProps {
-  tags: Tag[];
-  isLoading: boolean;
-  isFetching: boolean;
-  totalCount: number;
-  page: number;
-  limit: number;
-  onPageChange: (page: number) => void;
-  onLimitChange: (limit: number) => void;
-  selectedIds: string[];
-  onSelectionChange: (ids: string[]) => void;
-  onEdit: (tag: Tag) => void;
-  onDelete: (id: string) => void;
-  emptyMessage?: string;
-}
+
 
 const TagGrid = ({
   tags,

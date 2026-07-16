@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ConnectedChannel } from "@/src/types/components";
 import { baseApi } from "./baseApi";
 
 export const channelsApi = baseApi.enhanceEndpoints({ addTagTypes: ["ConnectedChannel"] }).injectEndpoints({
   endpoints: (builder) => ({
-    getConnectedChannels: builder.query<any, { workspace_id: string; platform?: string }>({
+    getConnectedChannels: builder.query<{ success: boolean; data: ConnectedChannel[]; connections: ConnectedChannel[] }, { workspace_id: string; platform?: string }>({
       query: (params) => ({
         url: "channels",
         params,

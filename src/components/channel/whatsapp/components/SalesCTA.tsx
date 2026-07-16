@@ -1,32 +1,25 @@
 "use client";
 
-import React from "react";
-import { Check, Zap } from "lucide-react";
 import { Button } from "@/src/elements/ui/button";
+import { SalesCTAProps } from "@/src/types/channel";
+import { Check } from "lucide-react";
 
-interface SalesCTAProps {
-  sales: {
-    title: string;
-    subtitle?: string;
-    button1_title: string;
-    button1_url: string;
-    button2_title?: string;
-    button2_url?: string;
-    bullets: string[];
-  };
-  isAuthenticated: boolean;
-  primaryColor: string;
-  router: { push: (url: string) => void };
-}
-
-export default function SalesCTA({ sales, isAuthenticated, primaryColor, router }: SalesCTAProps) {
+export default function SalesCTA({
+  sales,
+  isAuthenticated,
+  primaryColor,
+  router,
+}: SalesCTAProps) {
   if (!sales.title) return null;
 
   return (
     <section className="py-[calc(20px+(50-20)*((100vw-320px)/(1920-320)))] bg-white">
       <div className="container mx-auto px-[calc(8px+(24-8)*((100vw-320px)/(1920-320)))] md:px-12 xl:px-16">
         <div className="max-w-6xl mx-auto rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 p-[calc(10px+(30-10)*((100vw-320px)/(1920-320)))] text-white text-center relative overflow-hidden shadow-2xl shadow-emerald-950/20">
-          <div className="absolute top-[-50%] left-[-50%] w-[100%] h-[100%] rounded-full blur-[130px] pointer-events-none" style={{ backgroundColor: primaryColor, opacity: 0.15 }} />
+          <div
+            className="absolute top-[-50%] left-[-50%] w-[100%] h-[100%] rounded-full blur-[130px] pointer-events-none"
+            style={{ backgroundColor: primaryColor, opacity: 0.15 }}
+          />
 
           <div className="relative z-10 max-w-2xl mx-auto">
             <h2 className="text-[calc(22px+16*((100vw-320px)/1600))] font-bold tracking-tight leading-tight">

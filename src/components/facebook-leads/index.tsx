@@ -356,6 +356,7 @@ const FacebookLeads = () => {
             getRowId={(item) => item.id}
             emptyMessage={searchTerm ? `No forms found matching "${searchTerm}"` : "No forms found for this page."}
             className="border-none shadow-none rounded-none"
+            actionPermission={["update.facebook_leads"]}
           />
         )}
 
@@ -376,6 +377,7 @@ const FacebookLeads = () => {
             getRowId={(item) => item._id}
             emptyMessage={searchTerm ? `No forms found matching "${searchTerm}"` : "No forms connected yet."}
             className="border-none shadow-none rounded-none"
+            actionPermission={["update.facebook_leads", "delete.facebook_leads"]}
           />
         )}
       </div>

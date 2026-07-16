@@ -5,6 +5,8 @@ import { cn } from "@/src/lib/utils";
 import { ChevronRight, MessageSquare, Rocket, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/src/elements/ui/button";
+
 
 const QuickActionsCard = () => {
   const { t } = useTranslation();
@@ -38,7 +40,7 @@ const QuickActionsCard = () => {
 
       <div className="gap-3 flex flex-col sm:flex-row items-center justify-between [@media(max-width:1461px)]:flex-col [@media(max-width:1461px)]:flex-none! flex-1">
         {actions.map((action, i) => (
-          <button key={i} onClick={() => router.push(action.path)} className="w-full flex items-center justify-between p-2 rounded-lg bg-slate-50 dark:bg-(--page-body-bg) border border-slate-100 dark:border-none hover:border-primary/30 hover:bg-primary/5 transition-all group">
+          <Button variant="unstyled" key={i} onClick={() => router.push(action.path)} className="w-full flex items-center justify-between p-2 rounded-lg bg-slate-50 dark:bg-(--page-body-bg) border border-slate-100 dark:border-none hover:border-primary/30 hover:bg-primary/5 transition-all group">
             <div className="flex items-center gap-3">
               <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center transition-transform group-hover:scale-110", action.color === "blue" && "bg-blue-50 dark:bg-blue-500/10", action.color === "emerald" && "bg-emerald-50 dark:bg-emerald-500/10", action.color === "amber" && "bg-amber-50 dark:bg-amber-500/10")}>{action.icon}</div>
               <div className="text-left rtl:text-right">
@@ -47,7 +49,7 @@ const QuickActionsCard = () => {
               </div>
             </div>
             <ChevronRight size={14} className="text-slate-300 group-hover:text-primary transition-colors mt-1" />
-          </button>
+          </Button>
         ))}
       </div>
     </div>

@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import AgentForm from "@/src/components/agent/AgentForm";
 import { ROUTES } from "@/src/constants";
 import { Button } from "@/src/elements/ui/button";
 import { useGetAgentByIdQuery, useUpdateAgentMutation } from "@/src/redux/api/agentApi";
+import { AgentInput } from "@/src/types/agent";
 import { Loader2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -19,7 +19,7 @@ const AgentEditPage = () => {
 
   const agent = agentResult?.data;
 
-  const handleSave = async (data: any) => {
+  const handleSave = async (data: AgentInput) => {
     try {
       await updateAgent({ id, ...data }).unwrap();
       toast.success("Agent profile synced successfully");

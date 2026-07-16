@@ -75,6 +75,7 @@ export const formBuilderApi = baseApi.enhanceEndpoints({ addTagTypes: ["Form", "
       query: () => "/whatsapp/form-builder/template",
     }),
   }),
+  overrideExisting: true,
 });
 
 export const {

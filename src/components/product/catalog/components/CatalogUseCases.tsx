@@ -1,31 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/src/elements/ui/button";
+import { CatalogUseCasesProps } from "@/src/types/product";
+import { getResolvedImageUrl } from "@/src/utils/image";
+import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
 import Image from "next/image";
-import { getResolvedImageUrl } from "@/src/utils/image";
-import { Button } from "@/src/elements/ui/button";
+import { useState } from "react";
 
-interface TabItem {
-  heading: string;
-  title: string;
-  description: string;
-  bullets?: string[];
-  image?: string;
-}
-
-interface CatalogUseCasesProps {
-  useCases: {
-    badge?: string;
-    title?: string;
-    description?: string;
-    tabs: TabItem[];
-  };
-  primaryColor: string;
-}
-
-export default function CatalogUseCases({ useCases, primaryColor }: CatalogUseCasesProps) {
+export default function CatalogUseCases({
+  useCases,
+  primaryColor,
+}: CatalogUseCasesProps) {
   const [activeTabIdx, setActiveTabIdx] = useState<number>(0);
   const tabs = Array.isArray(useCases.tabs) ? useCases.tabs : [];
   const activeTab = tabs[activeTabIdx];
@@ -35,9 +21,11 @@ export default function CatalogUseCases({ useCases, primaryColor }: CatalogUseCa
   return (
     <section className="py-[calc(20px+(50-20)*((100vw-320px)/(1920-320)))] bg-white border-b border-slate-200/50">
       <div className="container mx-auto px-[calc(8px+(24-8)*((100vw-320px)/(1920-320)))] md:px-12 xl:px-16">
-
         <div className="text-center max-w-4xl mx-auto mb-[calc(16px+(40-16)*((100vw-320px)/(1920-320)))]">
-          <span className="text-xs bg-[#d9770610] px-4 py-1.5 rounded-full uppercase tracking-wide font-bold text-primary font-mono" style={{ color: primaryColor }}>
+          <span
+            className="text-xs bg-[#d9770610] px-4 py-1.5 rounded-full uppercase tracking-wide font-bold text-primary font-mono"
+            style={{ color: primaryColor }}
+          >
             {useCases.badge || "Use Cases"}
           </span>
           <h2 className="text-[calc(20px+12*((100vw-320px)/1600))] font-black text-slate-900 tracking-tight leading-tight mt-2.5">
@@ -56,11 +44,19 @@ export default function CatalogUseCases({ useCases, primaryColor }: CatalogUseCa
             <Button
               key={idx}
               onClick={() => setActiveTabIdx(idx)}
-              className={`px-6 py-3 rounded-lg text-[12px] font-bold cursor-pointer border ${activeTabIdx === idx
-                ? "text-white border-none shadow-md"
-                : "bg-slate-50 text-slate-500 border-slate-200/80 hover:bg-slate-100"
-                }`}
-              style={activeTabIdx === idx ? { backgroundColor: primaryColor, boxShadow: `0 8px 20px ${primaryColor}30` } : {}}
+              className={`px-6 py-3 rounded-lg text-[12px] font-bold cursor-pointer border ${
+                activeTabIdx === idx
+                  ? "text-white border-none shadow-md"
+                  : "bg-slate-50 text-slate-500 border-slate-200/80 hover:bg-slate-100"
+              }`}
+              style={
+                activeTabIdx === idx
+                  ? {
+                      backgroundColor: primaryColor,
+                      boxShadow: `0 8px 20px ${primaryColor}30`,
+                    }
+                  : {}
+              }
             >
               {tab.heading}
             </Button>
@@ -91,8 +87,14 @@ export default function CatalogUseCases({ useCases, primaryColor }: CatalogUseCa
                     <div className="space-y-3 mt-6">
                       {activeTab.bullets.map((bullet, bIdx) => (
                         <div key={bIdx} className="flex gap-3 items-start">
-                          <CheckCircle2 size={16} className="shrink-0 mt-0.5" style={{ color: primaryColor }} />
-                          <span className="text-xs font-semibold text-slate-650 font-sans">{bullet}</span>
+                          <CheckCircle2
+                            size={16}
+                            className="shrink-0 mt-0.5"
+                            style={{ color: primaryColor }}
+                          />
+                          <span className="text-xs font-semibold text-slate-650 font-sans">
+                            {bullet}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -109,12 +111,10 @@ export default function CatalogUseCases({ useCases, primaryColor }: CatalogUseCa
                     className="object-cover rounded-lg"
                   />
                 </div>
-
               </motion.div>
             )}
           </AnimatePresence>
         </div>
-
       </div>
     </section>
   );

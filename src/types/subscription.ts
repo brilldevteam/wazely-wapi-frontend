@@ -184,3 +184,9 @@ export interface NoPlansStateProps {
   mode: "upgrade" | "downgrade" | "none";
   onBack: () => void;
 }
+
+export interface ManualPaymentModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  selectedPlan: Plan | null;
+}

@@ -178,7 +178,11 @@ export const authoption: NextAuthOptions = {
 
     async redirect({ url, baseUrl }) {
       if (url.startsWith("/")) return `${baseUrl}${url}`;
-      if (new URL(url).origin === baseUrl) return url;
+      try {
+        if (new URL(url).origin === baseUrl) return url;
+      } catch (e) {
+        console.error("Failed to parse redirect URL:", url, e);
+      }
       return `${baseUrl}${ROUTES.Dashboard}`;
     },
   },

@@ -1,42 +1,29 @@
 "use client";
 
-import React from "react";
-import { Check, Zap } from "lucide-react";
+import { defaultInstagramSales } from "@/src/data/ChannelConnectionInfo";
 import { Button } from "@/src/elements/ui/button";
+import { InstagramSalesCTAProps } from "@/src/types/channel";
+import { Check } from "lucide-react";
 
-interface InstagramSalesCTAProps {
-  sales: {
-    title: string;
-    subtitle?: string;
-    button1_title?: string;
-    button1_url?: string;
-    button2_title?: string;
-    button2_url?: string;
-    button2_description?: string;
-    bullets?: string[];
-  };
-  isAuthenticated: boolean;
-  router: { push: (url: string) => void };
-}
-
-export default function InstagramSalesCTA({ sales, isAuthenticated, router }: InstagramSalesCTAProps) {
-  const defaultSales = {
-    title: "Turn Instagram Comments into Customers",
-    subtitle: "Connect your account in seconds, write automatic reply buttons, and send discount codes to direct messages instantly.",
-    button1_title: "Try For Free",
-    button1_url: "/signup",
-    button2_title: "Talk to Sales",
-    button2_url: "/pricing",
-    bullets: ["Easy Sign In", "Official Connection", "Cancel Anytime"]
-  };
-
-  const title = sales.title || defaultSales.title;
-  const subtitle = sales.subtitle || defaultSales.subtitle;
-  const button1_title = sales.button1_title || defaultSales.button1_title;
-  const button1_url = sales.button1_url || defaultSales.button1_url;
-  const button2_title = sales.button2_title || defaultSales.button2_title;
-  const button2_url = sales.button2_url || sales.button2_description || defaultSales.button2_url;
-  const bullets = Array.isArray(sales.bullets) ? sales.bullets : defaultSales.bullets;
+export default function InstagramSalesCTA({
+  sales,
+  isAuthenticated,
+  router,
+}: InstagramSalesCTAProps) {
+  const title = sales.title || defaultInstagramSales.title;
+  const subtitle = sales.subtitle || defaultInstagramSales.subtitle;
+  const button1_title =
+    sales.button1_title || defaultInstagramSales.button1_title;
+  const button1_url = sales.button1_url || defaultInstagramSales.button1_url;
+  const button2_title =
+    sales.button2_title || defaultInstagramSales.button2_title;
+  const button2_url =
+    sales.button2_url ||
+    sales.button2_description ||
+    defaultInstagramSales.button2_url;
+  const bullets = Array.isArray(sales.bullets)
+    ? sales.bullets
+    : defaultInstagramSales.bullets;
 
   return (
     <section className="py-[calc(20px+(50-20)*((100vw-320px)/(1920-320)))] bg-white">
@@ -69,7 +56,8 @@ export default function InstagramSalesCTA({ sales, isAuthenticated, router }: In
               <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 justify-center text-xs font-bold text-slate-600">
                 {bullets.map((bullet: string, idx: number) => (
                   <span key={idx} className="flex items-center gap-1.5">
-                    <Check size={14} style={{ color: "oklch(0.86 0.14 85)" }} /> {bullet}
+                    <Check size={14} style={{ color: "oklch(0.86 0.14 85)" }} />{" "}
+                    {bullet}
                   </span>
                 ))}
               </div>

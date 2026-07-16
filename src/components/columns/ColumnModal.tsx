@@ -1,8 +1,19 @@
 "use client";
 
-import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/src/elements/ui/alert-dialog";
+import { fieldTypesData } from "@/src/data/components";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/src/elements/ui/alert-dialog";
 import { Button } from "@/src/elements/ui/button";
-import { ColumnModalProps, CustomField, CustomFieldType } from "@/src/types/components";
+import {
+  ColumnModalProps,
+  CustomField,
+  CustomFieldType,
+} from "@/src/types/components";
 import { ColumnModalSchema } from "@/src/utils/validationSchema";
 import { useFormik } from "formik";
 import { DatabaseZap, Loader2, X } from "lucide-react";
@@ -11,18 +22,13 @@ import DataConstraintsSection from "./sections/DataConstraintsSection";
 import DisplayRulesSection from "./sections/DisplayRulesSection";
 import IdentitySection from "./sections/IdentitySection";
 
-const fieldTypesData = [
-  { label: "Text String", value: "text" },
-  { label: "Numeric Value", value: "number" },
-  { label: "Date Selection", value: "date" },
-  { label: "True / False", value: "boolean" },
-  { label: "Dropdown Options", value: "select" },
-  { label: "Long Text (Textarea)", value: "textarea" },
-  { label: "Email Address", value: "email" },
-  { label: "Phone Number", value: "phone" },
-];
-
-const ColumnModal: React.FC<ColumnModalProps> = ({ isOpen, onClose, onSave, column, isLoading }) => {
+const ColumnModal: React.FC<ColumnModalProps> = ({
+  isOpen,
+  onClose,
+  onSave,
+  column,
+  isLoading,
+}) => {
   const fieldTypes: CustomFieldType[] = fieldTypesData || [];
 
   const [newOption, setNewOption] = useState("");
@@ -67,11 +73,15 @@ const ColumnModal: React.FC<ColumnModalProps> = ({ isOpen, onClose, onSave, colu
 
       const type = values.type.toUpperCase();
       if (type === "TEXT" || type === "TEXTAREA") {
-        if (values.min_length !== undefined) payload.min_length = values.min_length;
-        if (values.max_length !== undefined) payload.max_length = values.max_length;
+        if (values.min_length !== undefined)
+          payload.min_length = values.min_length;
+        if (values.max_length !== undefined)
+          payload.max_length = values.max_length;
       } else if (type === "NUMBER") {
-        if (values.min_value !== undefined) payload.min_value = values.min_value;
-        if (values.max_value !== undefined) payload.max_value = values.max_value;
+        if (values.min_value !== undefined)
+          payload.min_value = values.min_value;
+        if (values.max_value !== undefined)
+          payload.max_value = values.max_value;
       } else if (type === "SELECT") {
         payload.options = values.options;
       }
@@ -91,7 +101,7 @@ const ColumnModal: React.FC<ColumnModalProps> = ({ isOpen, onClose, onSave, colu
   const handleRemoveOption = (index: number) => {
     formik.setFieldValue(
       "options",
-      formik.values.options.filter((_, i) => i !== index)
+      formik.values.options.filter((_, i) => i !== index),
     );
   };
 
@@ -136,15 +146,32 @@ const ColumnModal: React.FC<ColumnModalProps> = ({ isOpen, onClose, onSave, colu
           </Button>
         </AlertDialogHeader>
 
-        <form onSubmit={formik.handleSubmit} className="sm:p-5 p-4 max-h-[70vh] overflow-y-auto custom-scrollbar space-y-6">
-          <IdentitySection formik={formik} handleLabelChange={handleLabelChange} />
+        <form
+          onSubmit={formik.handleSubmit}
+          className="sm:p-5 p-4 max-h-[70vh] overflow-y-auto custom-scrollbar space-y-6"
+        >
+          <IdentitySection
+            formik={formik}
+            handleLabelChange={handleLabelChange}
+          />
 
-          <DataConstraintsSection formik={formik} fieldTypes={fieldTypes} newOption={newOption} setNewOption={setNewOption} handleAddOption={handleAddOption} handleRemoveOption={handleRemoveOption} />
+          <DataConstraintsSection
+            formik={formik}
+            fieldTypes={fieldTypes}
+            newOption={newOption}
+            setNewOption={setNewOption}
+            handleAddOption={handleAddOption}
+            handleRemoveOption={handleRemoveOption}
+          />
 
           <DisplayRulesSection formik={formik} isLoading={isLoading} />
 
           <AlertDialogFooter className="p-0 px-0! pt-4 bg-white/90 dark:bg-(--card-color)/90 backdrop-blur-md border-t border-(--input-border-color) dark:border-(--card-border-color) flex sm:justify-between items-center sm:flex-row-reverse">
-            <Button type="submit" disabled={isLoading} className="bg-primary hover:bg-primary/90 text-white px-6 h-10 rounded-lg font-semibold shadow-sm hover:shadow-md transition-all w-full sm:w-auto text-sm">
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="bg-primary hover:bg-primary/90 text-white px-6 h-10 rounded-lg font-semibold shadow-sm hover:shadow-md transition-all w-full sm:w-auto text-sm"
+            >
               {isLoading ? (
                 <div className="flex items-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />

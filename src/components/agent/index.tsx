@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import Can from "@/src/components/shared/Can";
@@ -11,7 +10,7 @@ import { useAppSelector } from "@/src/redux/hooks";
 import CommonHeader from "@/src/shared/CommonHeader";
 import ConfirmModal from "@/src/shared/ConfirmModal";
 import { DataTable } from "@/src/shared/DataTable";
-import { Agent } from "@/src/types/components";
+import { Agent, Team } from "@/src/types/components";
 import { Column } from "@/src/types/shared";
 import { formatDate } from "@/src/utils";
 import { maskSensitiveData } from "@/src/utils/masking";
@@ -194,7 +193,7 @@ const AgentPage = () => {
         className: "[@media(max-width:1920px)]:min-w-[198px]",
         cell: (row: Agent) => (
           <Badge variant="outline" className="font-bold text-[10px] uppercase tracking-widest px-2.5 py-1 break-all whitespace-normal line-clamp-1 rounded-lg border-2 bg-indigo-50 text-indigo-600 border-indigo-100 dark:bg-indigo-500/10 dark:text-indigo-400 dark:border-indigo-500/20">
-            {(row.team_id as any)?.name || "N/A"}
+            {typeof row.team_id === "object" ? row.team_id?.name : "N/A"}
           </Badge>
         ),
       },
@@ -303,7 +302,7 @@ const AgentPage = () => {
       />
 
       <div className="bg-white dark:bg-(--card-color) rounded-lg mt-8 border border-slate-200/60 dark:border-(--card-border-color) shadow-sm overflow-hidden">
-        <DataTable data={agents} columns={columns.filter((col) => visibleColumns.find((vc) => vc.id === col.header)?.isVisible !== false)} isLoading={isLoading} isFetching={isFetching || isDeleting} totalCount={totalCount} page={page} limit={limit} onPageChange={setPage} onLimitChange={setLimit} enableSelection={true} selectedIds={selectedIds} onSelectionChange={setSelectedIds} getRowId={(item) => item._id} emptyMessage={searchTerm ? `No agents found matching "${searchTerm}"` : "Your directory is empty. Start by adding your team members!"} className="border-none shadow-none rounded-none" onSortChange={handleSortChange} />
+        <DataTable data={agents} columns={columns.filter((col) => visibleColumns.find((vc) => vc.id === col.header)?.isVisible !== false)} isLoading={isLoading} isFetching={isFetching || isDeleting} totalCount={totalCount} page={page} limit={limit} onPageChange={setPage} onLimitChange={setLimit} enableSelection={true} selectedIds={selectedIds} onSelectionChange={setSelectedIds} getRowId={(item) => item._id} emptyMessage={searchTerm ? `No agents found matching "${searchTerm}"` : "Your directory is empty. Start by adding your team members!"} className="border-none shadow-none rounded-none" onSortChange={handleSortChange} actionPermission={["view.agent-task", "update.agents", "delete.agents"]} />
       </div>
 
       <ConfirmModal isOpen={!!deleteId} onClose={() => setDeleteId(null)} onConfirm={handleDelete} isLoading={isDeleting} title="Permanently Remove Agent?" subtitle="This will disconnect the agent from all active chats and revoke their access immediately. This action is final." confirmText="Yes, remove agent" variant="danger" />

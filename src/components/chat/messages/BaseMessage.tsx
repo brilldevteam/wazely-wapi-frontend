@@ -32,7 +32,7 @@ const StatusIcon = ({ status }: { status: string | null }) => {
   }
 };
 
-const BaseMessage: React.FC<BaseMessageProps> = ({ message, children, isWindowExpired }) => {
+const BaseMessage: React.FC<BaseMessageProps> = ({ message, children, isWindowExpired, isTransparent }) => {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [translatedText, setTranslatedText] = useState<string | null>(null);
   const { user } = useAppSelector((state) => state.auth);
@@ -90,11 +90,20 @@ const BaseMessage: React.FC<BaseMessageProps> = ({ message, children, isWindowEx
             </div>
 
             <div
-              className={cn("relative shadow-sm min-w-15 dark:bg-(--page-body-bg)!", isOutgoing ? "px-4 py-1.5 rounded-lg rounded-te-none border border-black/5" : "px-4 py-1.5 rounded-lg rounded-ts-none border border-black/5")}
-              style={{
-                backgroundColor: isOutgoing ? (userSettingData?.user_bubble_color == "null" ? "var(--chat-user-bg)" : "var(--chat-user-bubble)") : userSettingData?.contact_bubble_color == "null" ? "var(--light-background)" : "var(--chat-contact-bubble)",
-                color: isOutgoing ? (userSettingData?.user_text_color == "null" ? "text-slate-800" : "var(--chat-user-text)") : userSettingData?.contact_text_color == "null" ? "text-slate-800" : "var(--chat-contact-text)",
-              }}
+              className={cn(
+                "relative min-w-15 dark:bg-(--page-body-bg)!",
+                isTransparent
+                  ? "bg-transparent shadow-none border-none p-0"
+                  : cn("shadow-sm", isOutgoing ? "px-4 py-1.5 rounded-lg rounded-te-none border border-black/5" : "px-4 py-1.5 rounded-lg rounded-ts-none border border-black/5")
+              )}
+              style={
+                isTransparent
+                  ? { backgroundColor: "transparent", color: "inherit" }
+                  : {
+                      backgroundColor: isOutgoing ? (userSettingData?.user_bubble_color == "null" ? "var(--chat-user-bg)" : "var(--chat-user-bubble)") : userSettingData?.contact_bubble_color == "null" ? "var(--light-background)" : "var(--chat-contact-bubble)",
+                      color: isOutgoing ? (userSettingData?.user_text_color == "null" ? "text-slate-800" : "var(--chat-user-text)") : userSettingData?.contact_text_color == "null" ? "text-slate-800" : "var(--chat-contact-text)",
+                    }
+              }
             >
               <div className="w-full">
                 {message.reply_message && (
@@ -136,7 +145,7 @@ const BaseMessage: React.FC<BaseMessageProps> = ({ message, children, isWindowEx
 
                 <div className={cn("flex items-center gap-1 mt-0.5 justify-end h-3", isOutgoing ? "text-slate-500" : "text-slate-400 dark:text-slate-500")}>
                   <span className="text-[10px] tabular-nums dark:text-gray-400">{time}</span>
-                  {isOutgoing && <StatusIcon status={message.wa_status} />}
+                  {isOutgoing && <StatusIcon status={message.wa_status || message.delivery_status} />}
                 </div>
               </div>
 

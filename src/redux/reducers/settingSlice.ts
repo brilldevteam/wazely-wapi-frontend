@@ -44,7 +44,8 @@ const initialState: SettingState & Partial<SettingResponse> & { subscription: Su
   widget_telegram_url: "",
   widget_instagram_url: "",
   widget_facebook_url: "",
-  widget_sms_url: ""
+  widget_sms_url: "",
+  omnichannel_platforms: []
 };
 
 const settingSlice = createSlice({
@@ -79,7 +80,7 @@ const settingSlice = createSlice({
       state.default_theme_mode = settings.default_theme_mode || state.default_theme_mode;
       state.allow_media_send = settings.allow_media_send;
       state.is_demo_mode = settings.is_demo_mode;
-      state.allow_user_signup = settings.allow_user_signup;``
+      state.allow_user_signup = settings.allow_user_signup;
       state.landing_page_enabled = settings.landing_page_enabled;
       state.connection_method = settings.connection_method || [];
       state.otp_delivery_method = settings.otp_delivery_method || "email";
@@ -92,6 +93,7 @@ const settingSlice = createSlice({
       state.widget_instagram_url = settings.widget_instagram_url || "";
       state.widget_facebook_url = settings.widget_facebook_url || "";
       state.widget_sms_url = settings.widget_sms_url || "";
+      state.omnichannel_platforms = settings.omnichannel_platforms || [];
 
       if (typeof window !== "undefined") {
         try {

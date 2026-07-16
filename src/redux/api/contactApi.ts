@@ -45,7 +45,7 @@ export const contactApi = baseApi.enhanceEndpoints({ addTagTypes: ["Contact"] })
         method: "DELETE",
         body: { ids: ids },
       }),
-      invalidatesTags: ["Contact"],
+      invalidatesTags: ["Contact", "Chats"],
     }),
     exportContacts: builder.mutation<{ success: boolean; message: string }, void>({
       query: () => ({

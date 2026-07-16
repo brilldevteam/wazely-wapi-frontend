@@ -3,6 +3,8 @@
 import { ChevronDown } from "lucide-react";
 import React, { useState } from "react";
 import { FaqProps } from "../../types/landingPage";
+import { Button } from "@/src/elements/ui/button";
+
 
 const Faq: React.FC<FaqProps> = ({ data }) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
@@ -17,7 +19,7 @@ const Faq: React.FC<FaqProps> = ({ data }) => {
 
   return (
     <section id="faqs" className="py-[calc(20px+(48-20)*((100vw-320px)/(1920-320)))] bg-white">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
           <span className="inline-block text-[12px] font-bold text-primary bg-primary/10 px-4 py-1.5 rounded-full mb-4">
@@ -46,7 +48,7 @@ const Faq: React.FC<FaqProps> = ({ data }) => {
                   : "border-slate-200 bg-white hover:border-slate-300"
               }`}
             >
-              <button
+              <Button variant="unstyled"
                 onClick={() => toggleAccordion(index)}
                 className="w-full flex items-center justify-between px-6 py-5 text-left"
               >
@@ -61,7 +63,7 @@ const Faq: React.FC<FaqProps> = ({ data }) => {
                     activeIndex === index ? "rotate-180 text-primary" : "text-slate-400"
                   }`}
                 />
-              </button>
+              </Button>
               
               <div
                 className={`overflow-hidden transition-all duration-300 ${

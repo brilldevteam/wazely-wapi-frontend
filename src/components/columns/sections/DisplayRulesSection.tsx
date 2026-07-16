@@ -1,14 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
 import { Input } from "@/src/elements/ui/input";
 import { Label } from "@/src/elements/ui/label";
 import { Switch } from "@/src/elements/ui/switch";
-import { LayoutTemplate, AlignLeft, Asterisk, Eye } from "lucide-react";
-
-interface DisplayRulesSectionProps {
-  formik: any;
-  isLoading?: boolean;
-}
+import { DisplayRulesSectionProps } from "@/src/types/components";
+import { AlignLeft, Asterisk, Eye, LayoutTemplate } from "lucide-react";
+import React from "react";
 
 const DisplayRulesSection: React.FC<DisplayRulesSectionProps> = ({
   formik,
@@ -18,7 +14,10 @@ const DisplayRulesSection: React.FC<DisplayRulesSectionProps> = ({
     <div className="bg-white dark:bg-(--page-body-bg) p-4 rounded-lg border border-(--input-border-color) dark:border-(--card-border-color) shadow-sm space-y-4 relative overflow-hidden">
       <div className="flex items-center gap-2 mb-1">
         <div className="p-1.5 bg-emerald-100 dark:bg-emerald-900/40 rounded-md">
-          <LayoutTemplate size={16} className="text-emerald-600 dark:text-emerald-400" />
+          <LayoutTemplate
+            size={16}
+            className="text-emerald-600 dark:text-emerald-400"
+          />
         </div>
         <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200">
           Display Rules

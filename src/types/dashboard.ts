@@ -181,3 +181,4 @@ export interface WeeklyMessagesChartData {
   data: WeeklyMessageEntry[];
   isLoading: boolean;
 }
+ 

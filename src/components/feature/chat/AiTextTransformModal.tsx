@@ -122,7 +122,7 @@ const AiTextTransformModal: React.FC<AiTextTransformModalProps> = ({ isOpen, onC
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
                   <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest flex items-center justify-between">
                     <span>Transformed Result</span>
-                    <Button onClick={() => setTransformedResult(null)} className="text-primary hover:underline flex items-center gap-1">
+                    <Button onClick={() => setTransformedResult(null)} className="text-white flex items-center gap-1">
                       <RefreshCcw size={12} />
                       <span>Start Over</span>
                     </Button>

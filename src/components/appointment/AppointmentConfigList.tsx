@@ -1,22 +1,34 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { ROUTES } from "@/src/constants/route";
 import { Badge } from "@/src/elements/ui/badge";
 import { Button } from "@/src/elements/ui/button";
-import { useListAppointmentConfigsQuery, useDeleteAppointmentConfigMutation } from "@/src/redux/api/appointmentApi";
+import {
+  useDeleteAppointmentConfigMutation,
+  useListAppointmentConfigsQuery,
+} from "@/src/redux/api/appointmentApi";
+import { useAppSelector } from "@/src/redux/hooks";
 import CommonHeader from "@/src/shared/CommonHeader";
 import ConfirmModal from "@/src/shared/ConfirmModal";
 import { DataTable } from "@/src/shared/DataTable";
 import { AppointmentConfig } from "@/src/types/appointment";
 import { Column } from "@/src/types/shared";
-import { Calendar, Edit2, Plus, Trash2, CheckCircle2, XCircle, Clock, Users } from "lucide-react";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { ROUTES } from "@/src/constants/route";
-import dayjs from "dayjs";
 import useDebounce from "@/src/utils/hooks/useDebounce";
-import { useAppSelector } from "@/src/redux/hooks";
+import dayjs from "dayjs";
+import {
+  Calendar,
+  CheckCircle2,
+  Clock,
+  Edit2,
+  Plus,
+  Trash2,
+  Users,
+  XCircle,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import React, { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import Can from "../shared/Can";
 
 const AppointmentConfigList: React.FC = () => {
@@ -26,23 +38,31 @@ const AppointmentConfigList: React.FC = () => {
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [sortConfig, setSortConfig] = useState<{ key: string; order: "asc" | "desc" }>({ key: "created_at", order: "desc" });
+  const [sortConfig, setSortConfig] = useState<{
+    key: string;
+    order: "asc" | "desc";
+  }>({ key: "created_at", order: "desc" });
 
   const [deleteData, setDeleteData] = useState<AppointmentConfig | null>(null);
 
   const { selectedWorkspace } = useAppSelector((state) => state.workspace);
-  const { data, isLoading, isFetching, refetch } = useListAppointmentConfigsQuery({
-    page,
-    limit,
-    search: debouncedSearchTerm,
-    sort_by: sortConfig.key,
-    sort_order: sortConfig.order,
-    waba_id: selectedWorkspace?.waba_id || "",
-  }, {
-    skip: !selectedWorkspace?.waba_id,
-  });
+  const { data, isLoading, isFetching, refetch } =
+    useListAppointmentConfigsQuery(
+      {
+        page,
+        limit,
+        search: debouncedSearchTerm,
+        sort_by: sortConfig.key,
+        sort_order: sortConfig.order,
+        waba_id: selectedWorkspace?.waba_id || "",
+      },
+      {
+        skip: !selectedWorkspace?.waba_id,
+      },
+    );
 
-  const [deleteConfig, { isLoading: isDeleting }] = useDeleteAppointmentConfigMutation();
+  const [deleteConfig, { isLoading: isDeleting }] =
+    useDeleteAppointmentConfigMutation();
 
   const handlePageChange = (newPage: number) => setPage(newPage);
   const handleLimitChange = (newLimit: number) => {
@@ -77,7 +97,11 @@ const AppointmentConfigList: React.FC = () => {
   const [visibleColumns, setVisibleColumns] = useState(initialColumns);
 
   const handleColumnToggle = (columnId: string) => {
-    setVisibleColumns((prev) => prev.map((col) => (col.id === columnId ? { ...col, isVisible: !col.isVisible } : col)));
+    setVisibleColumns((prev) =>
+      prev.map((col) =>
+        col.id === columnId ? { ...col, isVisible: !col.isVisible } : col,
+      ),
+    );
   };
 
   const columns = useMemo<Column<AppointmentConfig>[]>(
@@ -94,8 +118,14 @@ const AppointmentConfigList: React.FC = () => {
               <Calendar size={16} />
             </div>
             <div>
-              <div className="font-bold text-slate-700 dark:text-slate-200 break-all whitespace-normal line-clamp-2">{item.name}</div>
-              {item.location && <div className="text-xs text-slate-500 break-all whitespace-normal line-clamp-2">{item.location}</div>}
+              <div className="font-bold text-slate-700 dark:text-slate-200 break-all whitespace-normal line-clamp-2">
+                {item.name}
+              </div>
+              {item.location && (
+                <div className="text-xs text-slate-500 break-all whitespace-normal line-clamp-2">
+                  {item.location}
+                </div>
+              )}
             </div>
           </div>
         ),
@@ -109,7 +139,8 @@ const AppointmentConfigList: React.FC = () => {
         cell: (item) => (
           <div className="flex items-center gap-1.5 text-sm font-medium text-slate-600 dark:text-slate-400">
             <Clock size={14} />
-            {item.duration_minutes} {t("minutes_unit", { defaultValue: "mins" })}
+            {item.duration_minutes}{" "}
+            {t("minutes_unit", { defaultValue: "mins" })}
           </div>
         ),
       },
@@ -136,25 +167,54 @@ const AppointmentConfigList: React.FC = () => {
         className: "min-w-[150px] [@media(max-width:1920px)]:min-w-[165px]",
         sortable: true,
         sortKey: "created_at",
-        cell: (item) => <div className="text-sm text-slate-500 dark:text-slate-400">{dayjs(item.created_at).format("DD MMM YYYY")}</div>,
+        cell: (item) => (
+          <div className="text-sm text-slate-500 dark:text-slate-400">
+            {dayjs(item.created_at).format("DD MMM YYYY")}
+          </div>
+        ),
       },
       {
         header: t("actions"),
-        className: "text-right min-w-[120px] [@media(max-width:1920px)]:min-w-[200px]",
+        className:
+          "text-right min-w-[120px] [@media(max-width:1920px)]:min-w-[200px]",
         cell: (item) => (
           <div className="flex items-center justify-end gap-2">
             <Can permission="view.appointment_booking">
-              <Button variant="outline" size="sm" className="w-10 h-10 border-none text-blue-500 hover:text-blue-500 hover:bg-blue-500/10 rounded-lg transition-all dark:hover:bg-blue-500/20 shadow-xs" onClick={() => router.push(`${ROUTES.AppointmentBooking}/${item._id}/records`)} title={t("view_bookings")}>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-10 h-10 border-none text-blue-500 hover:text-blue-500 hover:bg-blue-500/10 rounded-lg transition-all dark:hover:bg-blue-500/20 shadow-xs"
+                onClick={() =>
+                  router.push(
+                    `${ROUTES.AppointmentBooking}/${item._id}/records`,
+                  )
+                }
+                title={t("view_bookings")}
+              >
                 <Users size={16} />
               </Button>
             </Can>
             <Can permission="update.appointment_booking">
-              <Button variant="outline" size="sm" className="w-10 h-10 border-none text-primary hover:text-primary hover:bg-primary/10 rounded-lg transition-all dark:hover:bg-primary/20 shadow-xs" onClick={() => router.push(`${ROUTES.AppointmentBooking}/${item._id}`)} title={t("edit")}>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-10 h-10 border-none text-primary hover:text-primary hover:bg-primary/10 rounded-lg transition-all dark:hover:bg-primary/20 shadow-xs"
+                onClick={() =>
+                  router.push(`${ROUTES.AppointmentBooking}/${item._id}`)
+                }
+                title={t("edit")}
+              >
                 <Edit2 size={16} />
               </Button>
             </Can>
             <Can permission="delete.appointment_booking">
-              <Button variant="outline" size="sm" className="w-10 h-10 border-none text-red-600 hover:text-red-600 dark:text-red-500 hover:bg-red-50 rounded-lg transition-all dark:hover:bg-red-900/20 shadow-xs" onClick={() => setDeleteData(item)} title={t("delete")}>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-10 h-10 border-none text-red-600 hover:text-red-600 dark:text-red-500 hover:bg-red-50 rounded-lg transition-all dark:hover:bg-red-900/20 shadow-xs"
+                onClick={() => setDeleteData(item)}
+                title={t("delete")}
+              >
                 <Trash2 size={16} />
               </Button>
             </Can>
@@ -162,12 +222,15 @@ const AppointmentConfigList: React.FC = () => {
         ),
       },
     ],
-    [t, router]
+    [t, router],
   );
 
   const rightContent = (
     <Can permission="create.appointment_booking">
-      <Button onClick={() => router.push(`${ROUTES.AppointmentBooking}/add`)} className="flex items-center gap-2.5 px-4.5! py-5 bg-emerald-600 hover:bg-emerald-700 text-white h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group">
+      <Button
+        onClick={() => router.push(`${ROUTES.AppointmentBooking}/add`)}
+        className="flex items-center gap-2.5 px-4.5! py-5 bg-emerald-600 hover:bg-emerald-700 text-white h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group"
+      >
         <Plus className="w-5 h-5" />
         <span>{t("add_appointment_config")}</span>
       </Button>
@@ -198,10 +261,36 @@ const AppointmentConfigList: React.FC = () => {
       />
 
       <div className="bg-white dark:bg-(--card-color) rounded-lg border border-slate-200/60 dark:border-(--card-border-color) shadow-sm overflow-hidden">
-        <DataTable<AppointmentConfig> data={data?.data?.configs || []} columns={columns.filter((col) => visibleColumns.find((vc) => vc.label === col.header)?.isVisible !== false)} isLoading={isLoading} isFetching={isFetching} totalCount={data?.data?.pagination?.totalItems || 0} page={page} limit={limit} onPageChange={handlePageChange} onLimitChange={handleLimitChange} onSortChange={handleSortChange} getRowId={(item) => item._id} emptyMessage={t("no_appointment_configs")} />
+        <DataTable<AppointmentConfig>
+          data={data?.data?.configs || []}
+          columns={columns.filter(
+            (col) =>
+              visibleColumns.find((vc) => vc.label === col.header)
+                ?.isVisible !== false,
+          )}
+          isLoading={isLoading}
+          isFetching={isFetching}
+          totalCount={data?.data?.pagination?.totalItems || 0}
+          page={page}
+          limit={limit}
+          onPageChange={handlePageChange}
+          onLimitChange={handleLimitChange}
+          onSortChange={handleSortChange}
+          getRowId={(item) => item._id}
+          emptyMessage={t("no_appointment_configs")}
+        />
       </div>
 
-      <ConfirmModal isOpen={!!deleteData} onClose={() => setDeleteData(null)} onConfirm={handleDelete} isLoading={isDeleting} title={t("appointment_delete_title")} subtitle={t("appointment_delete_subtitle")} variant="danger" confirmText={t("delete")} />
+      <ConfirmModal
+        isOpen={!!deleteData}
+        onClose={() => setDeleteData(null)}
+        onConfirm={handleDelete}
+        isLoading={isDeleting}
+        title={t("appointment_delete_title")}
+        subtitle={t("appointment_delete_subtitle")}
+        variant="danger"
+        confirmText={t("delete")}
+      />
     </div>
   );
 };

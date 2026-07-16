@@ -6,9 +6,11 @@ import { Button } from "@/src/elements/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/src/elements/ui/dialog";
 import { cn } from "@/src/lib/utils";
 import { useConnectionMutation } from "@/src/redux/api/whatsappApi";
-import { useAppSelector } from "@/src/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
 import { ConnectWabaModalProps } from "@/src/types/dashboard";
 import { useEmbeddedSignup } from "@/src/utils/hooks/useEmbeddedSignup";
+import { useLazyGetWorkspacesQuery } from "@/src/redux/api/workspaceApi";
+import { setWorkspace } from "@/src/redux/reducers/workspaceSlice";
 import { MessageCircle, QrCode, Settings2, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
@@ -18,6 +20,8 @@ import { toast } from "sonner";
 const ConnectWabaModal = ({ isOpen, onClose }: ConnectWabaModalProps) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const [triggerGetWorkspaces] = useLazyGetWorkspacesQuery();
   const [isConnecting, setIsConnecting] = useState(false);
   const [connection] = useConnectionMutation();
   const { selectedWorkspace } = useAppSelector((state: any) => state.workspace);
@@ -26,8 +30,18 @@ const ConnectWabaModal = ({ isOpen, onClose }: ConnectWabaModalProps) => {
     async (code: string, signupData: any) => {
       try {
         setIsConnecting(true);
-        await connection({ code, signupData, workspace_id: selectedWorkspace?._id }).unwrap();
-        toast.success(t("connect_success"));
+        const response = await connection({ code, signupData, workspace_id: selectedWorkspace?._id }).unwrap();
+        if (response.success) {
+          const workspacesRes = await triggerGetWorkspaces().unwrap();
+          if (workspacesRes?.data) {
+            const currentWs = workspacesRes.data.find(
+              (ws: any) => ws._id === selectedWorkspace?._id
+            );
+            if (currentWs) {
+              dispatch(setWorkspace(currentWs));
+            }
+          }
+        }
         onClose();
       } catch (error: any) {
         toast.error(error?.data?.message || t("failed_to_connect_waba"));
@@ -35,7 +49,7 @@ const ConnectWabaModal = ({ isOpen, onClose }: ConnectWabaModalProps) => {
         setIsConnecting(false);
       }
     },
-    [connection, selectedWorkspace?._id, onClose, t]
+    [connection, selectedWorkspace?._id, onClose, t, dispatch, triggerGetWorkspaces]
   );
 
   const { startSignup, fbReady } = useEmbeddedSignup(handleFinish);
@@ -82,7 +96,7 @@ const ConnectWabaModal = ({ isOpen, onClose }: ConnectWabaModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-md! max-h-[90vh] custom-scrollbar overflow-auto max-w-[calc(100%-2rem)]! gap-0! p-0! border-none bg-white dark:bg-(--card-color) rounded-2xl">
+      <DialogContent className="sm:max-w-md!  max-h-[90vh] no-scrollbar overflow-auto max-w-[calc(100%-2rem)]! gap-0! p-0! border-none bg-white dark:bg-(--card-color) rounded-lg">
         <DialogHeader className="sm:p-6 p-4 pb-0!">
           <DialogTitle className="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
             <MessageCircle className="text-primary" size={24} />
@@ -93,7 +107,7 @@ const ConnectWabaModal = ({ isOpen, onClose }: ConnectWabaModalProps) => {
 
         <div className="sm:p-6 p-4 space-y-4">
           {options.map((option) => (
-            <button key={option.id} onClick={option.onClick} disabled={option.disabled} className={cn("w-full flex items-start gap-4 p-4 rounded-xl border border-slate-100 dark:border-(--card-border-color) bg-slate-50/50 dark:bg-(--dark-sidebar)/50 text-left rtl:text-right transition-all duration-300 hover:border-primary/30 hover:bg-primary/5 hover:scale-[1.01] group active:scale-[0.99]", option.disabled && "opacity-50 cursor-not-allowed hover:scale-100 hover:bg-transparent")}>
+            <Button variant="unstyled" key={option.id} onClick={option.onClick} disabled={option.disabled} className={cn("w-full flex items-start gap-4 p-4 rounded-lg border border-slate-100 dark:border-(--card-border-color) bg-slate-50 dark:bg-(--card-color) text-left rtl:text-right transition-all duration-300 hover:border-primary/30 hover:bg-primary/5 hover:scale-[1.01] group active:scale-[0.99]", option.disabled && "opacity-50 cursor-not-allowed hover:scale-100 hover:bg-transparent")}>
               <div className="mt-1 p-2.5 rounded-lg bg-white dark:bg-(--card-color) shadow-sm border border-slate-100 dark:border-(--card-border-color) group-hover:bg-primary/10 transition-colors">{option.icon}</div>
               <div className="flex-1 space-y-1">
                 <div className="flex items-center justify-between flex-wrap gap-2">
@@ -102,12 +116,12 @@ const ConnectWabaModal = ({ isOpen, onClose }: ConnectWabaModalProps) => {
                 </div>
                 <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">{option.description}</p>
               </div>
-            </button>
+            </Button>
           ))}
         </div>
 
-        <div className="bg-slate-50 dark:bg-(--card-color) p-4 flex justify-end gap-3 border-t border-slate-100 dark:border-(--card-border-color)">
-          <Button onClick={onClose} className="px-4 py-2 text-sm  font-bold text-white hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
+        <div className="bg-white dark:bg-(--card-color) p-4 flex justify-end gap-3 border-t border-slate-100 dark:border-(--card-border-color)">
+          <Button onClick={onClose} className="px-4 py-2 text-sm  font-bold text-white dark:hover:text-slate-300 transition-colors">
             {t("cancel")}
           </Button>
         </div>

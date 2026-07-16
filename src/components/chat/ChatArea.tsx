@@ -12,19 +12,22 @@ import { RootState } from "@/src/redux/store";
 import { Attachment } from "@/src/types/components";
 import { ChatAreaProps, SendMessagePayload, SuggestReplyMessage } from "@/src/types/components/chat";
 import { getInitials } from "@/src/utils";
+import { getResolvedImageUrl } from "@/src/utils/image";
 import { maskSensitiveData } from "@/src/utils/masking";
 import { BotMessageSquare, ChevronLeft, FileText, Filter, Image as ImageIcon, LayoutTemplate, Loader2, MessageSquareQuote, Mic, MoreVertical, Search, Send, Sparkles, Video, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import AiTextTransformModal from "../feature/chat/AiTextTransformModal";
 import SuggestReplyModal from "../feature/chat/SuggestReplyModal";
 import AudioRecorder from "./AudioRecorder";
 import ChatAttachmentMenu from "./ChatAttachmentMenu";
+import { EcommerceProductModal } from "./EcommerceProductModal";
 import EmojiPicker from "./EmojiPicker";
 import PaymentLinkModal from "./PaymentLinkModal";
+import GoogleMeetModal from "./GoogleMeetModal";
 import ExpiredWindowBanner from "./ExpiredWindowBanner";
 import InteractiveMessageModal from "./InteractiveMessageModal";
 import MediaSelectionModal from "./MediaSelectionModal";
@@ -69,12 +72,15 @@ const ChatArea: React.FC<ChatAreaProps> = ({ contactId, phoneNumberId, contactNa
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [isWindowExpired, setIsWindowExpired] = useState(false);
   const [page, setPage] = useState(1);
+  const [pendingScrollMessageId, setPendingScrollMessageId] = useState<string | null>(null);
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
   const [isInteractiveModalOpen, setIsInteractiveModalOpen] = useState(false);
   const [isQuickReplyModalOpen, setIsQuickReplyModalOpen] = useState(false);
   const [isPaymentLinkModalOpen, setIsPaymentLinkModalOpen] = useState(false);
+  const [isEcommerceModalOpen, setIsEcommerceModalOpen] = useState(false);
+  const [isGoogleMeetModalOpen, setIsGoogleMeetModalOpen] = useState(false);
   const [isAudioRecording, setIsAudioRecording] = useState(false);
   const typingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isAgentTypingRef = useRef(false);
@@ -121,9 +127,10 @@ const ChatArea: React.FC<ChatAreaProps> = ({ contactId, phoneNumberId, contactNa
   const userSettingData = userSetting?.data;
 
   const {
-    data: messagesData,
+    currentData: messagesData,
     isLoading,
     isFetching,
+    refetch,
   } = useGetMessagesQuery(
     {
       contact_id: currentContactId,
@@ -146,7 +153,6 @@ const ChatArea: React.FC<ChatAreaProps> = ({ contactId, phoneNumberId, contactNa
     if (allInbound.length === 0) return null;
     return allInbound.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0].createdAt;
   })();
-  console.log("lastInboundTime", lastInboundTime);
 
   const [sendMessage, { isLoading: isSending }] = useSendMessageMutation();
   const [createAttachment] = useCreateAttachmentMutation();
@@ -171,14 +177,55 @@ const ChatArea: React.FC<ChatAreaProps> = ({ contactId, phoneNumberId, contactNa
   const handleImageClick = (url: string, isFromInput = false) => {
     let allImages: string[] = [];
 
+    const getMessageImageUrl = (message: any): string | null => {
+      if (message.messageType === "image" && message.fileUrl) {
+        return message.fileUrl;
+      }
+      if (message.messageType === "interactive" && message.fileUrl) {
+        const ext = message.fileUrl.split(".").pop()?.toLowerCase();
+        if (["jpg", "jpeg", "png", "gif", "webp"].includes(ext || "")) {
+          return message.fileUrl;
+        }
+      }
+      if ((message.messageType === "template" || message.messageType === "carousel") && message.template) {
+        const template = message.template;
+        if (template.header && template.header.format !== "text" && template.header.format !== "location") {
+          const mediaUrl = message.fileUrl || template.header.media_url;
+          if (mediaUrl) {
+            const ext = mediaUrl.split(".").pop()?.toLowerCase().split("?")[0] || "";
+            const rawFormat = template.header.format === "media" ? template.header.media_type : template.header.format;
+            const format = (["jpg", "jpeg", "png", "webp", "gif"].includes(ext) ? "image" : rawFormat)?.toLowerCase();
+            if (format === "image") {
+              return mediaUrl;
+            }
+          }
+        }
+      }
+      return null;
+    };
+
     if (isFromInput) {
-      allImages = selectedMedia.filter((m) => m.mimeType.startsWith("image/")).map((m) => m.fileUrl);
+      allImages = selectedMedia
+        .filter((m) => m.mimeType.startsWith("image/"))
+        .map((m) => getResolvedImageUrl(m.fileUrl));
     } else {
-      allImages = messagesData?.messages.flatMap((dateGroup) => dateGroup.messageGroups.flatMap((group) => group.messages.filter((m) => m.messageType === "image").map((m) => m.fileUrl!))) || [];
+      const rawImages = messagesData?.messages.flatMap((dateGroup) =>
+        dateGroup.messageGroups.flatMap((group) =>
+          group.messages.map(getMessageImageUrl).filter(Boolean) as string[]
+        )
+      ) || [];
+      allImages = rawImages.map((src) => getResolvedImageUrl(src));
     }
 
-    const index = allImages.indexOf(url);
-    dispatch(openPreview({ images: allImages, index: index >= 0 ? index : 0 }));
+    const resolvedClickedUrl = getResolvedImageUrl(url);
+    let index = allImages.indexOf(resolvedClickedUrl);
+
+    if (index === -1) {
+      allImages.push(resolvedClickedUrl);
+      index = allImages.length - 1;
+    }
+
+    dispatch(openPreview({ images: allImages, index }));
   };
 
   const handleSend = async () => {
@@ -200,59 +247,37 @@ const ChatArea: React.FC<ChatAreaProps> = ({ contactId, phoneNumberId, contactNa
       const remoteMedia = currentSelectedMedia.filter((m: any) => !m.localFile);
 
       if (localMedia.length > 0) {
-        let finalMediaUrls = remoteMedia.map((m) => m.fileUrl);
+        const formData = new FormData();
+        
+        localMedia.forEach((m: any) => {
+          formData.append("file_url", m.localFile);
+        });
 
-        if (localMedia.length === 1 && remoteMedia.length === 0) {
+        remoteMedia.forEach((m: any) => {
+          formData.append("mediaUrls", m.fileUrl);
+        });
+
+        formData.append("whatsapp_phone_number_id", currentPhoneNumberId!);
+        formData.append("contact_id", currentContactId!);
+        formData.append("message", currentMessageText);
+        formData.append("provider", "business_api");
+
+        const totalCount = localMedia.length + remoteMedia.length;
+        if (totalCount === 1) {
           const firstLocal = localMedia[0] as any;
-          const formData = new FormData();
-          formData.append("file_url", firstLocal.localFile);
-          formData.append("whatsapp_phone_number_id", currentPhoneNumberId!);
-          formData.append("contact_id", currentContactId!);
-          formData.append("message", currentMessageText);
-          formData.append("provider", "business_api");
-
           const msgType = firstLocal.mimeType.startsWith("image/") ? "image" : firstLocal.mimeType.startsWith("video/") ? "video" : "document";
           formData.append("type", msgType);
           formData.append("messageType", msgType);
-
-          if (currentReplyToMessage) {
-            formData.append("replyMessageId", currentReplyToMessage.wa_message_id || currentReplyToMessage.id);
-          }
-
-          await sendMessage(formData).unwrap();
         } else {
-          toast.loading("Uploading local files...", { id: "upload-toast" });
-          const uploadedUrls = await Promise.all(
-            localMedia.map(async (m: any) => {
-              const formData = new FormData();
-              formData.append("file", m.localFile);
-              const response = await createAttachment(formData).unwrap();
-              return response.data.fileUrl || response.data.path;
-            })
-          );
-          toast.dismiss("upload-toast");
-
-          finalMediaUrls = [...finalMediaUrls, ...uploadedUrls];
-
-          const payload: SendMessagePayload = {
-            whatsapp_phone_number_id: currentPhoneNumberId!,
-            contact_id: currentContactId!,
-            message: currentMessageText,
-            type: "text",
-            messageType: "text",
-            mediaUrls: finalMediaUrls,
-            replyMessageId: currentReplyToMessage?.wa_message_id || currentReplyToMessage?.id,
-            provider: "business_api",
-          } as SendMessagePayload;
-
-          if (finalMediaUrls.length === 1) {
-            const firstMedia = currentSelectedMedia[0];
-            payload.messageType = firstMedia.mimeType.startsWith("image/") ? "image" : firstMedia.mimeType.startsWith("video/") ? "video" : "document";
-            payload.type = payload.messageType;
-          }
-
-          await sendMessage(payload).unwrap();
+          formData.append("type", "text");
+          formData.append("messageType", "text");
         }
+
+        if (currentReplyToMessage) {
+          formData.append("replyMessageId", currentReplyToMessage.wa_message_id || currentReplyToMessage.id);
+        }
+
+        await sendMessage(formData).unwrap();
       } else {
         const payload: SendMessagePayload = {
           whatsapp_phone_number_id: currentPhoneNumberId!,
@@ -404,9 +429,28 @@ const ChatArea: React.FC<ChatAreaProps> = ({ contactId, phoneNumberId, contactNa
     }
   };
 
-  const handleFileSelect = (file: File) => {
-    console.log("File selected:", file);
+  const handleGoogleMeetSend = async (googleMeetPayload: { google_account_id: string; meet_start_time: string; meet_end_time: string }) => {
+    if (!selectedChat || !selectedPhoneNumberId) return;
+
+    try {
+      const payload: SendMessagePayload = {
+        whatsapp_phone_number_id: currentPhoneNumberId!,
+        contact_id: currentContactId!,
+        type: "google_meet" as any,
+        messageType: "google_meet" as any,
+        provider: "business_api",
+        ...googleMeetPayload,
+      } as any;
+
+      await sendMessage(payload).unwrap();
+      toast.success("Google Meet link created and sent!");
+      dispatch(clearReplyToMessage());
+    } catch (error: any) {
+      toast.error(error?.data?.error || error?.message || "Failed to create Google Meet link");
+    }
   };
+
+  const handleFileSelect = (file: File) => {};
 
   const handleMediaSelect = (media: Attachment[]) => {
     setSelectedMedia((prev) => {
@@ -460,7 +504,42 @@ const ChatArea: React.FC<ChatAreaProps> = ({ contactId, phoneNumberId, contactNa
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setPage(1);
+    setPendingScrollMessageId(null);
   }, [currentContactId]);
+
+  useEffect(() => {
+    if (!pendingScrollMessageId) return;
+
+    // Check if the message is now in the DOM
+    const messageElement = document.getElementById(`message-${pendingScrollMessageId}`);
+    if (messageElement) {
+      toast.dismiss("scroll-loading");
+      messageElement.scrollIntoView({ behavior: "smooth", block: "center" });
+      messageElement.classList.add("bg-primary/10", "dark:bg-primary/30", "transition-colors", "duration-500", "py-5");
+      setTimeout(() => {
+        messageElement.classList.remove("bg-primary/10", "dark:bg-primary/30", "transition-colors", "duration-500", "py-5");
+      }, 2000);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setPendingScrollMessageId(null);
+      return;
+    }
+
+    // If it is not in the DOM, check if we are currently fetching
+    if (isFetching || isLoading) {
+      return; // Wait for the fetch to complete
+    }
+
+    // If we are not fetching, check if we have more messages to load
+    const hasMore = messagesData?.pagination?.hasMore || false;
+    if (hasMore) {
+      toast.loading("Loading older messages to find match...", { id: "scroll-loading" });
+      // Load the next page
+      setPage((prev) => prev + 1);
+    } else {
+      toast.error("Message not found in history", { id: "scroll-loading" });
+      setPendingScrollMessageId(null);
+    }
+  }, [pendingScrollMessageId, messagesData, isFetching, isLoading]);
 
   useEffect(() => {
     if (lastInboundTime) {
@@ -473,9 +552,15 @@ const ChatArea: React.FC<ChatAreaProps> = ({ contactId, phoneNumberId, contactNa
     }
   }, [lastInboundTime]);
 
+  const handleTimerExpire = useCallback(() => {
+    setIsWindowExpired(true);
+  }, []);
+
   useEffect(() => {
     const handleFocus = () => {
-      // unreadCountRef.current = 0; // Not available in this component, it was from useSocketHandler
+      if (currentContactId && currentPhoneNumberId) {
+        refetch();
+      }
     };
     const updateScreen = () => {
       dispatch(setIsMobileScreen(window.innerWidth <= 991));
@@ -488,7 +573,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ contactId, phoneNumberId, contactNa
       window.removeEventListener("focus", handleFocus);
       window.removeEventListener("resize", updateScreen);
     };
-  }, [dispatch]);
+  }, [dispatch, currentContactId, currentPhoneNumberId, refetch]);
 
   useEffect(() => {
     return () => {
@@ -513,7 +598,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ contactId, phoneNumberId, contactNa
         messageElement.classList.remove("bg-primary/10", "dark:bg-primary/30", "transition-colors", "duration-500", "py-5");
       }, 2000);
     } else {
-      toast.error("Message not found in current view");
+      setPendingScrollMessageId(messageId);
     }
   };
 
@@ -545,7 +630,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ contactId, phoneNumberId, contactNa
         <div className="flex items-center sm:gap-1 gap-0 [@media(max-width:430px)]:ml-auto rtl:[@media(max-width:430px)]:ml-0 rtl:[@media(max-width:430px)]:mr-auto [@media(max-width:430px)]:flex-wrap">
           {lastInboundTime && !isBaileys && (
             <div className="mr-2">
-              <WhatsAppTimer key={currentContactId} lastInboundTime={lastInboundTime} onExpire={() => setIsWindowExpired(true)} />
+              <WhatsAppTimer key={currentContactId} lastInboundTime={lastInboundTime} onExpire={handleTimerExpire} />
             </div>
           )}
           {isModal && (
@@ -610,7 +695,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ contactId, phoneNumberId, contactNa
           }}
         />
         <div className="flex-1 relative z-10 flex flex-col min-h-0 pt-2">
-          <ChatMessageList key={currentContactId} ref={scrollListRef} data={messagesData} isLoading={isLoading} isFetching={isFetching} onLoadMore={() => setPage((prev) => prev + 1)} onImageClick={(url) => handleImageClick(url, false)} isWindowExpired={isWindowExpired} />
+          <ChatMessageList key={currentContactId} ref={scrollListRef} data={messagesData} isLoading={isLoading || (isFetching && !messagesData)} isFetching={isFetching} onLoadMore={() => setPage((prev) => prev + 1)} onImageClick={(url) => handleImageClick(url, false)} isWindowExpired={isWindowExpired} />
         </div>
       </div>
 
@@ -678,7 +763,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ contactId, phoneNumberId, contactNa
           )}
           {isAudioRecording ? (
             <div className="w-full bg-transparent">
-              <AudioRecorder onSend={handleAudioSend} onCancel={() => setIsAudioRecording(false)} />
+              <AudioRecorder onSend={handleAudioSend} onCancel={() => setIsAudioRecording(false)} isSending={isSending} />
             </div>
           ) : (
             <div className="relative flex items-center gap-3 p-2 bg-transparent [@media(max-width:535px)]:flex-col group">
@@ -704,7 +789,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ contactId, phoneNumberId, contactNa
                   </Button>
                 </PlanFeature>
 
-                <ChatAttachmentMenu isBaileys={isBaileys} onFileSelect={handleFileSelect} onMediaLibraryOpen={() => setIsMediaModalOpen(true)} onLocationClick={() => setIsLocationModalOpen(true)} onInteractiveClick={handleInteractiveClick} onAudioClick={() => setIsAudioRecording(true)} onPaymentLinkClick={() => setIsPaymentLinkModalOpen(true)} />
+                <ChatAttachmentMenu isBaileys={isBaileys} onFileSelect={handleFileSelect} onMediaLibraryOpen={() => setIsMediaModalOpen(true)} onLocationClick={() => setIsLocationModalOpen(true)} onInteractiveClick={handleInteractiveClick} onAudioClick={() => setIsAudioRecording(true)} onPaymentLinkClick={() => setIsPaymentLinkModalOpen(true)} onEcommerceClick={() => setIsEcommerceModalOpen(true)} onGoogleMeetClick={() => setIsGoogleMeetModalOpen(true)} />
 
                 <PlanFeature feature="quick_replies">
                   <Button
@@ -771,6 +856,8 @@ const ChatArea: React.FC<ChatAreaProps> = ({ contactId, phoneNumberId, contactNa
       <QuickReplyModal isOpen={isQuickReplyModalOpen} onClose={() => setIsQuickReplyModalOpen(false)} onSelect={handleUseReply} onDirectSend={handleDirectSend} />
       <PaymentLinkModal isOpen={isPaymentLinkModalOpen} onClose={() => setIsPaymentLinkModalOpen(false)} onSend={handlePaymentLinkSend} isSending={isSending} />
       <MessageDateFilterModal isOpen={isDateFilterOpen} onClose={() => setIsDateFilterOpen(false)} onApply={setDateFilters} initialFilters={dateFilters} />
+      <EcommerceProductModal isOpen={isEcommerceModalOpen} onClose={() => setIsEcommerceModalOpen(false)} />
+      <GoogleMeetModal isOpen={isGoogleMeetModalOpen} onClose={() => setIsGoogleMeetModalOpen(false)} onSend={handleGoogleMeetSend} isSending={isSending} />
     </div>
   );
 };

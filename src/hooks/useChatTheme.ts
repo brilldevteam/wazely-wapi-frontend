@@ -24,7 +24,12 @@ export const useChatTheme = () => {
     userBubbleColor: data?.user_bubble_color || CHAT_THEME_DEFAULTS.user_bubble_color,
     contactBubbleColor: data?.contact_bubble_color || CHAT_THEME_DEFAULTS.contact_bubble_color,
     bgColor: data?.bg_color || CHAT_THEME_DEFAULTS.bg_color,
-    bgImage: data?.bg_image ? (data.bg_image.startsWith("http") ? data.bg_image : `${process.env.NEXT_PUBLIC_STORAGE_URL}${data.bg_image}`) : null,
+    bgImage: data?.bg_image ? (data.bg_image.startsWith("http") ? data.bg_image : (() => {
+      const API_URL = process.env.NEXT_PUBLIC_STORAGE_URL ?? "";
+      const cleanUrl = data.bg_image.replace(/\\/g, "/").startsWith("/") ? data.bg_image.replace(/\\/g, "/") : `/${data.bg_image.replace(/\\/g, "/")}`;
+      const baseUrl = API_URL.endsWith("/") ? API_URL.slice(0, -1) : API_URL;
+      return `${baseUrl}${cleanUrl}`;
+    })()) : null,
     userTextColor: data?.user_text_color || CHAT_THEME_DEFAULTS.user_text_color,
     contactTextColor: data?.contact_text_color || CHAT_THEME_DEFAULTS.contact_text_color,
   };

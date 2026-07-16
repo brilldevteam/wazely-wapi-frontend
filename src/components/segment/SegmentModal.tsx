@@ -1,26 +1,31 @@
 "use client";
 
-import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/src/elements/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/src/elements/ui/alert-dialog";
 import { Button } from "@/src/elements/ui/button";
 import { Input } from "@/src/elements/ui/input";
 import { Label } from "@/src/elements/ui/label";
+import { MultiSelect, Option } from "@/src/elements/ui/multi-select";
 import { Textarea } from "@/src/elements/ui/textarea";
+import { useGetContactQuery } from "@/src/redux/api/contactApi";
+import { useGetSegmentContactsQuery } from "@/src/redux/api/segmentApi";
+import { SegmentModalProps } from "@/src/types/segment";
 import { Loader2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { MultiSelect, Option } from "@/src/elements/ui/multi-select";
-import { useGetContactQuery } from "@/src/redux/api/contactApi";
-import { useGetSegmentContactsQuery } from "@/src/redux/api/segmentApi";
 
-interface SegmentModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSave: (data: { name: string; description?: string; contactIds?: string[] }) => void;
-  segment?: any;
-  isLoading?: boolean;
-}
-
-const SegmentModal = ({ isOpen, onClose, onSave, segment, isLoading }: SegmentModalProps) => {
+const SegmentModal = ({
+  isOpen,
+  onClose,
+  onSave,
+  segment,
+  isLoading,
+}: SegmentModalProps) => {
   const { t } = useTranslation();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -28,12 +33,18 @@ const SegmentModal = ({ isOpen, onClose, onSave, segment, isLoading }: SegmentMo
 
   const { data: contactsResult } = useGetContactQuery({ page: 1, limit: 1000 });
   const contacts = contactsResult?.data?.contacts || [];
-  const contactOptions: Option[] = contacts.map((c: { name: string; phone_number: string; _id: string }) => ({ label: `${c.name} (${c.phone_number})`, value: c._id }));
-
-  const { data: segmentContactsResult, isFetching: isFetchingSegmentContacts } = useGetSegmentContactsQuery(
-    { segmentId: segment?._id, limit: 1000 },
-    { skip: !segment?._id || !isOpen }
+  const contactOptions: Option[] = contacts.map(
+    (c: { name: string; phone_number: string; _id: string }) => ({
+      label: `${c.name}  ${c.phone_number ? `(${c.phone_number})` : ""}`,
+      value: c._id,
+    }),
   );
+
+  const { data: segmentContactsResult, isFetching: isFetchingSegmentContacts } =
+    useGetSegmentContactsQuery(
+      { segmentId: segment?._id, limit: 1000 },
+      { skip: !segment?._id || !isOpen },
+    );
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -41,7 +52,11 @@ const SegmentModal = ({ isOpen, onClose, onSave, segment, isLoading }: SegmentMo
         setName(segment.name || "");
         setDescription(segment.description || "");
         if (segmentContactsResult?.data?.contacts) {
-          setContactIds(segmentContactsResult.data.contacts.map((c: { _id: string }) => c._id));
+          setContactIds(
+            segmentContactsResult.data.contacts.map(
+              (c: { _id: string }) => c._id,
+            ),
+          );
         }
       } else {
         setName("");
@@ -106,14 +121,27 @@ const SegmentModal = ({ isOpen, onClose, onSave, segment, isLoading }: SegmentMo
               onChange={setContactIds}
               placeholder="Select contacts for this segment..."
             />
-            {isFetchingSegmentContacts && <p className="text-xs text-muted-foreground animate-pulse">Loading current contacts...</p>}
+            {isFetchingSegmentContacts && (
+              <p className="text-xs text-muted-foreground animate-pulse">
+                Loading current contacts...
+              </p>
+            )}
           </div>
 
           <AlertDialogFooter className="pt-4">
-            <Button type="button" variant="outline" onClick={onClose} className="h-11 px-6">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              className="h-11 px-6"
+            >
               {t("cancel")}
             </Button>
-            <Button type="submit" disabled={isLoading} className="h-11 px-8 text-white">
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="h-11 px-8 text-white"
+            >
               {isLoading ? (
                 <div className="flex items-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />

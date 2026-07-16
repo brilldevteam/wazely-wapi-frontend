@@ -15,8 +15,9 @@ import QuickReplySettingsModal from "./QuickReplySettingsModal";
 import { Button } from "@/src/elements/ui/button";
 import Can from "../shared/Can";
 import { Settings2 } from "lucide-react";
+import { FilterTab } from "@/src/types/replyMaterial";
 
-type FilterTab = "all" | "favorites" | "mine";
+
 
 const QuickRepliesContainer = () => {
   const { t } = useTranslation();

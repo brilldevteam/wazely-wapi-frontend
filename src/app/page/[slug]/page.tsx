@@ -7,7 +7,12 @@ const STORAGE_URL = process.env.NEXT_PUBLIC_STORAGE_URL || "";
 
 const resolveUrl = (url?: string): string => {
   if (!url) return "";
-  return url.startsWith("http") ? url : `${STORAGE_URL}${url}`;
+  if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:")) {
+    return url;
+  }
+  const cleanUrl = url.replace(/\\/g, "/").startsWith("/") ? url.replace(/\\/g, "/") : `/${url.replace(/\\/g, "/")}`;
+  const baseUrl = STORAGE_URL.endsWith("/") ? STORAGE_URL.slice(0, -1) : STORAGE_URL;
+  return `${baseUrl}${cleanUrl}`;
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

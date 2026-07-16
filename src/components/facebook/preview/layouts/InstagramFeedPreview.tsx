@@ -2,18 +2,24 @@
 "use client";
 
 import { Button } from "@/src/elements/ui/button";
-import { Bookmark, Heart, Images, MessageCircle, PlayCircle, Send } from "lucide-react";
+import { InstagramFeedPreviewProps } from "@/src/types/facebook";
+import {
+  Bookmark,
+  Heart,
+  Images,
+  MessageCircle,
+  PlayCircle,
+  Send,
+} from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
-interface InstagramFeedPreviewProps {
-  ad: any;
-  videoUrl: string;
-  imageUrl: string;
-  isVideo: boolean;
-}
-
-export const InstagramFeedPreview: React.FC<InstagramFeedPreviewProps> = ({ ad, videoUrl, imageUrl, isVideo }) => {
+export const InstagramFeedPreview: React.FC<InstagramFeedPreviewProps> = ({
+  ad,
+  videoUrl,
+  imageUrl,
+  isVideo,
+}) => {
   const isCarousel = ad?.creative_type === "CAROUSEL";
   const cards = ad?.ad_creative?.carousel_cards || [];
 
@@ -23,8 +29,12 @@ export const InstagramFeedPreview: React.FC<InstagramFeedPreviewProps> = ({ ad, 
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-(--dark-body) ring-2 ring-pink-500 ring-offset-2 dark:ring-offset-slate-900" />
           <div className="flex flex-col">
-            <span className="text-xs font-black text-slate-900 dark:text-white leading-none">Your Brand</span>
-            <span className="text-[10px] text-slate-400 font-bold mt-1 leading-none">Sponsored</span>
+            <span className="text-xs font-black text-slate-900 dark:text-white leading-none">
+              Your Brand
+            </span>
+            <span className="text-[10px] text-slate-400 font-bold mt-1 leading-none">
+              Sponsored
+            </span>
           </div>
         </div>
         <Button type="button" className="text-slate-400 bg-[unset]!">
@@ -38,9 +48,19 @@ export const InstagramFeedPreview: React.FC<InstagramFeedPreviewProps> = ({ ad, 
         <div className="flex overflow-x-auto snap-x custom-scrollbar pb-1">
           {cards.length > 0 ? (
             cards.map((card: any, idx: number) => (
-              <div key={idx} className="min-w-full aspect-square bg-slate-100 dark:bg-slate-800 snap-center relative">
+              <div
+                key={idx}
+                className="min-w-full aspect-square bg-slate-100 dark:bg-slate-800 snap-center relative"
+              >
                 {card.image_url ? (
-                  <Image src={card.image_url || ""} className="w-full h-full object-cover" width={100} height={100} unoptimized alt={"image"} />
+                  <Image
+                    src={card.image_url || ""}
+                    className="w-full h-full object-cover"
+                    width={100}
+                    height={100}
+                    unoptimized
+                    alt={"image"}
+                  />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-slate-300">
                     <Images size={48} />
@@ -62,7 +82,12 @@ export const InstagramFeedPreview: React.FC<InstagramFeedPreviewProps> = ({ ad, 
           {isVideo ? (
             videoUrl ? (
               <div className="w-full h-full relative">
-                <video src={videoUrl} poster={imageUrl} className="w-full h-full object-cover" muted />
+                <video
+                  src={videoUrl}
+                  poster={imageUrl}
+                  className="w-full h-full object-cover"
+                  muted
+                />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <PlayCircle className="text-white opacity-80" size={48} />
                 </div>
@@ -70,24 +95,45 @@ export const InstagramFeedPreview: React.FC<InstagramFeedPreviewProps> = ({ ad, 
             ) : (
               <div className="flex flex-col items-center gap-2 text-slate-300">
                 <PlayCircle size={48} />
-                <span className="text-xs font-bold uppercase tracking-widest">No Video Selected</span>
+                <span className="text-xs font-bold uppercase tracking-widest">
+                  No Video Selected
+                </span>
               </div>
             )
           ) : imageUrl ? (
-            <Image src={imageUrl} className="w-full h-full object-cover" alt="Preview" width={400} height={400} unoptimized />
+            <Image
+              src={imageUrl}
+              className="w-full h-full object-cover"
+              alt="Preview"
+              width={400}
+              height={400}
+              unoptimized
+            />
           ) : (
             <div className="flex flex-col items-center gap-2 text-slate-300">
               <Images size={48} />
-              <span className="text-xs font-bold uppercase tracking-widest">No Media Selected</span>
+              <span className="text-xs font-bold uppercase tracking-widest">
+                No Media Selected
+              </span>
             </div>
           )}
         </div>
       )}
 
       <div className="p-3 border-b border-slate-100 dark:border-(--card-border-color) flex items-center justify-between bg-white dark:bg-(--page-body-bg) group cursor-pointer transition-colors active:bg-slate-50">
-        <span className="text-sm font-bold text-blue-500 group-hover:text-blue-600 transition-colors">Send WhatsApp message</span>
-        <svg viewBox="0 0 24 24" width="16" height="16" className="text-slate-400">
-          <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" fill="currentColor"></path>
+        <span className="text-sm font-bold text-blue-500 group-hover:text-blue-600 transition-colors">
+          Send WhatsApp message
+        </span>
+        <svg
+          viewBox="0 0 24 24"
+          width="16"
+          height="16"
+          className="text-slate-400"
+        >
+          <path
+            d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
+            fill="currentColor"
+          ></path>
         </svg>
       </div>
 
@@ -101,8 +147,12 @@ export const InstagramFeedPreview: React.FC<InstagramFeedPreviewProps> = ({ ad, 
           <Bookmark size={22} />
         </div>
         <div className="space-x-2">
-          <span className="text-[13px] font-semibold text-slate-900 dark:text-white">Your Brand</span>
-          <span className="text-[13px] text-slate-800 dark:text-slate-200 line-clamp-2">{ad.ad_creative?.body || "..."}</span>
+          <span className="text-[13px] font-semibold text-slate-900 dark:text-white">
+            Your Brand
+          </span>
+          <span className="text-[13px] text-slate-800 dark:text-slate-200 line-clamp-2">
+            {ad.ad_creative?.body || "..."}
+          </span>
         </div>
       </div>
     </div>

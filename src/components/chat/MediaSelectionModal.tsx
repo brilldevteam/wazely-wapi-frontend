@@ -3,24 +3,36 @@
 import MediaGrid from "@/src/components/media/MediaGrid";
 import { Button } from "@/src/elements/ui/button";
 import { Checkbox } from "@/src/elements/ui/checkbox";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/src/elements/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/src/elements/ui/dialog";
 import { Input } from "@/src/elements/ui/input";
 import { Label } from "@/src/elements/ui/label";
 import { useGetAttachmentsQuery } from "@/src/redux/api/mediaApi";
 import { Attachment } from "@/src/types/components";
-import { MediaSelectionModalProps } from "@/src/types/components/chat";
+import {
+  LocalAttachment,
+  MediaSelectionModalProps,
+} from "@/src/types/components/chat";
 import { Loader2, Search, Send, Upload } from "lucide-react";
 import { useRef, useState } from "react";
+import { toast } from "sonner";
 
-interface LocalAttachment extends Attachment {
-  localFile?: File;
-}
-
-const MediaSelectionModal = ({ isOpen, onClose, onSelect }: MediaSelectionModalProps) => {
+const MediaSelectionModal = ({
+  isOpen,
+  onClose,
+  onSelect,
+}: MediaSelectionModalProps) => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const [localAttachments, setLocalAttachments] = useState<LocalAttachment[]>([]);
+  const [localAttachments, setLocalAttachments] = useState<LocalAttachment[]>(
+    [],
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: attachmentsData, isLoading } = useGetAttachmentsQuery({
@@ -29,19 +41,28 @@ const MediaSelectionModal = ({ isOpen, onClose, onSelect }: MediaSelectionModalP
   });
 
   const attachments: Attachment[] = attachmentsData?.data || [];
-  const allAttachments: LocalAttachment[] = [...localAttachments, ...attachments];
+  const allAttachments: LocalAttachment[] = [
+    ...localAttachments,
+    ...attachments,
+  ];
 
   const handleGridSelect = (id: string) => {
-    setSelectedItems((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+    setSelectedItems((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
+    );
   };
 
   const handleSelectAll = (checked: boolean) => {
     const currentPageIds = allAttachments.map((a) => a._id);
     if (checked) {
-      const uniqueIds = Array.from(new Set([...selectedItems, ...currentPageIds]));
+      const uniqueIds = Array.from(
+        new Set([...selectedItems, ...currentPageIds]),
+      );
       setSelectedItems(uniqueIds);
     } else {
-      setSelectedItems(selectedItems.filter((id) => !currentPageIds.includes(id)));
+      setSelectedItems(
+        selectedItems.filter((id) => !currentPageIds.includes(id)),
+      );
     }
   };
 
@@ -49,26 +70,37 @@ const MediaSelectionModal = ({ isOpen, onClose, onSelect }: MediaSelectionModalP
     const files = e.target.files;
     if (!files) return;
 
-    const newLocalAttachments: LocalAttachment[] = Array.from(files).map((file) => ({
-      _id: `local-${file.name}-${Date.now()}-${Math.random()}`,
-      original_name: file.name,
-      fileName: file.name,
-      mimeType: file.type,
-      fileSize: file.size,
-      fileUrl: URL.createObjectURL(file),
-      localFile: file,
-      createdAt: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      encoding: "7bit",
-      path: "",
-    }));
+    const newLocalAttachments: LocalAttachment[] = Array.from(files).map(
+      (file) => ({
+        _id: `local-${file.name}-${Date.now()}-${Math.random()}`,
+        original_name: file.name,
+        fileName: file.name,
+        mimeType: file.type,
+        fileSize: file.size,
+        fileUrl: URL.createObjectURL(file),
+        localFile: file,
+        createdAt: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        encoding: "7bit",
+        path: "",
+      }),
+    );
 
     setLocalAttachments((prev) => [...newLocalAttachments, ...prev]);
-    setSelectedItems((prev) => [...prev, ...newLocalAttachments.map((a) => a._id)]);
+    setSelectedItems((prev) => [
+      ...prev,
+      ...newLocalAttachments.map((a) => a._id),
+    ]);
   };
 
   const handleSubmit = () => {
-    const selectedMedia = allAttachments.filter((a) => selectedItems.includes(a._id));
+    if (selectedItems.length > 9) {
+      toast.error("You can send 10 Images at a Time");
+      return;
+    }
+    const selectedMedia = allAttachments.filter((a) =>
+      selectedItems.includes(a._id),
+    );
     onSelect(selectedMedia);
     onClose();
     setSelectedItems([]);
@@ -85,14 +117,28 @@ const MediaSelectionModal = ({ isOpen, onClose, onSelect }: MediaSelectionModalP
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="w-[calc(100vw-1rem)] gap-0 sm:w-[calc(100vw-2rem)] md:w-[calc(100vw-4rem)] lg:max-w-3xl max-h-[95vh] sm:max-h-[90vh] dark:bg-(--card-color) flex flex-col p-3 sm:p-4 md:p-6 overflow-hidden overflow-x-hidden">
         <DialogHeader className="mb-3 sm:mb-4 shrink-0 flex flex-row items-center justify-between">
-          <DialogTitle className="text-base sm:text-lg md:text-xl text-left">Select Media</DialogTitle>
+          <DialogTitle className="text-base sm:text-lg md:text-xl text-left">
+            Select Media
+          </DialogTitle>
           <div className="flex items-center gap-2">
-            <Button type="button" variant="outline" size="sm" className="h-8 sm:h-9 gap-2 text-xs sm:text-sm border-primary text-primary hover:text-primary hover:bg-primary/10" onClick={() => fileInputRef.current?.click()}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-8 sm:h-9 gap-2 text-xs sm:text-sm border-primary text-primary hover:text-primary hover:bg-primary/10"
+              onClick={() => fileInputRef.current?.click()}
+            >
               <Upload size={14} />
               <span className="hidden xs:inline">Send from Local</span>
               <span className="xs:hidden">Local</span>
             </Button>
-            <Input type="file" ref={fileInputRef} className="hidden" multiple onChange={handleLocalFileSelect} />
+            <Input
+              type="file"
+              ref={fileInputRef}
+              className="hidden"
+              multiple
+              onChange={handleLocalFileSelect}
+            />
           </div>
         </DialogHeader>
 
@@ -101,7 +147,10 @@ const MediaSelectionModal = ({ isOpen, onClose, onSelect }: MediaSelectionModalP
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
             {/* Search Input */}
             <div className="relative flex-1">
-              <Search className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+              <Search
+                className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                size={16}
+              />
               <Input
                 placeholder="Search media..."
                 className="pl-8 sm:pl-10 h-9 sm:h-10 text-sm"
@@ -115,8 +164,19 @@ const MediaSelectionModal = ({ isOpen, onClose, onSelect }: MediaSelectionModalP
 
             {/* Select All Checkbox */}
             <div className="flex items-center gap-2 px-2.5 sm:px-3 h-9 sm:h-10 bg-slate-50 dark:bg-(--table-hover) border border-slate-200 dark:border-(--card-border-color) rounded-lg shrink-0">
-              <Checkbox id="select-all-modal" checked={allAttachments.length > 0 && allAttachments.every((a) => selectedItems.includes(a._id))} onCheckedChange={(checked) => handleSelectAll(checked === true)} className="h-4 w-4 sm:h-5 sm:w-5" />
-              <Label htmlFor="select-all-modal" className="text-xs sm:text-sm font-medium text-slate-600 dark:text-gray-500 cursor-pointer select-none whitespace-nowrap">
+              <Checkbox
+                id="select-all-modal"
+                checked={
+                  allAttachments.length > 0 &&
+                  allAttachments.every((a) => selectedItems.includes(a._id))
+                }
+                onCheckedChange={(checked) => handleSelectAll(checked === true)}
+                className="h-4 w-4 sm:h-5 sm:w-5"
+              />
+              <Label
+                htmlFor="select-all-modal"
+                className="text-xs sm:text-sm font-medium text-slate-600 dark:text-gray-500 cursor-pointer select-none whitespace-nowrap"
+              >
                 Select All
               </Label>
             </div>
@@ -130,7 +190,13 @@ const MediaSelectionModal = ({ isOpen, onClose, onSelect }: MediaSelectionModalP
               </div>
             ) : allAttachments.length > 0 ? (
               <div className=" pr-2">
-                <MediaGrid attachments={allAttachments} selectedItems={selectedItems} onSelect={handleGridSelect} onItemClick={() => { }} isSelectionEnabled={true} />
+                <MediaGrid
+                  attachments={allAttachments}
+                  selectedItems={selectedItems}
+                  onSelect={handleGridSelect}
+                  onItemClick={() => {}}
+                  isSelectionEnabled={true}
+                />
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center h-48 sm:h-64 text-slate-400">
@@ -144,16 +210,34 @@ const MediaSelectionModal = ({ isOpen, onClose, onSelect }: MediaSelectionModalP
         <DialogFooter className="flex-row flex justify-between items-center gap-3 border-t border-slate-100 dark:border-(--card-border-color) pt-3 sm:pt-4 mt-3 sm:mt-4 shrink-0 overflow-x-hidden">
           {/* Selected Count */}
           <p className="text-xs sm:text-sm text-slate-500 dark:text-gray-500 font-medium shrink-0 overflow-hidden">
-            <span className="hidden xs:inline">{selectedItems.length} items selected</span>
-            <span className="xs:hidden">{selectedItems.length} selected</span>
+            <span
+              className={`hidden xs:inline ${selectedItems.length > 10 && "text-red-600"}`}
+            >
+              {selectedItems.length}/10 items selected
+            </span>
+            <span
+              className={`xs:hidden ${selectedItems.length > 10 && "text-red-600"}`}
+            >
+              {selectedItems.length}/10 selected
+            </span>
           </p>
 
           {/* Action Buttons */}
           <div className="flex gap-2 sm:gap-3 shrink-0">
-            <Button type="button" variant="outline" onClick={onClose} className="h-8 sm:h-9 md:h-10 px-3 sm:px-4 text-xs sm:text-sm">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              className="h-8 sm:h-9 md:h-10 px-3 sm:px-4 text-xs sm:text-sm"
+            >
               Cancel
             </Button>
-            <Button type="button" className="bg-primary text-white h-8 sm:h-9 md:h-10 px-3 sm:px-4 text-xs sm:text-sm" disabled={selectedItems.length === 0} onClick={handleSubmit}>
+            <Button
+              type="button"
+              className="bg-primary text-white h-8 sm:h-9 md:h-10 px-3 sm:px-4 text-xs sm:text-sm"
+              disabled={selectedItems.length === 0}
+              onClick={handleSubmit}
+            >
               <Send size={14} className="sm:mr-2" />
               <span className="hidden sm:inline">Send</span>
             </Button>

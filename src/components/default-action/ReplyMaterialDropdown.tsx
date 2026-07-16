@@ -25,12 +25,12 @@ const ReplyMaterialDropdown: React.FC<ReplyMaterialDropdownProps> = ({ value, on
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
-  const skip = !wabaId || !open;
+  const skip = !open;
 
-  const { data: materialsData, isLoading: loadingMaterials } = useGetReplyMaterialsQuery({ waba_id: wabaId }, { skip });
-  const { data: templatesData, isLoading: loadingTemplates } = useGetTemplatesQuery({ waba_id: wabaId, status: "approved" }, { skip });
-  const { data: chatbotsData, isLoading: loadingChatbots } = useGetChatbotsQuery({ waba_id: wabaId }, { skip });
-  const { data: catalogsData, isLoading: loadingCatalogs } = useGetLinkedCatalogsQuery({ waba_id: wabaId }, { skip });
+  const { data: materialsData, isLoading: loadingMaterials } = useGetReplyMaterialsQuery({ waba_id: wabaId || "" }, { skip });
+  const { data: templatesData, isLoading: loadingTemplates } = useGetTemplatesQuery({ waba_id: wabaId || "", status: "approved" }, { skip });
+  const { data: chatbotsData, isLoading: loadingChatbots } = useGetChatbotsQuery({ waba_id: wabaId || "" }, { skip });
+  const { data: catalogsData, isLoading: loadingCatalogs } = useGetLinkedCatalogsQuery({ waba_id: wabaId || "" }, { skip });
   const { data: appointmentData, isLoading: loadingAppointments } = useListAppointmentConfigsQuery({}, { skip });
 
   const isLoading = loadingMaterials || loadingTemplates || loadingChatbots || loadingCatalogs || loadingAppointments;

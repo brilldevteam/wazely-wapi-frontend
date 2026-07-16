@@ -74,7 +74,7 @@ const baseQueryWithLogout: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 
 export const baseApi = createApi({
   reducerPath: "api",
-  tagTypes: ["Chats", "Messages", "WhatsappCallAgent", "WhatsappCallLog", "AppointmentConfig", "AppointmentBooking", "PaymentGateways", "Templates", "GoogleAccounts", "GoogleCalendars", "GoogleEvents", "GoogleSheets", "GoogleSheetsData", "Segment"],
+  tagTypes: ["Chats", "Messages", "WhatsappCallAgent", "WhatsappCallLog", "AppointmentConfig", "AppointmentBooking", "PaymentGateways", "Templates", "GoogleAccounts", "GoogleCalendars", "GoogleEvents", "GoogleSheets", "GoogleSheetsData", "GoogleForms", "Segment"],
   baseQuery: baseQueryWithLogout,
   endpoints: () => ({}),
 });

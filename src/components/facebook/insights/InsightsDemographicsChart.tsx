@@ -8,22 +8,11 @@ import { Users2, PieChart } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "next-themes";
 import { Card } from "@/src/elements/ui/card";
+import { InsightsDemographicsChartProps } from "@/src/types/facebook";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-interface DemographicData {
-  age: string;
-  gender: string;
-  spend: number;
-  reach: number;
-  results: number;
-  cpr: number;
-}
 
-interface InsightsDemographicsChartProps {
-  data?: DemographicData[];
-  isLoading: boolean;
-}
 
 const InsightsDemographicsChart: React.FC<InsightsDemographicsChartProps> = ({ data = [], isLoading }) => {
   const { t } = useTranslation();

@@ -2,9 +2,17 @@
 "use client";
 
 import { ROUTES } from "@/src/constants";
+import {
+  MATCHING_METHOD_COLORS,
+  MATCHING_METHOD_LABELS,
+} from "@/src/data/KeywordActionData";
 import { Badge } from "@/src/elements/ui/badge";
 import { Button } from "@/src/elements/ui/button";
-import { useBulkDeleteKeywordActionsMutation, useDeleteKeywordActionMutation, useGetKeywordActionsQuery } from "@/src/redux/api/keywordActionApi";
+import {
+  useBulkDeleteKeywordActionsMutation,
+  useDeleteKeywordActionMutation,
+  useGetKeywordActionsQuery,
+} from "@/src/redux/api/keywordActionApi";
 import { useAppSelector } from "@/src/redux/hooks";
 import CommonHeader from "@/src/shared/CommonHeader";
 import ConfirmModal from "@/src/shared/ConfirmModal";
@@ -15,22 +23,6 @@ import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-
-const MATCHING_METHOD_LABELS: Record<string, string> = {
-  exact: "Exact",
-  contains: "Contains",
-  partial: "Partial",
-  starts_with: "Starts With",
-  ends_with: "Ends With",
-};
-
-const MATCHING_METHOD_COLORS: Record<string, string> = {
-  exact: "bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20 dark:border-(--card-border-color)",
-  contains: "bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-(--card-border-color)",
-  partial: "bg-amber-50 text-amber-600 border-amber-100 dark:bg-amber-500/10 dark:text-amber-400 dark:border-(--card-border-color)",
-  starts_with: "bg-purple-50 text-purple-600 border-purple-100 dark:bg-purple-500/10 dark:text-purple-400 dark:border-(--card-border-color)",
-  ends_with: "bg-rose-50 text-rose-600 border-rose-100 dark:bg-rose-500/10 dark:text-rose-400 dark:border-(--card-border-color)",
-};
 
 const KeywordActionPage: React.FC = () => {
   const { t } = useTranslation();
@@ -46,9 +38,21 @@ const KeywordActionPage: React.FC = () => {
   const [sortBy, setSortBy] = useState<string>("created_at");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
-  const { data, isLoading, isFetching } = useGetKeywordActionsQuery({ waba_id: wabaId, page, limit, search, sort_by: sortBy, sort_order: sortOrder }, { skip: !wabaId });
-  const [deleteAction, { isLoading: isDeleting }] = useDeleteKeywordActionMutation();
-  const [bulkDelete, { isLoading: isBulkDeleting }] = useBulkDeleteKeywordActionsMutation();
+  const { data, isLoading, isFetching } = useGetKeywordActionsQuery(
+    {
+      waba_id: wabaId,
+      page,
+      limit,
+      search,
+      sort_by: sortBy,
+      sort_order: sortOrder,
+    },
+    { skip: !wabaId },
+  );
+  const [deleteAction, { isLoading: isDeleting }] =
+    useDeleteKeywordActionMutation();
+  const [bulkDelete, { isLoading: isBulkDeleting }] =
+    useBulkDeleteKeywordActionsMutation();
 
   const items = data?.data || [];
   const pagination = data?.pagination;
@@ -56,86 +60,122 @@ const KeywordActionPage: React.FC = () => {
   const columns = useMemo(
     () => [
       {
-        header: "Keywords",
+        header: t("column_header_keywords", "Keywords"),
         sortable: true,
         sortKey: "keywords",
         cell: (row: KeywordAction) => (
           <div className="flex flex-wrap gap-1.5">
             {row.keywords.slice(0, 3).map((kw) => (
-              <span key={kw} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/5 text-primary border border-primary/10">
+              <span
+                key={kw}
+                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/5 text-primary border border-primary/10"
+              >
                 {kw}
               </span>
             ))}
-            {row.keywords.length > 3 && <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold text-slate-400 bg-slate-100 dark:bg-(--dark-body)">+{row.keywords.length - 3}</span>}
+            {row.keywords.length > 3 && (
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold text-slate-400 bg-slate-100 dark:bg-(--dark-body)">
+                +{row.keywords.length - 3}
+              </span>
+            )}
           </div>
         ),
       },
       {
-        header: "Channel",
+        header: t("column_header_channel", "Channel"),
         sortable: true,
         sortKey: "platform",
         cell: (row: KeywordAction) => {
           const platform = row.platform || "whatsapp";
-          let color = "bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20";
-          let label = "WhatsApp";
+          let color =
+            "bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20";
+          let label = t("platform_whatsapp", "WhatsApp");
           if (platform === "telegram") {
-            color = "bg-sky-50 text-sky-600 border-sky-100 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20";
-            label = "Telegram";
+            color =
+              "bg-sky-50 text-sky-600 border-sky-100 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20";
+            label = t("platform_telegram", "Telegram");
           } else if (platform === "facebook") {
-            color = "bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20";
-            label = "Facebook";
+            color =
+              "bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20";
+            label = t("platform_facebook", "Facebook");
           } else if (platform === "instagram") {
-            color = "bg-pink-50 text-pink-600 border-pink-100 dark:bg-pink-500/10 dark:text-pink-400 dark:border-pink-500/20";
-            label = "Instagram";
+            color =
+              "bg-pink-50 text-pink-600 border-pink-100 dark:bg-pink-500/10 dark:text-pink-400 dark:border-pink-500/20";
+            label = t("platform_instagram", "Instagram");
           }
           return (
-            <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border ${color}`}>
+            <span
+              className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border ${color}`}
+            >
               {label}
             </span>
           );
         },
       },
       {
-        header: "Method",
+        header: t("column_header_method", "Method"),
         sortable: true,
         sortKey: "matching_method",
         cell: (row: KeywordAction) => (
-          <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border ${MATCHING_METHOD_COLORS[row.matching_method] || ""}`}>
-            {MATCHING_METHOD_LABELS[row.matching_method] || row.matching_method}
-            {row.matching_method === "partial" && row.partial_percentage !== undefined && <span className="ml-1 opacity-60">({row.partial_percentage}%)</span>}
+          <span
+            className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border ${MATCHING_METHOD_COLORS[row.matching_method] || ""}`}
+          >
+            {t("matching_method_" + row.matching_method, MATCHING_METHOD_LABELS[row.matching_method] || row.matching_method)}
+            {row.matching_method === "partial" &&
+              row.partial_percentage !== undefined && (
+                <span className="ml-1 opacity-60">
+                  ({row.partial_percentage}%)
+                </span>
+              )}
           </span>
         ),
       },
       {
-        header: "Reply Type",
+        header: t("column_header_reply_type", "Reply Type"),
         sortable: true,
         sortKey: "reply_type",
         cell: (row: KeywordAction) => (
-          <Badge variant="outline" className="capitalize font-semibold text-slate-500 dark:text-slate-400">
+          <Badge
+            variant="outline"
+            className="capitalize font-semibold text-slate-500 dark:text-slate-400"
+          >
             {row.reply_type}
           </Badge>
         ),
       },
       {
-        header: "Reply",
+        header: t("column_header_reply", "Reply"),
         cell: (row: KeywordAction) => {
-          const name = (row.reply_id as any)?.name || (row.reply_id as any)?.template_name || (row.reply_id as any)?.display_name || (row.reply_id as any)?.title || "—";
-          return <span className="text-sm font-medium text-slate-700 dark:text-slate-300 truncate max-w-xs block">{name}</span>;
+          const name =
+            (row.reply_id as any)?.name ||
+            (row.reply_id as any)?.template_name ||
+            (row.reply_id as any)?.display_name ||
+            (row.reply_id as any)?.title ||
+            "—";
+          return (
+            <span className="text-sm font-medium text-slate-700 dark:text-slate-300 truncate max-w-xs block">
+              {name}
+            </span>
+          );
         },
       },
       {
-        header: "Status",
+        header: t("column_header_status", "Status"),
         sortable: true,
         sortKey: "status",
         cell: (row: KeywordAction) => (
-          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${row.status === "active" ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400" : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"}`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${row.status === "active" ? "bg-emerald-500" : "bg-slate-400"}`} />
-            {row.status === "active" ? "Active" : "Inactive"}
+          <span
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${row.status === "active" ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400" : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"}`}
+          >
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${row.status === "active" ? "bg-emerald-500" : "bg-slate-400"}`}
+            />
+            {row.status === "active" ? t("keyword_status_active", "Active") : t("keyword_status_inactive", "Inactive")}
           </span>
         ),
       },
       {
-        header: "Actions",
+        header: t("column_header_actions", "Actions"),
         cell: (row: KeywordAction) => (
           <div className="flex items-center gap-1">
             <Button
@@ -165,7 +205,7 @@ const KeywordActionPage: React.FC = () => {
         className: "w-24",
       },
     ],
-    [router]
+    [router, t],
   );
 
   const handleDelete = async () => {
@@ -198,14 +238,28 @@ const KeywordActionPage: React.FC = () => {
 
   return (
     <div className="p-4 sm:p-8 space-y-6 pt-0! bg-(--page-body-bg) dark:bg-(--dark-body)">
-      <CommonHeader title={t("keyword_action_page_title")} description={t("keyword_action_page_description")} searchTerm={search} onSearch={setSearch} searchPlaceholder="Search by keyword..." onAddClick={() => router.push(ROUTES.KeywordActionCreate)} addLabel="Add Keyword Trigger" isLoading={isLoading || isFetching} onBulkDelete={selectedIds.length > 0 ? () => setItemToDelete("bulk") : undefined} selectedCount={selectedIds.length} />
+      <CommonHeader
+        title={t("keyword_action_page_title")}
+        description={t("keyword_action_page_description")}
+        searchTerm={search}
+        onSearch={setSearch}
+        searchPlaceholder={t("search_by_keyword_placeholder", "Search by keyword...")}
+        onAddClick={() => router.push(ROUTES.KeywordActionCreate)}
+        addLabel={t("add_keyword_trigger", "Add Keyword Trigger")}
+        addPermission="update.message_bots"
+        isLoading={isLoading || isFetching}
+        onBulkDelete={
+          selectedIds.length > 0 ? () => setItemToDelete("bulk") : undefined
+        }
+        selectedCount={selectedIds.length}
+      />
 
       <DataTable<KeywordAction>
         data={items}
         columns={columns}
         isLoading={isLoading}
         isFetching={isFetching}
-        emptyMessage="No keyword actions found. Create one to automate keyword-based replies."
+        emptyMessage={t("no_keyword_actions_empty", "No keyword actions found. Create one to automate keyword-based replies.")}
         enableSelection
         selectedIds={selectedIds}
         onSelectionChange={setSelectedIds}
@@ -220,11 +274,26 @@ const KeywordActionPage: React.FC = () => {
         onSortChange={handleSortChange}
         sortBy={sortBy}
         sortOrder={sortOrder}
+        actionPermission={["update.message_bots"]}
       />
 
-      <ConfirmModal isOpen={!!itemToDelete && itemToDelete !== "bulk"} onClose={() => setItemToDelete(null)} onConfirm={handleDelete} isLoading={isDeleting} title="Delete Keyword Trigger?" subtitle="This will permanently remove this keyword action. This action cannot be undone." />
+      <ConfirmModal
+        isOpen={!!itemToDelete && itemToDelete !== "bulk"}
+        onClose={() => setItemToDelete(null)}
+        onConfirm={handleDelete}
+        isLoading={isDeleting}
+        title={t("delete_keyword_trigger_title", "Delete Keyword Trigger?")}
+        subtitle={t("delete_keyword_trigger_subtitle", "This will permanently remove this keyword action. This action cannot be undone.")}
+      />
 
-      <ConfirmModal isOpen={itemToDelete === "bulk"} onClose={() => setItemToDelete(null)} onConfirm={handleBulkDelete} isLoading={isBulkDeleting} title="Bulk Delete Keyword Triggers?" subtitle={`You are about to delete ${selectedIds.length} keyword action(s). This action cannot be undone.`} />
+      <ConfirmModal
+        isOpen={itemToDelete === "bulk"}
+        onClose={() => setItemToDelete(null)}
+        onConfirm={handleBulkDelete}
+        isLoading={isBulkDeleting}
+        title={t("bulk_delete_keyword_triggers_title", "Bulk Delete Keyword Triggers?")}
+        subtitle={t("bulk_delete_keyword_triggers_subtitle", "You are about to delete {{count}} keyword action(s). This action cannot be undone.", { count: selectedIds.length })}
+      />
     </div>
   );
 };

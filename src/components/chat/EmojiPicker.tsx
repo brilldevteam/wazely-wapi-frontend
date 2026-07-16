@@ -7,10 +7,9 @@ import { Smile } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useChatTheme } from "@/src/hooks/useChatTheme";
 import { useAppSelector } from "@/src/redux/hooks";
+import { EmojiPickerProps } from "@/src/types/components/chat";
 
-interface EmojiPickerProps {
-  onEmojiSelect: (emoji: string) => void;
-}
+
 
 const EmojiPicker = ({ onEmojiSelect }: EmojiPickerProps) => {
   const { theme } = useTheme();

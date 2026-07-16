@@ -20,7 +20,8 @@ export async function GET() {
     const data = await response.json();
 
     if (!response.ok) {
-      return NextResponse.json({ message: data.message || "Failed to fetch setup settings" }, { status: response.status });
+      const errorMessage = data.message || data.error || (response.status === 403 ? "You do not have permission to view settings" : "Failed to fetch setup settings");
+      return NextResponse.json({ message: errorMessage }, { status: response.status });
     }
 
     return NextResponse.json(data, { status: 200 });
@@ -58,7 +59,8 @@ export async function PUT(request: Request) {
     const data = await response.json();
 
     if (!response.ok) {
-      return NextResponse.json({ message: data.error || "Setup update failed" }, { status: response.status });
+      const errorMessage = data.message || data.error || (response.status === 403 ? "You do not have permission to update settings" : "Setup update failed");
+      return NextResponse.json({ message: errorMessage }, { status: response.status });
     }
 
     return NextResponse.json(data, { status: 200 });

@@ -18,7 +18,7 @@ const WebhookTable = ({ data, isLoading, localStatuses, onEdit, onDelete, onTogg
 
   const columns = [
     {
-      header: "Name",
+      header: t("name", "Name"),
       accessorKey: "webhook_name",
       copyable: true,
       copyValue: "webhook_name",
@@ -32,7 +32,7 @@ const WebhookTable = ({ data, isLoading, localStatuses, onEdit, onDelete, onTogg
       ),
     },
     {
-      header: "URL",
+      header: t("url", "URL"),
       accessorKey: "webhook_url",
       copyable: true,
       copyValue: "webhook_url",
@@ -45,7 +45,7 @@ const WebhookTable = ({ data, isLoading, localStatuses, onEdit, onDelete, onTogg
       ),
     },
     {
-      header: "Method",
+      header: t("method", "Method"),
       accessorKey: "method",
       sortable: true,
       sortKey: "method",
@@ -56,7 +56,7 @@ const WebhookTable = ({ data, isLoading, localStatuses, onEdit, onDelete, onTogg
       ),
     },
     {
-      header: "Status",
+      header: t("status", "Status"),
       accessorKey: "is_active",
       sortable: true,
       sortKey: "is_active",
@@ -70,20 +70,20 @@ const WebhookTable = ({ data, isLoading, localStatuses, onEdit, onDelete, onTogg
       },
     },
     {
-      header: "Actions",
+      header: t("actions", "Actions"),
       id: "actions",
       cell: (row: Webhook) => {
         const id = (typeof row._id === "string" ? row._id : row._id?.$oid) || row.id;
         const isConfigured = row.is_template_mapped;
         return (
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="icon" title="View Logs" className="h-10 w-10 text-slate-600 dark:text-slate-400 hover:text-primary border-none hover:bg-slate-100 dark:hover:bg-(--table-hover)" onClick={() => router.push(`${ROUTES.WebhooksLogs}?webhook_id=${id}`)}>
+            <Button variant="outline" size="icon" title={t("view_logs", "View Logs")} className="h-10 w-10 text-slate-600 dark:text-slate-400 hover:text-primary border-none hover:bg-slate-100 dark:hover:bg-(--table-hover)" onClick={() => router.push(`${ROUTES.WebhooksLogs}?webhook_id=${id}`)}>
               <ClipboardList size={16} />
             </Button>
-            <Button variant="outline" size="icon" title="View Payload" className="h-10 w-10   text-blue-600 dark:text-slate-400 hover:text-blue-600 border-none hover:bg-blue-100 dark:hover:bg-blue-500/20" onClick={() => onViewPayload(row)}>
+            <Button variant="outline" size="icon" title={t("view_payload", "View Payload")} className="h-10 w-10   text-blue-600 dark:text-slate-400 hover:text-blue-600 border-none hover:bg-blue-100 dark:hover:bg-blue-500/20" onClick={() => onViewPayload(row)}>
               <Zap size={16} />
             </Button>
-            <Button variant="outline" size="icon" title="Edit Webhook" className="w-10 h-10 border-none text-primary hover:text-primary hover:bg-primary/10 rounded-lg dark:hover:bg-primary/20 transition-all shadow-xs" onClick={() => onEdit(row)}>
+            <Button variant="outline" size="icon" title={t("edit_webhook", "Edit Webhook")} className="w-10 h-10 border-none text-primary hover:text-primary hover:bg-primary/10 rounded-lg dark:hover:bg-primary/20 transition-all shadow-xs" onClick={() => onEdit(row)}>
               <Edit2 size={16} />
             </Button>
             <DropdownMenu>
@@ -94,14 +94,14 @@ const WebhookTable = ({ data, isLoading, localStatuses, onEdit, onDelete, onTogg
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48 p-2 border-slate-100 dark:border-(--card-border-color) shadow-xl rounded-xl">
                 <DropdownMenuItem onClick={() => router.push(`${ROUTES.WebhooksMapTemplate}/${id}?type=customer`)} className="gap-2.5 px-3 py-2.5 cursor-pointer text-slate-800 dark:text-slate-200 font-medium text-xs hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:text-primary transition-colors">
-                  Map for Customer
+                  {t("map_for_customer", "Map for Customer")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => router.push(`${ROUTES.WebhooksMapTemplate}/${id}?type=owner`)} className="gap-2.5 px-3 py-2.5 cursor-pointer text-slate-800 dark:text-slate-200 font-medium text-xs hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:text-primary transition-colors border-t border-slate-50 dark:border-white/5">
-                  Map for Owner
+                  {t("map_for_owner", "Map for Owner")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button variant="outline" size="icon" title="Delete Webhook" className="w-10 h-10 border-none text-red-600 hover:text-red-600 dark:text-red-500 hover:bg-red-50 rounded-lg transition-all dark:hover:bg-red-900/20 shadow-xs" onClick={() => id && onDelete(id)}>
+            <Button variant="outline" size="icon" title={t("delete_webhook", "Delete Webhook")} className="w-10 h-10 border-none text-red-600 hover:text-red-600 dark:text-red-500 hover:bg-red-50 rounded-lg transition-all dark:hover:bg-red-900/20 shadow-xs" onClick={() => id && onDelete(id)}>
               <Trash2 size={16} />
             </Button>
           </div>
@@ -112,7 +112,7 @@ const WebhookTable = ({ data, isLoading, localStatuses, onEdit, onDelete, onTogg
 
   return (
     <div className="bg-white dark:bg-(--card-color) rounded-xl border border-slate-200/60 dark:border-(--card-border-color) shadow-sm overflow-hidden">
-      <DataTable columns={columns as any} data={data} isLoading={isLoading} totalCount={totalCount} page={page} limit={limit} onPageChange={onPageChange} onLimitChange={onLimitChange} enableSelection={false} getRowId={(item) => ((typeof item._id === "string" ? item._id : item._id?.$oid) || item.id || "") as string} emptyMessage="No webhooks found. Create your first webhook!" onSortChange={onSortChange} />
+      <DataTable columns={columns as any} data={data} isLoading={isLoading} totalCount={totalCount} page={page} limit={limit} onPageChange={onPageChange} onLimitChange={onLimitChange} enableSelection={false} getRowId={(item) => ((typeof item._id === "string" ? item._id : item._id?.$oid) || item.id || "") as string} emptyMessage={t("no_webhooks_found_create_first", "No webhooks found. Create your first webhook!")} onSortChange={onSortChange} actionPermission={["update.ecommerce_webhooks", "delete.ecommerce_webhooks"]} />
     </div>
   );
 };

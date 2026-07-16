@@ -182,7 +182,7 @@ const PaymentGatewayList: React.FC = () => {
 
   const rightContent = (
     <div className="flex items-center gap-3 flex-wrap">
-      <Can permission="view.payment_gateways">
+      <Can permission="update.payment_gateways">
         <Button
           variant="outline"
           onClick={() => setIsPaymentModalOpen(true)}
@@ -191,17 +191,19 @@ const PaymentGatewayList: React.FC = () => {
           <Settings className="w-5 h-5" />
           <span>{t("payment_settings") || "Payment Setting"}</span>
         </Button>
+      </Can>
+      <Can permission="create.payment_gateways">
         <Button
           onClick={() => {
             setEditData(null);
             setIsModalOpen(true);
           }}
           className="flex items-center gap-2.5 px-4.5! py-5 bg-primary text-white h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group shadow-none!"
-        >
+          >
           <Plus className="w-5 h-5" />
           <span>{t("add_gateway")}</span>
         </Button>
-      </Can>
+          </Can>
     </div>
   );
 
@@ -224,7 +226,7 @@ const PaymentGatewayList: React.FC = () => {
       />
 
       <div className="bg-white dark:bg-(--card-color) rounded-lg shadow-sm overflow-hidden">
-        <DataTable<PaymentGateway> data={data?.configs || []} columns={columns.filter((col) => visibleColumns.find((vc) => vc.label === col.header)?.isVisible !== false)} isLoading={isLoading} isFetching={isFetching} totalCount={data?.pagination?.totalItems || 0} page={page} limit={limit} onPageChange={handlePageChange} onLimitChange={handleLimitChange} onSortChange={handleSortChange} getRowId={(item) => item._id} emptyMessage={t("no_payment_gateways")} />
+        <DataTable<PaymentGateway> data={data?.configs || []} columns={columns.filter((col) => visibleColumns.find((vc) => vc.label === col.header)?.isVisible !== false)} isLoading={isLoading} isFetching={isFetching} totalCount={data?.pagination?.totalItems || 0} page={page} limit={limit} onPageChange={handlePageChange} onLimitChange={handleLimitChange} onSortChange={handleSortChange} getRowId={(item) => item._id} emptyMessage={t("no_payment_gateways")} actionPermission={["update.payment_gateways", "delete.payment_gateways"]}/> 
       </div>
 
       <PaymentGatewayModal

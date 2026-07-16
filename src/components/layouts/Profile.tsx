@@ -37,7 +37,10 @@ const Profile = () => {
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center font-semibold">{user ? user.name?.charAt(0)?.toUpperCase() : "U"}</div>
             <div>
-              <p className="text-sm font-semibold text-gray-900 dark:text-gray-400">{user?.name || "User"}</p>
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-400">{user?.name || "User"}</p>
+                <span className="absolute top-2 right-2 px-1.5 py-0.5 text-[9px] font-bold bg-primary/10 text-primary rounded-md uppercase tracking-wider">3.2</span>
+              </div>
               <p className="text-xs text-gray-500">{user?.email || "user@example.com"}</p>
             </div>
           </div>

@@ -9,7 +9,6 @@ import { useState } from "react";
 import { BaseNode } from "./BaseNode";
 import { NodeField } from "./NodeField";
 
-
 export function LocationNode({ data, id }: any) {
   const { setNodes } = useReactFlow();
   const [touched, setTouched] = useState(false);

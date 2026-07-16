@@ -1,31 +1,38 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { CHANNEL_CONFIG, OMNICHANNEL_SOURCES } from "@/src/data/chat";
 import { Badge } from "@/src/elements/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/elements/ui/select";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/src/elements/ui/sheet";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/src/elements/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/src/elements/ui/sheet";
 import { useGetConnectedChannelsQuery } from "@/src/redux/api/channelsApi";
 import { useGetWabaPhoneNumbersQuery } from "@/src/redux/api/whatsappApi";
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
 import { selectChat } from "@/src/redux/reducers/messenger/chatSlice";
 import { QuickChatSheetProps } from "@/src/types/components/chat";
 import { maskSensitiveData } from "@/src/utils/masking";
-import { Facebook, Instagram, MessageCircle, Phone, Send } from "lucide-react";
+import { Phone } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 import ChatArea from "./ChatArea";
 import ChatProfile from "./ChatProfile";
 
-const CHANNEL_CONFIG: Record<string, { label: string; color: string; Icon: React.ElementType }> = {
-  whatsapp: { label: "WhatsApp", color: "#25D366", Icon: MessageCircle },
-  baileys:  { label: "WhatsApp", color: "#25D366", Icon: MessageCircle },
-  telegram: { label: "Telegram", color: "#229ED9", Icon: Send },
-  facebook: { label: "Facebook", color: "#1877F2", Icon: Facebook },
-  instagram:{ label: "Instagram", color: "#E1306C", Icon: Instagram },
-};
-
-const OMNICHANNEL_SOURCES = ["telegram", "facebook", "instagram"];
-
-const QuickChatSheet: React.FC<QuickChatSheetProps> = ({ isOpen, onClose, contact, initialPhoneNumberId }) => {
+const QuickChatSheet: React.FC<QuickChatSheetProps> = ({
+  isOpen,
+  onClose,
+  contact,
+  initialPhoneNumberId,
+}) => {
   const dispatch = useAppDispatch();
   const { selectedWorkspace } = useAppSelector((state) => state.workspace);
   const { is_demo_mode } = useAppSelector((state) => state.setting);
@@ -34,19 +41,30 @@ const QuickChatSheet: React.FC<QuickChatSheetProps> = ({ isOpen, onClose, contac
   const source = (contact?.source || "whatsapp").toLowerCase();
   const isOmnichannel = OMNICHANNEL_SOURCES.includes(source);
 
-  const [selectedPhoneNumberId, setSelectedPhoneNumberId] = useState<string | undefined>(initialPhoneNumberId);
-  const { data: phoneNumbersData, isLoading: isLoadingPhones } = useGetWabaPhoneNumbersQuery(selectedWabaId || "", {
-    skip: !selectedWabaId || isOmnichannel,
-  });
-  const phoneNumbers = useMemo(() => (phoneNumbersData as any)?.data || [], [phoneNumbersData]);
+  const [selectedPhoneNumberId, setSelectedPhoneNumberId] = useState<
+    string | undefined
+  >(initialPhoneNumberId);
+  const { data: phoneNumbersData, isLoading: isLoadingPhones } =
+    useGetWabaPhoneNumbersQuery(selectedWabaId || "", {
+      skip: !selectedWabaId || isOmnichannel,
+    });
+  const phoneNumbers = useMemo(
+    () => (phoneNumbersData as any)?.data || [],
+    [phoneNumbersData],
+  );
 
   const { data: connectedChannelsResult } = useGetConnectedChannelsQuery(
     { workspace_id: selectedWorkspace?._id || "", platform: source },
     { skip: !selectedWorkspace?._id || !isOmnichannel },
   );
-  const [selectedOmnichannelId, setSelectedOmnichannelId] = useState<string | undefined>(undefined);
+  const [selectedOmnichannelId, setSelectedOmnichannelId] = useState<
+    string | undefined
+  >(undefined);
   const omnichannelConnections: any[] = useMemo(
-    () => connectedChannelsResult?.connections?.filter((c: any) => c.platform === source) || [],
+    () =>
+      connectedChannelsResult?.connections?.filter(
+        (c: any) => c.platform === source,
+      ) || [],
     [connectedChannelsResult, source],
   );
 
@@ -57,8 +75,17 @@ const QuickChatSheet: React.FC<QuickChatSheetProps> = ({ isOpen, onClose, contac
   }, [phoneNumbers, selectedPhoneNumberId, isOmnichannel]);
 
   useEffect(() => {
-    if (isOmnichannel && omnichannelConnections.length > 0 && !selectedOmnichannelId) {
-      setSelectedOmnichannelId(String(omnichannelConnections[0].phone_number_id || omnichannelConnections[0].id));
+    if (
+      isOmnichannel &&
+      omnichannelConnections.length > 0 &&
+      !selectedOmnichannelId
+    ) {
+      setSelectedOmnichannelId(
+        String(
+          omnichannelConnections[0].phone_number_id ||
+            omnichannelConnections[0].id,
+        ),
+      );
     }
   }, [omnichannelConnections, selectedOmnichannelId, isOmnichannel]);
 
@@ -67,7 +94,9 @@ const QuickChatSheet: React.FC<QuickChatSheetProps> = ({ isOpen, onClose, contac
     setSelectedOmnichannelId(undefined);
   }, [contact?._id, initialPhoneNumberId]);
 
-  const activePhoneNumberId = isOmnichannel ? selectedOmnichannelId : selectedPhoneNumberId;
+  const activePhoneNumberId = isOmnichannel
+    ? selectedOmnichannelId
+    : selectedPhoneNumberId;
 
   useEffect(() => {
     if (isOpen && contact) {
@@ -93,17 +122,26 @@ const QuickChatSheet: React.FC<QuickChatSheetProps> = ({ isOpen, onClose, contac
   }, [isOpen, contact, dispatch]);
 
   useEffect(() => {
-    return () => { dispatch(selectChat(null)); };
+    return () => {
+      dispatch(selectChat(null));
+    };
   }, [dispatch]);
 
   if (!contact) return null;
 
   const channelCfg = CHANNEL_CONFIG[source] || CHANNEL_CONFIG.whatsapp;
-  const { label: channelLabel, color: channelColor, Icon: ChannelIcon } = channelCfg;
+  const {
+    label: channelLabel,
+    color: channelColor,
+    Icon: ChannelIcon,
+  } = channelCfg;
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent side="right" className="sm:max-w-7xl w-full h-full p-0 flex flex-col gap-0 border-none shadow-2xl overflow-hidden">
+      <SheetContent
+        side="right"
+        className="sm:max-w-7xl w-full h-full p-0 flex flex-col gap-0 border-none shadow-2xl overflow-hidden"
+      >
         <SheetHeader className="p-4 border-b dark:border-(--card-border-color) bg-white dark:bg-(--card-color) flex flex-row items-center justify-between shrink-0">
           <div className="flex flex-row items-center gap-4 flex-wrap">
             <SheetTitle className="text-lg font-bold flex items-center gap-2">
@@ -115,21 +153,28 @@ const QuickChatSheet: React.FC<QuickChatSheetProps> = ({ isOpen, onClose, contac
               <Badge
                 variant="outline"
                 className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold border"
-                style={{ color: channelColor, borderColor: `${channelColor}40`, backgroundColor: `${channelColor}12` }}
+                style={{
+                  color: channelColor,
+                  borderColor: `${channelColor}40`,
+                  backgroundColor: `${channelColor}12`,
+                }}
               >
                 <ChannelIcon size={12} />
                 {channelLabel}
               </Badge>
             </div>
 
-            {!isOmnichannel && (
-              isLoadingPhones ? (
+            {!isOmnichannel &&
+              (isLoadingPhones ? (
                 <div className="h-9 w-50 bg-slate-50 dark:bg-(--page-body-bg) animate-pulse rounded-lg" />
               ) : (
                 phoneNumbers.length > 0 && (
                   <div className="flex items-center gap-2">
                     <div className="h-8 w-px bg-slate-200 dark:bg-(--card-border-color) hidden sm:block" />
-                    <Select value={selectedPhoneNumberId} onValueChange={setSelectedPhoneNumberId}>
+                    <Select
+                      value={selectedPhoneNumberId}
+                      onValueChange={setSelectedPhoneNumberId}
+                    >
                       <SelectTrigger className="w-50 h-9 bg-slate-50 dark:bg-(--page-body-bg) border-none shadow-none focus:ring-0">
                         <div className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-gray-400">
                           <Phone size={14} className="text-primary" />
@@ -138,16 +183,28 @@ const QuickChatSheet: React.FC<QuickChatSheetProps> = ({ isOpen, onClose, contac
                       </SelectTrigger>
                       <SelectContent>
                         {phoneNumbers.map((phone: any) => (
-                          <SelectItem key={phone.id} value={String(phone.id)} className="text-xs">
-                            {maskSensitiveData(phone.display_phone_number || phone.phone_number, "phone", is_demo_mode)}
+                          <SelectItem
+                            key={phone.id}
+                            value={String(phone.id)}
+                            className="text-xs"
+                          >
+                            {maskSensitiveData(
+                              phone.verified_name &&
+                                phone.verified_name !== "N/A" &&
+                                phone.verified_name.trim() !== ""
+                                ? phone.verified_name
+                                : phone.display_phone_number ||
+                                    phone.phone_number,
+                              "phone",
+                              is_demo_mode,
+                            )}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
                 )
-              )
-            )}
+              ))}
 
             {isOmnichannel && omnichannelConnections.length > 1 && (
               <div className="flex items-center gap-2">
@@ -164,8 +221,16 @@ const QuickChatSheet: React.FC<QuickChatSheetProps> = ({ isOpen, onClose, contac
                   </SelectTrigger>
                   <SelectContent>
                     {omnichannelConnections.map((conn: any) => (
-                      <SelectItem key={conn.id} value={String(conn.phone_number_id || conn.id)} className="text-xs">
-                        {maskSensitiveData(conn.name || conn.username || conn.id, "phone", is_demo_mode)}
+                      <SelectItem
+                        key={conn.id}
+                        value={String(conn.phone_number_id || conn.id)}
+                        className="text-xs"
+                      >
+                        {maskSensitiveData(
+                          conn.name || conn.username || conn.id,
+                          "phone",
+                          is_demo_mode,
+                        )}
                       </SelectItem>
                     ))}
                   </SelectContent>

@@ -1,3 +1,4 @@
+import { AgentKanbanStatus } from "@/src/types/agent";
 import { baseApi } from "./baseApi";
 
 export const agentApi = baseApi.enhanceEndpoints({ addTagTypes: ["Agent"] }).injectEndpoints({
@@ -60,7 +61,7 @@ export const agentApi = baseApi.enhanceEndpoints({ addTagTypes: ["Agent"] }).inj
     getAgentFunnels: builder.query({
       query: () => "/agent/funnels",
     }),
-    getAgentKanbanStatus: builder.query({
+    getAgentKanbanStatus: builder.query<{ success: boolean; data: AgentKanbanStatus[] }, string>({
       query: (id) => `/agent/${id}/funnel-status`,
     }),
     handleAgentKanbanAction: builder.mutation({

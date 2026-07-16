@@ -3,8 +3,8 @@
 import { Badge } from "@/src/elements/ui/badge";
 import { Button } from "@/src/elements/ui/button";
 import { Input } from "@/src/elements/ui/input";
-import { useGetAgentTasksQuery } from "@/src/redux/api/agentTaskApi";
-import { TaskPriority } from "@/src/types/agentTask";
+import { useGetAgentTaskByIdQuery, useGetAgentTasksQuery } from "@/src/redux/api/agentTaskApi";
+import { TaskPriority, TaskStatus } from "@/src/types/agentTask";
 import { formatDate } from "@/src/utils";
 import { Plus, Search, ChevronLeft, MessageSquare, X } from "lucide-react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
@@ -54,6 +54,39 @@ const AgentTaskListSidebar = ({ agentId, onSelectTask, onClose }: AgentTaskListS
         return "";
     }
   };
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "bg-slate-100 text-slate-500 border-slate-200 dark:bg-neutral-800 dark:text-gray-500 dark:border-neutral-700 text-[10px] font-medium ";
+      case "in_progress":
+        return "bg-amber-50  text-amber-600 border-amber-100 dark:bg-amber-500/10 dark:text-amber-500 dark:border-amber-500/20  text-[10px] font-medium";
+      case "on_hold":
+        return "bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-500/10 dark:text-blue-500 dark:border-blue-500/20  text-[10px] font-medium";
+      case "completed":
+        return "bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-500 dark:border-emerald-500/20  text-[10px] font-medium";
+      case "cancelled":
+        return "bg-red-50 text-red-600 border-red-100 dark:bg-red-500/10 dark:text-red-500 dark:border-red-500/20 text-[10px]  font-medium";
+      default:
+        return "";
+    }
+  };
+  const getStatusName = (name: string) => {
+    switch (name) {
+      case "pending":
+        return "Pending";
+      case "in_progress":
+        return "In Progress";
+      case "on_hold":
+        return "On Hold";
+      case "completed":
+        return "Completed";
+      case "cancelled":
+        return "Cancelled";
+      default:
+        return "";
+    }
+  };
+
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-(--card-color) overflow-x-hidden">
@@ -127,10 +160,14 @@ const AgentTaskListSidebar = ({ agentId, onSelectTask, onClose }: AgentTaskListS
                   <h3 className="font-semibold truncate text-slate-700 dark:text-slate-200 text-sm line-clamp-2 leading-tight group-hover:text-primary transition-colors">{task.title}</h3>
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] text-slate-400 font-medium uppercase tracking-wider">
+                <div className="flex items-center justify-between text-[11px] text-slate-400 font-medium tracking-wider">
                   <div className="flex flex-col">
                     <span className="lowercase">{formatDate(task.created_at)}</span>
+                    <span className="flex gap-1.5">
+
                     <Badge className={`uppercase text-[9px] px-2 py-0.5 rounded-lg border font-black shrink-0 w-fit mt-1 ${getPriorityColor(task.task_priority)}`}>{task.task_priority}</Badge>
+                    <Badge className={`text-[7px] px-2 py-0.5 rounded-lg border font-black shrink-0 w-fit mt-1 ${getStatusColor(task.status)}`}>{getStatusName(task.status)}</Badge>
+                    </span>
                   </div>
                   <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg [@media(min-width:992px)]:hidden bg-primary/5 text-primary hover:bg-primary/10">
                     <MessageSquare size={16} />

@@ -31,7 +31,7 @@ const ReplyMaterialsContent: React.FC<ReplyMaterialsContentProps> = ({ activeCon
   const [itemToEdit, setItemToEdit] = useState<ReplyMaterial | null>(null);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
 
-  const { data, isLoading, isFetching } = useGetReplyMaterialsQuery({ waba_id: waba_id || "", page, limit, search: searchTerm }, { skip: !waba_id });
+  const { data, isLoading, isFetching } = useGetReplyMaterialsQuery({ waba_id: waba_id || "", page, limit, search: searchTerm });
 
   const [createMaterial, { isLoading: isCreating }] = useCreateReplyMaterialMutation();
   const [updateMaterial, { isLoading: isUpdating }] = useUpdateReplyMaterialMutation();
@@ -121,7 +121,7 @@ const ReplyMaterialsContent: React.FC<ReplyMaterialsContentProps> = ({ activeCon
   return (
     <div className="flex-1 h-full flex flex-col min-w-0 bg-(--page-body-bg) dark:bg-(--dark-body) overflow-hidden">
       <div className="p-4 sm:p-6 pt-0! pb-0">
-        <CommonHeader title={t(activeConfig.label)} description={t(activeConfig.description)} onSearch={setSearchTerm} searchTerm={searchTerm} onAddClick={handleOpenCreate} addLabel={`${t("add")} ${t(activeConfig.label)}`} onBulkDelete={() => setIsBulkDeleteConfirmOpen(true)} selectedCount={selectedIds.length} isLoading={isLoading || isFetching} onToggleSidebar={onToggleSidebar} />
+        <CommonHeader title={t(activeConfig.label)} description={t(activeConfig.description)} onSearch={setSearchTerm} searchTerm={searchTerm} onAddClick={handleOpenCreate} addPermission="create.reply_materials" addLabel={`${t("add")} ${t(activeConfig.label)}`} onBulkDelete={() => setIsBulkDeleteConfirmOpen(true)} selectedCount={selectedIds.length} isLoading={isLoading || isFetching} onToggleSidebar={onToggleSidebar} />
       </div>
 
       <div className="flex-1 p-4 sm:p-6 pt-0! min-h-0 flex flex-col">

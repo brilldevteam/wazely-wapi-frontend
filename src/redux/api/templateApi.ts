@@ -90,7 +90,14 @@ export const templateApi = baseApi.enhanceEndpoints({ addTagTypes: ["Template"] 
       }),
       invalidatesTags: ["Template"],
     }),
+    publishTemplate: builder.mutation<ApiResponse<any>, string>({
+      query: (id) => ({
+        url: `/template/${id}/publish`,
+        method: "POST",
+      }),
+      invalidatesTags: (result, error, id) => [{ type: "Template", id }, "Template"],
+    }),
   }),
 });
 
-export const { useGetTemplatesQuery, useGetTemplateQuery, useCreateTemplateMutation, useUpdateTemplateMutation, useDeleteTemplateMutation, useSendTemplateMutation, useSyncTemplatesMutation, useSuggestTemplateMutation, useGetMetaTemplatesQuery, useSyncMetaTemplatesMutation, useSyncTemplatesStatusMutation } = templateApi;
+export const { useGetTemplatesQuery, useGetTemplateQuery, useCreateTemplateMutation, useUpdateTemplateMutation, useDeleteTemplateMutation, useSendTemplateMutation, useSyncTemplatesMutation, useSuggestTemplateMutation, useGetMetaTemplatesQuery, useSyncMetaTemplatesMutation, useSyncTemplatesStatusMutation, usePublishTemplateMutation } = templateApi;

@@ -1,23 +1,15 @@
-import React from "react";
-import { Filter, X } from "lucide-react";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "@/src/elements/ui/select";
+import { MessageLogsFilterProps } from "@/src/types/messageLogs";
+import { Filter, X } from "lucide-react";
+import React from "react";
+import { Button } from "@/src/elements/ui/button";
 
-interface MessageLogsFilterProps {
-  platformFilter: string;
-  setPlatformFilter: (val: string) => void;
-  statusFilter: string;
-  setStatusFilter: (val: string) => void;
-  timeFilter: string;
-  setTimeFilter: (val: string) => void;
-  searchTerm: string;
-  handleClearFilters: () => void;
-}
 
 export const MessageLogsFilter: React.FC<MessageLogsFilterProps> = ({
   platformFilter,
@@ -27,9 +19,13 @@ export const MessageLogsFilter: React.FC<MessageLogsFilterProps> = ({
   timeFilter,
   setTimeFilter,
   searchTerm,
-  handleClearFilters
+  handleClearFilters,
 }) => {
-  const showReset = searchTerm || platformFilter !== "all_platforms" || statusFilter !== "all_status" || timeFilter !== "all_time";
+  const showReset =
+    searchTerm ||
+    platformFilter !== "all_platforms" ||
+    statusFilter !== "all_status" ||
+    timeFilter !== "all_time";
 
   return (
     <div className="bg-white dark:bg-(--card-color) rounded-lg p-5 border border-slate-200/60 dark:border-(--card-border-color) shadow-sm flex flex-col md:flex-row items-center gap-4.5">
@@ -46,11 +42,36 @@ export const MessageLogsFilter: React.FC<MessageLogsFilterProps> = ({
               <SelectValue placeholder="Filter by Platform" />
             </SelectTrigger>
             <SelectContent className="dark:bg-(--card-color) dark:border-(--card-border-color)">
-              <SelectItem className="dark:hover:bg-(--table-hover)" value="all_platforms">All Platforms</SelectItem>
-              <SelectItem className="dark:hover:bg-(--table-hover)" value="whatsapp">WhatsApp</SelectItem>
-              <SelectItem className="dark:hover:bg-(--table-hover)" value="telegram">Telegram</SelectItem>
-              <SelectItem className="dark:hover:bg-(--table-hover)" value="facebook">Facebook</SelectItem>
-              <SelectItem className="dark:hover:bg-(--table-hover)" value="instagram">Instagram</SelectItem>
+              <SelectItem
+                className="dark:hover:bg-(--table-hover)"
+                value="all_platforms"
+              >
+                All Platforms
+              </SelectItem>
+              <SelectItem
+                className="dark:hover:bg-(--table-hover)"
+                value="whatsapp"
+              >
+                WhatsApp
+              </SelectItem>
+              <SelectItem
+                className="dark:hover:bg-(--table-hover)"
+                value="telegram"
+              >
+                Telegram
+              </SelectItem>
+              <SelectItem
+                className="dark:hover:bg-(--table-hover)"
+                value="facebook"
+              >
+                Facebook
+              </SelectItem>
+              <SelectItem
+                className="dark:hover:bg-(--table-hover)"
+                value="instagram"
+              >
+                Instagram
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -91,13 +112,13 @@ export const MessageLogsFilter: React.FC<MessageLogsFilterProps> = ({
 
       {/* Clear Filters Button */}
       {showReset && (
-        <button
+        <Button variant="unstyled"
           onClick={handleClearFilters}
           className="flex items-center gap-1.5 text-xs font-bold text-red-500 hover:text-red-600 bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 px-3.5 py-2.5 rounded-lg border border-red-100 dark:border-red-500/10 cursor-pointer transition-all shrink-0 active:scale-95"
         >
           <X size={13} />
           <span>Reset</span>
-        </button>
+        </Button>
       )}
     </div>
   );

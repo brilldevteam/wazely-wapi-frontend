@@ -13,6 +13,8 @@ import type { ShopifyProduct } from "@/src/types/shopify";
 import type { Column } from "@/src/types/shared";
 import { Button } from "@/src/elements/ui/button";
 import { toast } from "sonner";
+import Image from "next/image";
+
 
 export const ShopifyProductsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -110,7 +112,7 @@ export const ShopifyProductsPage: React.FC = () => {
           return (
             <div className="w-12 h-12 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 overflow-hidden flex items-center justify-center shrink-0">
               {imageUrl ? (
-                <img
+                <Image unoptimized width={1000} height={1000}
                   src={imageUrl}
                   alt={product.name}
                   className="w-full h-full object-cover group-hover/row:scale-105 transition-transform duration-300"

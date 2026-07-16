@@ -1,7 +1,7 @@
 import { baseApi } from "./baseApi";
-import { GoogleAccountsResponse, GoogleConnectResponse, GoogleGenericResponse, GoogleCalendarsResponse, GoogleCalendarResponse, GoogleQueryParams, GoogleEventsResponse, GoogleEventResponse, GoogleSheetsResponse, GoogleSheetDataResponse, GoogleSheet, GoogleSyncSheetsRequest, GoogleSyncSheetsResponse, GoogleBulkDeleteRequest, GoogleBulkDeleteResponse } from "../../types/google";
+import { GoogleAccountsResponse, GoogleConnectResponse, GoogleGenericResponse, GoogleCalendarsResponse, GoogleCalendarResponse, GoogleQueryParams, GoogleEventsResponse, GoogleEventResponse, GoogleSheetsResponse, GoogleSheetDataResponse, GoogleSheet, GoogleSyncSheetsRequest, GoogleSyncSheetsResponse, GoogleBulkDeleteRequest, GoogleBulkDeleteResponse, GoogleForm, GoogleFormsResponse, GoogleSyncFormsRequest, GoogleSyncFormsResponse, GoogleFormCreateRequest } from "../../types/google";
 
-export const googleApi = baseApi.enhanceEndpoints({ addTagTypes: ["GoogleAccounts", "GoogleCalendars", "GoogleEvents", "GoogleSheets", "GoogleSheetsData"] }).injectEndpoints({
+export const googleApi = baseApi.enhanceEndpoints({ addTagTypes: ["GoogleAccounts", "GoogleCalendars", "GoogleEvents", "GoogleSheets", "GoogleSheetsData", "GoogleForms"] }).injectEndpoints({
   endpoints: (builder) => ({
     connectGoogle: builder.query<GoogleConnectResponse, void>({
       query: () => "/google/connect",
@@ -128,7 +128,67 @@ export const googleApi = baseApi.enhanceEndpoints({ addTagTypes: ["GoogleAccount
       }),
       invalidatesTags: ["GoogleSheets"],
     }),
+    // Forms endpoints
+    listForms: builder.query<GoogleFormsResponse, { accountId: string } & GoogleQueryParams>({
+      query: ({ accountId, ...params }) => ({
+        url: `/google/${accountId}/forms`,
+        params,
+      }),
+      providesTags: ["GoogleForms"],
+    }),
+    createGoogleForm: builder.mutation<{ success: boolean; form: GoogleForm }, { accountId: string; body: GoogleFormCreateRequest }>({
+      query: ({ accountId, body }) => ({
+        url: `/google/accounts/${accountId}/forms`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["GoogleForms"],
+    }),
+    updateGoogleForm: builder.mutation<{ success: boolean; form: GoogleForm }, { formId: string; body: GoogleFormCreateRequest }>({
+      query: ({ formId, body }) => ({
+        url: `/google/forms/${formId}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["GoogleForms"],
+    }),
+    readForm: builder.query<{ success: boolean; form: any; form_details?: any }, { formId: string }>({
+      query: ({ formId }) => ({
+        url: `/google/forms/${formId}`,
+      }),
+    }),
+    readFormResponses: builder.query<{ success: boolean; data: { responses: any[]; pagination: any } }, { formId: string; page?: number; limit?: number; search?: string }>({
+      query: ({ formId, ...params }) => ({
+        url: `/google/${formId}/responses`,
+        params,
+      }),
+    }),
+    deleteForm: builder.mutation<GoogleGenericResponse, { id: string; deleteFrom: "google" | "platform" }>({
+      query: ({ id, deleteFrom }) => ({
+        url: `/google/forms/${id}`,
+        method: "DELETE",
+        params: { delete_from: deleteFrom },
+      }),
+      invalidatesTags: ["GoogleForms"],
+    }),
+    syncForms: builder.mutation<GoogleSyncFormsResponse, GoogleSyncFormsRequest>({
+      query: (body) => ({
+        url: "/google/forms/sync",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["GoogleForms"],
+    }),
+    bulkDeleteForms: builder.mutation<GoogleGenericResponse, { ids: string[]; delete_from: "google" | "platform" }>({
+      query: (body) => ({
+        url: "/google/forms/bulk-delete",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["GoogleForms"],
+    }),
   }),
+  overrideExisting: true,
 });
 
-export const { useLazyConnectGoogleQuery, useListGoogleAccountsQuery, useDisconnectGoogleAccountMutation, useFetchCalendarsQuery, useCreateCalendarMutation, useLinkCalendarMutation, useDeleteCalendarMutation, useListEventsQuery, useCreateEventMutation, useUpdateEventMutation, useDeleteEventMutation, useListSheetsQuery, useCreateSheetMutation, useReadSheetQuery, useWriteSheetMutation, useSyncSheetsMutation, useBulkDeleteSheetsMutation } = googleApi;
+export const { useLazyConnectGoogleQuery, useListGoogleAccountsQuery, useDisconnectGoogleAccountMutation, useFetchCalendarsQuery, useCreateCalendarMutation, useLinkCalendarMutation, useDeleteCalendarMutation, useListEventsQuery, useCreateEventMutation, useUpdateEventMutation, useDeleteEventMutation, useListSheetsQuery, useCreateSheetMutation, useReadSheetQuery, useWriteSheetMutation, useSyncSheetsMutation, useBulkDeleteSheetsMutation, useListFormsQuery, useCreateGoogleFormMutation, useUpdateGoogleFormMutation, useReadFormQuery, useLazyReadFormQuery, useReadFormResponsesQuery, useDeleteFormMutation, useSyncFormsMutation, useBulkDeleteFormsMutation } = googleApi;

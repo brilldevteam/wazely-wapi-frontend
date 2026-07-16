@@ -1,3 +1,4 @@
+import { QuickReply } from "../redux/api/quickReplyApi";
 import { CampaignCard, CarouselProduct } from "./campaign";
 import { Chatbot } from "./chatbot";
 import { DelayUnit, ReplyMaterialSourceType, SendDay, Sequence, SequenceStep } from "./sequence";
@@ -284,4 +285,29 @@ export interface SequenceStepsViewProps {
 export interface TemplatesSectionProps {
   wabaId: string;
   onToggleSidebar?: () => void;
+}
+
+export interface QuickReplyCardProps {
+  item: QuickReply;
+  onEdit: (item: QuickReply) => void;
+  onDelete: (id: string) => void;
+  onToggleFavorite: (id: string) => void;
+  isLoading: boolean;
+  isSelected?: boolean;
+  onSelect?: (id: string, selected: boolean) => void;
+}
+
+export type FilterTab = "all" | "favorites" | "mine";
+
+export interface QuickReplyModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: (payload: { content: string }) => void;
+  editData: QuickReply | null;
+  isLoading: boolean;
+}
+
+export interface QuickReplySettingsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
 }

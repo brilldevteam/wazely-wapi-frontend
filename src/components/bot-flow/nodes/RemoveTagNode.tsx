@@ -9,6 +9,8 @@ import { BaseNode } from "./BaseNode";
 import { NodeField } from "./NodeField";
 import { Badge } from "@/src/elements/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/elements/ui/select";
+import { Button } from "@/src/elements/ui/button";
+
 
 export function RemoveTagNode({ data, id }: any) {
   const { setNodes } = useReactFlow();
@@ -82,14 +84,14 @@ export function RemoveTagNode({ data, id }: any) {
                   className="flex items-center gap-1 bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-800 text-[11px] px-2 py-0.5"
                 >
                   {tag.label}
-                  <button
+                  <Button variant="unstyled"
                     type="button"
                     onClick={() => handleRemove(tag._id)}
                     className="ml-0.5 hover:text-rose-900 dark:hover:text-rose-200 transition-colors cursor-pointer"
                     aria-label={`Remove ${tag.label}`}
                   >
                     <X size={10} />
-                  </button>
+                  </Button>
                 </Badge>
               ))}
             </div>

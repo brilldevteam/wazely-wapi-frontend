@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { usePathname } from "next/navigation";
 import { useAppSelector } from "@/src/redux/hooks";
-import { MessageCircle, X, MessageSquare, Phone, Instagram, Send, Facebook } from "lucide-react";
+import { Facebook, Instagram, MessageCircle, MessageSquare, Send, X } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { Button } from "@/src/elements/ui/button";
+
 
 const FloatingWidget = () => {
   const pathname = usePathname();
@@ -13,13 +15,11 @@ const FloatingWidget = () => {
     widget_telegram_url,
     widget_instagram_url,
     widget_facebook_url,
-    widget_sms_url,
     app_name
   } = useAppSelector((state) => state.setting);
 
   const [isOpen, setIsOpen] = useState(false);
 
-  // Show only on public routes (landing, product details, custom pages, channel presentation pages)
   const isPublicRoute = 
     pathname === "/" || 
     pathname === "/landing" || 
@@ -29,11 +29,10 @@ const FloatingWidget = () => {
 
   if (!widget_enabled || !isPublicRoute) return null;
 
-  // Build list of active channels (WhatsApp, Telegram, Instagram, Messenger)
   const channels = [
     { id: "whatsapp", name: "WhatsApp", url: widget_whatsapp_url, color: "bg-whatsapp hover:bg-whatsapp-hover text-white", icon: MessageSquare },
     { id: "telegram", name: "Telegram", url: widget_telegram_url, color: "bg-telegram hover:bg-telegram-hover text-white", icon: Send },
-    { id: "instagram", name: "Instagram", url: widget_instagram_url, color: "bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] hover:opacity-90 text-white", icon: Instagram },
+    { id: "instagram", name: "Instagram", url: widget_instagram_url, color: "bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] hover:opacity-90 text-white!", icon: Instagram },
     { id: "facebook", name: "Messenger", url: widget_facebook_url, color: "bg-facebook hover:bg-facebook-hover text-white", icon: Facebook },
   ].filter(c => c.url && c.url.trim() !== "");
 
@@ -41,9 +40,8 @@ const FloatingWidget = () => {
 
   return (
     <div className="fixed bottom-6 left-6 z-50 flex items-center gap-3 font-sans select-none">
-      {/* Main Trigger Button */}
       <div className="relative group">
-        <button
+        <Button variant="unstyled"
           onClick={() => setIsOpen(!isOpen)}
           className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg border ${
             isOpen 
@@ -57,17 +55,15 @@ const FloatingWidget = () => {
           ) : (
             <MessageCircle size={26} className="animate-in fade-in zoom-in duration-300" />
           )}
-        </button>
+        </Button>
         
-        {/* Branding Label */}
         {isOpen && (
           <div className="absolute top-full left-0 mt-2 w-max bg-zinc-900/90 backdrop-blur-sm text-[9px] text-zinc-400 py-0.5 px-2 rounded-md shadow-md border border-zinc-800 animate-in fade-in slide-in-from-top-1 duration-300 whitespace-nowrap font-medium">
-            Widget by <span className="font-semibold text-primary">{app_name || "Wapi"}</span>
+            Widget by <span className="font-semibold text-primary">{app_name || "."}</span>
           </div>
         )}
       </div>
 
-      {/* Expanded Social Channel Row */}
       <div 
         className={`flex items-center gap-2.5 transition-all duration-500 origin-left ${
           isOpen 

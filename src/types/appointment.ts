@@ -1,3 +1,7 @@
+import { Template } from "./components";
+import { GoogleAccount, GoogleCalendar, GoogleSheet, GoogleAccountsResponse, GoogleCalendarsResponse, GoogleSheetsResponse } from "./google";
+import { PaymentGateway, PaymentGatewaysResponse } from "./paymentGateway";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type AppointmentDay = "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
 
@@ -15,7 +19,7 @@ export interface AppointmentSlot {
 export interface AppointmentQuestion {
   id: string;
   label: string;
-  type: "text" | "number" | "email" | "phone" | "select" | "multiselect" | "date" | "time" | "datetime";
+  type: "text" | "number" | "email" | "phone" | "dropdown" | "date" | "time";
   required: boolean;
   options?: string[];
 }
@@ -142,4 +146,113 @@ export interface AppointmentBookingsResponse {
 export interface AppointmentBookingResponse {
   success: boolean;
   booking: AppointmentBooking;
+}
+
+export interface BookingDetailsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  bookingId?: string;
+} 
+
+
+export interface BookingStatusModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  booking: AppointmentBooking | null;
+}
+
+export interface SendPaymentLinkModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  booking: AppointmentBooking | null;
+}
+
+export interface AvailabilityStepProps {
+  formData: Partial<AppointmentConfig>;
+  errors?: Record<string, string>;
+  toggleDay: (dayIndex: number) => void;
+  addInterval: (dayIndex: number) => void;
+  removeInterval: (dayIndex: number, intervalIndex: number) => void;
+  updateInterval: (dayIndex: number, intervalIndex: number, field: "from" | "to", value: string) => void;
+}
+
+export interface FinancialsStepProps {
+  formData: Partial<AppointmentConfig>;
+  errors: Record<string, string>;
+  gatewaysData: PaymentGatewaysResponse | undefined;
+  isLoadingGateways: boolean;
+  templatesData: { success: boolean; data: Template[] } | undefined;
+  handleInputChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void;
+  handleSelectChange: (name: string, value: string) => void;
+  handleSwitchChange: (name: string, checked: boolean) => void;
+  handleMappingChange: (
+    templateType: string,
+    variable: string,
+    value: string,
+  ) => void;
+  handleCouponChange: (templateType: string, value: string) => void;
+  handleExpirationChange: (templateType: string, value: string) => void;
+  mappingOptions: { label: string; value: string }[];
+}
+
+export interface GeneralInfoStepProps {
+  formData: Partial<AppointmentConfig>;
+  errors: Record<string, string>;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleSelectChange: (name: string, value: string) => void;
+  handleSwitchChange: (name: string, checked: boolean) => void;
+}
+
+export interface IntegrationsStepProps {
+  formData: Partial<AppointmentConfig>;
+  googleAccountsData: GoogleAccountsResponse | undefined;
+  calendarsData: GoogleCalendarsResponse | undefined;
+  sheetsData: GoogleSheetsResponse | undefined;
+  isLoadingAccounts: boolean;
+  isLoadingCalendars: boolean;
+  isLoadingSheets: boolean;
+  errors: Record<string, string>;
+  handleSelectChange: (name: string, value: string) => void;
+  handleSwitchChange: (name: string, checked: boolean) => void;
+}
+
+export interface QuestionnaireStepProps {
+  formData: Partial<AppointmentConfig>;
+  errors: Record<string, string>;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  addQuestion: () => void;
+  removeQuestion: (index: number) => void;
+  updateQuestion: (index: number, field: keyof AppointmentQuestion, value: any) => void;
+  addQuestionOption: (qIndex: number) => void;
+  updateQuestionOption: (qIndex: number, oIndex: number, value: string) => void;
+  removeQuestionOption: (qIndex: number, oIndex: number) => void;
+}
+
+export interface TemplatesStepProps {
+  formData: Partial<AppointmentConfig>;
+  errors: Record<string, string>;
+  templatesData: { success: boolean; data: Template[] } | undefined;
+  handleSelectChange: (name: string, value: string) => void;
+  handleSwitchChange: (name: string, checked: boolean) => void;
+  handleMappingChange: (templateType: string, variable: string, value: string) => void;
+  handleCouponChange: (templateType: string, value: string) => void;
+  handleExpirationChange: (templateType: string, value: string) => void;
+  mappingOptions: { label: string; value: string }[];
+}
+
+export interface AppointmentTemplateMapperProps {
+  template: Template;
+  variablesMapping: Record<string, string>;
+  onVariableChange: (variable: string, value: string) => void;
+  mappingOptions: { label: string; value: string }[];
+  mediaUrl?: string;
+  onMediaUrlChange?: (url: string) => void;
+  couponCode?: string;
+  onCouponCodeChange?: (code: string) => void;
+  expirationMinutes?: string | number;
+  onExpirationChange?: (mins: string) => void;
+  errors?: Record<string, string>;
+  fieldKey?: string;
 }

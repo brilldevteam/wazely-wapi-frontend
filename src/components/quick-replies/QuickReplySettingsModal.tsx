@@ -9,11 +9,8 @@ import { useAppSelector } from "@/src/redux/hooks";
 import { Loader2, X, Settings2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { QuickReplySettingsModalProps } from "@/src/types/replyMaterial";
 
-interface QuickReplySettingsModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
 
 const QuickReplySettingsModal = ({ isOpen, onClose }: QuickReplySettingsModalProps) => {
   const { t } = useTranslation();

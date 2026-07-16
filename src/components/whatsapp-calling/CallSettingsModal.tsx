@@ -9,16 +9,14 @@ import { Switch } from "@/src/elements/ui/switch";
 import { useGetWabaPhoneNumbersQuery } from "@/src/redux/api/whatsappApi";
 import { useGetCallSettingsQuery, useUpdateCallSettingsMutation } from "@/src/redux/api/whatsappCallingApi";
 import { useAppSelector } from "@/src/redux/hooks";
+import { CallSettingsModalProps } from "@/src/types/whatsappCalling";
 import { Loader2, Phone, Settings2, ShieldCheck } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-
-interface CallSettingsModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+import { useTranslation } from "react-i18next";
 
 const CallSettingsModal = ({ isOpen, onClose }: CallSettingsModalProps) => {
+  const { t } = useTranslation();
   const { selectedWorkspace } = useAppSelector((state) => state.workspace);
   const selectedWabaId = selectedWorkspace?.waba_id;
 
@@ -52,9 +50,13 @@ const CallSettingsModal = ({ isOpen, onClose }: CallSettingsModalProps) => {
         calling_status: checked ? "ENABLED" : "DISABLED",
         call_icon_visibility: settings?.call_icon_visibility || "DEFAULT",
       }).unwrap();
-      toast.success(`Calling ${checked ? "enabled" : "disabled"} successfully`);
+      toast.success(
+        checked
+          ? t("calling_enabled_success", "Calling enabled successfully")
+          : t("calling_disabled_success", "Calling disabled successfully")
+      );
     } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to update settings");
+      toast.error(error?.data?.message || t("failed_update_settings", "Failed to update settings"));
     }
   };
 
@@ -67,8 +69,8 @@ const CallSettingsModal = ({ isOpen, onClose }: CallSettingsModalProps) => {
               <Settings2 size={24} className="text-primary" />
             </div>
             <div className="flex flex-col text-left rtl:text-right">
-              AI Call Settings
-              <p className="text-slate-400 text-sm mt-1">Configure global calling settings for your phone numbers.</p>
+              {t("ai_call_settings_title", "AI Call Settings")}
+              <p className="text-slate-400 text-sm mt-1">{t("ai_call_settings_desc", "Configure global calling settings for your phone numbers.")}</p>
             </div>
           </DialogTitle>
         </DialogHeader>
@@ -77,11 +79,11 @@ const CallSettingsModal = ({ isOpen, onClose }: CallSettingsModalProps) => {
           <div className="space-y-3">
             <Label className="text-sm font-bold text-slate-700 dark:text-gray-500 flex items-center gap-2">
               <Phone size={14} className="text-slate-400" />
-              Select WABA Phone Number
+              {t("select_waba_phone_number", "Select WABA Phone Number")}
             </Label>
             <Select value={selectedPhoneId} onValueChange={setSelectedPhoneId}>
               <SelectTrigger className="h-12 py-6 rounded-lg bg-slate-50 dark:bg-(--page-body-bg) dark:border-(--card-border-color) border-slate-200 focus:ring-primary/10">
-                <SelectValue placeholder={isLoadingPhones ? "Loading numbers..." : "Select Phone Number"} />
+                <SelectValue placeholder={isLoadingPhones ? t("loading_numbers", "Loading numbers...") : t("select_phone_number", "Select Phone Number")} />
               </SelectTrigger>
               <SelectContent className="dark:bg-(--card-color)">
                 {phoneNumbers.map((phone: any) => (
@@ -98,16 +100,16 @@ const CallSettingsModal = ({ isOpen, onClose }: CallSettingsModalProps) => {
               <div className="space-y-1">
                 <p className="font-bold text-slate-900 dark:text-gray-500 flex items-center gap-2">
                   <ShieldCheck size={16} className="text-emerald-500" />
-                  AI Calling Status
+                  {t("ai_calling_status", "AI Calling Status")}
                 </p>
-                <p className="text-xs text-slate-500">Enable or disable AI voice calls for this number.</p>
+                <p className="text-xs text-slate-500">{t("ai_calling_status_desc", "Enable or disable AI voice calls for this number.")}</p>
               </div>
               {isLoadingSettings || isFetchingSettings ? <Loader2 className="animate-spin text-primary" size={20} /> : <Switch disabled={isUpdating} checked={settings?.calling_status === "ENABLED"} onCheckedChange={handleToggleStatus} />}
             </div>
 
             {!isLoadingSettings && !settings && selectedPhoneId && (
               <div className="p-4 bg-amber-50 rounded-lg border border-amber-100">
-                <p className="text-xs text-amber-700 font-medium">No settings found for this phone number. Please contact support if this persists.</p>
+                <p className="text-xs text-amber-700 font-medium">{t("no_settings_found_phone", "No settings found for this phone number. Please contact support if this persists.")}</p>
               </div>
             )}
           </div>
@@ -115,7 +117,7 @@ const CallSettingsModal = ({ isOpen, onClose }: CallSettingsModalProps) => {
 
         <div className="sm:p-6 p-4 bg-(--input-color) dark:bg-(--card-color) border-t flex justify-end">
           <Button variant="outline" className="rounded-lg h-11 px-8 font-bold" onClick={onClose}>
-            Close
+            {t("close", "Close")}
           </Button>
         </div>
       </DialogContent>

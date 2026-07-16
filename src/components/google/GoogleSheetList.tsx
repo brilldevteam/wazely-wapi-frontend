@@ -2,14 +2,26 @@
 "use client";
 
 import { Button } from "@/src/elements/ui/button";
-import { useBulkDeleteSheetsMutation, useCreateSheetMutation, useListSheetsQuery, useWriteSheetMutation } from "@/src/redux/api/googleApi";
+import {
+  useBulkDeleteSheetsMutation,
+  useCreateSheetMutation,
+  useListSheetsQuery,
+  useWriteSheetMutation,
+} from "@/src/redux/api/googleApi";
 import CommonHeader from "@/src/shared/CommonHeader";
 import { DataTable } from "@/src/shared/DataTable";
-import { GoogleSheet } from "@/src/types/google";
+import { GoogleSheet, GoogleSheetListProps } from "@/src/types/google";
 import { Column } from "@/src/types/shared";
 import useDebounce from "@/src/utils/hooks/useDebounce";
 import dayjs from "dayjs";
-import { Edit2, Eye, FileSpreadsheet, Plus, RefreshCw, Trash2 } from "lucide-react";
+import {
+  Edit2,
+  Eye,
+  FileSpreadsheet,
+  Plus,
+  RefreshCw,
+  Trash2,
+} from "lucide-react";
 import { useParams } from "next/navigation";
 import React, { useMemo, useState, use } from "react";
 import { useTranslation } from "react-i18next";
@@ -20,10 +32,6 @@ import WriteSheetModal from "./WriteSheetModal";
 import SyncSheetsModal from "./SyncSheetsModal";
 import DeleteSheetModal from "./DeleteSheetModal";
 
-interface GoogleSheetListProps {
-  paramsPromise: Promise<{ id: string }>;
-}
-
 const GoogleSheetList: React.FC<GoogleSheetListProps> = ({ paramsPromise }) => {
   const params = use(paramsPromise);
   const accountId = params.id as string;
@@ -32,7 +40,10 @@ const GoogleSheetList: React.FC<GoogleSheetListProps> = ({ paramsPromise }) => {
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [sortConfig, setSortConfig] = useState<{ key: string; order: "asc" | "desc" }>({ key: "created_at", order: "desc" });
+  const [sortConfig, setSortConfig] = useState<{
+    key: string;
+    order: "asc" | "desc";
+  }>({ key: "created_at", order: "desc" });
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
@@ -52,7 +63,8 @@ const GoogleSheetList: React.FC<GoogleSheetListProps> = ({ paramsPromise }) => {
 
   const [createSheet, { isLoading: isCreating }] = useCreateSheetMutation();
   const [writeSheet, { isLoading: isWriting }] = useWriteSheetMutation();
-  const [bulkDeleteSheets, { isLoading: isDeleting }] = useBulkDeleteSheetsMutation();
+  const [bulkDeleteSheets, { isLoading: isDeleting }] =
+    useBulkDeleteSheetsMutation();
 
   const handlePageChange = (newPage: number) => setPage(newPage);
   const handleLimitChange = (newLimit: number) => {
@@ -88,7 +100,10 @@ const GoogleSheetList: React.FC<GoogleSheetListProps> = ({ paramsPromise }) => {
   const handleDeleteSheets = async (deleteFrom: "google" | "platform") => {
     if (deleteIds.length === 0) return;
     try {
-      await bulkDeleteSheets({ ids: deleteIds, delete_from: deleteFrom }).unwrap();
+      await bulkDeleteSheets({
+        ids: deleteIds,
+        delete_from: deleteFrom,
+      }).unwrap();
       toast.success(t("google_account_delete_success"));
       setDeleteIds([]);
       setSelectedIds((prev) => prev.filter((id) => !deleteIds.includes(id)));
@@ -107,7 +122,11 @@ const GoogleSheetList: React.FC<GoogleSheetListProps> = ({ paramsPromise }) => {
   const [visibleColumns, setVisibleColumns] = useState(initialColumns);
 
   const handleColumnToggle = (columnId: string) => {
-    setVisibleColumns((prev) => prev.map((col) => (col.id === columnId ? { ...col, isVisible: !col.isVisible } : col)));
+    setVisibleColumns((prev) =>
+      prev.map((col) =>
+        col.id === columnId ? { ...col, isVisible: !col.isVisible } : col,
+      ),
+    );
   };
 
   const columns = useMemo<Column<GoogleSheet>[]>(
@@ -123,7 +142,9 @@ const GoogleSheetList: React.FC<GoogleSheetListProps> = ({ paramsPromise }) => {
             <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600">
               <FileSpreadsheet size={16} />
             </div>
-            <div className="font-bold text-slate-700 dark:text-slate-200">{item.name}</div>
+            <div className="font-bold text-slate-700 dark:text-slate-200">
+              {item.name}
+            </div>
           </div>
         ),
       },
@@ -133,7 +154,11 @@ const GoogleSheetList: React.FC<GoogleSheetListProps> = ({ paramsPromise }) => {
         accessorKey: "sheet_id",
         copyable: true,
         copyField: "sheet_id",
-        cell: (item) => <div className="text-xs font-mono text-slate-500 break-all">{item.sheet_id}</div>,
+        cell: (item) => (
+          <div className="text-xs font-mono text-slate-500 break-all">
+            {item.sheet_id}
+          </div>
+        ),
       },
       {
         header: t("created_at"),
@@ -141,44 +166,77 @@ const GoogleSheetList: React.FC<GoogleSheetListProps> = ({ paramsPromise }) => {
         accessorKey: "created_at",
         sortable: true,
         sortKey: "created_at",
-        cell: (item) => <div className="text-sm text-slate-500 dark:text-slate-400 font-medium">{dayjs(item.created_at).format("DD MMM YYYY, hh:mm A")}</div>,
+        cell: (item) => (
+          <div className="text-sm text-slate-500 dark:text-slate-400 font-medium">
+            {dayjs(item.created_at).format("DD MMM YYYY, hh:mm A")}
+          </div>
+        ),
       },
       {
         header: t("actions"),
         className: "text-right min-w-[120px]",
         cell: (item) => (
           <div className="flex items-center justify-end gap-2">
-            <Button variant="outline" size="sm" className="w-10 h-10 border-none text-blue-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all dark:hover:bg-blue-900/20 shadow-xs" onClick={() => setReadSheetId(item._id)} title={t("google_account_read_sheet")}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-10 h-10 border-none text-blue-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all dark:hover:bg-blue-900/20 shadow-xs"
+              onClick={() => setReadSheetId(item._id)}
+              title={t("google_account_read_sheet")}
+            >
               <Eye size={16} />
             </Button>
-            <Button variant="outline" size="sm" className="w-10 h-10 border-none text-emerald-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all dark:hover:bg-emerald-900/20 shadow-xs" onClick={() => setWriteSheetId(item._id)} title={t("google_account_write_sheet")}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-10 h-10 border-none text-emerald-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all dark:hover:bg-emerald-900/20 shadow-xs"
+              onClick={() => setWriteSheetId(item._id)}
+              title={t("google_account_write_sheet")}
+            >
               <Edit2 size={16} />
             </Button>
-            <Button variant="outline" size="sm" className="w-10 h-10 border-none text-red-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all dark:hover:bg-red-900/20 shadow-xs" onClick={() => setDeleteIds([item._id])} title={t("delete")}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-10 h-10 border-none text-red-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all dark:hover:bg-red-900/20 shadow-xs"
+              onClick={() => setDeleteIds([item._id])}
+              title={t("delete")}
+            >
               <Trash2 size={16} />
             </Button>
           </div>
         ),
       },
     ],
-    [t]
+    [t],
   );
 
   const rightContent = (
     <div className="flex items-center flex-wrap gap-3">
       {selectedIds.length > 0 && (
-        <Button onClick={() => setDeleteIds(selectedIds)} variant="outline" className="flex items-center gap-2.5 px-4.5! py-5 border-red-600 text-red-600 hover:bg-red-50 h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group dark:hover:bg-red-900/20 animate-in fade-in zoom-in duration-300">
+        <Button
+          onClick={() => setDeleteIds(selectedIds)}
+          variant="outline"
+          className="flex items-center gap-2.5 px-4.5! py-5 border-red-600 text-red-600 hover:bg-red-50 h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group dark:hover:bg-red-900/20 animate-in fade-in zoom-in duration-300"
+        >
           <Trash2 className="w-5 h-5" />
           <span>
             {t("google_account_bulk_delete")} ({selectedIds.length})
           </span>
         </Button>
       )}
-      <Button onClick={() => setIsSyncModalOpen(true)} variant="outline" className="flex items-center gap-2.5 px-4.5! py-5 border-emerald-600 text-emerald-600 hover:bg-emerald-50 h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group dark:hover:bg-emerald-900/20">
+      <Button
+        onClick={() => setIsSyncModalOpen(true)}
+        variant="outline"
+        className="flex items-center gap-2.5 px-4.5! py-5 border-emerald-600 text-emerald-600 hover:bg-emerald-50 h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group dark:hover:bg-emerald-900/20"
+      >
         <RefreshCw className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />
         <span>{t("google_account_sync_sheets")}</span>
       </Button>
-      <Button onClick={() => setIsAddModalOpen(true)} className="flex items-center gap-2.5 px-4.5! py-5 bg-emerald-600 hover:bg-emerald-700 text-white h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group">
+      <Button
+        onClick={() => setIsAddModalOpen(true)}
+        className="flex items-center gap-2.5 px-4.5! py-5 bg-emerald-600 hover:bg-emerald-700 text-white h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group"
+      >
         <Plus className="w-5 h-5" />
         <span>{t("google_account_add_sheet")}</span>
       </Button>
@@ -206,18 +264,69 @@ const GoogleSheetList: React.FC<GoogleSheetListProps> = ({ paramsPromise }) => {
       />
 
       <div className="bg-white dark:bg-(--card-color) rounded-lg shadow-sm overflow-hidden">
-        <DataTable<GoogleSheet> data={data?.sheets || []} columns={columns.filter((col) => visibleColumns.find((vc) => vc.label === col.header)?.isVisible !== false)} isLoading={isLoading} isFetching={isFetching} totalCount={data?.pagination?.totalItems || 0} page={page} limit={limit} onPageChange={handlePageChange} onLimitChange={handleLimitChange} onSortChange={handleSortChange} getRowId={(item) => item._id} emptyMessage={searchTerm ? t("no_results_for", { searchTerm }) : t("google_account_no_sheets")} enableSelection={true} selectedIds={selectedIds} onSelectionChange={setSelectedIds} />
+        <DataTable<GoogleSheet>
+          data={data?.sheets || []}
+          columns={columns.filter(
+            (col) =>
+              visibleColumns.find((vc) => vc.label === col.header)
+                ?.isVisible !== false,
+          )}
+          isLoading={isLoading}
+          isFetching={isFetching}
+          totalCount={data?.pagination?.totalItems || 0}
+          page={page}
+          limit={limit}
+          onPageChange={handlePageChange}
+          onLimitChange={handleLimitChange}
+          onSortChange={handleSortChange}
+          getRowId={(item) => item._id}
+          emptyMessage={
+            searchTerm
+              ? t("no_results_for", { searchTerm })
+              : t("google_account_no_sheets")
+          }
+          enableSelection={true}
+          selectedIds={selectedIds}
+          onSelectionChange={setSelectedIds}
+        />
       </div>
 
-      <AddSheetModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} onConfirm={handleCreateSheet} isLoading={isCreating} />
+      <AddSheetModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onConfirm={handleCreateSheet}
+        isLoading={isCreating}
+      />
 
-      {readSheetId && <ReadSheetModal isOpen={!!readSheetId} onClose={() => setReadSheetId(null)} sheetId={readSheetId} />}
+      {readSheetId && (
+        <ReadSheetModal
+          isOpen={!!readSheetId}
+          onClose={() => setReadSheetId(null)}
+          sheetId={readSheetId}
+        />
+      )}
 
-      <WriteSheetModal isOpen={!!writeSheetId} onClose={() => setWriteSheetId(null)} sheetId={writeSheetId || ""} onConfirm={handleWriteSheet} isLoading={isWriting} />
+      <WriteSheetModal
+        isOpen={!!writeSheetId}
+        onClose={() => setWriteSheetId(null)}
+        sheetId={writeSheetId || ""}
+        onConfirm={handleWriteSheet}
+        isLoading={isWriting}
+      />
 
-      <SyncSheetsModal isOpen={isSyncModalOpen} onClose={() => setIsSyncModalOpen(false)} accountId={accountId} />
+      <SyncSheetsModal
+        isOpen={isSyncModalOpen}
+        onClose={() => setIsSyncModalOpen(false)}
+        accountId={accountId}
+      />
 
-      <DeleteSheetModal isOpen={deleteIds.length > 0} onClose={() => setDeleteIds([])} onConfirm={handleDeleteSheets} isLoading={isDeleting} count={deleteIds.length} />
+      <DeleteSheetModal
+        isOpen={deleteIds.length > 0}
+        onClose={() => setDeleteIds([])}
+        onConfirm={handleDeleteSheets}
+        isLoading={isDeleting}
+        count={deleteIds.length}
+      />
     </div>
   );
 };

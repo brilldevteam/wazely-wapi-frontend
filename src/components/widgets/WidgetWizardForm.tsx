@@ -14,13 +14,9 @@ import { ActionStep } from "./steps/ActionStep";
 import { AppearanceStep } from "./steps/AppearanceStep";
 import { BodyStep } from "./steps/BodyStep";
 import { HeaderStep } from "./steps/HeaderStep";
+import { STEPS } from "@/src/data/widget";
 
-const STEPS = [
-  { id: "appearance", label: "Appearance", icon: Palette, description: "Widget button & position" },
-  { id: "header", label: "Header", icon: Type, description: "Chat window header style" },
-  { id: "body", label: "Body", icon: MessageCircle, description: "Welcome message & colors" },
-  { id: "action", label: "Action", icon: Settings, description: "Chat button customization" },
-];
+
 
 const WidgetWizardForm: React.FC<WidgetWizardFormProps> = ({ data, onChange, onSuccess, existingId, isStandalone, onBodyBgImageChange }) => {
   const [stepIdx, setStepIdx] = useState(0);
@@ -124,9 +120,9 @@ const WidgetWizardForm: React.FC<WidgetWizardFormProps> = ({ data, onChange, onS
       }
 
       if (response.success && response.data) {
-        setGeneratedScript(response.data.embed_code || response.data.script_tag || "");
+        setGeneratedScript(response?.data.embed_code || response?.data.script_tag || "");
         setIsSuccess(true);
-        onSuccess();
+        // onSuccess();
       }
     } catch (error: any) {
       toast.error(error?.data?.message || "Something went wrong. Please try again.");

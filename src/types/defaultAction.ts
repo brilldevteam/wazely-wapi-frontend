@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DelayedReplyRef, ReplyRef, WabaConfigPayload } from "./wabaConfiguration";
+import {
+  DelayedReplyRef,
+  ReplyRef,
+  WabaConfigPayload,
+} from "./wabaConfiguration";
 import { WeekDay } from "./workingHours";
 
 interface ToggleConfigField {
@@ -16,9 +20,9 @@ export interface ConfigRowProps {
   isExpanded: boolean;
   isSaving: boolean;
   wabaId: string;
-  onToggle: (enabled: boolean) => void;
   onReplyChange: (ref: ReplyRef | null) => void;
   onDelayChange?: (minutes: number) => void;
+  onToggleExpand?: () => void;
 }
 
 export interface ToggleSwitchProps {
@@ -82,5 +86,14 @@ export interface ToggleConfigFieldProps {
 export interface WorkingHoursModalProps {
   open: boolean;
   onClose: () => void;
+  wabaId: string;
+}
+export type DayState = {
+  status: "opened" | "closed";
+  hours: { from: string; to: string }[];
+};
+export type WeekState = Record<WeekDay, DayState>;
+
+export interface WorkingHoursFormProps {
   wabaId: string;
 }

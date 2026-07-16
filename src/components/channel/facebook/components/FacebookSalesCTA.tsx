@@ -1,25 +1,15 @@
 "use client";
 
-import React from "react";
-import { Check, Zap } from "lucide-react";
 import { Button } from "@/src/elements/ui/button";
+import { FacebookSalesCTAProps } from "@/src/types/channel";
+import { Check } from "lucide-react";
 
-interface FacebookSalesCTAProps {
-  sales: {
-    title: string;
-    subtitle?: string;
-    button1_title: string;
-    button1_url: string;
-    button2_title?: string;
-    button2_url?: string;
-    bullets: string[];
-  };
-  isAuthenticated: boolean;
-  fbGradient: string;
-  router: { push: (url: string) => void };
-}
-
-export default function FacebookSalesCTA({ sales, isAuthenticated, fbGradient, router }: FacebookSalesCTAProps) {
+export default function FacebookSalesCTA({
+  sales,
+  isAuthenticated,
+  fbGradient,
+  router,
+}: FacebookSalesCTAProps) {
   if (!sales.title) return null;
 
   return (

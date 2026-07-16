@@ -1,115 +1,163 @@
+import { PREDEFINED_CRONS } from "@/src/data/campaign";
 import { Badge } from "@/src/elements/ui/badge";
 import { Campaign } from "@/src/types/components";
 import { cn, formatDate } from "@/src/utils";
-import { Calendar, Clock, FileText, Globe, Hash, Phone } from "lucide-react";
 
-export const OverviewConfiguration = ({ campaign, wabaId }: { campaign: Campaign; wabaId: string | number | undefined }) => {
+export const OverviewConfiguration = ({
+  campaign,
+  wabaId,
+}: {
+  campaign: Campaign;
+  wabaId: string | number | undefined;
+}) => {
   return (
-    <div className="flex flex-col gap-6">
-      <div className="space-y-4 w-full">
-        <h3 className="text-sm font-medium text-slate-500 dark:text-slate-400 pl-1">
-          Configuration
-        </h3>
-        <div className="bg-white dark:bg-(--page-body-bg) rounded-lg border border-slate-200/60 dark:border-(--card-border-color) p-2 grid grid-cols-2 md:grid-cols-4 gap-2 shadow-sm">
-          <div className="p-3 flex flex-col justify-center dark:bg-(--dark-body) border border-slate-100 dark:border-(--card-border-color) hover:bg-slate-50 dark:hover:bg-(--table-hover) transition-colors rounded-lg">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="text-slate-500">
-                <Hash size={12} />
+    <div className="space-y-4">
+      <h3 className="text-sm font-black text-slate-500 dark:text-slate-400">
+        Configuration Details
+      </h3>
+      <div className="bg-white dark:bg-(--card-color) rounded-xl border border-slate-200/60 dark:border-(--card-border-color) shadow-sm overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-100 dark:divide-(--card-border-color)">
+          {/* Section 1: Campaign info */}
+          <div className="p-4 sm:p-6 space-y-4">
+            <h4 className="text-sm font-bold text-primary">Campaign Info</h4>
+            <div className="space-y-3.5">
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-slate-500 dark:text-slate-400">Name</span>
+                <span
+                  className="font-semibold text-slate-900 dark:text-slate-100 text-right truncate max-w-[150px]"
+                  title={campaign.name}
+                >
+                  {campaign.name}
+                </span>
               </div>
-              <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
-                Name
-              </span>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-slate-500 dark:text-slate-400">
+                  Status
+                </span>
+                <Badge
+                  variant="outline"
+                  className={cn(
+                    "uppercase font-black text-[9px] px-2.5 py-0.5 rounded-md border",
+                    campaign.status === "completed"
+                      ? "bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-900/50"
+                      : "bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950/30 dark:border-blue-900/50",
+                  )}
+                >
+                  {campaign.status}
+                </Badge>
+              </div>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-slate-500 dark:text-slate-400">
+                  Created Date
+                </span>
+                <span className="font-semibold text-slate-900 dark:text-slate-100">
+                  {formatDate(campaign.created_at)}
+                </span>
+              </div>
             </div>
-            <span
-              className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate"
-              title={campaign.name}
-            >
-              {campaign.name}
-            </span>
           </div>
 
-          <div className="p-3 flex flex-col justify-center border border-slate-100 dark:border-(--card-border-color) dark:bg-(--dark-body) hover:bg-slate-50 dark:hover:bg-(--table-hover) transition-colors rounded-lg">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="text-slate-500">
-                <Clock size={12} />
+          {/* Section 2: Template configuration */}
+          <div className="p-5 sm:p-6 space-y-4">
+            <h4 className="text-sm font-bold text-primary">
+              Template Settings
+            </h4>
+            <div className="space-y-3.5">
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-slate-500 dark:text-slate-400">
+                  Template
+                </span>
+                <span
+                  className="font-semibold text-slate-900 dark:text-slate-100 text-right max-w-[160px] truncate"
+                  title={campaign.template_name}
+                >
+                  {campaign.template_name}
+                </span>
               </div>
-              <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
-                Lang
-              </span>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-slate-500 dark:text-slate-400">
+                  Language
+                </span>
+                <span className="text-xs font-bold bg-slate-100 dark:bg-(--dark-body) px-2 py-0.5 rounded text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
+                  {campaign.language_code || "en_US"}
+                </span>
+              </div>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-slate-500 dark:text-slate-400">
+                  WABA ID
+                </span>
+                <span className="font-mono text-xs font-semibold text-slate-900 dark:text-slate-100">
+                  {wabaId || "N/A"}
+                </span>
+              </div>
             </div>
-            <span className="text-xs mt-0.5 font-bold w-fit bg-slate-100 dark:bg-(--page-body-bg) px-2 py-0.5 rounded text-slate-800 dark:text-slate-200 shadow-sm border border-slate-200 dark:border-slate-800">
-              {campaign.language_code || "en_US"}
-            </span>
           </div>
 
-          <div className="p-3 flex flex-col justify-center border border-slate-100 dark:border-(--card-border-color) dark:bg-(--dark-body) hover:bg-slate-50 dark:hover:bg-(--table-hover) transition-colors rounded-lg">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="text-slate-500">
-                <Phone size={12} />
+          {/* Section 3: Scheduling */}
+          <div className="p-4 sm:p-6 space-y-4">
+            <h4 className="text-sm font-bold text-primary">Scheduling Info</h4>
+            <div className="space-y-3.5">
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-slate-500 dark:text-slate-400">
+                  Schedule Type
+                </span>
+                <span className="font-semibold text-slate-900 dark:text-slate-100">
+                  {campaign.is_recurring
+                    ? `Recurring (${campaign.recurring_pattern === "custom_cron" ? "Custom Cron" : campaign.recurring_pattern})`
+                    : campaign.scheduled_at
+                      ? "Scheduled"
+                      : "Immediate"}
+                </span>
               </div>
-              <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
-                WABA ID
-              </span>
-            </div>
-            <span
-              className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate"
-              title={String(wabaId)}
-            >
-              {wabaId || "N/A"}
-            </span>
-          </div>
-
-          <div className="p-3 flex flex-col justify-center border border-slate-100 dark:border-(--card-border-color) dark:bg-(--dark-body) hover:bg-slate-50 dark:hover:bg-(--table-hover) transition-colors rounded-lg">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="text-slate-500">
-                <Calendar size={12} />
-              </div>
-              <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
-                Date
-              </span>
-            </div>
-            <span className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
-              {formatDate(campaign.created_at)}
-            </span>
-          </div>
-
-          <div className="col-span-2 md:col-span-2 p-3 flex flex-col justify-center border border-slate-100 dark:border-(--card-border-color) dark:bg-(--dark-body) hover:bg-slate-50 dark:hover:bg-(--table-hover) transition-colors rounded-lg">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="text-slate-500">
-                <FileText size={12} />
-              </div>
-              <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
-                Template
-              </span>
-            </div>
-            <span
-              className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate"
-              title={campaign.template_name}
-            >
-              {campaign.template_name}
-            </span>
-          </div>
-
-          <div className="col-span-2 md:col-span-2 p-3 flex flex-col justify-center border border-slate-100 dark:border-(--card-border-color) dark:bg-(--dark-body) hover:bg-slate-50 dark:hover:bg-(--table-hover) transition-colors rounded-lg">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="text-slate-500">
-                <Globe size={12} />
-              </div>
-              <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
-                Status
-              </span>
-            </div>
-            <Badge
-              variant="outline"
-              className={cn(
-                "uppercase font-black text-[9px] px-2 py-0.5 mt-0.5 rounded-md border w-fit",
-                campaign.status === "completed"
-                  ? "bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-900/50"
-                  : "bg-blue-50 text-blue-600 border-blue-200 dark:bg-(--page-body-bg) dark:border-blue-900/50",
+              {campaign.is_recurring && campaign.cron_expression && (
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-slate-500 dark:text-slate-400">
+                    Schedule Details
+                  </span>
+                  <span className="font-semibold text-slate-900 dark:text-slate-100">
+                    {PREDEFINED_CRONS.find((c) => c.value === campaign.cron_expression)?.label || campaign.cron_expression}
+                  </span>
+                </div>
               )}
-            >
-              {campaign.status}
-            </Badge>
+              {campaign.scheduled_at && !campaign.is_recurring && (
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-slate-500 dark:text-slate-400">
+                    Scheduled For
+                  </span>
+                  <span className="font-semibold text-slate-900 dark:text-slate-100">
+                    {formatDate(campaign.scheduled_at)}
+                  </span>
+                </div>
+              )}
+              {campaign.is_recurring && campaign.next_run_at && (
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-slate-500 dark:text-slate-400">
+                    Next Run At
+                  </span>
+                  <span className="font-semibold text-slate-900 dark:text-slate-100">
+                    {formatDate(campaign.next_run_at)}
+                  </span>
+                </div>
+              )}
+              {campaign.is_recurring && campaign.recurring_end_date && (
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-slate-500 dark:text-slate-400">
+                    End Date
+                  </span>
+                  <span className="font-semibold text-slate-900 dark:text-slate-100">
+                    {formatDate(campaign.recurring_end_date)}
+                  </span>
+                </div>
+              )}
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-slate-500 dark:text-slate-400">
+                  Last Updated
+                </span>
+                <span className="font-semibold text-slate-900 dark:text-slate-100">
+                  {formatDate(campaign.updated_at)}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

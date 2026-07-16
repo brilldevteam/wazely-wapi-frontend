@@ -9,10 +9,10 @@ import React from "react";
 import { CarouselMediaEditor } from "../../campaigns/wizard/CarouselMediaEditor";
 import { CarouselProductEditor } from "../../campaigns/wizard/CarouselProductEditor";
 import { CatalogProductPicker } from "../../campaigns/wizard/CatalogProductPicker";
-import { TemplateCarouselCard } from "../../campaigns/wizard/types";
 import { VariableRow } from "../../campaigns/wizard/VariableMappingComponents";
 import { formatExpirationTime, getTemplateVariables, hasMediaTemplateHeader, isMarketingTemplate } from "@/src/utils/template";
 import LocationMapPicker from "@/src/components/shared/LocationMapPicker";
+import { TemplateCarouselCard } from "@/src/types/campaign";
 
 const TemplateConfig: React.FC<TemplateConfigProps> = ({
   template,

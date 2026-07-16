@@ -2,27 +2,26 @@
 "use client";
 
 import { Button } from "@/src/elements/ui/button";
-import { useCreateSegmentMutation, useDeleteSegmentMutation, useBulkDeleteSegmentsMutation, useGetSegmentsQuery, useUpdateSegmentMutation } from "@/src/redux/api/segmentApi";
+import {
+  useBulkDeleteSegmentsMutation,
+  useCreateSegmentMutation,
+  useDeleteSegmentMutation,
+  useGetSegmentsQuery,
+  useUpdateSegmentMutation,
+} from "@/src/redux/api/segmentApi";
 import CommonHeader from "@/src/shared/CommonHeader";
 import ConfirmModal from "@/src/shared/ConfirmModal";
 import { DataTable } from "@/src/shared/DataTable";
+import { Segment } from "@/src/types/segment";
 import { Column } from "@/src/types/shared";
 import { formatDate } from "@/src/utils";
 import { Edit2, Trash2, Users } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import SegmentModal from "./SegmentModal";
 import Can from "../shared/Can";
+import SegmentModal from "./SegmentModal";
 import SegmentContactsModal from "./SegmentsContactsModal";
-
-interface Segment {
-  _id: string;
-  name: string;
-  description?: string;
-  member_count?: number;
-  created_at: string;
-}
 
 const SegmentPage = () => {
   const { t } = useTranslation();
@@ -52,18 +51,24 @@ const SegmentPage = () => {
   const [createSegment, { isLoading: isCreating }] = useCreateSegmentMutation();
   const [updateSegment, { isLoading: isUpdating }] = useUpdateSegmentMutation();
   const [deleteSegment, { isLoading: isDeleting }] = useDeleteSegmentMutation();
-  const [bulkDeleteSegments, { isLoading: isBulkDeleting }] = useBulkDeleteSegmentsMutation();
+  const [bulkDeleteSegments, { isLoading: isBulkDeleting }] =
+    useBulkDeleteSegmentsMutation();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingSegment, setEditingSegment] = useState<Segment | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [contactsModalOpen, setContactsModalOpen] = useState(false);
-  const [selectedSegmentForContacts, setSelectedSegmentForContacts] = useState<Segment | null>(null);
+  const [selectedSegmentForContacts, setSelectedSegmentForContacts] =
+    useState<Segment | null>(null);
 
   const segments = segmentsResult?.data?.segments || [];
   const totalCount = segmentsResult?.data?.pagination?.totalItems || 0;
 
-  const handleSave = async (data: { name: string; description?: string; contactIds?: string[] }) => {
+  const handleSave = async (data: {
+    name: string;
+    description?: string;
+    contactIds?: string[];
+  }) => {
     try {
       if (editingSegment) {
         await updateSegment({ id: editingSegment._id, ...data }).unwrap();
@@ -94,7 +99,9 @@ const SegmentPage = () => {
     if (selectedIds.length === 0) return;
     try {
       await bulkDeleteSegments(selectedIds).unwrap();
-      toast.success(t("segment_success_bulk_deleted", { count: selectedIds.length }));
+      toast.success(
+        t("segment_success_bulk_deleted", { count: selectedIds.length }),
+      );
       setSelectedIds([]);
       setShowBulkDeleteModal(false);
     } catch (error: any) {
@@ -199,7 +206,11 @@ const SegmentPage = () => {
         addPermission="create.segments"
         isLoading={isLoading}
         selectedCount={selectedIds.length}
-        onBulkDelete={selectedIds.length > 0 ? () => setShowBulkDeleteModal(true) : undefined}
+        onBulkDelete={
+          selectedIds.length > 0
+            ? () => setShowBulkDeleteModal(true)
+            : undefined
+        }
         deletePermission="delete.segments"
       />
 
@@ -218,7 +229,11 @@ const SegmentPage = () => {
             setPage(1);
           }}
           getRowId={(item) => item._id}
-          emptyMessage={searchTerm ? `No segments found matching "${searchTerm}"` : "No segments found. Add your first segment."}
+          emptyMessage={
+            searchTerm
+              ? `No segments found matching "${searchTerm}"`
+              : "No segments found. Add your first segment."
+          }
           className="border-none shadow-none rounded-none"
           onSortChange={(key, order) => {
             setSortBy(key);
@@ -227,6 +242,7 @@ const SegmentPage = () => {
           enableSelection={true}
           selectedIds={selectedIds}
           onSelectionChange={setSelectedIds}
+          actionPermission={["update.segments", "delete.segments"]}
         />
       </div>
 

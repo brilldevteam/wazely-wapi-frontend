@@ -11,7 +11,12 @@ const API_URL = process.env.NEXT_PUBLIC_STORAGE_URL ?? "";
 
 const resolveUrl = (url?: string): string => {
   if (!url || url.length <= 0) return getUrlWithBasePath("/assets/logos/logo3.png");
-  return getUrlWithBasePath(url.startsWith("http") ? url : `${API_URL}${url}`);
+  if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:")) {
+    return getUrlWithBasePath(url);
+  }
+  const cleanUrl = url.replace(/\\/g, "/").startsWith("/") ? url.replace(/\\/g, "/") : `/${url.replace(/\\/g, "/")}`;
+  const baseUrl = API_URL.endsWith("/") ? API_URL.slice(0, -1) : API_URL;
+  return getUrlWithBasePath(`${baseUrl}${cleanUrl}`);
 };
 
 export const DynamicLogo = ({ width = 200, height = 56, className = "h-14 w-auto object-contain", skeletonClassName = "h-14 w-48 animate-pulse bg-transparent" }: DynamicLogoProps) => {

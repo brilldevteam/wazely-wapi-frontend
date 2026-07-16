@@ -135,7 +135,7 @@ export function WebhookNode({ data, id }: any) {
               <div className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Available Variables</div>
               <div className="flex flex-wrap gap-1.5">
                 {["{{message}}", "{{messageType}}", "{{senderNumber}}", "{{recipientNumber}}", "{{timestamp}}", "{{contact.name}}", "{{contact_name}}", "{{contactId}}", "{{contact.email}}", "{{contact.custom_fields.KEY}}", "{{api_status}}", "{{api_response.KEY}}", "{{webhook_status}}", "{{webhook_response.message}}"].map((variable) => (
-                  <button
+                  <Button variant="unstyled"
                     key={variable}
                     onClick={() => {
                       navigator.clipboard.writeText(variable);
@@ -146,7 +146,7 @@ export function WebhookNode({ data, id }: any) {
                     title="Click to copy"
                   >
                     {copiedVar === variable ? "Copied!" : variable}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>

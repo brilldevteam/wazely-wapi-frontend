@@ -8,7 +8,7 @@ import { useDisconnectChannelMutation, useGetConnectedChannelsQuery } from "@/sr
 import { useAppSelector } from "@/src/redux/hooks";
 import CommonHeader from "@/src/shared/CommonHeader";
 import ConfirmModal from "@/src/shared/ConfirmModal";
-import { ArrowRight, Check, Link2Off, Loader2, RefreshCw, Send } from "lucide-react";
+import { ArrowRight, Bot, Calendar, Check, Hash, Link2Off, Loader2, RefreshCw, Send, User } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { TelegramConnectModal } from "./TelegramConnectModal";
@@ -77,7 +77,7 @@ const TelegramConnect = () => {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        <div className="lg:sticky lg:top-32 lg:col-span-5 xl:col-span-5">
+        <div className="lg:sticky lg:top-32 lg:col-span-5 xl:col-span-5 space-y-6">
           {/* Telegram Card */}
           <Card className="overflow-hidden border border-slate-200/60 dark:border-(--card-border-color) hover:border-[#229ED9]/50 dark:hover:border-[#229ED9]/40 hover:shadow-xl hover:shadow-[#229ED9]/8 transition-all duration-300 rounded-xl flex flex-col justify-between h-full bg-gradient-to-br from-[#229ED9]/6 via-white/4 to-[#229ED9]/6 dark:from-[#229ED9]/8 dark:via-(--card-color) dark:to-(--card-color)">
             <CardContent className="sm:p-6 p-4 flex flex-col h-full justify-between gap-6">
@@ -149,6 +149,97 @@ const TelegramConnect = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Connected Telegram Bot Info Card */}
+          {isTelegramConnected && telegramConn && (
+            <Card className="border border-slate-200/60 dark:border-(--card-border-color) dark:bg-(--card-color) shadow-sm overflow-hidden rounded-xl">
+              <CardContent className="sm:p-6 p-4 space-y-5">
+                <div className="flex items-center gap-3 pb-3.5">
+                  <div className="w-10 h-10 rounded-lg bg-[#229ED9]/10 flex items-center justify-center shrink-0">
+                    <Bot className="w-5 h-5 text-[#229ED9]" />
+                  </div>
+                  <div>
+                    <h3 className="text-md font-bold text-slate-900 dark:text-slate-100">
+                      Connected Bot Info
+                    </h3>
+                    <p className="text-xs text-slate-400 dark:text-gray-500">
+                      Active integration details
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  {/* Bot Name */}
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800/40 flex items-center justify-center shrink-0 border border-slate-100 dark:border-slate-800">
+                      <User className="w-4 h-4 text-slate-400 dark:text-gray-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[11px] font-semibold text-slate-400 dark:text-gray-500 uppercase tracking-wider">Bot Name</p>
+                      <p className="text-sm font-bold text-slate-850 dark:text-slate-200 truncate mt-0.5">
+                        {telegramConn.bot_name || telegramConn.name || "N/A"}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Bot Username */}
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800/40 flex items-center justify-center shrink-0 border border-slate-100 dark:border-slate-800">
+                      <Send className="w-4 h-4 text-slate-400 dark:text-gray-500" strokeWidth={1.5} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[11px] font-semibold text-slate-400 dark:text-gray-500 uppercase tracking-wider">Username</p>
+                      <a
+                        href={`https://t.me/${(telegramConn.bot_username || "").replace(/^@/, "")}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-bold text-[#229ED9] hover:underline truncate inline-flex items-center gap-1 mt-0.5"
+                      >
+                        @{telegramConn.bot_username ? telegramConn.bot_username.replace(/^@/, "") : "N/A"}
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Bot ID */}
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800/40 flex items-center justify-center shrink-0 border border-slate-100 dark:border-slate-800">
+                      <Hash className="w-4 h-4 text-slate-400 dark:text-gray-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[11px] font-semibold text-slate-400 dark:text-gray-500 uppercase tracking-wider">Bot ID</p>
+                      <code className="text-xs bg-slate-50 dark:bg-slate-800/40 px-2 py-0.5 rounded text-slate-650 dark:text-slate-300 font-mono mt-0.5 inline-block border border-slate-100 dark:border-slate-800/60">
+                        {telegramConn.bot_id || "N/A"}
+                      </code>
+                    </div>
+                  </div>
+
+                  {(() => {
+                    const connectionDate = telegramConn.created_at || telegramConn.createdAt;
+                    if (!connectionDate) return null;
+                    return (
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800/40 flex items-center justify-center shrink-0 border border-slate-100 dark:border-slate-800">
+                          <Calendar className="w-4 h-4 text-slate-400 dark:text-gray-500" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[11px] font-semibold text-slate-400 dark:text-gray-500 uppercase tracking-wider">Connected On</p>
+                          <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mt-0.5">
+                            {new Date(connectionDate).toLocaleDateString(undefined, {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit"
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         <div className="lg:col-span-7 xl:col-span-7">

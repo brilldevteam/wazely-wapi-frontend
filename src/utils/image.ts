@@ -31,7 +31,17 @@ export const getResolvedImageUrl = (src: any, fallbackSrc?: string): string => {
         return fallbackSrc || defaultPlaceholder;
       }
 
+      if (sourceString.startsWith("uploads/")) {
+        sourceString = "/" + sourceString;
+      }
+
       if (isAbsoluteUrl(sourceString)) {
+        if (sourceString.includes("/uploads/") && !sourceString.includes("amazonaws.com")) {
+          const storageUrl = ImageBaseUrl || API_BASE_URL || "";
+          const baseUrl = storageUrl.endsWith("/") ? storageUrl : `${storageUrl}/`;
+          const uploadPath = sourceString.substring(sourceString.indexOf("/uploads/"));
+          return `${baseUrl}${uploadPath.substring(1)}`;
+        }
         return sourceString;
       }
 

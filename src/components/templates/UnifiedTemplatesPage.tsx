@@ -9,9 +9,10 @@ import { useEffect, useState } from "react";
 import ChannelSelectionPage from "./ChannelSelectionPage";
 import AdminTemplateLibrary from "./AdminTemplateLibrary";
 import MessageTemplates from "./MessageTemplates";
-import TemplatesSidebar, { TemplateView } from "./TemplatesSidebar";
+import TemplatesSidebar from "./TemplatesSidebar";
 import { usePermissions } from "@/src/hooks/usePermissions";
 import { useFeatureAccess } from "@/src/hooks/useFeatureAccess";
+import { TemplateView } from "@/src/types/components/template";
 
 const UnifiedTemplatesPage = () => {
   const router = useRouter();

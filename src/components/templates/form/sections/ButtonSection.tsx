@@ -121,7 +121,7 @@ export const ButtonSection = ({ interactiveType, setInteractiveType, buttons, ad
         )}
 
         {interactiveType === "quick_reply" && !isLimitedTimeOffer && (
-          <Button type="button" onClick={() => addButton("quick_reply")} className="bg-[unset]! w-full! h-12! flex items-center justify-center gap-2! rounded-lg! border-2! border-dashed! border-slate-200! dark:hover:border-(--card-border-color)! dark:border-(--card-border-color)! text-white! font-bold hover:border-emerald-500/50! hover:bg-emerald-50/30! dark:hover:bg-(--table-hover)! transition-all text-sm!">
+          <Button type="button" onClick={() => addButton("quick_reply")} className="bg-[unset]! w-full! h-12! flex items-center justify-center gap-2! rounded-lg! border-2! border-dashed! border-slate-200! dark:hover:border-(--card-border-color)! dark:border-(--card-border-color)! text-slate-500 dark:text-white! font-bold hover:border-emerald-500/50! hover:bg-emerald-50/30! dark:hover:bg-(--table-hover)! transition-all text-sm!">
             <Plus size={18} />
             Add Quick Reply ({buttons?.filter((b: any) => b.type === "quick_reply").length || 0}/10)
           </Button>

@@ -6,6 +6,8 @@ import Images from "../../shared/Image";
 import { TestimonialPopulated, TestimonialProps } from "../../types/landingPage";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Button } from "@/src/elements/ui/button";
+
 
 const Testimonial: React.FC<TestimonialProps> = ({ data }) => {
   const swiperRef = useRef<any>(null);
@@ -33,20 +35,20 @@ const Testimonial: React.FC<TestimonialProps> = ({ data }) => {
         <div className="relative">
           {/* Nav Buttons */}
           <div className="hidden sm:block">
-            <button
+            <Button variant="unstyled"
               onClick={() => swiperRef.current?.slidePrev()}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-20 flex items-center justify-center w-11 h-11 rounded-full bg-white border border-slate-200 shadow-md hover:shadow-lg hover:border-primary/40 transition-all cursor-pointer"
+              className="absolute left-0 top-[calc(50%-28px)] -translate-y-1/2 -translate-x-4 z-20 flex items-center justify-center w-11 h-11 rounded-full bg-white border border-slate-200 shadow-md hover:shadow-lg hover:border-primary/40 transition-all cursor-pointer"
               aria-label="Previous"
             >
               <ArrowLeft size={18} className="text-slate-700" />
-            </button>
-            <button
+            </Button>
+            <Button variant="unstyled"
               onClick={() => swiperRef.current?.slideNext()}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-20 flex items-center justify-center w-11 h-11 rounded-full bg-white border border-slate-200 shadow-md hover:shadow-lg hover:border-primary/40 transition-all cursor-pointer"
+              className="absolute right-0 top-[calc(50%-28px)] -translate-y-1/2 translate-x-4 z-20 flex items-center justify-center w-11 h-11 rounded-full bg-white border border-slate-200 shadow-md hover:shadow-lg hover:border-primary/40 transition-all cursor-pointer"
               aria-label="Next"
             >
               <ArrowLeft size={18} className="rotate-180 text-slate-700" />
-            </button>
+            </Button>
           </div>
 
           <Swiper

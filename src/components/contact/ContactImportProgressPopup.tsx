@@ -99,7 +99,7 @@ const ContactImportProgressPopup = () => {
                 <ChevronUp size={14} />
               </Button>
             )}
-            <Button onClick={handleClose} className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors" title={isRunning ? "Minimize" : "Dismiss"}>
+            <Button onClick={handleClose} className="p-1.5 rounded-lg bg-slate-100 dark:bg-white/10 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors" title={isRunning ? "Minimize" : "Dismiss"}>
               <X size={14} />
             </Button>
           </div>

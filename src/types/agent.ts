@@ -1,12 +1,21 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // Agent types
 
 import { AgentTask, AgentTaskComment } from "./agentTask";
 import { Agent } from "./components";
 
+export type AgentInput = Omit<Agent, "created_at" | "updated_at" | "role" | "_id"> & {
+  password?: string;
+  team_id?: string;
+};
+
+export interface AgentKanbanStatus {
+  funnelId: string;
+  stageId: string;
+}
+
 export interface AgentFormProps {
-  initialData?: any;
-  onSave: (data: any) => Promise<void>;
+  initialData?: Partial<Agent>;
+  onSave: (data: AgentInput) => Promise<void>;
   isLoading?: boolean;
 }
 
@@ -38,7 +47,7 @@ export interface AgentTaskFormFieldsProps {
 
 export interface AgentFormdDataProps {
   agent?: Agent | null;
-  onSave: (data: any) => Promise<void>;
+  onSave: (data: AgentInput) => Promise<void>;
   onCancel: () => void;
   isLoading: boolean;
 }
@@ -68,4 +77,11 @@ export interface AgentTaskListSidebarData {
   agentId: string;
   onSelectTask?: () => void;
   onClose?: () => void;
+} 
+
+
+export interface AgentKanbanActionModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  agent: Agent | null;
 }

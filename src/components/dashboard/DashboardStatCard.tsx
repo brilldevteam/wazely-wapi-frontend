@@ -1,10 +1,10 @@
 "use client";
 
+import { presets } from "@/src/data/dashboard";
 import { DashboardStatCardData } from "@/src/types/dashboard";
 import { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
 import CountUp from "react-countup";
-import { presets } from "./DashboardDateFilter";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 

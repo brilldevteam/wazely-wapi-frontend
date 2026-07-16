@@ -113,12 +113,12 @@ const ImagePreviewModal = () => {
         )}
 
         {/* Slider */}
-        <div className="w-full h-full p-10 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+        <div className="w-full h-full p-3 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Swiper modules={[Navigation, Zoom, Keyboard]} zoom={true} keyboard={{ enabled: true }} initialSlide={currentIndex} onSwiper={setSwiper} onSlideChange={(s) => dispatch(setCurrentIndex(s.activeIndex))} className="w-full h-full">
             {images.map((img, idx) => (
               <SwiperSlide key={idx} className="flex! items-center! justify-center">
                 <div className="swiper-zoom-container">
-                  <motion.img initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.3 }} src={getResolvedImageUrl(img)} alt={`Preview ${idx + 1}`} className="max-w-full max-h-full object-contain shadow-2xl rounded-sm" />
+                  <motion.img initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.3 }} src={getResolvedImageUrl(img)} alt={`Preview ${idx + 1}`} className=" object-cover w-full h-screen shadow-2xl rounded-sm" />
                 </div>
               </SwiperSlide>
             ))}

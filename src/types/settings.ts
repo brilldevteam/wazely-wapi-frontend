@@ -92,6 +92,13 @@ export interface SettingResponse {
   banner_possion?: "left" | "center" | "right";
   banner_bg_color?: string;
   banner_text_color?: string;
+  is_popup?: boolean;
+  popup_image_url?: string;
+  popup_title?: string;
+  popup_description?: string;
+  popup_bullets?: string[];
+  popup_button_text?: string;
+  popup_button_url?: string;
   cookie_enabled?: boolean;
   signup_agree_enable?: boolean;
   signup_agree_prefix?: string;
@@ -103,6 +110,7 @@ export interface SettingResponse {
   widget_instagram_url?: string;
   widget_facebook_url?: string;
   widget_sms_url?: string;
+  omnichannel_platforms?: string[];
 }
 
 export interface UserSetting {
@@ -139,6 +147,9 @@ export interface AISettings {
   is_show_phone_no?: boolean;
   notification_tone?: string;
   notifications_enabled?: boolean;
+  is_snooze_enabled?: boolean;
+  snooze_time_minutes?: number;
+  snooze_count_limit?: number;
   is_free_trial?: boolean;
   free_trial_days_remaining?: number;
   features?: {
