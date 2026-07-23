@@ -3,7 +3,7 @@
 import { COUNTRIES } from "@/src/data/Countries";
 import { Button } from "@/src/elements/ui/button";
 import { Label } from "@/src/elements/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/elements/ui/select";
+import { CountryCodeSelect } from "@/src/components/shared/CountryCodeSelect";
 import { useCreateShortLinkMutation, useUpdateShortLinkMutation } from "@/src/redux/api/shortLinkApi";
 import { Loader2, Rocket, Save } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -87,27 +87,7 @@ const ShortLinkForm: React.FC<ShortLinkFormProps> = ({ initialData, onSuccess })
                 </Label>
                 <div className="flex gap-2 flex-wrap">
                   <div className="w-32 shrink-0">
-                    <Select
-                      value={COUNTRIES.find((c) => c.dial_code === dialCode)?.code || "IN"}
-                      onValueChange={(val) => {
-                        const country = COUNTRIES.find((c) => c?.code === val);
-                        if (country) setDialCode(country.dial_code);
-                      }}
-                    >
-                      <SelectTrigger className="h-12 py-6 bg-slate-50 dark:bg-(--page-body-bg) border-slate-200 dark:border-(--card-border-color) rounded-lg font-bold focus:ring-emerald-500/20">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="max-h-64 rounded-lg dark:bg-(--card-color)">
-                        {COUNTRIES.map((c) => (
-                          <SelectItem key={c?.code} value={c.code} className="cursor-pointer py-2.5 dark:hover:bg-(--table-hover)">
-                            <span className="flex items-center gap-2">
-                              <span className="text-slate-400 text-[10px] w-6 uppercase">{c.code}</span>
-                              <span className="font-bold">{c.dial_code}</span>
-                            </span>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <CountryCodeSelect value={dialCode} onChange={setDialCode} triggerClassName="h-12" />
                   </div>
                   <Input
                     type="number"

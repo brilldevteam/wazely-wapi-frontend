@@ -12,9 +12,9 @@ import PayloadFieldSelector from "../PayloadFieldSelector";
 import { MappingStepProps } from "@/src/types/webhook";
 import { Button } from "@/src/elements/ui/button";
 import { Switch } from "@/src/elements/ui/switch";
-import { Plus, X, Globe } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { COUNTRIES } from "@/src/data/Countries";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/elements/ui/select";
+import { CountryCodeSelect } from "@/src/components/shared/CountryCodeSelect";
 import { toast } from "sonner";
 
 const MappingStep = ({
@@ -41,7 +41,7 @@ const MappingStep = ({
   setMerchantRecipients?: (recipients: string[]) => void;
 }) => {
   const [newRecipient, setNewRecipient] = React.useState("");
-  const [selectedCountry, setSelectedCountry] = React.useState(COUNTRIES[0]); // Default to first country (India)
+  const [dialCode, setDialCode] = React.useState(COUNTRIES[0].dial_code); // Default to first country (India)
 
   const addRecipient = () => {
     const cleanNumber = newRecipient.replace(/\D/g, "");
@@ -55,7 +55,7 @@ const MappingStep = ({
       return;
     }
 
-    const fullNumber = selectedCountry.dial_code.replace("+", "") + cleanNumber;
+    const fullNumber = dialCode.replace("+", "") + cleanNumber;
 
     if (merchantRecipients.includes(fullNumber)) {
       toast.error("This phone number is already added");
@@ -122,34 +122,9 @@ const MappingStep = ({
               </Label>
               <div className="flex gap-2">
                 <div className="flex-1 flex gap-2">
-                  <Select
-                    value={selectedCountry.code}
-                    onValueChange={(code) => {
-                      const country = COUNTRIES.find((c) => c.code === code);
-                      if (country) setSelectedCountry(country);
-                    }}
-                  >
-                    <SelectTrigger className="w-30 h-12 py-6 rounded-lg bg-slate-50/50 dark:bg-(--page-body-bg) border-slate-100 dark:border-(--card-border-color) font-bold text-xs shadow-xs focus:ring-emerald-500/20">
-                      <SelectValue>
-                        <div className="flex items-center gap-2">
-                          <span className="text-slate-400">
-                            <Globe size={14} />
-                          </span>
-                          <span>{selectedCountry.dial_code}</span>
-                        </div>
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent className="max-h-60 rounded-xl border-slate-100 dark:border-(--card-border-color) shadow-2xl dark:bg-(--card-color)">
-                      {COUNTRIES.map((country) => (
-                        <SelectItem key={country.code} value={country.code} className="hover:bg-emerald-50 dark:hover:bg-emerald-500/10 cursor-pointer py-2.5 px-3 rounded-lg mx-1 transition-colors">
-                          <div className="flex items-center justify-between gap-3 w-full">
-                            <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{country.name}</span>
-                            <span className="text-[10px] font-black text-primary bg-primary/10 px-2 py-0.5 rounded-md">{country.dial_code}</span>
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <div className="w-30 shrink-0">
+                    <CountryCodeSelect value={dialCode} onChange={setDialCode} triggerClassName="h-12" />
+                  </div>
                   <Input
                     value={newRecipient}
                     onChange={(e) => setNewRecipient(e.target.value.replace(/\D/g, ""))}

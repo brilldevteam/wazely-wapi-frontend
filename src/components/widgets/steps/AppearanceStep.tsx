@@ -4,7 +4,7 @@ import { Check, Palette, Phone } from "lucide-react";
 import { cn } from "@/src/utils";
 import { ColorRow } from "./ColorRow";
 import { StepProps } from "./widgetTypes";
-import { CountrySelect } from "../../shared/CountrySelect";
+import { CountryCodeSelect } from "../../shared/CountryCodeSelect";
 import { COUNTRIES } from "@/src/data/Countries";
 import { useEffect, useState } from "react";
 import { Button } from "@/src/elements/ui/button";
@@ -37,14 +37,7 @@ export const AppearanceStep = ({ data, onChange, isStandalone }: StepProps) => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="sm:col-span-1">
-              <CountrySelect
-                value={COUNTRIES.find((c) => c.dial_code === dialCode)?.name || ""}
-                onChange={(val) => {
-                  const country = COUNTRIES.find((c) => c.name === val);
-                  if (country) setDialCode(country.dial_code);
-                }}
-                placeholder="Code"
-              />
+              <CountryCodeSelect value={dialCode} onChange={setDialCode} placeholder="Code" />
             </div>
             <div className="sm:col-span-2">
               <Input
