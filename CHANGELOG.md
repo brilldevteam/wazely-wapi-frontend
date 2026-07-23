@@ -9,6 +9,7 @@
 
 ## Unreleased
 
+- Fix the campaign status badge staying on "Sending" (with a spinning icon) after a campaign is paused, by showing a dedicated "Paused" state whenever a sending campaign has been paused.
 - Fix Coupon Code marketing templates silently saving as Standard by requiring a valid Copy Code button before the template can be saved, instead of allowing it to save with no button or an invalid placeholder example.
 - Warn upfront when editing a template that isn't Draft/Rejected, since WhatsApp rejects structural edits on Approved/Pending templates, and explain why Save is disabled when a button has invalid content.
 - Use the searchable country-code dropdown (flag + dial code) for phone number fields in the WhatsApp Short Link form, the widget's WhatsApp number field, and the webhook merchant recipient numbers, matching Agent Management.

@@ -10,6 +10,7 @@ import {
   Loader2,
   Megaphone,
   MessageCircle,
+  Pause,
   Send,
   UserCheck,
   Users,
@@ -148,6 +149,12 @@ export const statusConfig: any = {
     className:
       "bg-blue-50 text-blue-600 dark:text-primary border-blue-100 dark:border-(--card-border-color) dark:bg-(--dark-sidebar) dark:hover:bg-(--table-hover) animate-pulse",
     label: "Sending",
+  },
+  paused: {
+    icon: Pause,
+    className:
+      "bg-amber-50 text-amber-600 border-amber-100 dark:border-(--card-border-color) dark:bg-(--dark-sidebar) dark:hover:bg-(--table-hover)",
+    label: "Paused",
   },
   processing: {
     icon: Loader2,
