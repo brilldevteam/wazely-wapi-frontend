@@ -9,7 +9,7 @@
 
 ## Unreleased
 
-- Fix Coupon Code marketing templates silently saving as Standard by automatically attaching the required Copy Code button when that template type is selected.
+- Fix Coupon Code marketing templates silently saving as Standard by requiring a valid Copy Code button before the template can be saved, instead of allowing it to save with no button or an invalid placeholder example.
 - Use the searchable country-code dropdown (flag + dial code) for phone number fields in the WhatsApp Short Link form, the widget's WhatsApp number field, and the webhook merchant recipient numbers, matching Agent Management.
 - Require the correct media attachment before submitting a WhatsApp media-template campaign.
 - Keep explicit carousel card upload indexes and prevent unresolved browser blob URLs from being submitted.
