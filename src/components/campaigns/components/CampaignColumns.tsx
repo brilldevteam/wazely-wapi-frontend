@@ -98,7 +98,8 @@ export const getCampaignColumns = ({
     className: "[@media(max-width:1800px)]:min-w-[120px]",
     accessorKey: "status",
     cell: (row) => {
-      const config = statusConfig[row.status] || statusConfig.draft;
+      const displayStatus = row.is_paused ? "paused" : row.status;
+      const config = statusConfig[displayStatus] || statusConfig.draft;
       const Icon = config.icon;
       return (
         <Badge
@@ -107,7 +108,8 @@ export const getCampaignColumns = ({
           <Icon
             size={12}
             className={
-              row.status === "sending" || row.status === "recurring"
+              !row.is_paused &&
+              (row.status === "sending" || row.status === "recurring")
                 ? "animate-spin"
                 : ""
             }
@@ -269,6 +271,7 @@ export const getCampaignColumns = ({
         </Can>
         <Can permission="create.campaigns">
           {(row.status === "completed" ||
+            row.status === "failed" ||
             row.status === "completed_with_errors") && (
             <Button
               variant="outline"

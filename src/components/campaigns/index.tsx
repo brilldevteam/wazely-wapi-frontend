@@ -114,6 +114,8 @@ const CampaignsPage = ({ platform }: CampaignsPageProps) => {
     },
     {
       refetchOnMountOrArgChange: true,
+      pollingInterval: 5000,
+      skipPollingIfUnfocused: true,
     },
   );
 
@@ -169,6 +171,7 @@ const CampaignsPage = ({ platform }: CampaignsPageProps) => {
     if (pauseCampaignItem) {
       try {
         await togglePauseCampaign(pauseCampaignItem.id).unwrap();
+        await refetch();
         toast.success(
           `Campaign ${!pauseCampaignItem.isPaused ? "paused" : "resumed"} successfully`,
         );
