@@ -235,14 +235,32 @@ export const TemplatePreviewBubble = ({
         {!isSpecial && templateType !== "text" && templateType !== "none" && (
           <div className="aspect-video bg-slate-100 dark:bg-slate-900 flex items-center justify-center text-slate-400 dark:text-slate-600 overflow-hidden relative">
             {fileUrl ? (
-              <Image
-                src={fileUrl}
-                alt="Media"
-                className="w-full h-full object-cover"
-                width={100}
-                height={100}
-                unoptimized
-              />
+              templateType === "video" ? (
+                <video
+                  src={fileUrl}
+                  className="w-full h-full object-cover"
+                  controls
+                  muted
+                  playsInline
+                  preload="metadata"
+                />
+              ) : templateType === "document" ? (
+                <div className="w-full h-full bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
+                  <FileText
+                    size={40}
+                    className="text-slate-300 dark:text-slate-700"
+                  />
+                </div>
+              ) : (
+                <Image
+                  src={fileUrl}
+                  alt="Media"
+                  className="w-full h-full object-cover"
+                  width={100}
+                  height={100}
+                  unoptimized
+                />
+              )
             ) : (
               <div className="w-full h-full bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
                 {templateType === "location" ? (
@@ -395,7 +413,7 @@ export const TemplatePreviewBubble = ({
     ) {
       let avatarBg =
         "bg-linear-to-tr from-[#fec564] via-[#fd5c63] to-[#d9317a]";
-      let iconColor = "text-white";
+      const iconColor = "text-white";
       if (platform === "facebook") {
         avatarBg = "bg-[#1877F2]";
       } else if (platform === "telegram") {

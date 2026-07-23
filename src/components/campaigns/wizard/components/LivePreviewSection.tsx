@@ -33,7 +33,11 @@ export const LivePreviewSection = ({
           {template ? (
             <FormLivePreview
               platform={formik.values.platform || "whatsapp"}
-              templateType={template.header?.format || "text"}
+              templateType={
+                template.header?.format === "media"
+                  ? template.header?.media_type || "image"
+                  : template.header?.format || "text"
+              }
               headerText={template.header?.text || ""}
               messageBody={template.message_body || ""}
               variables_example={previewVariables}
