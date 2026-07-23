@@ -7,7 +7,7 @@ import { ArrowLeft, Eye, Loader2, Phone, Plus, Sparkles, X } from "lucide-react"
 import { CATEGORIES, INTERACTIVE_ACTIONS, LANGUAGES, TEMPLATE_TYPES } from "@/src/data/templates";
 import AITemplateModal from "./form/AITemplateModal";
 import { FormLivePreview } from "./form/FormLivePreview";
-import { useTemplateForm } from "./form/hooks/useTemplateForm";
+import { makeId, useTemplateForm } from "./form/hooks/useTemplateForm";
 import { AuthenticationSection } from "./form/sections/AuthenticationSection";
 import { BasicInfoSection } from "./form/sections/BasicInfoSection";
 import { BodySection } from "./form/sections/BodySection";
@@ -123,7 +123,7 @@ const TemplateForm = ({ wabaId, templateId, adminTemplateId }: TemplateFormProps
               </div>
             </div>
 
-            <BasicInfoSection language={formData.language} setLanguage={(val) => setFormData((p: any) => ({ ...p, language: val }))} category={formData.category} setCategory={(val) => setFormData((p: any) => ({ ...p, category: val, marketing_type: val === "MARKETING" ? p.marketing_type : "none" }))} templateName={formData.template_name} setTemplateName={(val) => setFormData((p: any) => ({ ...p, template_name: val }))} marketingType={formData.marketing_type} setMarketingType={(val) => setFormData((p: any) => ({ ...p, marketing_type: val, interactive_type: "none", buttons: [] }))} offerText={formData.offer_text} setOfferText={(val) => setFormData((p: any) => ({ ...p, offer_text: val }))} languages={LANGUAGES} categories={CATEGORIES} isEditing={!!templateId} platform={platform} />
+            <BasicInfoSection language={formData.language} setLanguage={(val) => setFormData((p: any) => ({ ...p, language: val }))} category={formData.category} setCategory={(val) => setFormData((p: any) => ({ ...p, category: val, marketing_type: val === "MARKETING" ? p.marketing_type : "none" }))} templateName={formData.template_name} setTemplateName={(val) => setFormData((p: any) => ({ ...p, template_name: val }))} marketingType={formData.marketing_type} setMarketingType={(val) => setFormData((p: any) => ({ ...p, marketing_type: val, interactive_type: "none", buttons: val === "coupon_code" ? [{ id: makeId(), type: "copy_code", text: "Copy Code" }] : [] }))} offerText={formData.offer_text} setOfferText={(val) => setFormData((p: any) => ({ ...p, offer_text: val }))} languages={LANGUAGES} categories={CATEGORIES} isEditing={!!templateId} platform={platform} />
 
             {formData.category === "AUTHENTICATION" ? (
               <AuthenticationSection authData={authData} setAuthData={setAuthData} isLoading={isCreating || isEditing} />
