@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { cn } from "@/src/lib/utils";
 import { useCreateManualSubscriptionMutation } from "@/src/redux/api/subscriptionApi";
 import CurrencyValue from "@/src/shared/CurrencyValue";
-import { Plan } from "@/src/types/subscription";
+import { ManualPaymentModalProps, Plan } from "@/src/types/subscription";
 import { validationManualPaymentSchema } from "@/src/utils/validationSchema";
 import { Form, Formik } from "formik";
 import { Banknote, Landmark, Loader2, ReceiptText, ShieldCheck, Upload } from "lucide-react";
@@ -17,11 +17,7 @@ import Image from "next/image";
 import React, { useRef, useState } from "react";
 import { toast } from "sonner";
 
-interface ManualPaymentModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  selectedPlan: Plan | null;
-}
+
 
 const ManualPaymentModal: React.FC<ManualPaymentModalProps> = ({ isOpen, onClose, selectedPlan }) => {
   const [createManual, { isLoading }] = useCreateManualSubscriptionMutation();

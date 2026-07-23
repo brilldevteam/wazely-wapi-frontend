@@ -7,12 +7,9 @@ import { AuthenticationSectionProps, AuthFormData, OTPType } from "@/src/types/c
 import { KeyRound, ShieldCheck, Timer } from "lucide-react";
 import CharacterCountWrapper from "@/src/shared/CharacterCountWrapper";
 import { Button } from "@/src/elements/ui/button";
+import { OTP_TYPES } from "@/src/data/templates";
 
-const OTP_TYPES: { label: string; value: OTPType; description: string }[] = [
-  { label: "Copy Code", value: "COPY_CODE", description: "User copies the OTP manually" },
-  { label: "One-Tap", value: "ONE_TAP", description: "Android auto-fills the code" },
-  { label: "Zero-Tap", value: "ZERO_TAP", description: "Automatic no-tap autofill" },
-];
+
 
 export const AuthenticationSection = ({ authData, setAuthData, isLoading }: AuthenticationSectionProps) => {
   const update = (patch: Partial<AuthFormData>) => setAuthData({ ...authData, ...patch });

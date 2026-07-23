@@ -3,6 +3,8 @@
 import * as React from "react";
 import { cn } from "@/src/lib/utils";
 import { Circle } from "lucide-react";
+import { Button } from "@/src/elements/ui/button";
+
 
 const RadioGroupContext = React.createContext<{
   value?: string;
@@ -31,13 +33,13 @@ const RadioGroupItem = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttri
   const isChecked = context.value === value;
 
   return (
-    <button type="button" role="radio" aria-checked={isChecked} data-state={isChecked ? "checked" : "unchecked"} disabled={context.disabled || props.disabled} ref={ref} className={cn("aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors", isChecked && "bg-primary text-white", className)} onClick={() => context.onValueChange?.(value)} {...props}>
+    <Button variant="unstyled" type="button" role="radio" aria-checked={isChecked} data-state={isChecked ? "checked" : "unchecked"} disabled={context.disabled || props.disabled} ref={ref} className={cn("aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors", isChecked && "bg-primary text-white", className)} onClick={() => context.onValueChange?.(value)} {...props}>
       {isChecked && (
         <div className="flex items-center justify-center w-full h-full">
           <Circle className="h-2 w-2 fill-current text-current" />
         </div>
       )}
-    </button>
+    </Button>
   );
 });
 RadioGroupItem.displayName = "RadioGroupItem";

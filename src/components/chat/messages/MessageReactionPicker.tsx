@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { COMMON_EMOJIS } from "@/src/data/chat";
 import { Button } from "@/src/elements/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/src/elements/ui/popover";
 import { cn } from "@/src/lib/utils";
@@ -51,7 +52,7 @@ const MessageReactionPicker: React.FC<MessageReactionPickerProps> = ({ message, 
     }
   };
 
-  const COMMON_EMOJIS = ["❤️", "👍", "😂", "😮", "😢", "🙏"];
+  
   const displayEmojis = typeof window !== "undefined" && window.innerWidth < 640 ? COMMON_EMOJIS.slice(0, 4) : COMMON_EMOJIS;
 
   return (

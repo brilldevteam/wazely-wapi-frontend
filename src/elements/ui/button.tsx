@@ -18,6 +18,7 @@ const buttonVariants = cva(
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-(--table-hover)",
         link: "text-primary underline-offset-4 hover:underline",
+        unstyled: "",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
@@ -46,6 +47,17 @@ function Button({
     asChild?: boolean
   }) {
   const Comp = asChild ? Slot : "button"
+
+  if (variant === "unstyled") {
+    return (
+      <Comp
+        suppressHydrationWarning
+        data-slot="button"
+        className={className}
+        {...props}
+      />
+    )
+  }
 
   return (
     <Comp

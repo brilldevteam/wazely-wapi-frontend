@@ -1,23 +1,13 @@
 "use client";
 
-import { useAppSelector } from "@/src/redux/hooks";
-import { QuickReply } from "@/src/redux/api/quickReplyApi";
-import { format } from "date-fns";
-import { Edit2, Star, Trash2, Shield } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { Checkbox } from "@/src/elements/ui/checkbox";
-import Can from "../shared/Can";
 import { Button } from "@/src/elements/ui/button";
-
-interface QuickReplyCardProps {
-  item: QuickReply;
-  onEdit: (item: QuickReply) => void;
-  onDelete: (id: string) => void;
-  onToggleFavorite: (id: string) => void;
-  isLoading: boolean;
-  isSelected?: boolean;
-  onSelect?: (id: string, selected: boolean) => void;
-}
+import { Checkbox } from "@/src/elements/ui/checkbox";
+import { useAppSelector } from "@/src/redux/hooks";
+import { QuickReplyCardProps } from "@/src/types/replyMaterial";
+import { format } from "date-fns";
+import { Edit2, Shield, Star, Trash2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import Can from "../shared/Can";
 
 const QuickReplyCard = ({
   item,
@@ -37,7 +27,9 @@ const QuickReplyCard = ({
   const canSelect = isOwner; // Only allow selecting own replies for bulk delete
 
   return (
-    <div className={`group relative bg-white dark:bg-(--card-color) border ${isSelected ? "border-primary shadow-sm" : "border-slate-200 dark:border-(--card-border-color)"} rounded-lg p-4 hover:shadow-md dark:hover:shadow-none hover:border-primary/30 transition-all duration-200`}>
+    <div
+      className={`group relative bg-white dark:bg-(--card-color) border ${isSelected ? "border-primary shadow-sm" : "border-slate-200 dark:border-(--card-border-color)"} rounded-lg p-4 hover:shadow-md dark:hover:shadow-none hover:border-primary/30 transition-all duration-200`}
+    >
       {/* Selection Checkbox */}
       {canSelect && onSelect && (
         <div className="absolute top-3 left-3 z-10">
@@ -49,7 +41,9 @@ const QuickReplyCard = ({
       )}
 
       {/* Favorite + admin badge */}
-      <div className={`flex items-start justify-between gap-2 mb-3 ${canSelect ? "ml-6" : ""}`}>
+      <div
+        className={`flex items-start justify-between gap-2 mb-3 ${canSelect ? "ml-6" : ""}`}
+      >
         <div className="flex items-center gap-2 flex-wrap">
           {item.is_admin_reply && (
             <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400">
@@ -67,11 +61,16 @@ const QuickReplyCard = ({
           <Button
             onClick={() => onToggleFavorite(item._id)}
             disabled={isLoading}
-            className={`shrink-0 bg-[unset]! transition-colors disabled:opacity-50 ${item.is_favorite
-              ? "text-amber-400 hover:text-amber-500"
-              : "text-slate-300 hover:text-amber-400 dark:text-slate-600 dark:hover:text-amber-400"
+            className={`shrink-0 bg-[unset]! transition-colors disabled:opacity-50 ${
+              item.is_favorite
+                ? "text-amber-400 hover:text-amber-500"
+                : "text-slate-300 hover:text-amber-400 dark:text-slate-600 dark:hover:text-amber-400"
             }`}
-            title={item.is_favorite ? t("quick_reply_unfavorite") : t("quick_reply_favorite")}
+            title={
+              item.is_favorite
+                ? t("quick_reply_unfavorite")
+                : t("quick_reply_favorite")
+            }
           >
             <Star size={16} fill={item.is_favorite ? "currentColor" : "none"} />
           </Button>
@@ -90,7 +89,9 @@ const QuickReplyCard = ({
       {/* Footer */}
       <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 dark:border-(--card-border-color)">
         <span className="text-[11px] text-slate-400 dark:text-gray-500">
-          {item.createdAt ? format(new Date(item.createdAt), "MMMM d, yyyy") : ""}
+          {item.createdAt
+            ? format(new Date(item.createdAt), "MMMM d, yyyy")
+            : ""}
         </span>
 
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -101,7 +102,7 @@ const QuickReplyCard = ({
                 disabled={isLoading}
                 className="w-8! h-8! rounded-lg! flex items-center justify-center bg-[unset]! text-primary! hover:bg-primary/10! dark:hover:bg-primary/20! transition-all disabled:opacity-50"
                 title={t("edit")}
-                >
+              >
                 <Edit2 size={14} />
               </Button>
             </Can>

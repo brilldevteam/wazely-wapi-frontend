@@ -8,20 +8,9 @@ import { ArrowRight, MessageSquare, Send, Settings2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { TemplateSettingsModal } from "./list/TemplateSettingsModal";
 import { useFeatureAccess } from "@/src/hooks/useFeatureAccess";
+import { templateChannels } from "@/src/data/templates";
 
-const FacebookIcon = () => (
-  <svg className="w-6 h-6 text-[#1877F2]" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-  </svg>
-);
 
-const InstagramIcon = () => (
-  <svg className="w-6 h-6 text-[#E1306C]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-  </svg>
-);
 
 const ChannelSelectionPage: React.FC = () => {
   const router = useRouter();
@@ -29,48 +18,7 @@ const ChannelSelectionPage: React.FC = () => {
   const { getEnabledChannels, isFeatureEnabled, isLoading } = useFeatureAccess();
   const enabled = getEnabledChannels();
 
-  const channels = [
-    {
-      id: "whatsapp",
-      title: "WhatsApp Templates",
-      description: "Design and manage rich WhatsApp message templates for marketing campaigns, utility notifications, and customer engagement.",
-      icon: <MessageSquare className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />,
-      colorClass: "hover:border-emerald-500/50 hover:shadow-emerald-500/8 bg-gradient-to-br from-emerald-500/5 via-white to-white dark:from-slate-900 dark:via-(--card-color) dark:to-(--card-color)",
-      iconBgColor: "rgba(16, 185, 129, 0.1)",
-      iconBorderColor: "rgba(16, 185, 129, 0.2)",
-      btnColor: "#059669",
-    },
-    {
-      id: "telegram",
-      title: "Telegram Templates",
-      description: "Create and organize automated Telegram bot messaging templates to broadcast support, alerts, and marketing workflows.",
-      icon: <Send className="w-6 h-6 text-[#229ED9]" />,
-      colorClass: "hover:border-[#229ED9]/50 hover:shadow-[#229ED9]/8 bg-gradient-to-br from-[#229ED9]/5 via-white to-white dark:from-slate-900 dark:via-(--card-color) dark:to-(--card-color)",
-      iconBgColor: "rgba(34, 158, 217, 0.1)",
-      iconBorderColor: "rgba(34, 158, 217, 0.2)",
-      btnColor: "#229ED9",
-    },
-    {
-      id: "facebook",
-      title: "Facebook Templates",
-      description: "Manage standard Facebook Messenger announcement templates to nurture leads and build business workflows.",
-      icon: <FacebookIcon />,
-      colorClass: "hover:border-[#1877F2]/50 hover:shadow-[#1877F2]/8 bg-gradient-to-br from-[#1877F2]/5 via-white to-white dark:from-slate-900 dark:via-(--card-color) dark:to-(--card-color)",
-      iconBgColor: "rgba(24, 119, 242, 0.1)",
-      iconBorderColor: "rgba(24, 119, 242, 0.2)",
-      btnColor: "#1877F2",
-    },
-    {
-      id: "instagram",
-      title: "Instagram Templates",
-      description: "Design professional Instagram Direct message templates to auto-respond to stories, leads, and customer chat updates.",
-      icon: <InstagramIcon />,
-      colorClass: "hover:border-[#E1306C]/50 hover:shadow-[#E1306C]/8 bg-gradient-to-br from-[#E1306C]/5 via-white to-white dark:from-slate-900 dark:via-(--card-color) dark:to-(--card-color)",
-      iconBgColor: "rgba(225, 48, 108, 0.1)",
-      iconBorderColor: "rgba(225, 48, 108, 0.2)",
-      btnColor: "#E1306C",
-    },
-  ].filter((ch) => {
+  const channels = templateChannels.filter((ch) => {
     if (ch.id === "whatsapp") return true;
     if (ch.id === "facebook") return enabled.facebook && isFeatureEnabled("fb_template");
     if (ch.id === "instagram") return enabled.instagram && isFeatureEnabled("ig_template");

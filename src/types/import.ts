@@ -60,3 +60,4 @@ export interface ImportJobResponse {
   success: boolean;
   data: ImportJobData;
 }
+

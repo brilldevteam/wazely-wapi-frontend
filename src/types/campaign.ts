@@ -30,12 +30,6 @@ export interface DetailRowProps {
   value: React.ReactNode;
 }
 
-export interface StatBoxProps {
-  label: string;
-  value: number | string;
-  color?: string;
-}
-
 export interface RecipientTypeCardProps {
   type: string;
   label: string;
@@ -98,4 +92,47 @@ export interface CampaignStatsData {
     messagesRead: number;
   };
   isLoading: boolean;
+}
+
+export interface StatBoxProps {
+  label: string;
+  count: number;
+  color: "blue" | "emerald" | "purple" | "red" | "orange";
+}
+
+export interface CampaignWizardProps {
+  platform?: "whatsapp" | "telegram" | "facebook" | "instagram";
+}
+
+export interface CampaignsPageProps {
+  platform?: "whatsapp" | "telegram" | "facebook" | "instagram";
+}
+
+export interface ContactsResponse {
+  success: boolean;
+  data?: {
+    contacts: import("./components").Contact[];
+  };
+}
+
+export interface TagsResponse {
+  success: boolean;
+  data?: {
+    tags: import("./components").Tag[];
+  };
+}
+
+export interface SegmentsResponse {
+  success: boolean;
+  data?: {
+    segments: import("./segment").Segment[];
+  };
+}
+
+export interface CardItemProps {
+  title: string;
+  description: string;
+  icon: ReactNode;
+  isActive: boolean;
+  onClick: () => void;
 }

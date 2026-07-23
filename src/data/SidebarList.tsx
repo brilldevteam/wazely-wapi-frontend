@@ -1,5 +1,5 @@
-import { MenuItem } from "@/src/types/components";
-import { BookImage, BookKey, BotMessageSquare, Cable, ChartSpline, CheckSquare, ClipboardClock, Columns, Contact, CreditCard, Database, FileImage, Form, GitBranch, HatGlasses, Image as ImageIcon, Import, Instagram, LayoutDashboard, LayoutTemplate, ListOrdered, MailCheck, Megaphone, Menu, MessageCircle, MessageSquare, MessageSquareText, Navigation, Phone, PhoneCall, PlayCircle, Plug, PlugZap, Receipt, Settings, ShieldUser, ShoppingBag, Signpost, SquareKanban, Tags, Target, Timer, UserRoundPen, Users, Webhook, Workflow, Wrench, Zap, Send, Facebook, UserStar, Video, Sparkles, XIcon, Twitter } from "lucide-react";
+​import { MenuItem } from "@/src/types/components";
+import { BookImage, BookKey, BotMessageSquare, Cable, ChartSpline, CheckSquare, ClipboardClock, Columns, Contact, CreditCard, Database, FileImage, Form, FormInput, GitBranch, HatGlasses, Image as ImageIcon, Import, Instagram, LayoutDashboard, LayoutTemplate, ListOrdered, MailCheck, Megaphone, Menu, MessageCircle, MessageSquare, MessageSquareText, Navigation, Package, Phone, PhoneCall, PlayCircle, Plug, PlugZap, Receipt, Settings, ShieldUser, ShoppingBag, Signpost, SquareKanban, Tags, Target, Timer, UserRoundPen, Users, Webhook, Workflow, Wrench, Zap, Send, Facebook, UserStar, Video, Sparkles, XIcon, Twitter, ListChecks } from "lucide-react";
 import { ROUTES } from "../constants";
 import { TwitterIcon } from "../utils/customIcon";
 
@@ -313,7 +313,7 @@ export const MENUITEMS: MenuItem[] = [
     path: ROUTES.DefaultAction,
     section: "automation_sidebar_title",
     order: 2,
-    permission: "view.message_bots",
+    permission: "update.waba_configuration",
     featureKey: "message_bots",
   },
   {
@@ -575,11 +575,27 @@ export const NODETEMPLATES = [
     category: "LOGIC",
   },
   {
+    id: "advanced_condition",
+    label: "Advanced Condition",
+    description: "Create complex branching rules using AND/OR logic",
+    icon: <GitBranch />,
+    color: "#9333ea",
+    category: "LOGIC",
+  },
+  {
     id: "wait_for_reply",
     label: "Wait for Reply",
     description: "Value from user reply to a variable for later use",
     icon: <MessageSquare />,
     color: "var(--warning-amber)",
+    category: "UTILITIES",
+  },
+  {
+    id: "ask_and_wait",
+    label: "Ask and Wait",
+    description: "Ask a question and wait for a specific user response",
+    icon: <MessageCircle />,
+    color: "#14b8a6", // teal-500
     category: "UTILITIES",
   },
   {
@@ -640,11 +656,30 @@ export const NODETEMPLATES = [
     category: "INTEGRATIONS",
     featureKey: "google_account",
   },
+
+  {
+    id: "send_google_form",
+    label: "Send Google Form",
+    description: "Send a Google Form link to the user",
+    icon: <FormInput />,
+    color: "var(--blue-500)",
+    category: "MESSAGING",
+    featureKey: "google_account",
+  },
   {
     id: "create_calendar_event",
     label: "Calendar Event",
     description: "Schedule a Google Calendar event",
     icon: <Timer />,
+    color: "var(--google-blue)",
+    category: "INTEGRATIONS",
+    featureKey: "google_account",
+  },
+  {
+    id: "create_google_meet",
+    label: "Google Meet",
+    description: "Schedule a Google Meet video call",
+    icon: <Video />,
     color: "var(--google-blue)",
     category: "INTEGRATIONS",
     featureKey: "google_account",
@@ -702,5 +737,54 @@ export const NODETEMPLATES = [
     color: "#65a30d",
     category: "CRM",
     featureKey: "contacts",
+  },
+  {
+    id: "move_to_pipeline_stage",
+    label: "Move Pipeline Stage",
+    description: "Move contact to a specific Kanban pipeline stage",
+    icon: <SquareKanban />,
+    color: "#3b82f6",
+    category: "CRM",
+    featureKey: "kanban_funnels",
+  },
+  {
+    id: "send_sequence",
+    label: "Send Sequence",
+    description: "Enroll the contact into a predefined sequence",
+    icon: <ListOrdered />,
+    color: "#e11d48",
+    category: "CRM",
+  },
+  {
+    id: "run_sub_flow",
+    label: "Run Sub Flow",
+    description: "Execute another published automation flow",
+    icon: <Workflow />,
+    color: "#06b6d4",
+    category: "UTILITIES",
+  },
+  {
+    id: "appointment_flow",
+    label: "Appointment Booking",
+    description: "Start an automated appointment booking flow",
+    icon: <ClipboardClock />,
+    color: "#d97706",
+    category: "INTERACTIONS",
+  },
+  {
+    id: "send_catalog",
+    label: "Catalog Product",
+    description: "Send WhatsApp Catalog products",
+    icon: <Package />,
+    color: "#2563eb",
+    category: "MESSAGING",
+  },
+  {
+    id: "send_shopify",
+    label: "Shopify Product",
+    description: "Send products from Shopify store",
+    icon: <Package />,
+    color: "#16a34a",
+    category: "MESSAGING",
   },
 ];

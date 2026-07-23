@@ -8,15 +8,18 @@ import { toast } from "sonner";
 import { HeaderSectionProps } from "@/src/types/components/template";
 import CharacterCountWrapper from "@/src/shared/CharacterCountWrapper";
 import { Button } from "@/src/elements/ui/button";
+import { useAppSelector } from "@/src/redux/hooks";
 
 export const HeaderSection = ({ templateType, setTemplateType, headerText, setHeaderText, templateTypes, setHeaderFile, headerFile, mediaUrl }: HeaderSectionProps) => {
+  const { setting } = useAppSelector((state) => state.setting);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        return toast.error("File size exceeds 5MB limit");
+      const maxLimitMB = templateType === "video" ? setting?.video_file_limit || 10 : templateType === "image" ? setting?.image_file_limit || 5 : setting?.document_file_limit || 10;
+      if (file.size > maxLimitMB * 1024 * 1024) {
+        return toast.error(`File size exceeds ${maxLimitMB}MB limit`);
       }
       setHeaderFile(file);
     }
@@ -55,9 +58,9 @@ export const HeaderSection = ({ templateType, setTemplateType, headerText, setHe
                   key={type.value}
                   type="button"
                   onClick={() => {
+                    setHeaderFile(null);
                     if (templateType === type.value) {
                       setTemplateType("none");
-                      setHeaderFile(null);
                     } else {
                       setTemplateType(type.value);
                     }
@@ -117,7 +120,7 @@ export const HeaderSection = ({ templateType, setTemplateType, headerText, setHe
                 <Plus className="text-primary" size={24} />
               </div>
               <p className="text-sm font-bold text-slate-500 dark:text-gray-500">Upload {templateType} header</p>
-              <p className="text-[11px] text-slate-500 dark:text-gray-500 mt-1.5 font-medium">PDF, JPG, PNG or MP4 (Max 5MB)</p>
+              <p className="text-[11px] text-slate-500 dark:text-gray-500 mt-1.5 font-medium">PDF, JPG, PNG or MP4 (Max {templateType === "video" ? setting?.video_file_limit || 10 : templateType === "image" ? setting?.image_file_limit || 5 : setting?.document_file_limit || 10}MB)</p>
             </div>
           )}
         </div>

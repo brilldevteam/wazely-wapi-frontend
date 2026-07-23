@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React from "react";
+import { FacebookNotificationPreviewProps } from "@/src/types/facebook";
 import { Facebook } from "lucide-react";
+import React from "react";
 
-interface FacebookNotificationPreviewProps {
-  ad: any;
-}
-
-export const FacebookNotificationPreview: React.FC<FacebookNotificationPreviewProps> = ({ ad }) => {
+export const FacebookNotificationPreview: React.FC<
+  FacebookNotificationPreviewProps
+> = ({ ad }) => {
   return (
     <div className="w-full max-w-[340px] sm:max-w-sm h-[500px] sm:h-125 border border-slate-200 dark:border-(--card-border-color) rounded-lg bg-white dark:bg-(--card-color) shadow-sm relative overflow-hidden lg:scale-95 origin-top">
       <div className="absolute top-0 left-0 right-0 h-10 bg-slate-50 dark:bg-(--card-color) border-b border-slate-100 dark:border-(--card-border-color) flex items-center px-4 gap-4">
@@ -37,7 +36,9 @@ export const FacebookNotificationPreview: React.FC<FacebookNotificationPreviewPr
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs text-slate-800 dark:text-white leading-normal">
-                <span className="font-black">Creator page</span> has something you might like: <span className="italic">{`"${ad.ad_creative?.title || "new ad"}"`}</span>
+                <span className="font-black">Creator page</span> has something
+                you might like:{" "}
+                <span className="italic">{`"${ad.ad_creative?.title || "new ad"}"`}</span>
               </p>
               <p className="text-[10px] text-slate-400 font-bold mt-1">Ad</p>
             </div>

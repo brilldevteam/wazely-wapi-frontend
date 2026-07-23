@@ -5,21 +5,16 @@ import { Badge } from "@/src/elements/ui/badge";
 import { Button } from "@/src/elements/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/src/elements/ui/dropdown-menu";
 import { cn } from "@/src/lib/utils";
-import { ClipboardList, Edit2, Layout, MoreVertical, Rocket, Trash2 } from "lucide-react";
+import { ClipboardList, Edit2, Info, Layout, MoreVertical, Rocket, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import Can from "../shared/Can";
 import { ROUTES } from "@/src/constants";
+import { FormCardProps } from "@/src/types/formBuilder";
 
-interface FormCardProps {
-  form: any;
-  onDelete: (id: string) => void;
-  onPublish: (id: string) => void;
-  isPublishing?: boolean;
-  isDeleting?: boolean;
-}
 
-const FormCard = ({ form, onDelete, onPublish, isPublishing, isDeleting }: FormCardProps) => {
+
+const FormCard = ({ form, onDelete, onPublish, onViewInfo, isPublishing, isDeleting }: FormCardProps) => {
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -64,10 +59,13 @@ const FormCard = ({ form, onDelete, onPublish, isPublishing, isDeleting }: FormC
             <DropdownMenuSeparator />
 
             <Can permission="update.form_builder">
-              <DropdownMenuItem onClick={() => router.push(`${ROUTES.WhatsappForm}/${form._id}/edit`)} className="gap-2.5 px-3 py-2.5 cursor-pointer">
-                <Edit2 size={16} className="text-blue-500" />
-                <span className="font-semibold text-sm">{t("edit")}</span>
-              </DropdownMenuItem>
+              {status.toLowerCase() === "draft" && (
+                <DropdownMenuItem onClick={() => router.push(`${ROUTES.WhatsappForm}/${form._id}/edit`)} className="gap-2.5 px-3 py-2.5 cursor-pointer">
+                  <Edit2 size={16} className="text-blue-500" />
+                  <span className="font-semibold text-sm">{t("edit")}</span>
+                </DropdownMenuItem>
+              )}
+              
 
               {!(isPublished || isDeprecated || isPublishing) && <DropdownMenuItem onClick={() => onPublish(form._id)} disabled={isPublished || isDeprecated || isPublishing} className="gap-2.5 px-3 py-2.5 cursor-pointer">
                 <Rocket size={16} className={cn("text-emerald-500", (isPublished || isDeprecated) && "text-slate-300")} />
@@ -77,6 +75,11 @@ const FormCard = ({ form, onDelete, onPublish, isPublishing, isDeleting }: FormC
               <DropdownMenuItem onClick={() => router.push(`${ROUTES.WhatsappForm}/${form._id}/submissions`)} className="gap-2.5 px-3 py-2.5 cursor-pointer">
                 <ClipboardList size={16} className="text-blue-500" />
                 <span className="font-semibold text-sm">{t("view_submissions")}</span>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem onClick={() => onViewInfo && onViewInfo(form)} className="gap-2.5 px-3 py-2.5 cursor-pointer">
+                <Info size={16} className="text-slate-500" />
+                <span className="font-semibold text-sm">{t("info")}</span>
               </DropdownMenuItem>
             </Can>
 

@@ -1,34 +1,28 @@
 "use client";
 
+import { FacebookFeaturesProps } from "@/src/types/channel";
+import Image from "next/image";
 
-interface Feature {
-  badge?: string;
-  title: string;
-  description: string;
-  image?: string;
-  fallback?: string;
-}
 
-interface FacebookFeaturesProps {
-  featuresSection: {
-    badge?: string;
-    title: string;
-    subtitle?: string;
-    features: Feature[];
-  };
-  getResolvedImageUrl: (src: any, fallbackSrc?: string) => string;
-  fbGradient: string;
-}
-
-export default function FacebookFeatures({ featuresSection, getResolvedImageUrl, fbGradient }: FacebookFeaturesProps) {
+export default function FacebookFeatures({
+  featuresSection,
+  getResolvedImageUrl,
+  fbGradient,
+}: FacebookFeaturesProps) {
   if (featuresSection.features.length === 0) return null;
 
   return (
-    <section id="features-showcase" className="py-[calc(20px+(50-20)*((100vw-320px)/(1920-320)))] bg-white border-t border-slate-100">
+    <section
+      id="features-showcase"
+      className="py-[calc(20px+(50-20)*((100vw-320px)/(1920-320)))] bg-white border-t border-slate-100"
+    >
       <div className="container mx-auto px-[calc(8px+(24-8)*((100vw-320px)/(1920-320)))] md:px-12 xl:px-16">
         <div className="text-center max-w-4xl mx-auto mb-[calc(16px+(64-16)*((100vw-320px)/(1920-320)))]">
           {featuresSection.badge && (
-            <span className="text-[12px] font-bold text-white px-4 py-1.5 rounded-full uppercase tracking-wide inline-block mb-3.5" style={{ background: fbGradient }}>
+            <span
+              className="text-[12px] font-bold text-white px-4 py-1.5 rounded-full uppercase tracking-wide inline-block mb-3.5"
+              style={{ background: fbGradient }}
+            >
               {featuresSection.badge}
             </span>
           )}
@@ -36,7 +30,7 @@ export default function FacebookFeatures({ featuresSection, getResolvedImageUrl,
             {featuresSection.title}
           </h2>
           {featuresSection.subtitle && (
-            <p className=" text-[17px] font-semibold text-slate-600 leading-relaxed">
+            <p className=" text-[15px] font-medium text-slate-600 leading-relaxed">
               {featuresSection.subtitle}
             </p>
           )}
@@ -46,19 +40,35 @@ export default function FacebookFeatures({ featuresSection, getResolvedImageUrl,
           {featuresSection.features.map((feat: any, idx: number) => {
             const isEven = idx % 2 === 0;
             return (
-              <div key={idx} className={`grid grid-cols-1 lg:grid-cols-2 gap-[calc(20px+(48-20)*((100vw-320px)/(1920-320)))] items-center mb-[calc(18px+(64-18)*((100vw-320px)/(1920-320)))] ${isEven ? "" : "lg:flex-row-reverse"}`}>
-                <div className={isEven ? "lg:order-1 text-left" : "lg:order-2 text-left"}>
+              <div
+                key={idx}
+                className={`grid grid-cols-1 lg:grid-cols-2 gap-[calc(20px+(48-20)*((100vw-320px)/(1920-320)))] items-center mb-[calc(18px+(64-18)*((100vw-320px)/(1920-320)))] ${isEven ? "" : "lg:flex-row-reverse"}`}
+              >
+                <div
+                  className={
+                    isEven ? "lg:order-1 text-left" : "lg:order-2 text-left"
+                  }
+                >
                   {feat.badge && (
-                    <span className="text-xs font-bold uppercase tracking-wide text-white bg-blue-50 px-2.5 py-1 rounded-full inline-block mb-3" style={{ background: fbGradient }}>
+                    <span
+                      className="text-xs font-bold uppercase tracking-wide text-white bg-blue-50 px-2.5 py-1 rounded-full inline-block mb-3"
+                      style={{ background: fbGradient }}
+                    >
                       {feat.badge}
                     </span>
                   )}
-                  <h4 className="text-[20px] xl:text-[24px] font-bold leading-tight mb-4">{feat.title}</h4>
-                  <p className="text-[14px] font-medium text-slate-600 leading-relaxed">{feat.description}</p>
+                  <h4 className="text-[20px] xl:text-[24px] font-bold leading-tight mb-4">
+                    {feat.title}
+                  </h4>
+                  <p className="text-[15px] font-medium text-slate-600 leading-relaxed">
+                    {feat.description}
+                  </p>
                 </div>
-                <div className={`relative w-full max-w-[550px] mx-auto z-10 p-4 ${isEven ? "lg:order-2" : "lg:order-1"}`}>
+                <div
+                  className={`relative w-full max-w-[550px] mx-auto z-10 p-4 ${isEven ? "lg:order-2" : "lg:order-1"}`}
+                >
                   <div className="w-full h-auto flex items-center justify-center">
-                    <img
+                    <Image unoptimized width={1000} height={1000}
                       src={getResolvedImageUrl(feat.image, feat.fallback)}
                       alt={feat.title}
                       className="w-full h-auto object-contain rounded-lg transition-transform duration-700"

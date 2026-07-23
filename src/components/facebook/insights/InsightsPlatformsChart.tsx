@@ -1,29 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React from "react";
-import type { ApexOptions } from "apexcharts";
-import dynamic from "next/dynamic";
-import { Share2, Smartphone } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { useTheme } from "next-themes";
 import { Card } from "@/src/elements/ui/card";
+import { InsightsPlatformsChartProps } from "@/src/types/facebook";
+import type { ApexOptions } from "apexcharts";
+import { Share2, Smartphone } from "lucide-react";
+import { useTheme } from "next-themes";
+import dynamic from "next/dynamic";
+import React from "react";
+import { useTranslation } from "react-i18next";
 
-const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
+const ReactApexChart = dynamic(() => import("react-apexcharts"), {
+  ssr: false,
+});
 
-interface PlatformData {
-  platform: string;
-  spend: number;
-  reach: number;
-  results: number;
-}
-
-interface InsightsPlatformsChartProps {
-  data?: PlatformData[];
-  isLoading: boolean;
-}
-
-const InsightsPlatformsChart: React.FC<InsightsPlatformsChartProps> = ({ data = [], isLoading }) => {
+const InsightsPlatformsChart: React.FC<InsightsPlatformsChartProps> = ({
+  data = [],
+  isLoading,
+}) => {
   const { t } = useTranslation();
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
@@ -67,7 +61,8 @@ const InsightsPlatformsChart: React.FC<InsightsPlatformsChartProps> = ({ data = 
               fontSize: "12px",
               fontWeight: 700,
               color: textColor,
-              formatter: () => series.reduce((a, b) => a + b, 0).toLocaleString(),
+              formatter: () =>
+                series.reduce((a, b) => a + b, 0).toLocaleString(),
             },
             value: {
               fontSize: "24px",
@@ -109,7 +104,12 @@ const InsightsPlatformsChart: React.FC<InsightsPlatformsChartProps> = ({ data = 
         {isLoading ? (
           <div className="absolute inset-0 bg-slate-100/50 dark:bg-(--card-color) rounded-lg animate-pulse" />
         ) : (
-          <ReactApexChart options={options} series={series} type="donut" height={300} />
+          <ReactApexChart
+            options={options}
+            series={series}
+            type="donut"
+            height={300}
+          />
         )}
       </div>
     </Card>

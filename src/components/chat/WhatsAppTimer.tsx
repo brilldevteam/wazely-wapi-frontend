@@ -6,6 +6,11 @@ const WhatsAppTimer: React.FC<WhatsAppTimerProps> = ({ lastInboundTime, onExpire
   const [timeLeft, setTimeLeft] = useState<string>("");
   const [isExpired, setIsExpired] = useState(false);
 
+  const onExpireRef = React.useRef(onExpire);
+  useEffect(() => {
+    onExpireRef.current = onExpire;
+  }, [onExpire]);
+
   useEffect(() => {
     const calculateTime = () => {
       const now = new Date();
@@ -16,7 +21,7 @@ const WhatsAppTimer: React.FC<WhatsAppTimerProps> = ({ lastInboundTime, onExpire
       if (diff <= 0) {
         setTimeLeft("00:00:00");
         setIsExpired(true);
-        onExpire?.();
+        onExpireRef.current?.();
         return;
       }
 
@@ -31,7 +36,7 @@ const WhatsAppTimer: React.FC<WhatsAppTimerProps> = ({ lastInboundTime, onExpire
     calculateTime();
     const interval = setInterval(calculateTime, 1000);
     return () => clearInterval(interval);
-  }, [lastInboundTime, onExpire]);
+  }, [lastInboundTime]);
 
   return (
     <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-[11px] font-medium uppercase tracking-widest transition-all duration-500 ${isExpired ? "bg-red-50 text-red-600 dark:bg-rose-500/10 border border-red-400 dark:border-rose-900/20" : "bg-emerald-50 dark:bg-(--page-body-bg) text-primary border border-emerald-400 dark:border-(--card-border-color)"}`}>

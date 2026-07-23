@@ -116,9 +116,9 @@ export function CalendarEventNode({ data, id }: any) {
           </Select>
         </NodeField>
 
-        <NodeField label="Start Time (ISO or template)">
+        <NodeField label="Start Time">
           <Input
-            placeholder="e.g. 2026-04-10T10:00:00Z"
+            type="datetime-local"
             value={data.start_time || ""}
             onFocus={() => setTouched(true)}
             onChange={(e) => updateNodeData("start_time", e.target.value)}
@@ -128,7 +128,7 @@ export function CalendarEventNode({ data, id }: any) {
 
         <NodeField label="End Time (Optional)">
           <Input
-            placeholder="e.g. 2026-04-10T10:30:00Z"
+            type="datetime-local"
             value={data.end_time || ""}
             onFocus={() => setTouched(true)}
             onChange={(e) => updateNodeData("end_time", e.target.value)}

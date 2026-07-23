@@ -98,7 +98,7 @@ const Sidebar = ({ onMenuClick }: SidebarProps) => {
     }
   }, [permissionsRes, dispatch]);
 
-  const { isFeatureEnabled, getEnabledChannels, isLoading: featureLoading } = useFeatureAccess();
+  const { isFeatureEnabled, getEnabledChannels, isLoading: featureLoading, isPlatformAllowed, getPlatformFromSection } = useFeatureAccess();
   const enabledChannels = getEnabledChannels();
   const restrictedPaths = [ROUTES.Orders, ROUTES.Catalogues, ROUTES.Webhooks, ROUTES.AppointmentBooking, ROUTES.WhatsappForm, ROUTES.AICall, ROUTES.AICallAgents, ROUTES.AICallLogs, ROUTES.AICallAgentsCreate, ROUTES.AICallAgentsEdit];
 
@@ -130,6 +130,12 @@ const Sidebar = ({ onMenuClick }: SidebarProps) => {
 
     return { ...item, isPlanDisabled };
   }).filter((item) => {
+    // 0. Omnichannel platform admin setting check
+    const platform = getPlatformFromSection(item.section);
+    if (platform && !isPlatformAllowed(platform)) {
+      return false;
+    }
+
     // 1. Role check
     if (item.roles && !item.roles.includes(user?.role || "")) {
       return false;
@@ -189,16 +195,22 @@ const Sidebar = ({ onMenuClick }: SidebarProps) => {
     const API_URL = process.env.NEXT_PUBLIC_STORAGE_URL ?? "";
     const resolveUrl = (url?: string) => {
       if (!url) return "";
-      return url.startsWith("http") ? url : `${API_URL}${url}`;
+      if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:")) {
+        return url;
+      }
+      const normalizedUrl = url.replace(/\\/g, "/");
+      const cleanUrl = normalizedUrl.startsWith("/") ? normalizedUrl : `/${normalizedUrl}`;
+      const baseUrl = API_URL.endsWith("/") ? API_URL.slice(0, -1) : API_URL;
+      return `${baseUrl}${cleanUrl}`;
     };
 
     if (isVisuallyExpanded) {
       const url = isDark ? logo_dark_url : logo_light_url;
-      return getUrlWithBasePath(resolveUrl(url) || "/assets/logos/logo1.png");
+      return getUrlWithBasePath(resolveUrl(url) ||(isDark ? "/assets/logos/logo3.png" : "/assets/logos/logo1.png"));
     }
 
     const url = isDark ? sidebar_dark_logo_url : sidebar_light_logo_url;
-    return getUrlWithBasePath(resolveUrl(url) || "/assets/logos/sidebarLogo.png");
+    return getUrlWithBasePath(resolveUrl(url) ||( isDark ? "/assets/logos/sidebarLogoDark.png" : "/assets/logos/sidebarLogo.png"))
   }, [mounted, theme, isVisuallyExpanded, logo_light_url, logo_dark_url, sidebar_light_logo_url, sidebar_dark_logo_url]);
 
   const [openSections, setOpenSections] = useState<string[]>(["overview_sidebar_title", "communication_sidebar_title"]);

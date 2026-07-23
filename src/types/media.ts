@@ -2,6 +2,12 @@
 
 import { Attachment } from "./components";
 
+
+export interface FileItem {
+  file: File;
+  previewUrl: string;
+}
+
 export interface MediaGridProps {
   mediaType?: string;
   onSelect?: (url: string) => void;

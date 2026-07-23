@@ -210,7 +210,7 @@ const WebhookLogs = () => {
         onBack={() => router.push(ROUTES.Webhooks)}
       />
 
-      <div className="bg-white dark:bg-(--card-color) rounded-2xl border border-slate-200/60 dark:border-(--card-border-color) overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-(--card-color) rounded-lg border border-slate-200/60 dark:border-(--card-border-color) overflow-hidden shadow-sm">
         {activeTab === "trigger" && (
           <DataTable
             data={triggerLogsResult?.data?.logs || []}
@@ -228,6 +228,7 @@ const WebhookLogs = () => {
             getRowId={(item) => item._id || item.id || ""}
             emptyMessage={searchTerm ? `No trigger logs found matching "${searchTerm}"` : "No trigger logs found for this webhook."}
             className="border-none shadow-none rounded-none"
+            actionPermission={["view.ecommerce_webhooks"]}
           />
         )}
 

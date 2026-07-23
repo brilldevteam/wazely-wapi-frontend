@@ -1,3 +1,5 @@
+import { KanbanFunnel } from "./kanban-funnel";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface ConfirmModalProps {
   isOpen: boolean;
@@ -51,6 +53,7 @@ export interface DataTableProps<T> {
   getRowId?: (item: T) => string;
   // Sorting
   onSortChange?: (sortBy: string, sortOrder: "asc" | "desc") => void;
+  actionPermission?: string[];
   sortBy?: string;
   sortOrder?: "asc" | "desc";
 }
@@ -109,4 +112,52 @@ export interface ApiResponse<T = any> {
   message?: string;
   data: T;
   totalCount?: number;
+}
+
+export interface CanProps {
+  permission?: string;
+  anyPermission?: string[];
+  module?: string;
+  children: React.ReactNode;
+  fallback?: React.ReactNode;
+}
+
+export interface CookiePreferences {
+  essential: boolean;
+  analytical: boolean;
+  marketing: boolean;
+}
+
+export interface FunnelStageAction { 
+  funnelId: string;
+  toStageId: string;
+}
+
+export interface FunnelStageDropdownProps {
+  funnels: KanbanFunnel[];
+  selectedActions: FunnelStageAction[];
+  onChange: (actions: FunnelStageAction[]) => void;
+  placeholder?: string;
+  disabled?: boolean;
+  isLoading?: boolean;
+  className?: string;
+}
+
+export interface LocationData {
+  latitude: string;
+  longitude: string;
+  name?: string;
+  address?: string;
+}
+
+export interface LocationMapPickerProps {
+  value: LocationData;
+  onChange: (data: LocationData) => void;
+}
+
+export interface TagInputProps {
+  value: string[];
+  onChange: (value: string[]) => void;
+  placeholder?: string;
+  disabled?: boolean;
 }

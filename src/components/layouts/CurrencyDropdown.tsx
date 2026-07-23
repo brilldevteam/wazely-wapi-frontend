@@ -14,13 +14,18 @@ const CurrencyDropdown = ({ onDark = false }: { onDark?: boolean }) => {
 
   const { data: currenciesData, isLoading } = useGetAllCurrenciesQuery({ is_active: true, limit: 100 });
 
-  const currencies = useMemo(() => currenciesData?.data?.currencies ?? [], [currenciesData]);
+  const currencies = useMemo(() => {
+    const list = currenciesData?.data?.currencies ?? [];
+    return list.filter((c) => c.is_active);
+  }, [currenciesData]);
 
-  // Auto-select default (or first) currency if nothing is persisted yet
   useEffect(() => {
-    if (currencies.length === 0 || selectedCurrency) return;
-    const defaultCurrency = currencies.find((c) => c.is_default) ?? currencies[0];
-    dispatch(setSelectedCurrency(defaultCurrency));
+    if (currencies.length === 0) return;
+    const isSelectedActive = selectedCurrency && currencies.some((c) => c._id === selectedCurrency._id);
+    if (!isSelectedActive) {
+      const defaultCurrency = currencies.find((c) => c.is_default) ?? currencies[0];
+      dispatch(setSelectedCurrency(defaultCurrency));
+    }
   }, [currencies, selectedCurrency, dispatch]);
 
   return (

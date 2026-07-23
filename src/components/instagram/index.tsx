@@ -3,28 +3,30 @@
 
 import { Badge } from "@/src/elements/ui/badge";
 import { Button } from "@/src/elements/ui/button";
-import { useDisconnectChannelMutation, useGetConnectedChannelsQuery } from "@/src/redux/api/channelsApi";
+import {
+  useDisconnectChannelMutation,
+  useGetConnectedChannelsQuery,
+} from "@/src/redux/api/channelsApi";
 import { useAppSelector } from "@/src/redux/hooks";
 import CommonHeader from "@/src/shared/CommonHeader";
 import ConfirmModal from "@/src/shared/ConfirmModal";
 import { DataTable } from "@/src/shared/DataTable";
+import { InstagramAccountData } from "@/src/types/instagram";
 import { Column } from "@/src/types/shared";
 import { Link2Off, Loader2 } from "lucide-react";
 import React, { useMemo, useState } from "react";
 import { toast } from "sonner";
 
-interface InstagramAccountData {
-  id: string;
-  name: string;
-  pageName: string;
-  pageId: string;
-  connectedAt: string;
-  status: string;
-  connectionId: string;
-}
-
 const InstagramIcon = () => (
-  <svg className="w-5 h-5 text-[#E1306C]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    className="w-5 h-5 text-[#E1306C]"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
     <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
@@ -40,7 +42,8 @@ const InstagramAccountsList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [disconnectId, setDisconnectId] = useState<string | null>(null);
-  const [disconnectChannel, { isLoading: isDisconnecting }] = useDisconnectChannelMutation();
+  const [disconnectChannel, { isLoading: isDisconnecting }] =
+    useDisconnectChannelMutation();
 
   const {
     data: channelsResponse,
@@ -49,7 +52,7 @@ const InstagramAccountsList: React.FC = () => {
     refetch,
   } = useGetConnectedChannelsQuery(
     { workspace_id: workspaceId, platform: "instagram" },
-    { skip: !workspaceId }
+    { skip: !workspaceId },
   );
 
   const handleDisconnectConfirm = async () => {
@@ -57,14 +60,19 @@ const InstagramAccountsList: React.FC = () => {
     try {
       const response = await disconnectChannel(disconnectId).unwrap();
       if (response.success) {
-        toast.success(response.message || "Instagram account disconnected successfully!");
+        toast.success(
+          response.message || "Instagram account disconnected successfully!",
+        );
         setDisconnectId(null);
         refetch();
       } else {
         toast.error(response.error || "Failed to disconnect Instagram account");
       }
     } catch (err: any) {
-      toast.error(err?.data?.error || "An error occurred while disconnecting the Instagram account");
+      toast.error(
+        err?.data?.error ||
+          "An error occurred while disconnecting the Instagram account",
+      );
     }
   };
 
@@ -78,10 +86,12 @@ const InstagramAccountsList: React.FC = () => {
         conn.pages.forEach((page: any) => {
           list.push({
             id: page.instagram_account_id || page.page_id,
-            name: page.instagram_username || page.page_name || "Instagram Account",
+            name:
+              page.instagram_username || page.page_name || "Instagram Account",
             pageName: page.page_name || "N/A",
             pageId: page.page_id || "N/A",
-            connectedAt: conn.createdAt || conn.updatedAt || new Date().toISOString(),
+            connectedAt:
+              conn.createdAt || conn.updatedAt || new Date().toISOString(),
             status: conn.is_active ? "Active" : "Inactive",
             connectionId: conn._id,
           });
@@ -93,7 +103,8 @@ const InstagramAccountsList: React.FC = () => {
           name: conn.username || conn.fb_user_name || "Instagram Account",
           pageName: "N/A",
           pageId: "N/A",
-          connectedAt: conn.createdAt || conn.updatedAt || new Date().toISOString(),
+          connectedAt:
+            conn.createdAt || conn.updatedAt || new Date().toISOString(),
           status: conn.is_active ? "Active" : "Inactive",
           connectionId: conn._id,
         });
@@ -110,7 +121,7 @@ const InstagramAccountsList: React.FC = () => {
       (acc) =>
         acc.name.toLowerCase().includes(lower) ||
         acc.pageName.toLowerCase().includes(lower) ||
-        acc.id.toLowerCase().includes(lower)
+        acc.id.toLowerCase().includes(lower),
     );
   }, [instagramAccounts, searchTerm]);
 
@@ -175,10 +186,11 @@ const InstagramAccountsList: React.FC = () => {
         cell: (item) => (
           <Badge
             variant={item.status === "Active" ? "success" : "secondary"}
-            className={`font-bold uppercase tracking-wider text-[10px] px-2.5 py-1 rounded-full ${item.status === "Active"
-              ? "bg-green-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 border border-green-100 dark:border-emerald-500/20"
-              : ""
-              }`}
+            className={`font-bold uppercase tracking-wider text-[10px] px-2.5 py-1 rounded-full ${
+              item.status === "Active"
+                ? "bg-green-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 border border-green-100 dark:border-emerald-500/20"
+                : ""
+            }`}
           >
             {item.status}
           </Badge>
@@ -226,7 +238,7 @@ const InstagramAccountsList: React.FC = () => {
         ),
       },
     ],
-    [isDisconnecting, disconnectId]
+    [isDisconnecting, disconnectId],
   );
 
   return (
@@ -244,8 +256,7 @@ const InstagramAccountsList: React.FC = () => {
           refetch();
           toast.success("Instagram accounts refreshed");
         }}
-      >
-      </CommonHeader>
+      ></CommonHeader>
 
       <div className="bg-white dark:bg-(--card-color) rounded-lg shadow-sm overflow-hidden">
         <DataTable<InstagramAccountData>
@@ -267,6 +278,7 @@ const InstagramAccountsList: React.FC = () => {
               : "No Instagram accounts connected yet. Link Instagram inside Setup & Integration!"
           }
           className="border-none shadow-none rounded-none"
+          actionPermission={["update.waba_configuration"]}
         />
       </div>
 

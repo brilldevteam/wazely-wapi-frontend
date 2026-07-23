@@ -127,3 +127,118 @@ export interface GoogleBulkDeleteResponse {
     failed: { id: string; message: string }[];
   };
 }
+
+export interface AddCalendarModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: (summary: string) => void;
+  isLoading: boolean;
+}
+
+export interface AddSheetModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: (title: string) => void;
+  isLoading: boolean;
+}
+
+export interface DeleteSheetModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: (deleteFrom: "google" | "platform") => void;
+  isLoading: boolean;
+  count: number;
+}
+
+export interface EventModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: (data: { summary: string; description?: string; start: string; end: string }) => void;
+  isLoading: boolean;
+  event?: GoogleEvent | null;
+}
+
+
+export interface GoogleCalendarEventListProps {
+  calendarId: string;
+}
+
+export interface GoogleCalendarListProps {
+  accountId: string;
+}
+
+export interface GoogleSheetListProps {
+  paramsPromise: Promise<{ id: string }>;
+}
+
+export interface ReadSheetModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  sheetId: string;
+}
+
+export interface SyncSheetsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  accountId: string;
+}
+
+export interface GoogleDriveFile {
+  id: string;
+  name: string;
+}
+
+export interface WriteSheetModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  sheetId: string;
+  onConfirm: (values: string[][]) => void;
+  isLoading: boolean;
+}
+
+export interface GoogleForm {
+  _id: string;
+  google_account_id: string;
+  form_id: string;
+  name: string;
+  is_linked?: boolean;
+  created_at: string;
+}
+
+export interface GoogleFormsResponse {
+  success: boolean;
+  forms: GoogleForm[];
+  pagination?: Pagination;
+}
+
+export interface GoogleSyncFormsRequest {
+  google_account_id: string;
+  forms?: { id: string; name: string }[];
+}
+
+export interface GoogleSyncFormsResponse {
+  success: boolean;
+  mode: "list" | "sync";
+  message?: string;
+  forms: { id: string; name: string }[] | GoogleForm[];
+}
+
+export interface GoogleFormCreateField {
+  title: string;
+  type: "text" | "paragraph" | "multiple_choice" | "checkbox" | "dropdown" | "date" | "time" | "linear_scale" | "rating";
+  required?: boolean;
+  options?: string[];
+  low?: number;
+  high?: number;
+  lowLabel?: string;
+  highLabel?: string;
+  ratingScaleLevel?: number;
+  iconType?: "STAR" | "HEART" | "THUMB_UP";
+}
+
+export interface GoogleFormCreateRequest {
+  title: string;
+  description?: string;
+  require_email?: boolean;
+  fields: GoogleFormCreateField[];
+}

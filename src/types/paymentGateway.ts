@@ -105,3 +105,27 @@ export interface PaymentGatewayResponse {
   config: PaymentGateway;
   webhook_registered?: boolean;
 }
+
+export interface PaymentGatewayModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: (data: any) => void;
+  isLoading: boolean;
+  editData?: PaymentGateway | null;
+}
+
+export interface PaymentSettingModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export interface PaymentFormState {
+  payment_success_message: string;
+  payment_failed_message: string;
+  payment_reminder_enabled: boolean;
+  payment_reminder_unit: "minutes" | "hours" | "days";
+  payment_reminder_delay: number;
+  payment_reminder_message: string;
+  catalog_payment_link_enabled: boolean;
+  catalog_payment_link_automatic: boolean;
+}

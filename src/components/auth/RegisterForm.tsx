@@ -390,7 +390,7 @@ export const RegisterPage = () => {
                       checked={formik.values.agreePrivacyPolicy}
                       onCheckedChange={(checked) => formik.setFieldValue("agreePrivacyPolicy", checked === true)}
                     />
-                    <label htmlFor="agreePrivacyPolicy" className="text-sm font-medium text-slate-600 dark:text-slate-400 cursor-pointer select-none leading-none">
+                    <Label htmlFor="agreePrivacyPolicy" className="text-sm font-medium text-slate-600 dark:text-slate-400 cursor-pointer select-none leading-none">
                       {agreementPrefix}{" "}
                       <a
                         href={agreementHref}
@@ -401,7 +401,7 @@ export const RegisterPage = () => {
                       >
                         {agreementLinkText}
                       </a>
-                    </label>
+                    </Label>
                   </div>
                 )}
 

@@ -2,20 +2,24 @@
 
 import { ImageBaseUrl } from "@/src/constants";
 import { Button } from "@/src/elements/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/src/elements/ui/dialog";
 import { Input } from "@/src/elements/ui/input";
 import { Label } from "@/src/elements/ui/label";
 import { useAppSelector } from "@/src/redux/hooks";
-import { Copy, X, Globe, ShieldCheck } from "lucide-react";
-import { toast } from "sonner";
+import { FacebookWebhookModalProps } from "@/src/types/facebookLead";
+import { Copy, Globe, ShieldCheck, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/src/elements/ui/dialog";
+import { toast } from "sonner";
 
-interface FacebookWebhookModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-const FacebookWebhookModal = ({ isOpen, onClose }: FacebookWebhookModalProps) => {
+const FacebookWebhookModal = ({
+  isOpen,
+  onClose,
+}: FacebookWebhookModalProps) => {
   const { t } = useTranslation();
   const { setting } = useAppSelector((state) => state.setting);
 
@@ -24,7 +28,9 @@ const FacebookWebhookModal = ({ isOpen, onClose }: FacebookWebhookModalProps) =>
     toast.success(t("copied_success", { title }));
   };
 
-  const webhookUrl = setting?.facebook_lead_webhook_url ? `${ImageBaseUrl ?? ""}/${setting.facebook_lead_webhook_url}` : "";
+  const webhookUrl = setting?.facebook_lead_webhook_url
+    ? `${ImageBaseUrl ?? ""}/${setting.facebook_lead_webhook_url}`
+    : "";
   const verifyToken = setting?.facebook_lead_webhook_verify_token || "";
 
   return (
@@ -44,7 +50,12 @@ const FacebookWebhookModal = ({ isOpen, onClose }: FacebookWebhookModalProps) =>
               </p>
             </div>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8 rounded-lg text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-(--table-hover)">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="h-8 w-8 rounded-lg text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-(--table-hover)"
+          >
             <X size={18} />
           </Button>
         </DialogHeader>
@@ -92,7 +103,9 @@ const FacebookWebhookModal = ({ isOpen, onClose }: FacebookWebhookModalProps) =>
                   size="icon"
                   disabled={!verifyToken}
                   className="shrink-0 h-11 w-12 border-gray-200 dark:border-(--card-border-color) text-gray-400 hover:text-primary hover:border-primary/30 transition-all"
-                  onClick={() => copyToClipboard(verifyToken, t("verification_token"))}
+                  onClick={() =>
+                    copyToClipboard(verifyToken, t("verification_token"))
+                  }
                 >
                   <Copy size={18} />
                 </Button>
@@ -105,13 +118,18 @@ const FacebookWebhookModal = ({ isOpen, onClose }: FacebookWebhookModalProps) =>
               <ShieldCheck className="w-4 h-4 text-amber-600 dark:text-amber-400" />
             </div>
             <p className="text-[11px] text-amber-700 dark:text-amber-400/80 leading-relaxed">
-              Use these credentials to configure the Webhook section in your Meta App Settings. This allows it to receive real-time updates when users submit your Facebook Lead Forms.
+              Use these credentials to configure the Webhook section in your
+              Meta App Settings. This allows it to receive real-time updates
+              when users submit your Facebook Lead Forms.
             </p>
           </div>
         </div>
 
         <div className="p-4 bg-white dark:bg-(--card-color) border-t border-gray-100 dark:border-(--card-border-color) flex justify-end">
-          <Button onClick={onClose} className="bg-primary h-11 px-4.5! py-5 hover:bg-primary/90 text-white min-w-25">
+          <Button
+            onClick={onClose}
+            className="bg-primary h-11 px-4.5! py-5 hover:bg-primary/90 text-white min-w-25"
+          >
             {t("common_close")}
           </Button>
         </div>

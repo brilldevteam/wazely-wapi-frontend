@@ -1,16 +1,13 @@
 "use client";
 
-import { MenuItem } from "@/src/types/landingPage";
+import { MenuItem, ProductDropdownProps } from "@/src/types/landingPage";
 import * as LucideIcons from "lucide-react";
 import { ArrowRight, ChevronDown, Sparkles } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
 import Images from "../../shared/Image";
+import { Button } from "@/src/elements/ui/button";
 
-interface ProductDropdownProps {
-  item: MenuItem;
-  scrollToSection: (id: string) => void;
-}
 
 const getMenuIcon = (iconName?: string) => {
   if (!iconName) return null;
@@ -24,7 +21,10 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
   const children = item.children || [];
 
   const handleLinkClick = (child: MenuItem, e: React.MouseEvent) => {
-    if (child.path && (child.path.startsWith("#") || !child.path.startsWith("/"))) {
+    if (
+      child.path &&
+      (child.path.startsWith("#") || !child.path.startsWith("/"))
+    ) {
       e.preventDefault();
       const cleanId = child.path.replace("#", "");
       scrollToSection(cleanId);
@@ -57,7 +57,14 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
                   >
                     <div className="shrink-0">
                       {child.link_image ? (
-                        <Images src={child.link_image} alt="" className="w-9 h-9 rounded-lg object-cover bg-white-opacity-5 border border-white-opacity-10" width={36} height={36} unoptimized />
+                        <Images
+                          src={child.link_image}
+                          alt=""
+                          className="w-9 h-9 rounded-lg object-cover bg-white-opacity-5 border border-white-opacity-10"
+                          width={36}
+                          height={36}
+                          unoptimized
+                        />
                       ) : (
                         <div className="p-2 rounded-lg bg-white-opacity-5 text-slate-400! group-hover/item:bg-primary group-hover/item:text-white! transition-all duration-300">
                           {icon || <Sparkles className="w-5 h-5" />}
@@ -70,7 +77,9 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
                           {child.title}
                         </span>
                         {child.badge_text && (
-                          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}>
+                          <span
+                            className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
+                          >
                             {child.badge_text}
                           </span>
                         )}
@@ -106,7 +115,14 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
                     >
                       <div className="shrink-0">
                         {child.link_image ? (
-                          <Images src={child.link_image} alt="" className="w-8 h-8 rounded-lg object-cover bg-white-opacity-5 border border-white-opacity-10" width={32} height={32} unoptimized />
+                          <Images
+                            src={child.link_image}
+                            alt=""
+                            className="w-8 h-8 rounded-lg object-cover bg-white-opacity-5 border border-white-opacity-10"
+                            width={32}
+                            height={32}
+                            unoptimized
+                          />
                         ) : (
                           <div className="p-2 rounded-lg bg-white-opacity-5 text-slate-400! group-hover/item:bg-primary group-hover/item:text-white! transition-all duration-350">
                             {icon || <Sparkles className="w-4 h-4" />}
@@ -119,7 +135,9 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
                             {child.title}
                           </span>
                           {child.badge_text && (
-                            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}>
+                            <span
+                              className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
+                            >
                               {child.badge_text}
                             </span>
                           )}
@@ -177,16 +195,27 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
                     >
                       <div className="shrink-0">
                         {child.link_image ? (
-                          <Images src={child.link_image} alt="" className="w-8 h-8 rounded-lg object-cover bg-white-opacity-5 border border-white-opacity-10" width={32} height={32} unoptimized />
+                          <Images
+                            src={child.link_image}
+                            alt=""
+                            className="w-8 h-8 rounded-lg object-cover bg-white-opacity-5 border border-white-opacity-10"
+                            width={32}
+                            height={32}
+                            unoptimized
+                          />
                         ) : icon ? (
-                          <span className="text-slate-400 group-hover/item:text-primary">{icon}</span>
+                          <span className="text-slate-400 group-hover/item:text-primary">
+                            {icon}
+                          </span>
                         ) : null}
                       </div>
                       <span className="text-[14.5px] font-semibold text-white! group-hover/item:text-primary! transition-colors flex-1">
                         {child.title}
                       </span>
                       {child.badge_text && (
-                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}>
+                        <span
+                          className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
+                        >
                           {child.badge_text}
                         </span>
                       )}
@@ -200,7 +229,11 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
               <span className="text-[12px] text-slate-300! font-medium">
                 🚀 Need assistance setup? Contact our 24/7 team
               </span>
-              <Link href="#contact" onClick={() => setIsOpen(false)} className="text-primary! hover:text-white! font-bold text-[12px] flex items-center gap-1">
+              <Link
+                href="#contact"
+                onClick={() => setIsOpen(false)}
+                className="text-primary! hover:text-white! font-bold text-[12px] flex items-center gap-1"
+              >
                 Support Panel &rarr;
               </Link>
             </div>
@@ -226,7 +259,14 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
                   >
                     <div className="shrink-0 mb-3">
                       {child.link_image ? (
-                        <Images src={child.link_image} alt="" className="w-10 h-10 rounded-lg object-cover bg-white-opacity-5 border border-white-opacity-10" width={40} height={40} unoptimized />
+                        <Images
+                          src={child.link_image}
+                          alt=""
+                          className="w-10 h-10 rounded-lg object-cover bg-white-opacity-5 border border-white-opacity-10"
+                          width={40}
+                          height={40}
+                          unoptimized
+                        />
                       ) : (
                         <div className="p-2.5 rounded-lg bg-white-opacity-5 text-primary! w-fit group-hover/item:bg-primary group-hover/item:text-white! transition-colors">
                           {icon || <Sparkles className="w-5 h-5" />}
@@ -238,7 +278,9 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
                         {child.title}
                       </span>
                       {child.badge_text && (
-                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}>
+                        <span
+                          className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
+                        >
                           {child.badge_text}
                         </span>
                       )}
@@ -269,7 +311,14 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
                   className="group/item flex items-start gap-4 p-3 rounded-xl hover:bg-white-opacity-5 transition-all duration-300"
                 >
                   {child.link_image ? (
-                    <Images src={child.link_image} alt="" className="w-20 h-14 rounded-lg object-cover bg-white-opacity-5 shrink-0 border border-white-opacity-10" width={80} height={56} unoptimized />
+                    <Images
+                      src={child.link_image}
+                      alt=""
+                      className="w-20 h-14 rounded-lg object-cover bg-white-opacity-5 shrink-0 border border-white-opacity-10"
+                      width={80}
+                      height={56}
+                      unoptimized
+                    />
                   ) : (
                     <div className="w-20 h-14 rounded-lg bg-white-opacity-5 shrink-0 flex items-center justify-center text-slate-500 border border-white-opacity-10">
                       <Sparkles className="w-5 h-5" />
@@ -281,7 +330,9 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
                         {child.title}
                       </span>
                       {child.badge_text && (
-                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}>
+                        <span
+                          className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
+                        >
                           {child.badge_text}
                         </span>
                       )}
@@ -316,16 +367,27 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
                   >
                     <div className="shrink-0">
                       {child.link_image ? (
-                        <Images src={child.link_image} alt="" className="w-6 h-6 rounded object-cover bg-white-opacity-5 border border-white-opacity-10" width={24} height={24} unoptimized />
+                        <Images
+                          src={child.link_image}
+                          alt=""
+                          className="w-6 h-6 rounded object-cover bg-white-opacity-5 border border-white-opacity-10"
+                          width={24}
+                          height={24}
+                          unoptimized
+                        />
                       ) : icon ? (
-                        <span className="text-slate-400 group-hover/item:text-primary shrink-0">{icon}</span>
+                        <span className="text-slate-400 group-hover/item:text-primary shrink-0">
+                          {icon}
+                        </span>
                       ) : null}
                     </div>
                     <span className="text-[14.5px] font-semibold text-slate-200! group-hover/item:text-primary! transition-colors flex-1">
                       {child.title}
                     </span>
                     {child.badge_text && (
-                      <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}>
+                      <span
+                        className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
+                      >
                         {child.badge_text}
                       </span>
                     )}
@@ -345,18 +407,22 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
-      <button
+      <Button variant="unstyled"
         className={`flex items-center bg-[unset]! p-0! gap-1.5 text-[17px] font-medium transition-colors cursor-pointer py-2
         ${isOpen ? "text-white!" : "text-slate-300! hover:text-white!"}`}
       >
         <span>{item.title}</span>
         {item.badge_text && (
-          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${item.badge_color === "green" ? "bg-emerald-500!" : item.badge_color === "black" ? "bg-black!" : item.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}>
+          <span
+            className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${item.badge_color === "green" ? "bg-emerald-500!" : item.badge_color === "black" ? "bg-black!" : item.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
+          >
             {item.badge_text}
           </span>
         )}
-        <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />
-      </button>
+        <ChevronDown
+          className={`w-4 h-4 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+        />
+      </Button>
 
       {item.mega_menu ? (
         <div
@@ -384,14 +450,27 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
                 >
                   <div className="shrink-0">
                     {child.link_image ? (
-                      <Images src={child.link_image} alt="" className="w-5 h-5 rounded object-cover bg-white-opacity-5 border border-white-opacity-10" width={20} height={20} unoptimized />
+                      <Images
+                        src={child.link_image}
+                        alt=""
+                        className="w-5 h-5 rounded object-cover bg-white-opacity-5 border border-white-opacity-10"
+                        width={20}
+                        height={20}
+                        unoptimized
+                      />
                     ) : icon ? (
-                      <span className="text-slate-400 group-hover/item:text-primary shrink-0">{icon}</span>
+                      <span className="text-slate-400 group-hover/item:text-primary shrink-0">
+                        {icon}
+                      </span>
                     ) : null}
                   </div>
-                  <span className="text-slate-300! group-hover/item:text-primary! flex-1 truncate">{child.title}</span>
+                  <span className="text-slate-300! group-hover/item:text-primary! flex-1 truncate">
+                    {child.title}
+                  </span>
                   {child.badge_text && (
-                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}>
+                    <span
+                      className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
+                    >
                       {child.badge_text}
                     </span>
                   )}

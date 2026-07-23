@@ -1,14 +1,13 @@
 "use client";
 
-import React from "react";
-import { PlatformProps } from "../../types/landingPage";
-import { CheckCircle2, ArrowRight } from "lucide-react";
-import { Button } from "@/src/elements/ui/button";
 import { ROUTES } from "@/src/constants";
+import { Button } from "@/src/elements/ui/button";
 import { useAppSelector } from "@/src/redux/hooks";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import React from "react";
 import Images from "../../shared/Image";
-import { getUrlWithBasePath } from "@/src/utils";
+import { PlatformProps } from "../../types/landingPage";
 
 const HowItWorks: React.FC<PlatformProps> = ({ data }) => {
   const router = useRouter();
@@ -44,45 +43,46 @@ const HowItWorks: React.FC<PlatformProps> = ({ data }) => {
                 <div className="hidden md:block absolute top-16 left-full w-full h-0.5 bg-gradient-to-r from-primary/50 to-transparent -translate-x-1/2 z-0" />
               )}
 
-              <div className="relative h-full flex flex-col bg-white rounded-lg p-[calc(15px+(32-15)*((100vw-320px)/(1920-320)))] shadow-lg border border-slate-100 hover:shadow-xl transition-shadow">
-                {/* Step Number */}
-                <div className="flex items-center justify-center w-16 h-16 rounded-lg bg-gradient-to-br from-primary to-emerald-400 text-white font-black text-2xl mb-6 shadow-lg shadow-primary/25">
-                  {String(index + 1).padStart(2, "0")}
-                </div>
+              <div className="relative h-full flex flex-col justify-between bg-white rounded-lg shadow-lg border border-slate-100 hover:shadow-xl transition-shadow">
+                <div className="p-[calc(15px+(32-15)*((100vw-320px)/(1920-320)))] pb-0!">
+                  {/* Step Number */}
+                  <div className="flex items-center justify-center w-16 h-16 rounded-lg bg-gradient-to-br from-primary to-emerald-400 text-white font-black text-2xl mb-6 shadow-lg shadow-primary/25">
+                    {String(index + 1).padStart(2, "0")}
+                  </div>
 
-                {/* Tagline */}
-                {step.tagline && (
-                  <span className="text-xs font-bold text-primary mb-2 block">
-                    {step.tagline}
-                  </span>
-                )}
+                  {/* Tagline */}
+                  {step.tagline && (
+                    <span className="text-xs font-bold text-primary mb-2 block">
+                      {step.tagline}
+                    </span>
+                  )}
 
-                {/* Title */}
-                <h3 className="text-xl lg:text-2xl font-black text-slate-900 mb-4 leading-tight">
-                  {step.title}
-                </h3>
+                  {/* Title */}
+                  <h3 className="text-xl lg:text-2xl font-black text-slate-900 mb-4 leading-tight">
+                    {step.title}
+                  </h3>
 
-                {/* Description */}
-                <p className="text-slate-500 leading-relaxed sm:mb-6 mb-4">
-                  {step.description}
-                </p>
+                  {/* Description */}
+                  <p className="text-slate-500 leading-relaxed sm:mb-6 mb-4">
+                    {step.description}
+                  </p>
 
-                {/* Bullets */}
-                {step.bullets && step.bullets.length > 0 && (
-                  <ul className="space-y-3">
-                    {step.bullets.map((bullet, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-                        <span className="text-sm text-slate-500">{bullet}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-
+                  {/* Bullets */}
+                  {step.bullets && step.bullets.length > 0 && (
+                    <ul className="space-y-3">
+                      {step.bullets.map((bullet, i) => (
+                        <li key={i} className="flex items-start gap-2">
+                          <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                          <span className="text-sm text-slate-500">{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>  
                 {/* Step Image */}
                 {step.image && (
-                  <div className="mt-auto pt-4 sm:pt-6 w-full">
-                    <div className="rounded-lg overflow-hidden ">
+                  <div className="w-full mt-3">
+                    <div className="rounded-b-lg overflow-hidden">
                       <Images
                         src={step.image}
                         alt={step.title}

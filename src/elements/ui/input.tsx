@@ -2,7 +2,7 @@ import * as React from "react"
 
 import { cn } from "@/src/lib/utils"
 
-function Input({ className, type, onKeyDown, ...props }: React.ComponentProps<"input">) {
+function Input({ className, type, onKeyDown, unstyled, ...props }: React.ComponentProps<"input"> & { unstyled?: boolean }) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (type === "number") {
       const isControlKey = ["Backspace", "Delete", "Tab", "Escape", "Enter", "Home", "End", "ArrowLeft", "ArrowRight"].includes(e.key) || (e.ctrlKey === true && ["a", "c", "v", "x", "z"].includes(e.key.toLowerCase())) || (e.metaKey === true && ["a", "c", "v", "x", "z"].includes(e.key.toLowerCase()));
@@ -15,6 +15,18 @@ function Input({ className, type, onKeyDown, ...props }: React.ComponentProps<"i
       onKeyDown(e);
     }
   };
+
+  if (unstyled) {
+    return (
+      <input
+        type={type}
+        onKeyDown={handleKeyDown}
+        data-slot="input"
+        className={className}
+        {...props}
+      />
+    );
+  }
 
   return (
     <input

@@ -130,8 +130,8 @@ const ChatMessageList = forwardRef<{ scrollToTop: () => void; scrollToBottom: ()
             </div>
           )}
 
-          {data.messages.map((dateGroup) => (
-            <div key={dateGroup.dateKey} className="flex flex-col space-y-6">
+          {data.messages.map((dateGroup, idx) => (
+            <div key={`${dateGroup.dateKey}-${idx}`} className="flex flex-col space-y-6">
               <div className="flex justify-center sticky top-1 z-10">
                 <span className="px-3 py-1 rounded-full bg-slate-100/50 dark:bg-(--page-body-bg) backdrop-blur-sm text-[11px] font-bold text-slate-500 dark:text-gray-400 shadow-sm border border-slate-200/50 dark:border-(--card-border-color)">{formatChatDate(dateGroup.dateKey)}</span>
               </div>

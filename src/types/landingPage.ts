@@ -81,6 +81,7 @@ export interface PricingSection {
   subscribed_count: string;
   subscribed_user: string;
   plans: PricingPlan[];
+  tabs?: { key: string; value: string; badge?: string }[];
   _id?: string;
 }
 
@@ -231,4 +232,19 @@ export interface PricingPlanProps {
 
 export interface TestimonialProps {
   data: TestimonialsSection;
+}
+
+export interface DynamicPageClientProps {
+  slug: string;
+}
+
+export interface PageContentProps {
+  content: string;
+}
+
+export type BillingTab = string;
+
+export interface ProductDropdownProps {
+  item: MenuItem;
+  scrollToSection: (id: string) => void;
 }

@@ -49,7 +49,10 @@ const ChatThemePage = () => {
       });
       if (bg_image) {
         setBgType("image");
-        setImagePreview(bg_image.startsWith("http") ? bg_image : `${process.env.NEXT_PUBLIC_STORAGE_URL}${bg_image}`);
+        const API_URL = process.env.NEXT_PUBLIC_STORAGE_URL ?? "";
+        const cleanUrl = bg_image.replace(/\\/g, "/").startsWith("/") ? bg_image.replace(/\\/g, "/") : `/${bg_image.replace(/\\/g, "/")}`;
+        const baseUrl = API_URL.endsWith("/") ? API_URL.slice(0, -1) : API_URL;
+        setImagePreview(bg_image.startsWith("http") ? bg_image : `${baseUrl}${cleanUrl}`);
       } else {
         setBgType("color");
       }

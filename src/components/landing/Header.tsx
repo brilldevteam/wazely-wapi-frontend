@@ -1,6 +1,6 @@
 "use client";
 
-import Logo1 from "@/public/assets/logos/logo1.png";
+import Logo3 from "@/public/assets/logos/logo3.png";
 import { ROUTES } from "@/src/constants";
 import { Button } from "@/src/elements/ui/button";
 import { useAppSelector } from "@/src/redux/hooks";
@@ -15,6 +15,7 @@ import { useGetLandingPageQuery } from "../../redux/api/landingPageApi";
 import Images from "../../shared/Image";
 import CurrencyDropdown from "../layouts/CurrencyDropdown";
 import ProductDropdown from "./ProductDropdown";
+import { defaultMenuItems } from "@/src/data/landing";
 
 const getMenuIcon = (iconName?: string) => {
   if (!iconName) return null;
@@ -38,55 +39,11 @@ const Header = ({ isColor }: { isColor?: boolean }) => {
   const { data: landingResponse } = useGetLandingPageQuery();
   const headerData = landingResponse?.data?.header_section;
 
-  // Fallback default menu items if Mongoose document is not yet configured or populated
-  const defaultMenuItems: MenuItem[] = [
-    {
-      title: "Home",
-      link_type: "Link",
-      path: "/landing",
-      status: true,
-    },
-    {
-      title: "Channels",
-      link_type: "Sub",
-      status: true,
-      children: [
-        { title: "WhatsApp", link_type: "Link", path: "/channel/whatsapp", status: true, icon: "Phone" },
-        { title: "Instagram", link_type: "Link", path: "/channel/instagram", status: true, icon: "Instagram" },
-        { title: "Telegram", link_type: "Link", path: "/channel/telegram", status: true, icon: "Send" },
-        { title: "Facebook", link_type: "Link", path: "/channel/facebook", status: true, icon: "Facebook" },
-      ],
-    },
-    {
-      title: "Features",
-      link_type: "Sub",
-      mega_menu: true,
-      mega_menu_type: "Link With Image",
-      status: true,
-      children: [
-        { title: "Bulk WhatsApp Broadcast", link_type: "Link", path: "/product/broadcast_bulk_messages", description: "Reach Everyone Instantly with Bulk WhatsApp Broadcast", status: true, icon: "Send" },
-        { title: "Shared Inbox", link_type: "Link", path: "/product/shared_team_inbox", description: "Centralized Communication with Shared Inbox", status: true, icon: "Inbox" },
-        { title: "WhatsApp Catalog", link_type: "Link", path: "/product/catalog", description: "Showcase Resources with WhatsApp Catalog", status: true, icon: "ShoppingBag" },
-        { title: "AI Voice Calling", link_type: "Link", path: "/product/ai_calling", description: "AI voice agents handling inbound & outbound voice calls", status: true, icon: "Phone" },
-        { title: "Appointment Booking", link_type: "Link", path: "/product/appointment_booking", description: "Let customers book appointments directly", status: true, icon: "Calendar" },
-        { title: "Click To WhatsApp Ads", link_type: "Link", path: "/product/ctwa", description: "Drive instant conversations with ads", status: true, icon: "Sparkles" },
-        { title: "Automation Builder", link_type: "Link", path: "/product/automation_builder", description: "AI-powered, human-like chatbots for every use case", status: true, icon: "GitBranch" },
-        { title: "WhatsApp Forms", link_type: "Link", path: "/product/whatsapp_forms", description: "Create and share forms that collect responses", status: true, icon: "FileText" },
-      ],
-    },
-    {
-      title: "Pricing",
-      link_type: "Link",
-      path: "/landing#pricing",
-      status: true,
-    },
-  ];
-
   const menuItems = headerData?.menu_items && headerData.menu_items.length > 0
     ? headerData.menu_items
     : defaultMenuItems;
 
-  const logoUrl = headerData?.logo_url || logo_dark_url || Logo1;
+  const logoUrl = headerData?.logo_url || logo_dark_url || Logo3;
 
   const scrollToSection = (id: string) => {
     const isLandingPage = pathname === "/" || pathname === ROUTES.Landing;

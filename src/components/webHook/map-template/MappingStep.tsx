@@ -169,9 +169,9 @@ const MappingStep = ({
               {merchantRecipients.map((phone, index) => (
                 <Badge key={index} className="pl-3 pr-1 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-none font-bold text-xs flex items-center gap-2 group transition-all hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600">
                   {phone}
-                  <button onClick={() => removeRecipient(index)} className="p-1 hover:bg-red-100 dark:hover:bg-red-800 rounded-md transition-colors">
+                  <Button variant="unstyled" onClick={() => removeRecipient(index)} className="p-1 hover:bg-red-100 dark:hover:bg-red-800 rounded-md transition-colors">
                     <X size={12} />
-                  </button>
+                  </Button>
                 </Badge>
               ))}
               {merchantRecipients.length === 0 && <p className="text-[10px] text-slate-400 italic font-bold uppercase tracking-widest py-2">No recipients added yet.</p>}

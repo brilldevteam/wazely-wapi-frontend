@@ -73,6 +73,13 @@ export const whatsappApi = baseApi.enhanceEndpoints({ addTagTypes: ["Whatsapp", 
       }),
       invalidatesTags: ["WhatsappStatus", "WhatsappConnections", "Workspace"],
     }),
+    setPrimaryPhoneNumber: builder.mutation<{ success: boolean; message: string }, string>({
+      query: (phoneNumberId) => ({
+        url: `/whatsapp/phone-numbers/${phoneNumberId}/set-primary`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["WhatsappStatus", "WhatsappConnections", "Workspace"],
+    }),
     getMessageLogs: builder.query<{ success: boolean; data: { logs: any[]; pagination: { currentPage: number; totalPages: number; totalItems: number; itemsPerPage: number } } }, { page?: number; limit?: number; search?: string; status?: string; timeFilter?: string; platform?: string; workspaceId?: string } | void>({
       query: (params) => {
         const queryParams = new URLSearchParams();
@@ -102,5 +109,6 @@ export const {
   useGetBaileysQRCodeQuery,
   useLazyGetBaileysQRCodeQuery,
   useDisconnectWhatsAppMutation,
+  useSetPrimaryPhoneNumberMutation,
   useGetMessageLogsQuery
 } = whatsappApi;

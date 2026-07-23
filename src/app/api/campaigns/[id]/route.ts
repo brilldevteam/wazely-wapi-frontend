@@ -58,7 +58,11 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
     const token = session?.accessToken as string | undefined;
     const { id } = await context.params;
 
-    const response = await fetch(`${PUBLIC_API_URL}/campaigns/${id}`, {
+    const { searchParams } = new URL(request.url);
+    const queryString = searchParams.toString();
+    const apiUrl = `${PUBLIC_API_URL}/campaigns/${id}${queryString ? `?${queryString}` : ""}`;
+
+    const response = await fetch(apiUrl, {
       headers: {
         "Content-Type": "application/json",
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -73,3 +77,4 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
     return NextResponse.json({ error: "Failed to fetch campaign" }, { status: 500 });
   }
 }
+

@@ -11,6 +11,7 @@ import useDebounce from "@/src/utils/hooks/useDebounce";
 import { useTranslation } from "react-i18next";
 import { useAppSelector } from "@/src/redux/hooks";
 import { ROUTES } from "@/src/constants";
+import { useFeatureAccess } from "@/src/hooks/useFeatureAccess";
 
 const flattenMenuData = (isAgent: boolean): SearchResult[] => {
   const flattened: SearchResult[] = [];
@@ -34,6 +35,7 @@ const SearchBar = ({ defaultOpen = false, onClose }: { defaultOpen?: boolean; on
   const router = useRouter();
   const { user } = useAppSelector((state) => state.auth);
   const isAgent = user?.role === "agent";
+  const { isPathEnabled } = useFeatureAccess();
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
@@ -42,12 +44,14 @@ const SearchBar = ({ defaultOpen = false, onClose }: { defaultOpen?: boolean; on
 
   const allMenuItems = useMemo(() => {
     const flattened = flattenMenuData(isAgent);
-    return flattened.map((item) => ({
-      ...item,
-      label: t(item.label),
-      section: item.section ? t(item.section) : undefined,
-    }));
-  }, [t, isAgent]);
+    return flattened
+      .filter((item) => isPathEnabled(item.path))
+      .map((item) => ({
+        ...item,
+        label: t(item.label),
+        section: item.section ? t(item.section) : undefined,
+      }));
+  }, [t, isAgent, isPathEnabled]);
 
   const filteredResults = useMemo(() => {
     if (!debouncedSearchQuery.trim()) return [];

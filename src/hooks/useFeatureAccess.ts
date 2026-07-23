@@ -8,6 +8,7 @@ import { ROUTES } from "@/src/constants";
 
 export const useFeatureAccess = () => {
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const { setting } = useAppSelector((state) => state.setting);
   const { data: subscriptionRes, isLoading: subLoading } = useGetUserSubscriptionQuery(undefined, {
     skip: !isAuthenticated,
   });
@@ -67,9 +68,31 @@ export const useFeatureAccess = () => {
     [enabledFeatures, planFeatures, subLoading, user?.isSelfTenant]
   );
 
+  const isPlatformAllowed = useCallback(
+    (platform: string) => {
+      if (!setting || !setting.omnichannel_platforms) return true;
+      return setting.omnichannel_platforms.includes(platform);
+    },
+    [setting]
+  );
+
+  const getPlatformFromSection = useCallback((section?: string) => {
+    if (section === "telegram_sidebar_title") return "telegram";
+    if (section === "facebook_sidebar_title") return "facebook";
+    if (section === "instagram_sidebar_title") return "instagram";
+    if (section === "twitter_sidebar_title") return "twitter";
+    return null;
+  }, []);
+
   const getEnabledChannels = useCallback(() => {
     if (user?.isSelfTenant) {
-      return { facebook: true, instagram: true, telegram: true, twitter: true, whatsapp: true };
+      return {
+        facebook: isPlatformAllowed("facebook"),
+        instagram: isPlatformAllowed("instagram"),
+        telegram: isPlatformAllowed("telegram"),
+        twitter: isPlatformAllowed("twitter"),
+        whatsapp: true
+      };
     }
     if (subLoading) {
       return { facebook: true, instagram: true, telegram: true, twitter: true, whatsapp: true };
@@ -83,18 +106,23 @@ export const useFeatureAccess = () => {
     };
 
     return {
-      facebook: checkEnabled("omnichannel_facebook"),
-      instagram: checkEnabled("omnichannel_instagram"),
-      telegram: checkEnabled("omnichannel_telegram"),
-      twitter: checkEnabled("omnichannel_twitter"),
+      facebook: checkEnabled("omnichannel_facebook") && isPlatformAllowed("facebook"),
+      instagram: checkEnabled("omnichannel_instagram") && isPlatformAllowed("instagram"),
+      telegram: checkEnabled("omnichannel_telegram") && isPlatformAllowed("telegram"),
+      twitter: checkEnabled("omnichannel_twitter") && isPlatformAllowed("twitter"),
       whatsapp: true,
     };
-  }, [planFeatures, enabledFeatures, subLoading, user?.isSelfTenant]);
+  }, [planFeatures, enabledFeatures, subLoading, user?.isSelfTenant, isPlatformAllowed]);
 
   const isPathEnabled = useCallback(
     (path: string) => {
       const item = MENUITEMS.find((m) => m.path === path || path.startsWith(m.path + "/"));
       if (!item) return true;
+
+      const platform = getPlatformFromSection(item.section);
+      if (platform && !isPlatformAllowed(platform)) {
+        return false;
+      }
 
       const enabled = getEnabledChannels();
       if (item.section === "telegram_sidebar_title") {
@@ -107,12 +135,24 @@ export const useFeatureAccess = () => {
       if (item.section === "instagram_sidebar_title") {
         if (!enabled.instagram) return false;
       }
+      if (item.section === "twitter_sidebar_title") {
+        if (!enabled.twitter) return false;
+      }
 
       if (!item.featureKey) return true;
       return isFeatureEnabled(item.featureKey);
     },
-    [isFeatureEnabled, getEnabledChannels]
+    [isFeatureEnabled, getEnabledChannels, isPlatformAllowed, getPlatformFromSection]
   );
 
-  return { isFeatureEnabled, isPathEnabled, enabledFeatures, planFeatures, getEnabledChannels, isLoading: subLoading };
+  return {
+    isFeatureEnabled,
+    isPathEnabled,
+    enabledFeatures,
+    planFeatures,
+    getEnabledChannels,
+    isPlatformAllowed,
+    getPlatformFromSection,
+    isLoading: subLoading
+  };
 };

@@ -198,7 +198,7 @@ const SubmissionsPage = () => {
       />
 
       <div className="bg-white dark:bg-(--card-color) rounded-xl border border-slate-200/60 dark:border-(--card-border-color) shadow-sm overflow-hidden">
-        <DataTable columns={columns as any} data={submissionsData?.data || []} isLoading={isLoading} isFetching={isFetching || isUpdatingStatus || isDeleting} totalCount={submissionsData?.pagination?.totalForms || 0} page={page} limit={limit} onPageChange={setPage} onLimitChange={setLimit} enableSelection={false} getRowId={(item: any) => (item._id || item.id || "") as string} emptyMessage="No submissions found yet. Share your form to start collected data!" />
+        <DataTable columns={columns as any} data={submissionsData?.data || []} isLoading={isLoading} isFetching={isFetching || isUpdatingStatus || isDeleting} totalCount={submissionsData?.pagination?.totalForms || 0} page={page} limit={limit} onPageChange={setPage} onLimitChange={setLimit} enableSelection={false} getRowId={(item: any) => (item._id || item.id || "") as string} emptyMessage="No submissions found yet. Share your form to start collected data!" actionPermission={["update.form_builder", "delete.form_builder"]} />
       </div>
 
       <SubmissionDetailsModal isOpen={isDetailsModalOpen} onClose={() => setIsDetailsModalOpen(false)} data={detailsData?.data || null} isLoading={isDetailsLoading} />

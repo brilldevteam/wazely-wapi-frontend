@@ -31,3 +31,20 @@ export interface StageModalProps {
   stage?: Partial<KanbanStage> | null;
   isLoading?: boolean;
 }
+
+export interface ItemModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: (data: { priority: string; isArchived: boolean }) => void;
+  item: {
+    _id: string;
+    title: string;
+    priority?: string;
+    isArchived?: boolean;
+  } | null;
+  isLoading?: boolean;
+}
+
+export interface PipelineManageProps {
+  id: string;
+}

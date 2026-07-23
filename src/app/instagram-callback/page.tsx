@@ -4,8 +4,13 @@ import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { getUrlWithBasePath } from "@/src/utils";
 
+let isDispatched = false;
+
 export default function InstagramCallback() {
   useEffect(() => {
+    if (isDispatched) return;
+    isDispatched = true;
+
     // Get URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
@@ -55,3 +60,4 @@ export default function InstagramCallback() {
     </div>
   );
 }
+

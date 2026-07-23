@@ -1,6 +1,7 @@
 "use client";
 
 import { ROUTES } from "@/src/constants";
+import { MONTH_NAMES } from "@/src/data/dashboard";
 import { ContactYearlyChartProps } from "@/src/types/dashboard";
 import type { ApexOptions } from "apexcharts";
 import { ArrowUpRight, Users } from "lucide-react";
@@ -10,7 +11,7 @@ import { useTranslation } from "react-i18next";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 
 const ContactYearlyChart = ({ data, isLoading }: ContactYearlyChartProps) => {
   const { t } = useTranslation();

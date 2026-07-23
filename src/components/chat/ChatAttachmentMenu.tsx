@@ -3,13 +3,13 @@
 import { Button } from "@/src/elements/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/src/elements/ui/popover";
 import { ChatAttachmentMenuProps } from "@/src/types/components/chat";
-import { Image as ImageIcon, MapPin, Paperclip, MessageSquare, List, Mic, CreditCard } from "lucide-react";
+import { Image as ImageIcon, MapPin, Paperclip, MessageSquare, List, Mic, CreditCard, ShoppingCart, Video } from "lucide-react";
 import React from "react";
 import { useChatTheme } from "@/src/hooks/useChatTheme";
 import { useAppSelector } from "@/src/redux/hooks";
 import { Input } from "@/src/elements/ui/input";
 
-const ChatAttachmentMenu = ({ onFileSelect, onMediaLibraryOpen, onLocationClick, onInteractiveClick, onAudioClick, onPaymentLinkClick, isBaileys }: ChatAttachmentMenuProps) => {
+const ChatAttachmentMenu = ({ onFileSelect, onMediaLibraryOpen, onLocationClick, onInteractiveClick, onAudioClick, onPaymentLinkClick, onEcommerceClick, onGoogleMeetClick, isBaileys }: ChatAttachmentMenuProps) => {
   const { isCustom } = useChatTheme();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const { userSetting, allow_media_send } = useAppSelector((state) => state.setting);
@@ -20,6 +20,9 @@ const ChatAttachmentMenu = ({ onFileSelect, onMediaLibraryOpen, onLocationClick,
       onFileSelect(e.target.files[0]);
     }
   };
+  const activePlatform = (typeof window !== "undefined" && localStorage.getItem("selectedChannel")) || "whatsapp";
+
+  const isWhatsApp = activePlatform === "whatsapp";
 
   return (
     <Popover>
@@ -48,10 +51,10 @@ const ChatAttachmentMenu = ({ onFileSelect, onMediaLibraryOpen, onLocationClick,
             <span>Button message</span>
           </Button>
 
-          <Button className="flex items-center bg-[unset]! justify-start gap-3 p-2! hover:bg-slate-100! dark:hover:bg-(--table-hover)! rounded-lg! transition-colors text-sm! text-slate-700! dark:text-slate-300!" onClick={() => onInteractiveClick("list")}>
+          {isWhatsApp && <Button className="flex items-center bg-[unset]! justify-start gap-3 p-2! hover:bg-slate-100! dark:hover:bg-(--table-hover)! rounded-lg! transition-colors text-sm! text-slate-700! dark:text-slate-300!" onClick={() => onInteractiveClick("list")}>
             <List size={18} className="text-blue-500" />
             <span>List message</span>
-          </Button>
+          </Button>}
 
           <div className="h-px bg-slate-100 dark:bg-(--card-border-color) my-1" />
 
@@ -94,6 +97,26 @@ const ChatAttachmentMenu = ({ onFileSelect, onMediaLibraryOpen, onLocationClick,
               <span>Send payment link</span>
             </Button>
           )}
+          {!isBaileys && (
+            <Button
+              className="flex items-center bg-[unset]! gap-3! p-2! justify-start hover:bg-slate-100! dark:hover:bg-(--table-hover)! rounded-lg! transition-colors text-sm! text-slate-700! dark:text-slate-300!"
+              onClick={() => {
+                onEcommerceClick?.();
+              }}
+            >
+              <ShoppingCart size={18} className="text-indigo-500" />
+              <span>Ecommerce</span>
+            </Button>
+          )}
+          <Button
+            className="flex items-center bg-[unset]! gap-3! p-2! justify-start hover:bg-slate-100! dark:hover:bg-(--table-hover)! rounded-lg! transition-colors text-sm! text-slate-700! dark:text-slate-300!"
+            onClick={() => {
+              onGoogleMeetClick?.();
+            }}
+          >
+            <Video size={18} className="text-blue-500" />
+            <span>Google Meet</span>
+          </Button>
         </div>
         <Input type="file" ref={fileInputRef} className="hidden" onChange={handleFileChange} />
       </PopoverContent>

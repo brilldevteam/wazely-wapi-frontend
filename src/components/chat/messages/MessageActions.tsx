@@ -34,8 +34,8 @@ const MessageActions: React.FC<MessageActionsProps> = ({ message, isOutgoing, on
           if (list?.header) text += `*${list.header}*\n\n`;
           if (msg.content) text += `${msg.content}\n`;
           if (list?.footer) text += `\n_${list.footer}_`;
-          if (buttons) {
-            text += "\n" + buttons.map((b) => `[${b.title}]`).join(" ");
+          if (buttons && Array.isArray(buttons)) {
+            text += "\n" + (buttons as any[]).map((b) => `[${b.title || b.text || ""}]`).join(" ");
           }
           if (list?.buttonTitle) {
             text += `\n\n[${list.buttonTitle}]`;

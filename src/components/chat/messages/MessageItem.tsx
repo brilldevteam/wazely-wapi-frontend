@@ -13,6 +13,7 @@ import TextMessage from "./TextMessage";
 import VideoMessage from "./VideoMessage";
 import CommentMessage from "./CommentMessage";
 import StoryReplyMessage from "./StoryReplyMessage";
+import StickerMessage from "./StickerMessage";
 
 const MessageItem: React.FC<MessageItemProps> = ({ message, onImageClick, isWindowExpired }) => {
   switch (message.messageType) {
@@ -24,6 +25,8 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, onImageClick, isWind
       return <CommentMessage message={message} isWindowExpired={isWindowExpired} />;
     case "image":
       return <ImageMessage message={message} onImageClick={onImageClick} isWindowExpired={isWindowExpired} />;
+    case "sticker":
+      return <StickerMessage message={message} isWindowExpired={isWindowExpired} />;
     case "video":
       return <VideoMessage message={message} isWindowExpired={isWindowExpired} />;
     case "audio":
@@ -40,6 +43,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, onImageClick, isWind
     case "order":
       return <OrderMessage message={message} isWindowExpired={isWindowExpired} />;
     case "payment_link":
+    case "google_meet":
       return <TextMessage message={message} isWindowExpired={isWindowExpired} />;
     case "system_messages":
       return <SystemMessage message={message} />;

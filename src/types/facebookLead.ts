@@ -36,3 +36,16 @@ export interface FacebookPage {
   category: string;
   is_active: boolean;
 }
+
+export interface ConnectFormModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConnect: (data: { form_name: string; tag_ids: string[] }) => void;
+  form: FacebookLeadForm | null;
+  isLoading: boolean;
+}
+
+export interface FacebookWebhookModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}

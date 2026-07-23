@@ -1,10 +1,11 @@
-import { CircleDollarSign, Clock, CreditCard, FileText, Globe, MessageSquare, TrendingUp, Type, Wallet } from "lucide-react";
+import { BarChart3, CircleDollarSign, Clock, CreditCard, FileText, Globe, MessageSquare, TrendingUp, Type, Wallet } from "lucide-react";
 
 export const SUGGESTIONS = ["welcome", "pricing", "talk_to_rep", "support_query", "business_hours", "product_catalog", "payment_info", "technical_help", "demo_request"];
 
 export const CAMPAIGNDATA = [
   { id: "overview", label: "Overview", icon: TrendingUp },
   { id: "messages", label: "Messages", icon: MessageSquare },
+  { id: "insights", label: "Insights", icon: BarChart3 },
 ];
 
 export const CHATFILTER = [

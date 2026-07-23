@@ -1,37 +1,26 @@
 "use client";
 
+import { CheckCircle2, Loader2, Unplug } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { CheckCircle2, Loader2, Unplug } from "lucide-react";
 
+import { cn } from "@/src/lib/utils";
+import {
+  useDisconnectShopifyMutation,
+  useGetShopifyConfigQuery,
+  useSaveShopifyConfigMutation,
+} from "@/src/redux/api/shopifyApi";
 import CommonHeader from "@/src/shared/CommonHeader";
 import ConfirmModal from "@/src/shared/ConfirmModal";
-import { cn } from "@/src/lib/utils";
-import { useGetShopifyConfigQuery, useSaveShopifyConfigMutation, useDisconnectShopifyMutation } from "@/src/redux/api/shopifyApi";
-import type { ShopifyConfigPayload } from "@/src/types/shopify";
+import {
+  EMPTY_FORM,
+  type FormState,
+  type ShopifyConfigPayload,
+} from "@/src/types/shopify";
 
 // Split Sub-components
 import { ShopifyConfigForm } from "./ShopifyConfigForm";
 import { ShopifyInstructions } from "./ShopifyInstructions";
-
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-interface FormState {
-  shop_domain: string;
-  admin_api_access_token: string;
-  client_id: string;
-  client_secret: string;
-  is_active: boolean;
-}
-
-const EMPTY_FORM: FormState = {
-  shop_domain: "",
-  admin_api_access_token: "",
-  client_id: "",
-  client_secret: "",
-  is_active: true,
-};
 
 // ---------------------------------------------------------------------------
 // Main Component
@@ -41,12 +30,19 @@ const ShopifyConnectPage: React.FC = () => {
   const [isDirty, setIsDirty] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
-  const { data: configData, isLoading: loadingConfig, refetch } = useGetShopifyConfigQuery();
+  const {
+    data: configData,
+    isLoading: loadingConfig,
+    refetch,
+  } = useGetShopifyConfigQuery();
   const [saveConfig, { isLoading: isSaving }] = useSaveShopifyConfigMutation();
-  const [disconnectShopify, { isLoading: isDisconnecting }] = useDisconnectShopifyMutation();
+  const [disconnectShopify, { isLoading: isDisconnecting }] =
+    useDisconnectShopifyMutation();
 
   const existingConfig = configData?.config ?? configData?.data ?? null;
-  const isConnected = !!(existingConfig?.shop_domain && existingConfig?.is_active);
+  const isConnected = !!(
+    existingConfig?.shop_domain && existingConfig?.is_active
+  );
 
   // Populate form when config loads
   useEffect(() => {
@@ -68,13 +64,20 @@ const ShopifyConnectPage: React.FC = () => {
   };
 
   const handleSave = async () => {
-    if (!form.shop_domain.trim() || !form.admin_api_access_token.trim() || !form.client_id.trim() || !form.client_secret.trim()) {
+    if (
+      !form.shop_domain.trim() ||
+      !form.admin_api_access_token.trim() ||
+      !form.client_id.trim() ||
+      !form.client_secret.trim()
+    ) {
       toast.error("All fields are required.");
       return;
     }
 
     const payload: Partial<ShopifyConfigPayload> = {};
-    const normalisedDomain = form.shop_domain.replace(/^https?:\/\//, "").replace(/\/$/, "");
+    const normalisedDomain = form.shop_domain
+      .replace(/^https?:\/\//, "")
+      .replace(/\/$/, "");
 
     if (!existingConfig) {
       // Fresh connection - send everything
@@ -85,12 +88,16 @@ const ShopifyConnectPage: React.FC = () => {
       payload.is_active = form.is_active;
     } else {
       // Update - only send changed fields
-      const originalDomain = existingConfig.shop_domain?.replace(/^https?:\/\//, "").replace(/\/$/, "");
+      const originalDomain = existingConfig.shop_domain
+        ?.replace(/^https?:\/\//, "")
+        .replace(/\/$/, "");
 
       if (normalisedDomain !== originalDomain) {
         payload.shop_domain = normalisedDomain;
       }
-      if (form.admin_api_access_token !== existingConfig.admin_api_access_token) {
+      if (
+        form.admin_api_access_token !== existingConfig.admin_api_access_token
+      ) {
         payload.admin_api_access_token = form.admin_api_access_token;
       }
       if (form.client_id !== existingConfig.client_id) {
@@ -147,23 +154,29 @@ const ShopifyConnectPage: React.FC = () => {
         title="Shopify Connect"
         description="Link your Shopify store to sync products, orders, and automate messages."
         rightContent={
-          <div className={cn(
-            "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold border",
-            isConnected
-              ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/30"
-              : "bg-slate-100 dark:bg-(--dark-body) text-slate-500 border-slate-200 dark:border-(--card-border-color)"
-          )}>
-            {isConnected
-              ? <><CheckCircle2 size={13} /> Connected</>
-              : <><Unplug size={13} /> Not Connected</>
-            }
+          <div
+            className={cn(
+              "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold border",
+              isConnected
+                ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/30"
+                : "bg-slate-100 dark:bg-(--dark-body) text-slate-500 border-slate-200 dark:border-(--card-border-color)",
+            )}
+          >
+            {isConnected ? (
+              <>
+                <CheckCircle2 size={13} /> Connected
+              </>
+            ) : (
+              <>
+                <Unplug size={13} /> Not Connected
+              </>
+            )}
           </div>
         }
       />
 
       {/* Two-column layout */}
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-6 items-start">
-        
         {/* LEFT — Configuration Form */}
         <ShopifyConfigForm
           form={form}

@@ -1,13 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
 import { Input } from "@/src/elements/ui/input";
 import { Label } from "@/src/elements/ui/label";
-import { Tag, KeyRound, HelpCircle } from "lucide-react";
-
-interface IdentitySectionProps {
-  formik: any;
-  handleLabelChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
+import { IdentitySectionProps } from "@/src/types/components";
+import { HelpCircle, KeyRound, Tag } from "lucide-react";
+import React from "react";
 
 const IdentitySection: React.FC<IdentitySectionProps> = ({
   formik,

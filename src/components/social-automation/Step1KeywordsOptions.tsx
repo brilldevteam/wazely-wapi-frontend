@@ -1,54 +1,22 @@
-import React from "react";
-import { Label } from "@/src/elements/ui/label";
+import { MATCHING_METHODS } from "@/src/data/KeywordActionData";
 import { Button } from "@/src/elements/ui/button";
 import { Input } from "@/src/elements/ui/input";
+import { Label } from "@/src/elements/ui/label";
 import { Switch } from "@/src/elements/ui/switch";
 import { cn } from "@/src/lib/utils";
-import { MATCHING_METHODS } from "@/src/data/KeywordActionData";
+import { Step1KeywordsOptionsProps } from "@/src/types/socialAutomation";
+import {
+  Check,
+  Clock,
+  EyeOff,
+  Heart,
+  MessageCircle,
+  Settings,
+  UserCheck,
+  X
+} from "lucide-react";
+import React from "react";
 import { PercentageSlider } from "./PercentageSlider";
-import { Settings, Heart, EyeOff, Clock, X, Plus, Check, UserCheck, MessageCircle } from "lucide-react";
-
-interface Step1KeywordsOptionsProps {
-  keywords: string[];
-  setKeywords: React.Dispatch<React.SetStateAction<string[]>>;
-  keywordInput: string;
-  setKeywordInput: (v: string) => void;
-  suggestedKeywords: string[];
-  matchingMethod: string;
-  setMatchingMethod: (v: string) => void;
-  partialPercentage: number;
-  setPartialPercentage: (v: number) => void;
-  autoLikeComment: boolean;
-  setAutoLikeComment: (v: boolean) => void;
-  autoHideComment: boolean;
-  setAutoHideComment: (v: boolean) => void;
-  autoReplyText: string;
-  setAutoReplyText: (v: string) => void;
-  hideConditionType: "keywords" | "chatbot";
-  setHideConditionType: (v: "keywords" | "chatbot") => void;
-  hideKeywords: string[];
-  setHideKeywords: React.Dispatch<React.SetStateAction<string[]>>;
-  hideKeywordInput: string;
-  setHideKeywordInput: (v: string) => void;
-  hideChatbotId: string;
-  setHideChatbotId: (v: string) => void;
-  chatbotsData: any[];
-  delaySeconds: number;
-  setDelaySeconds: (v: number) => void;
-  handleKeyDown: (e: React.KeyboardEvent) => void;
-  addKeyword: () => void;
-  mediaType: "post" | "story" | "reel";
-  requiresFollowing: boolean;
-  setRequiresFollowing: (v: boolean) => void;
-  followGateMessage: string;
-  setFollowGateMessage: (v: string) => void;
-  followGateButtonYes: string;
-  setFollowGateButtonYes: (v: string) => void;
-  followGateButtonNo: string;
-  setFollowGateButtonNo: (v: string) => void;
-  followGateRejectionMessage: string;
-  setFollowGateRejectionMessage: (v: string) => void;
-}
 
 export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
   keywords,
@@ -72,9 +40,6 @@ export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
   setHideKeywords,
   hideKeywordInput,
   setHideKeywordInput,
-  hideChatbotId,
-  setHideChatbotId,
-  chatbotsData,
   delaySeconds,
   setDelaySeconds,
   handleKeyDown,
@@ -95,12 +60,16 @@ export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
     <div className="sm:p-6 p-4 space-y-6">
       {/* Keywords Tag Input (Read-only) */}
       <div className="space-y-2">
-        <Label className="text-sm font-bold text-slate-500 ">Trigger Keywords</Label>
+        <Label className="text-sm font-bold text-slate-500 ">
+          Trigger Keywords
+        </Label>
         <div
           className={cn(
             "min-h-10 p-3 rounded-lg border transition-all flex flex-wrap gap-2 items-center",
             "bg-slate-50 dark:bg-(--page-body-bg)",
-            keywords.length ? "border-primary/20" : "border-slate-200 dark:border-none"
+            keywords.length
+              ? "border-primary/20"
+              : "border-slate-200 dark:border-none",
           )}
         >
           {keywords.map((kw) => (
@@ -110,13 +79,15 @@ export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
             >
               {kw}
               {mediaType === "story" && (
-                <button
+                <Button variant="unstyled"
                   type="button"
-                  onClick={() => setKeywords((prev) => prev.filter((k) => k !== kw))}
+                  onClick={() =>
+                    setKeywords((prev) => prev.filter((k) => k !== kw))
+                  }
                   className="ml-2 hover:bg-white/20 rounded-full p-0.5 transition-colors"
                 >
                   <X size={12} />
-                </button>
+                </Button>
               )}
             </span>
           ))}
@@ -133,14 +104,18 @@ export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
             </div>
           )}
           {keywords.length === 0 && mediaType !== "story" && (
-            <span className="text-xs text-slate-400">No keywords configured.</span>
+            <span className="text-xs text-slate-400">
+              No keywords configured.
+            </span>
           )}
         </div>
       </div>
 
       {/* Matching Methods */}
       <div className="space-y-3">
-        <Label className="text-sm font-bold text-slate-500">Matching Method</Label>
+        <Label className="text-sm font-bold text-slate-500">
+          Matching Method
+        </Label>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           {MATCHING_METHODS.map((m) => (
             <Button
@@ -151,22 +126,28 @@ export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
                 "flex h-18 justify-start items-start gap-3 p-4 rounded-lg border text-left transition-all",
                 matchingMethod === m.value
                   ? "border-primary bg-primary/5! ring-1 ring-primary/10 shadow-sm"
-                  : "border-slate-100 dark:border-(--card-border-color) hover:border-primary/20 hover:bg-slate-50/50! bg-[unset]! dark:hover:bg-(--table-hover)!"
+                  : "border-slate-100 dark:border-(--card-border-color) hover:border-primary/20 hover:bg-slate-50/50! bg-[unset]! dark:hover:bg-(--table-hover)!",
               )}
             >
               <div
                 className={cn(
                   "w-4.5 h-4.5 rounded-full border-2 flex items-center justify-center mt-0.5 shrink-0 transition-all",
-                  matchingMethod === m.value ? "border-primary bg-primary" : "border-slate-300 dark:border-(--card-border-color)"
+                  matchingMethod === m.value
+                    ? "border-primary bg-primary"
+                    : "border-slate-300 dark:border-(--card-border-color)",
                 )}
               >
-                {matchingMethod === m.value && <Check size={5} className="text-white" />}
+                {matchingMethod === m.value && (
+                  <Check size={5} className="text-white" />
+                )}
               </div>
               <div className="min-w-0 text-left rtl:text-right">
                 <p
                   className={cn(
                     "text-sm font-bold",
-                    matchingMethod === m.value ? "text-primary" : "text-slate-800 dark:text-white"
+                    matchingMethod === m.value
+                      ? "text-primary"
+                      : "text-slate-800 dark:text-white",
                   )}
                 >
                   {m.label}
@@ -179,7 +160,10 @@ export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
       </div>
 
       {matchingMethod === "partial" && (
-        <PercentageSlider value={partialPercentage} onChange={setPartialPercentage} />
+        <PercentageSlider
+          value={partialPercentage}
+          onChange={setPartialPercentage}
+        />
       )}
 
       {/* Additional Options */}
@@ -194,11 +178,18 @@ export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
               <div className="flex items-center gap-3">
                 <Heart className="text-pink-500" size={18} />
                 <div>
-                  <p className="text-[15px] font-bold text-slate-800 dark:text-white">Auto-Like Comment</p>
-                  <p className="text-sm text-slate-400">Automatically likes the matching comment.</p>
+                  <p className="text-[15px] font-bold text-slate-800 dark:text-white">
+                    Auto-Like Comment
+                  </p>
+                  <p className="text-sm text-slate-400">
+                    Automatically likes the matching comment.
+                  </p>
                 </div>
               </div>
-              <Switch checked={autoLikeComment} onCheckedChange={setAutoLikeComment} />
+              <Switch
+                checked={autoLikeComment}
+                onCheckedChange={setAutoLikeComment}
+              />
             </div>
           )}
 
@@ -207,8 +198,13 @@ export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
               <div className="flex items-center gap-3">
                 <MessageCircle className="text-blue-500" size={18} />
                 <div>
-                  <p className="text-[15px] font-bold text-slate-800 dark:text-white">Auto-Reply to Comment</p>
-                  <p className="text-sm text-slate-400">Leaves a public reply on the user's comment (Leave blank to disable).</p>
+                  <p className="text-[15px] font-bold text-slate-800 dark:text-white">
+                    Auto-Reply to Comment
+                  </p>
+                  <p className="text-sm text-slate-400">
+                    Leaves a public reply on the user's comment (Leave blank to
+                    disable).
+                  </p>
                 </div>
               </div>
               <Input
@@ -227,31 +223,48 @@ export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
                 <div className="flex items-center gap-3">
                   <EyeOff className="text-slate-500" size={18} />
                   <div>
-                    <p className="text-[15px] font-bold text-slate-800 dark:text-white">Auto-Hide Comment</p>
-                    <p className="text-sm text-slate-400">Hides the comment to prevent spam or copycats.</p>
+                    <p className="text-[15px] font-bold text-slate-800 dark:text-white">
+                      Auto-Hide Comment
+                    </p>
+                    <p className="text-sm text-slate-400">
+                      Hides the comment to prevent spam or copycats.
+                    </p>
                   </div>
                 </div>
-                <Switch checked={autoHideComment} onCheckedChange={setAutoHideComment} />
+                <Switch
+                  checked={autoHideComment}
+                  onCheckedChange={setAutoHideComment}
+                />
               </div>
 
               {autoHideComment && (
                 <div className="space-y-4 pt-3 border-t border-slate-150 dark:border-(--card-border-color)">
                   <div className="space-y-2">
-                    <Label className="text-xs font-bold text-slate-500">Hide Condition</Label>
+                    <Label className="text-xs font-bold text-slate-500">
+                      Hide Condition
+                    </Label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       <Button
                         type="button"
-                        variant={hideConditionType === "keywords" ? "default" : "outline"}
+                        variant={
+                          hideConditionType === "keywords"
+                            ? "default"
+                            : "outline"
+                        }
                         onClick={() => setHideConditionType("keywords")}
-                        className="h-9 text-white"
+                        className="h-9"
                       >
                         Keyword Match
                       </Button>
                       <Button
                         type="button"
-                        variant={hideConditionType === "chatbot" ? "default" : "outline"}
-                        onClick={() => setHideConditionType("chatbot")}
-                        className="h-9 text-white"
+                        variant={
+                          hideConditionType === "aimodel"
+                            ? "default"
+                            : "outline"
+                        }
+                        onClick={() => setHideConditionType("aimodel")}
+                        className="h-9"
                       >
                         AI Model Analysis
                       </Button>
@@ -260,17 +273,32 @@ export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
 
                   {hideConditionType === "keywords" && (
                     <div className="space-y-2">
-                      <Label className="text-xs font-bold text-slate-500">Hide Keywords</Label>
-                      <div className={cn(
-                        "min-h-10 p-2 rounded-lg border flex flex-wrap gap-2 items-center",
-                        "bg-white dark:bg-(--card-color) border-slate-200 dark:border-slate-700"
-                      )}>
+                      <Label className="text-xs font-bold text-slate-500">
+                        Hide Keywords
+                      </Label>
+                      <div
+                        className={cn(
+                          "min-h-10 p-2 rounded-lg border flex flex-wrap gap-2 items-center",
+                          "bg-white dark:bg-(--card-color) border-slate-200 dark:border-slate-700",
+                        )}
+                      >
                         {hideKeywords.map((kw) => (
-                          <span key={kw} className="inline-flex items-center px-2 py-1 rounded bg-slate-100 dark:bg-(--dark-body) text-xs font-bold">
+                          <span
+                            key={kw}
+                            className="inline-flex items-center px-2 py-1 rounded bg-slate-100 dark:bg-(--dark-body) text-xs font-bold"
+                          >
                             {kw}
-                            <button type="button" onClick={() => setHideKeywords(prev => prev.filter(k => k !== kw))} className="ml-1.5 text-slate-400 hover:text-red-500">
+                            <Button variant="unstyled"
+                              type="button"
+                              onClick={() =>
+                                setHideKeywords((prev) =>
+                                  prev.filter((k) => k !== kw),
+                                )
+                              }
+                              className="ml-1.5 text-slate-400 hover:text-red-500"
+                            >
                               <X size={12} />
-                            </button>
+                            </Button>
                           </span>
                         ))}
                         <Input
@@ -281,8 +309,14 @@ export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
                           onKeyDown={(e) => {
                             if (e.key === "Enter" || e.key === ",") {
                               e.preventDefault();
-                              if (hideKeywordInput.trim() && !hideKeywords.includes(hideKeywordInput.trim())) {
-                                setHideKeywords(p => [...p, hideKeywordInput.trim()]);
+                              if (
+                                hideKeywordInput.trim() &&
+                                !hideKeywords.includes(hideKeywordInput.trim())
+                              ) {
+                                setHideKeywords((p) => [
+                                  ...p,
+                                  hideKeywordInput.trim(),
+                                ]);
                                 setHideKeywordInput("");
                               }
                             }
@@ -293,19 +327,14 @@ export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
                     </div>
                   )}
 
-                  {hideConditionType === "chatbot" && (
-                    <div className="space-y-2">
-                      <Label className="text-xs font-bold text-slate-500">Select AI Chatbot</Label>
-                      <select
-                        value={hideChatbotId}
-                        onChange={(e) => setHideChatbotId(e.target.value)}
-                        className="flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-(--card-border-color) dark:bg-(--page-body-bg) dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus:ring-slate-300"
-                      >
-                        <option value="" disabled>Choose AI Model to analyze comments...</option>
-                        {chatbotsData.map((c: any) => (
-                          <option key={c._id} value={c._id}>{c.name}</option>
-                        ))}
-                      </select>
+                  {hideConditionType === "aimodel" && (
+                    <div className="p-3 bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 rounded-lg">
+                      <p className="text-[13px] text-blue-700 dark:text-blue-400">
+                        The comment will be analyzed by your globally configured
+                        AI Model in AI Settings. If the model determines the
+                        comment contains hate speech, vulgarity, or spam, it
+                        will be automatically hidden.
+                      </p>
                     </div>
                   )}
                 </div>
@@ -318,17 +347,26 @@ export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
               <div className="flex items-center gap-3">
                 <UserCheck className="text-indigo-500" size={18} />
                 <div>
-                  <p className="text-[15px] font-bold text-slate-800 dark:text-white">Requires Following</p>
-                  <p className="text-sm text-slate-400">User must follow your profile to receive the DM reply.</p>
+                  <p className="text-[15px] font-bold text-slate-800 dark:text-white">
+                    Requires Following
+                  </p>
+                  <p className="text-sm text-slate-400">
+                    User must follow your profile to receive the DM reply.
+                  </p>
                 </div>
               </div>
-              <Switch checked={requiresFollowing} onCheckedChange={setRequiresFollowing} />
+              <Switch
+                checked={requiresFollowing}
+                onCheckedChange={setRequiresFollowing}
+              />
             </div>
 
             {requiresFollowing && (
               <div className="space-y-4 pt-3 border-t border-slate-150 dark:border-(--card-border-color)">
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-bold text-slate-500 dark:text-slate-400">Follow Gate Message</Label>
+                  <Label className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                    Follow Gate Message
+                  </Label>
                   <Input
                     type="text"
                     value={followGateMessage}
@@ -339,7 +377,9 @@ export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <Label className="text-xs font-bold text-slate-500 dark:text-slate-400">Yes Button Text</Label>
+                    <Label className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                      Yes Button Text
+                    </Label>
                     <Input
                       type="text"
                       value={followGateButtonYes}
@@ -349,7 +389,9 @@ export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-xs font-bold text-slate-500 dark:text-slate-400">No Button Text</Label>
+                    <Label className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                      No Button Text
+                    </Label>
                     <Input
                       type="text"
                       value={followGateButtonNo}
@@ -360,11 +402,15 @@ export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-bold text-slate-500 dark:text-slate-400">Gate Rejection Message</Label>
+                  <Label className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                    Gate Rejection Message
+                  </Label>
                   <Input
                     type="text"
                     value={followGateRejectionMessage}
-                    onChange={(e) => setFollowGateRejectionMessage(e.target.value)}
+                    onChange={(e) =>
+                      setFollowGateRejectionMessage(e.target.value)
+                    }
                     placeholder="E.g., Sorry, this exclusive offer is only for our followers!"
                     className="h-10 rounded-lg bg-white dark:bg-(--card-color) border-slate-200 dark:border-slate-700 focus-visible:ring-primary/20"
                   />
@@ -377,8 +423,12 @@ export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
             <div className="flex items-center gap-3">
               <Clock className="text-amber-500" size={18} />
               <div>
-                <p className="text-[15px] font-bold text-slate-800 dark:text-white">Reply Delay</p>
-                <p className="text-sm text-slate-400">Simulate natural response time (seconds).</p>
+                <p className="text-[15px] font-bold text-slate-800 dark:text-white">
+                  Reply Delay
+                </p>
+                <p className="text-sm text-slate-400">
+                  Simulate natural response time (seconds).
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-2 mt-2 w-full">
@@ -387,7 +437,9 @@ export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
                 min={0}
                 max={3600}
                 value={delaySeconds}
-                onChange={(e) => setDelaySeconds(Math.max(0, parseInt(e.target.value) || 0))}
+                onChange={(e) =>
+                  setDelaySeconds(Math.max(0, parseInt(e.target.value) || 0))
+                }
                 className="w-24 h-10 rounded-lg bg-white dark:bg-(--card-color) border-slate-200 dark:border-slate-700 focus-visible:ring-primary/20"
               />
               <span className="text-sm text-slate-400">seconds delay</span>

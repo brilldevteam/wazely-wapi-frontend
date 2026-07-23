@@ -90,8 +90,8 @@ const TeamList = () => {
   const handleDelete = async () => {
     if (deleteId) {
       try {
-        await deleteTeams([deleteId]).unwrap();
-        toast.success(t("team_delete_success"));
+        const res = await deleteTeams([deleteId]).unwrap();
+        toast.success(t(res.message ||"team_delete_success"));
         setDeleteId(null);
       } catch (error: any) {
         toast.error(error?.data?.message || t("team_delete_failed"));
@@ -101,8 +101,8 @@ const TeamList = () => {
 
   const confirmBulkDelete = async () => {
     try {
-      await deleteTeams(selectedIds).unwrap();
-      toast.success(t("teams_deleted_success", { count: selectedIds.length }));
+      const res = await deleteTeams(selectedIds).unwrap();
+      toast.success(t(res.message || "teams_deleted_success", { count: selectedIds.length }));
       setSelectedIds([]);
     } catch (error: any) {
       toast.error(error?.data?.message || t("teams_delete_failed"));

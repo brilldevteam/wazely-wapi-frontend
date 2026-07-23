@@ -12,6 +12,7 @@ import CurrencyDropdown from "./CurrencyDropdown";
 import Profile from "./Profile";
 import SearchBar from "./SearchBar";
 import WorkspaceSwitcherModal from "@/src/components/workspace/WorkspaceSwitcherModal";
+import SelfTenantBanner from "./SelfTenantBanner";
 
 const Header = () => {
   const dispatch = useAppDispatch();
@@ -75,6 +76,7 @@ const Header = () => {
               <Button variant="ghost" size="icon" onClick={() => setMobileSearchOpen(true)} className="w-9 h-9 sm:w-10 sm:h-10 p-2 sm:p-2.5 rounded-lg transition-all duration-200 cursor-pointer dark:bg-(--page-body-bg) dark:text-gray-500 dark:hover:text-white dark:hover:bg-(--focus-bg-color) bg-white text-slate-500 hover:text-success-green hover:bg-green-50 shadow-sm border border-slate-100 dark:border-none min-[1025px]:hidden" title="Search">
                 <Search size={18} />
               </Button>
+              <SelfTenantBanner />
               <Button variant="ghost" size="lg" onClick={() => setWorkspaceSwitcherOpen(true)} className="flex items-center gap-2 h-10 px-2 sm:px-3 rounded-lg text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:bg-(--page-body-bg) dark:hover:bg-(--table-hover) text-[15px] font-medium border border-slate-200 dark:border-(--card-border-color) max-w-10 sm:max-w-40" title="Switch Workspace">
                 <Building2 size={20} className="text-primary shrink-0" />
                 <span className="truncate hidden sm:inline">{selectedWorkspace?.name ?? "Workspace"}</span>

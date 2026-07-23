@@ -1,24 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/src/elements/ui/button";
+import { AICallingFAQsProps } from "@/src/types/product";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 
-interface FAQItem {
-  question: string;
-  answer: string;
-}
-
-interface AICallingFAQsProps {
-  faqs: {
-    badge?: string;
-    title?: string;
-    items: FAQItem[];
-  };
-  primaryColor: string;
-}
-
-export default function AICallingFAQs({ faqs, primaryColor }: AICallingFAQsProps) {
+export default function AICallingFAQs({
+  faqs,
+  primaryColor,
+}: AICallingFAQsProps) {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const items = Array.isArray(faqs.items) ? faqs.items : [];
 
@@ -27,9 +17,11 @@ export default function AICallingFAQs({ faqs, primaryColor }: AICallingFAQsProps
   return (
     <section className="py-[calc(20px+(50-20)*((100vw-320px)/(1920-320)))] bg-slate-50 border-t border-slate-200/50">
       <div className="container mx-auto px-[calc(8px+(24-8)*((100vw-320px)/(1920-320)))] md:px-12 xl:px-16">
-
         <div className="text-center max-w-4xl mx-auto mb-[calc(16px+(40-16)*((100vw-320px)/(1920-320)))]">
-          <span className="text-xs bg-[#7c3aed10] px-4 py-1.5 rounded-full uppercase tracking-wide font-bold text-primary font-mono" style={{ color: primaryColor }}>
+          <span
+            className="text-xs bg-[#7c3aed10] px-4 py-1.5 rounded-full uppercase tracking-wide font-bold text-primary font-mono"
+            style={{ color: primaryColor }}
+          >
             {faqs.badge || "FAQs"}
           </span>
           <h2 className="text-[calc(20px+12*((100vw-320px)/1600))] font-black text-slate-900 tracking-tight mt-2.5">
@@ -39,13 +31,22 @@ export default function AICallingFAQs({ faqs, primaryColor }: AICallingFAQsProps
 
         <div className="max-w-5xl mx-auto space-y-4">
           {items.map((item, idx) => (
-            <div key={idx} className="bg-white border border-slate-200/60 rounded-lg overflow-hidden shadow-sm">
+            <div
+              key={idx}
+              className="bg-white border border-slate-200/60 rounded-lg overflow-hidden shadow-sm"
+            >
               <Button
-                onClick={() => setOpenFaqIndex(openFaqIndex === idx ? null : idx)}
+                onClick={() =>
+                  setOpenFaqIndex(openFaqIndex === idx ? null : idx)
+                }
                 className="w-full h-[68px] flex hover:bg-[unset] justify-between items-center sm:p-5 p-4 text-left bg-transparent border-none cursor-pointer outline-none"
               >
-                <span className="text-[15px] font-bold text-slate-800">{item.question}</span>
-                <span className="text-slate-400 font-black text-lg transition-transform">{openFaqIndex === idx ? "−" : "+"}</span>
+                <span className="text-[15px] font-bold text-slate-800">
+                  {item.question}
+                </span>
+                <span className="text-slate-400 font-black text-lg transition-transform">
+                  {openFaqIndex === idx ? "−" : "+"}
+                </span>
               </Button>
 
               <AnimatePresence>
@@ -65,7 +66,6 @@ export default function AICallingFAQs({ faqs, primaryColor }: AICallingFAQsProps
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );

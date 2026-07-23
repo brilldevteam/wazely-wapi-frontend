@@ -142,7 +142,7 @@ function FeatureRow({ feature, index, isEven, isAuthenticated, user, route }: an
 
   return (
     <div
-      className={`grid grid-cols-1 lg:grid-cols-2 gap-[calc(10px+(48-10)*((100vw-320px)/(1920-320)))] items-center mb-[calc(25px+(80-25)*((100vw-320px)/(1920-320)))]`}
+      className={`grid grid-cols-1 lg:grid-cols-2 gap-[calc(10px+(48-10)*((100vw-320px)/(1920-320)))] items-center mb-[calc(25px+(40-25)*((100vw-320px)/(1920-320)))]`}
     >
       {/* Content */}
       <div
@@ -208,7 +208,7 @@ function CtaRow({ ctaButton, isAuthenticated, user, route }: any) {
   }, []);
 
   return (
-    <div ref={ctaRef} className="reveal-item mt-[calc(20px+(70-20)*((100vw-320px)/(1920-320)))] text-center">
+    <div ref={ctaRef} className="reveal-item mt-[calc(20px+(50-20)*((100vw-320px)/(1920-320)))] text-center">
       <Button
         className="group bg-primary hover:bg-primary/90 text-white px-8! py-4! h-12! rounded-lg font-bold text-lg transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/25 inline-flex items-center gap-2"
         onClick={() => {

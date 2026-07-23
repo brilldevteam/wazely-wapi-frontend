@@ -7,11 +7,9 @@ import ConfirmModal from "@/src/shared/ConfirmModal";
 import { useChatTheme } from "@/src/hooks/useChatTheme";
 import { useAppSelector } from "@/src/redux/hooks";
 import { useTranslation } from "react-i18next";
+import { ProfileClearChatProps } from "@/src/types/components/chat";
 
-interface ProfileClearChatProps {
-  onClearChat: () => Promise<void>;
-  isLoading: boolean;
-}
+
 
 const ProfileClearChat = ({ onClearChat, isLoading }: ProfileClearChatProps) => {
   const { t } = useTranslation();

@@ -11,6 +11,8 @@ export const automationApi = baseApi.enhanceEndpoints({ addTagTypes: ["Automatio
         if (params?.sort_by) queryParams.append("sort_by", params.sort_by);
         if (params?.sort_order) queryParams.append("sort_order", params.sort_order);
         if (params?.workspace_id) queryParams.append("workspace_id", params.workspace_id);
+        if (params?.status) queryParams.append("status", params.status);
+        if (params?.platform) queryParams.append("platform", params.platform);
         return {
           url: `/automation?${queryParams.toString()}`,
         };
@@ -81,6 +83,41 @@ export const automationApi = baseApi.enhanceEndpoints({ addTagTypes: ["Automatio
         "AutomationFlow",
       ],
     }),
+    togglePauseAutomationFlow: builder.mutation({
+      query: ({ flowId, is_paused, workspace_id }) => {
+        const queryParams = new URLSearchParams();
+        if (workspace_id) queryParams.append("workspace_id", workspace_id);
+        const qStr = queryParams.toString();
+        return {
+          url: `/automation/${flowId}/toggle-pause${qStr ? `?${qStr}` : ""}`,
+          method: "PATCH",
+          body: { is_paused },
+        };
+      },
+      invalidatesTags: (result, error, { flowId }) => [
+        { type: "AutomationFlow", id: flowId },
+        "AutomationFlow",
+      ],
+    }),
+    testAutomationFlow: builder.mutation({
+      query: ({ flowId, test_data, unsaved_flow, workspace_id }) => {
+        const queryParams = new URLSearchParams();
+        if (workspace_id) queryParams.append("workspace_id", workspace_id);
+        const qStr = queryParams.toString();
+        return {
+          url: `/automation/${flowId}/test${qStr ? `?${qStr}` : ""}`,
+          method: "POST",
+          body: { test_data, unsaved_flow },
+        };
+      },
+    }),
+    suggestAutomationFlow: builder.mutation({
+      query: (body) => ({
+        url: "/automation/suggest",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -91,4 +128,7 @@ export const {
   useUpdateAutomationFlowMutation,
   useDeleteAutomationFlowMutation,
   useToggleAutomationFlowMutation,
+  useTogglePauseAutomationFlowMutation,
+  useTestAutomationFlowMutation,
+  useSuggestAutomationFlowMutation,
 } = automationApi;

@@ -4,24 +4,9 @@ import React, { useState } from "react";
 import * as LucideIcons from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/src/elements/ui/button";
+import { AutomationCatalogProps } from "@/src/types/product";
 
-interface NodeItem {
-  name: string;
-  category: string;
-  type?: string;
-  description: string;
-  icon?: string | React.ReactNode;
-}
 
-interface AutomationCatalogProps {
-  flowNodes: {
-    badge?: string;
-    title?: string;
-    description?: string;
-    nodes: NodeItem[];
-  };
-  primaryColor: string;
-}
 
 const getIconComponent = (iconName?: string) => {
   if (!iconName) return LucideIcons.Sparkles;
@@ -49,7 +34,7 @@ export default function AutomationCatalog({ flowNodes, primaryColor }: Automatio
             {flowNodes.title || "All Conversational Flow Nodes"}
           </h2>
           {flowNodes.description && (
-            <p className="text-[17px] font-semibold text-slate-600 mt-4 leading-relaxed font-sans">
+            <p className="text-[17px] font-medium text-slate-600 mt-4 leading-relaxed font-sans">
               {flowNodes.description}
             </p>
           )}
@@ -97,7 +82,7 @@ export default function AutomationCatalog({ flowNodes, primaryColor }: Automatio
                       </span>
                     </div>
                     <h4 className="text-md font-black text-slate-800">{node.name}</h4>
-                    <p className="text-[14.5px] font-semibold text-slate-500 mt-2.5 leading-relaxed font-sans">
+                    <p className="text-[14.5px] font-medium text-slate-500 mt-2.5 leading-relaxed font-sans">
                       {node.description}
                     </p>
                   </div>

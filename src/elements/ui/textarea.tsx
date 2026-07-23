@@ -2,7 +2,17 @@ import * as React from "react"
 
 import { cn } from "@/src/lib/utils"
 
-function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
+function Textarea({ className, unstyled, ...props }: React.ComponentProps<"textarea"> & { unstyled?: boolean }) {
+  if (unstyled) {
+    return (
+      <textarea
+        data-slot="textarea"
+        className={className}
+        {...props}
+      />
+    )
+  }
+
   return (
     <textarea
       data-slot="textarea"

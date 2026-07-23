@@ -3,6 +3,7 @@
 
 import { Input } from "@/src/elements/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/elements/ui/select";
+import { Switch } from "@/src/elements/ui/switch";
 import { useGetChatbotsQuery } from "@/src/redux/api/chatbotApi";
 import { useAppSelector } from "@/src/redux/hooks";
 import { useReactFlow } from "@xyflow/react";
@@ -92,6 +93,7 @@ export function AssignChatbotNode({ data, id }: any) {
             className="text-sm bg-gray-50 border-gray-200 focus:bg-gray-50 dark:focus:bg-(--page-body-bg) dark:bg-(--page-body-bg) dark:border-(--card-border-color)"
           />
         </NodeField>
+
       </div>
     </BaseNode>
   );

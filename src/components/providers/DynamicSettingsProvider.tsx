@@ -1,59 +1,101 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useEffect, useState, ReactNode } from "react";
-import { useGetSettingsQuery } from "@/src/redux/api/settingsApi";
+import { ROUTES } from "@/src/constants";
+import { DEFAULT_FAVICON } from "@/src/data/product";
 import { useGetAuthPageSetupQuery } from "@/src/redux/api/authApi";
+import { useGetSettingsQuery } from "@/src/redux/api/settingsApi";
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
 import { setAuthPageSetup, setSetting } from "@/src/redux/reducers/settingSlice";
-import { usePathname, useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
-import { ROUTES } from "@/src/constants";
-import { useTranslation } from "react-i18next";
+import { DynamicSettingsProviderProps } from "@/src/types/product";
 import { getUrlWithBasePath } from "@/src/utils";
+import { useTheme } from "next-themes";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const API_URL = process.env.NEXT_PUBLIC_STORAGE_URL ?? "";
 
 const resolveUrl = (url?: string): string => {
   if (!url) return "";
-  return url.startsWith("http") ? url : `${API_URL}${url}`;
+
+  // Replace backslashes with forward slashes for cross-platform compatibility
+  const normalizedUrl = url.replace(/\\/g, "/");
+
+  if (normalizedUrl.startsWith("http://") || normalizedUrl.startsWith("https://") || normalizedUrl.startsWith("data:")) {
+    return normalizedUrl;
+  }
+
+  const baseUrl = (API_URL || "").endsWith("/") ? API_URL.slice(0, -1) : API_URL;
+
+  if (normalizedUrl.startsWith("/uploads/")) {
+    return `${baseUrl}${normalizedUrl}`;
+  }
+  if (normalizedUrl.startsWith("uploads/")) {
+    return `${baseUrl}/${normalizedUrl}`;
+  }
+  if (normalizedUrl.startsWith("/")) {
+    return getUrlWithBasePath(normalizedUrl);
+  }
+  return getUrlWithBasePath(`/${normalizedUrl}`);
 };
 
-const DEFAULT_FAVICON = "/assets/logos/sidebarLogo.png";
+
 
 function applyFavicon(href: string) {
   if (typeof window === "undefined" || !href) return;
 
-  const links = document.querySelectorAll("link[rel*='icon']");
-  const normalizedHref = href.startsWith("http") ? href : new URL(href, window.location.origin).href;
+  try {
+    let normalizedHref = href;
+    try {
+      normalizedHref = (href.startsWith("http") || href.startsWith("data:")) ? href : new URL(href, window.location.origin).href;
+    } catch (e) {
+      console.warn("Failed to normalize target favicon href:", href, e);
+    }
 
-  if (links.length > 0) {
-    links.forEach((link: any) => {
-      const normalizedLinkHref = new URL(link.href, window.location.origin).href;
-      if (normalizedLinkHref !== normalizedHref) {
-        link.href = href;
-      }
-    });
-  } else {
-    const link = document.createElement("link");
-    link.rel = "icon";
-    link.href = href;
-    document.head.appendChild(link);
+    const links = document.querySelectorAll("link[rel='icon'], link[rel='shortcut icon']");
+
+    if (links.length > 0) {
+      links.forEach((link: any) => {
+        try {
+          const linkHref = link.getAttribute("href") || "";
+          if (!linkHref) return;
+
+          const normalizedLinkHref = (linkHref.startsWith("http") || linkHref.startsWith("data:"))
+            ? linkHref
+            : new URL(linkHref, window.location.origin).href;
+
+          if (normalizedLinkHref !== normalizedHref) {
+            link.href = href;
+          }
+        } catch (innerError) {
+          console.warn("Failed to normalize icon link href:", link.href, innerError);
+          // Safe fallback comparison
+          if (link.href !== href) {
+            link.href = href;
+          }
+        }
+      });
+    } else {
+      const link = document.createElement("link");
+      link.rel = "icon";
+      link.href = href;
+      document.head.appendChild(link);
+    }
+  } catch (outerError) {
+    console.error("Error applying favicon:", outerError);
   }
 }
 
-interface DynamicSettingsProviderProps {
-  children: ReactNode;
-}
 
 const DynamicSettingsProvider = ({ children }: DynamicSettingsProviderProps) => {
   const dispatch = useAppDispatch();
   const pathname = usePathname();
   const router = useRouter();
   const { t } = useTranslation();
-  const { data: settingsData, isLoading, refetch: refetchSettings } = useGetSettingsQuery({}, { refetchOnMountOrArgChange: true });
+  const { data: settingsData, isLoading, isError, refetch: refetchSettings } = useGetSettingsQuery({}, { refetchOnMountOrArgChange: true });
   const { data: authSetupData, refetch: refetchAuthSetup } = useGetAuthPageSetupQuery(undefined, { refetchOnMountOrArgChange: true });
-  const { app_name, favicon_url, app_description, pageTitle, pageDescription, landing_page_enabled } = useAppSelector((state) => state.setting);
+  const { app_name, favicon_url, app_description, pageTitle, pageDescription, landing_page_enabled, isSettingsLoaded } = useAppSelector((state) => state.setting);
   const [mounted, setMounted] = useState(false);
   const { setTheme } = useTheme();
 
@@ -113,27 +155,39 @@ const DynamicSettingsProvider = ({ children }: DynamicSettingsProviderProps) => 
   useEffect(() => {
     if (!mounted) return;
 
-    const faviconHref = getUrlWithBasePath(resolveUrl(favicon_url) || DEFAULT_FAVICON);
-
-    // Title update
-    const baseTitle = app_name || t("app_name");
-    const fullTitle = pageTitle ? `${pageTitle} | ${baseTitle}` : `${baseTitle} | All-in-One WhatsApp Marketing & Automation Platform`;
-
-    if (document.title !== fullTitle) {
-      document.title = fullTitle;
+    let faviconHref = "";
+    if (isSettingsLoaded) {
+      const resolved = resolveUrl(favicon_url);
+      faviconHref = resolved || getUrlWithBasePath(DEFAULT_FAVICON);
+    } else if (isLoading) {
+      faviconHref = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+    } else if (isError) {
+      faviconHref = getUrlWithBasePath(DEFAULT_FAVICON);
+    } else {
+      faviconHref = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
     }
 
-    // Description update
-    const description = pageDescription || app_description;
-    if (description) {
-      let meta = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
-      if (!meta) {
-        meta = document.createElement("meta");
-        meta.setAttribute("name", "description");
-        document.head.appendChild(meta);
+    // Title update
+    if (isSettingsLoaded) {
+      const baseTitle = app_name || t("app_name");
+      const fullTitle = pageTitle ? `${pageTitle} | ${baseTitle}` : `${baseTitle} | All-in-One WhatsApp Marketing & Automation Platform`;
+
+      if (document.title !== fullTitle) {
+        document.title = fullTitle;
       }
-      if (meta.getAttribute("content") !== description) {
-        meta.setAttribute("content", description);
+
+      // Description update
+      const description = pageDescription || app_description;
+      if (description) {
+        let meta = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
+        if (!meta) {
+          meta = document.createElement("meta");
+          meta.setAttribute("name", "description");
+          document.head.appendChild(meta);
+        }
+        if (meta.getAttribute("content") !== description) {
+          meta.setAttribute("content", description);
+        }
       }
     }
 
@@ -141,7 +195,7 @@ const DynamicSettingsProvider = ({ children }: DynamicSettingsProviderProps) => 
     if (faviconHref) {
       applyFavicon(faviconHref);
     }
-  }, [app_name, app_description, favicon_url, pathname, mounted, pageTitle, pageDescription, t]);
+  }, [app_name, app_description, favicon_url, pathname, mounted, pageTitle, pageDescription, t, isSettingsLoaded, isLoading, isError]);
 
   return <>{children}</>;
 };

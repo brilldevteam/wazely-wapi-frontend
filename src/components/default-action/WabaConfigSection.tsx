@@ -1,59 +1,56 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import { toast } from "sonner";
-import { Skeleton } from "@/src/elements/ui/skeleton";
-import { Loader2, Info } from "lucide-react";
+import { CONFIG_FIELDS } from "@/src/data/defaultAction";
 import { Button } from "@/src/elements/ui/button";
-import { useGetWabaConfigurationQuery, useUpdateWabaConfigurationMutation } from "@/src/redux/api/wabaConfigurationApi";
-import { WabaConfigPayload, ReplyRef, DelayedReplyRef } from "@/src/types/wabaConfiguration";
+import { Skeleton } from "@/src/elements/ui/skeleton";
+import { cn } from "@/src/lib/utils";
+import {
+  useGetWabaConfigurationQuery,
+  useUpdateWabaConfigurationMutation,
+} from "@/src/redux/api/wabaConfigurationApi";
+import {
+  WabaConfigSectionProps
+} from "@/src/types/defaultAction";
+import {
+  DelayedReplyRef,
+  ReplyRef,
+  WabaConfigPayload,
+} from "@/src/types/wabaConfiguration";
+import { Info, Loader2 } from "lucide-react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import ConfigRow from "./waba-config/ConfigRow";
 import ToggleSwitch from "./waba-config/ToggleSwitch";
-import { cn } from "@/src/lib/utils";
-import { ToggleConfigFieldProps, WabaConfigSectionProps } from "@/src/types/defaultAction";
 
-const CONFIG_FIELDS: ToggleConfigFieldProps[] = [
-  {
-    key: "out_of_working_hours",
-    label: "Outside business hours",
-    description:
-      "Auto-reply sent when a message is received beyond working hours",
-  },
-  {
-    key: "welcome_message",
-    label: "Greeting message",
-    description: "Initial message sent to a new contact",
-  },
-  {
-    key: "delayed_reply",
-    label: "Postponed Response",
-    description: "Message sent after a set delay if no agent responds",
-    hasDelayMinutes: true,
-  },
-  {
-    key: "fallback_message",
-    label: "Default fallback message",
-    description: "Sent when no matching keyword or action is found",
-  },
-  {
-    key: "reengagement_message",
-    label: "Reactivation message",
-    description:
-      "Sent to reconnect with inactive contacts after a period of inactivity",
-  },
-];
+const isConfigFieldEnabled = (val: any) => {
+  return !!(val && typeof val === "object" && val.id);
+};
+
+const getInitialExpandedMap = (config: WabaConfigPayload) => {
+  const map: Record<string, boolean> = {};
+  CONFIG_FIELDS.forEach((field) => {
+    map[field.key] = isConfigFieldEnabled(
+      config[field.key as keyof WabaConfigPayload],
+    );
+  });
+  return map;
+};
 
 const WabaConfigSection: React.FC<WabaConfigSectionProps> = ({ wabaId }) => {
   const [localConfig, setLocalConfig] = useState<WabaConfigPayload>({});
   const [initialConfig, setInitialConfig] = useState<WabaConfigPayload>({});
-  const [enabledMap, setEnabledMap] = useState<Record<string, boolean>>({});
+  const [expandedMap, setExpandedMap] = useState<Record<string, boolean>>({});
   const initializedWabaId = useRef<string | null>(null);
 
-  const hasChanges = JSON.stringify(localConfig) !== JSON.stringify(initialConfig);
+  const hasChanges =
+    JSON.stringify(localConfig) !== JSON.stringify(initialConfig);
 
-  const { data, isLoading, isError } = useGetWabaConfigurationQuery(wabaId, { skip: !wabaId });
-  const [updateConfig, { isLoading: isSaving }] = useUpdateWabaConfigurationMutation();
+  const { data, isLoading, isError } = useGetWabaConfigurationQuery(wabaId, {
+    skip: !wabaId,
+  });
+  const [updateConfig, { isLoading: isSaving }] =
+    useUpdateWabaConfigurationMutation();
 
   useEffect(() => {
     if (data?.data && initializedWabaId.current !== wabaId) {
@@ -66,49 +63,46 @@ const WabaConfigSection: React.FC<WabaConfigSectionProps> = ({ wabaId }) => {
         reengagement_message: d.reengagement_message ?? null,
         round_robin_assignment: d.round_robin_assignment ?? false,
       };
-       
+
       setLocalConfig(config);
-       
       setInitialConfig(config);
-       
-      setEnabledMap({
-        out_of_working_hours: !!d.out_of_working_hours?.id,
-        welcome_message: !!d.welcome_message?.id,
-        delayed_reply: !!d.delayed_reply?.id,
-        fallback_message: !!d.fallback_message?.id,
-        reengagement_message: !!d.reengagement_message?.id,
-      });
+
+      setExpandedMap(getInitialExpandedMap(config));
       initializedWabaId.current = wabaId;
     }
   }, [data, wabaId]);
 
-
   const saveConfig = useCallback(
     async (newConfig: WabaConfigPayload) => {
       try {
-        const response = await updateConfig({ wabaId, data: newConfig }).unwrap();
+        const response = await updateConfig({
+          wabaId,
+          data: newConfig,
+        }).unwrap();
         toast.success(response.message || "Configuration saved");
       } catch (err: any) {
         toast.error(err?.data?.message || "Failed to save configuration");
       }
     },
-    [wabaId, updateConfig]
+    [wabaId, updateConfig],
   );
 
-  const handleToggle = (key: string, enabled: boolean) => {
-    setEnabledMap((prev) => ({ ...prev, [key]: enabled }));
-    if (!enabled) {
-      setLocalConfig((prev) => ({ ...prev, [key]: null }));
-    }
+  const handleToggleExpand = (key: string) => {
+    setExpandedMap((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handleReplyChange = (key: keyof WabaConfigPayload, ref: ReplyRef | null) => {
+  const handleReplyChange = (
+    key: keyof WabaConfigPayload,
+    ref: ReplyRef | null,
+  ) => {
     setLocalConfig((prev) => ({ ...prev, [key]: ref }));
   };
 
   const handleDelayChange = (minutes: number) => {
     const current = localConfig.delayed_reply as DelayedReplyRef | null;
-    const newRef: DelayedReplyRef | null = current ? { ...current, delay_minutes: minutes } : { id: "", type: "", delay_minutes: minutes };
+    const newRef: DelayedReplyRef | null = current
+      ? { ...current, delay_minutes: minutes }
+      : { id: "", type: "", delay_minutes: minutes };
     setLocalConfig((prev) => ({ ...prev, delayed_reply: newRef }));
   };
 
@@ -123,13 +117,7 @@ const WabaConfigSection: React.FC<WabaConfigSectionProps> = ({ wabaId }) => {
 
   const handleDiscard = () => {
     setLocalConfig(initialConfig);
-    setEnabledMap({
-      out_of_working_hours: !!initialConfig.out_of_working_hours,
-      welcome_message: !!initialConfig.welcome_message,
-      delayed_reply: !!initialConfig.delayed_reply,
-      fallback_message: !!initialConfig.fallback_message,
-      reengagement_message: !!initialConfig.reengagement_message,
-    });
+    setExpandedMap(getInitialExpandedMap(initialConfig));
     toast.info("Changes discarded");
   };
 
@@ -138,10 +126,13 @@ const WabaConfigSection: React.FC<WabaConfigSectionProps> = ({ wabaId }) => {
       <div className="space-y-4 animate-pulse">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="p-4 bg-white dark:bg-(--card-color) rounded-xl border border-slate-200/60 dark:border-(--card-border-color) space-y-3">
+            <div
+              key={i}
+              className="p-4 bg-white dark:bg-(--card-color) rounded-xl border border-slate-200/60 dark:border-(--card-border-color) space-y-3"
+            >
               <div className="flex items-center justify-between">
                 <Skeleton className="w-32 h-5" />
-                <Skeleton className="w-10 h-6 rounded-full" />
+                <Skeleton className="w-5 h-5 rounded-md" />
               </div>
               <Skeleton className="w-full h-24 rounded-lg" />
             </div>
@@ -170,15 +161,15 @@ const WabaConfigSection: React.FC<WabaConfigSectionProps> = ({ wabaId }) => {
                 key={field.key}
                 field={field}
                 value={localConfig[field.key] as any}
-                enabled={!!enabledMap[field.key]}
-                isExpanded={!!enabledMap[field.key]}
+                enabled={isConfigFieldEnabled(localConfig[field.key])}
+                isExpanded={!!expandedMap[field.key]}
                 isSaving={isSaving}
                 wabaId={wabaId}
-                onToggle={(v) => handleToggle(field.key, v)}
                 onReplyChange={(ref) => handleReplyChange(field.key, ref)}
                 onDelayChange={
                   field.hasDelayMinutes ? handleDelayChange : undefined
                 }
+                onToggleExpand={() => handleToggleExpand(field.key)}
               />
             ))}
           </div>
@@ -188,15 +179,15 @@ const WabaConfigSection: React.FC<WabaConfigSectionProps> = ({ wabaId }) => {
                 key={field.key}
                 field={field}
                 value={localConfig[field.key] as any}
-                enabled={!!enabledMap[field.key]}
-                isExpanded={!!enabledMap[field.key]}
+                enabled={isConfigFieldEnabled(localConfig[field.key])}
+                isExpanded={!!expandedMap[field.key]}
                 isSaving={isSaving}
                 wabaId={wabaId}
-                onToggle={(v) => handleToggle(field.key, v)}
                 onReplyChange={(ref) => handleReplyChange(field.key, ref)}
                 onDelayChange={
                   field.hasDelayMinutes ? handleDelayChange : undefined
                 }
+                onToggleExpand={() => handleToggleExpand(field.key)}
               />
             ))}
             <div className="rounded-lg border border-slate-100 dark:border-(--card-border-color)/50 bg-white dark:bg-(--card-color) shadow-sm">
@@ -207,7 +198,7 @@ const WabaConfigSection: React.FC<WabaConfigSectionProps> = ({ wabaId }) => {
                       size={15}
                       className={cn(
                         localConfig.round_robin_assignment &&
-                        "text-primary animate-pulse",
+                          "text-primary animate-pulse",
                       )}
                     />
                   </div>
@@ -242,8 +233,12 @@ const WabaConfigSection: React.FC<WabaConfigSectionProps> = ({ wabaId }) => {
       {hasChanges && (
         <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 bg-white dark:bg-(--card-color) p-4 rounded-lg border border-slate-200 dark:border-(--card-border-color) shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-500">
           <div className="flex flex-col pr-4 border-r border-slate-100 dark:border-slate-800">
-            <span className="text-sm font-bold text-slate-800 dark:text-white">Unsaved Changes</span>
-            <span className="text-xs text-slate-400">You have unsaved configuration updates</span>
+            <span className="text-sm font-bold text-slate-800 dark:text-white">
+              Unsaved Changes
+            </span>
+            <span className="text-xs text-slate-400">
+              You have unsaved configuration updates
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <Button

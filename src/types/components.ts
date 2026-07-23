@@ -2,6 +2,7 @@
 import { ReactNode } from "react";
 import { SuggestReplyMessage } from "./components/chat";
 import { AIModel } from "./settings";
+import { FormValues, ThemePreset } from "./chatTheme";
 
 export interface MenuItem {
   icon: React.ReactNode;
@@ -228,6 +229,15 @@ export interface TemplateVariable {
   example: string;
 }
 
+export interface TemplateCarouselCard {
+  components: {
+    type: string;
+    format?: string;
+    buttons?: { type: string; text: string; example?: string[] }[];
+    example?: { header_handle?: string[] };
+  }[];
+}
+
 export interface Template {
   _id: string;
   user_id: string;
@@ -245,6 +255,7 @@ export interface Template {
   variables?: TemplateVariable[];
   footer_text?: string;
   buttons?: TemplateButton[];
+  carousel_cards?: TemplateCarouselCard[];
   meta_template_id?: string;
   is_limited_time_offer?: boolean;
   offer_text?: string;
@@ -267,7 +278,9 @@ export interface Recipient {
   sent_at?: string;
   delivered_at?: string;
   read_at?: string;
-  failure_reason?: string;
+  failure_reason?: string | { original: string; friendly: string };
+run_number?: number;
+  run_sent_at?: string;
 }
 
 export interface Campaign {
@@ -287,13 +300,29 @@ export interface Campaign {
   variables_mapping?: Record<string, string>;
   media_url?: string;
   is_scheduled: boolean;
+  is_recurring?: boolean;
+  recurring_pattern?: "daily" | "weekly" | "monthly" | "custom_cron";
+  cron_expression?: string | null;
+  recurring_end_date?: string | null;
+  parent_recurring_id?: string | null;
+  next_run_at?: string | null;
+  batch_size?: number | null;
+  pause_between_batches?: number | null;
   avoid_unsubscribers: boolean;
-  scheduled_at?: string;
+  scheduled_at: string;
   sent_at: string;
   completed_at?: string;
-  status: "draft" | "scheduled" | "sending" | "completed" | "failed" | "cancelled" | "completed_with_errors";
+  status: "draft" | "scheduled" | "recurring" | "sending" | "completed" | "failed" | "cancelled" | "completed_with_errors";
+  is_paused?: boolean;
+  is_published?: boolean;
   stats: CampaignStats;
   recipients?: Recipient[];
+  error_log?: {
+    timestamp: string;
+    contact_id?: string;
+    phone_number?: string;
+    error: string;
+  }[];
   created_at: string;
   updated_at: string;
 }
@@ -312,6 +341,13 @@ export interface CampaignFormValues {
   media_url: string;
   media_file?: File;
   is_scheduled: boolean;
+  is_recurring?: boolean;
+  recurring_pattern?: "daily" | "weekly" | "monthly" | "custom_cron";
+  cron_expression?: string;
+  recurring_end_date?: string;
+  batch_size?: string;
+  pause_between_batches?: string;
+  is_published?: boolean;
   avoid_unsubscribers: boolean;
   scheduled_at: string;
   // Template-specific campaign fields
@@ -426,4 +462,87 @@ export interface TagModalProps {
   tag?: Tag | null;
   isLoading: boolean;
   fromProfile?: boolean;
+}
+
+export interface DataConstraintsSectionProps {
+  formik: any;
+  fieldTypes: CustomFieldType[];
+  newOption: string;
+  setNewOption: (val: string) => void;
+  handleAddOption: () => void;
+  handleRemoveOption: (index: number) => void;
+} 
+
+export interface DisplayRulesSectionProps {
+  formik: any;
+  isLoading?: boolean;
+}
+
+export interface IdentitySectionProps {
+  formik: any;
+  handleLabelChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export interface BackgroundSettingsProps {
+  t: (key: string) => string;
+  bgType: "color" | "image";
+  setBgType: (type: "color" | "image") => void;
+  formValues: FormValues;
+  imagePreview: string | null;
+  setImagePreview: (preview: string | null) => void;
+  handleColorChange: (key: keyof FormValues, value: string) => void;
+  handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setFormValues: React.Dispatch<React.SetStateAction<FormValues>>;
+}
+
+export interface ChatPreviewProps {
+  formValues: FormValues;
+  bgType: "color" | "image";
+  imagePreview: string | null;
+}
+
+export interface ColorSettingsProps {
+  t: (key: string) => string;
+  formValues: FormValues;
+  handleColorChange: (key: keyof FormValues, value: string) => void;
+}
+
+export interface ThemePresetsProps {
+  t: (key: string) => string;
+  presetType: "light" | "dark";
+  setPresetType: (type: "light" | "dark") => void;
+  formValues: FormValues;
+  bgType: "color" | "image";
+  handleThemeSelect: (theme: ThemePreset) => void;
+  onResetDefault: () => void;
+}
+
+export interface ContactKanbanActionModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  contact: Contact | null;
+}
+
+export interface TeamFormProps {
+  id?: string;
+  isEdit?: boolean;
+}
+
+export interface ConnectedChannel {
+  _id: string;
+  id?: string;
+  platform: "whatsapp" | "telegram" | "facebook" | "instagram";
+  workspace_id: string;
+  is_active: boolean;
+  bot_token?: string;
+  access_token?: string;
+  meta_data?: any;
+  bot_name?: string;
+  name?: string;
+  bot_username?: string;
+  bot_id?: string;
+  created_at?: string;
+  createdAt?: string;
+  profile_image_url?: string;
+  username?: string;
 }

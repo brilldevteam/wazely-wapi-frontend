@@ -13,18 +13,17 @@ import {
   MousePointer,
   Settings
 } from "lucide-react";
+import { AutomationSimulatorProps, FlowNode } from "@/src/types/product";
+import { Button } from "@/src/elements/ui/button";
+import { Label } from "@/src/elements/ui/label";
+import { Textarea } from "@/src/elements/ui/textarea";
+import { Input } from "@/src/elements/ui/input";
 
-type FlowNode = {
-  id: string;
-  type: "trigger" | "message" | "input" | "condition" | "agent" | "webhook" | "delay";
-  title: string;
-  subtitle: string;
-  config: Record<string, any>;
-};
 
-interface AutomationSimulatorProps {
-  primaryColor: string;
-}
+
+
+
+
 
 export default function AutomationSimulator({ primaryColor }: AutomationSimulatorProps) {
   // Simulator Interactive Nodes
@@ -158,7 +157,7 @@ export default function AutomationSimulator({ primaryColor }: AutomationSimulato
             const isActive = node.id === activeNodeId;
             return (
               <div key={node.id} className="relative z-10 flex flex-col items-center">
-                <button
+                <Button variant="unstyled"
                   onClick={() => setActiveNodeId(node.id)}
                   className="w-full max-w-[240px] text-left p-3.5 rounded-xl border text-white transition-all cursor-pointer select-none bg-slate-950/80"
                   style={{
@@ -176,7 +175,7 @@ export default function AutomationSimulator({ primaryColor }: AutomationSimulato
                     </div>
                     <MousePointer size={12} className="shrink-0" style={{ color: isActive ? primaryColor : "#475569" }} />
                   </div>
-                </button>
+                </Button>
                 {index < nodes.length - 1 && (
                   <div className="h-5 w-0.5 bg-slate-800 border-l border-dashed border-slate-755 flex items-center justify-center my-1">
                     <ChevronRight size={10} className="rotate-90 text-slate-650" />
@@ -196,19 +195,19 @@ export default function AutomationSimulator({ primaryColor }: AutomationSimulato
             </div>
             <div className="mt-4 space-y-4">
               <div>
-                <label className="text-[9.5px] font-black text-slate-500 uppercase tracking-wider block font-mono">Node ID</label>
+                <Label className="text-[9.5px] font-black text-slate-500 uppercase tracking-wider block font-mono">Node ID</Label>
                 <p className="text-[11px] text-white font-mono mt-1">{activeNode.id}</p>
               </div>
               <div>
-                <label className="text-[9.5px] font-black text-slate-500 uppercase tracking-wider block font-mono">Block Title</label>
+                <Label className="text-[9.5px] font-black text-slate-500 uppercase tracking-wider block font-mono">Block Title</Label>
                 <p className="text-[11.5px] text-white font-black mt-1">{activeNode.title}</p>
               </div>
 
               {activeNode.type === "trigger" && (
                 <div className="space-y-3.5">
                   <div>
-                    <label className="text-[9.5px] font-black text-slate-500 uppercase tracking-wider block font-mono">Keywords</label>
-                    <input
+                    <Label className="text-[9.5px] font-black text-slate-500 uppercase tracking-wider block font-mono">Keywords</Label>
+                    <Input unstyled
                       type="text"
                       value={activeNode.config.keywords || ""}
                       onChange={(e) => handleUpdateNodeConfig({ keywords: e.target.value })}
@@ -224,8 +223,8 @@ export default function AutomationSimulator({ primaryColor }: AutomationSimulato
               {activeNode.type === "message" && (
                 <div className="space-y-3.5">
                   <div>
-                    <label className="text-[9.5px] font-black text-slate-500 uppercase tracking-wider block font-mono">Text Message</label>
-                    <textarea
+                    <Label className="text-[9.5px] font-black text-slate-500 uppercase tracking-wider block font-mono">Text Message</Label>
+                    <Textarea unstyled
                       rows={3}
                       value={activeNode.config.text || ""}
                       onChange={(e) => handleUpdateNodeConfig({ text: e.target.value })}
@@ -240,7 +239,7 @@ export default function AutomationSimulator({ primaryColor }: AutomationSimulato
               {activeNode.type === "input" && (
                 <div className="space-y-3.5">
                   <div>
-                    <label className="text-[9.5px] font-black text-slate-500 uppercase tracking-wider block font-mono">Validation Format</label>
+                    <Label className="text-[9.5px] font-black text-slate-500 uppercase tracking-wider block font-mono">Validation Format</Label>
                     <select
                       value={activeNode.config.validation || "Text"}
                       onChange={(e) => handleUpdateNodeConfig({ validation: e.target.value })}
@@ -260,8 +259,8 @@ export default function AutomationSimulator({ primaryColor }: AutomationSimulato
               {activeNode.type === "webhook" && (
                 <div className="space-y-3.5">
                   <div>
-                    <label className="text-[9.5px] font-black text-slate-500 uppercase tracking-wider block font-mono">Target Request URL</label>
-                    <input
+                    <Label className="text-[9.5px] font-black text-slate-500 uppercase tracking-wider block font-mono">Target Request URL</Label>
+                    <Input unstyled
                       type="text"
                       value={activeNode.config.url || ""}
                       onChange={(e) => handleUpdateNodeConfig({ url: e.target.value })}
@@ -276,8 +275,8 @@ export default function AutomationSimulator({ primaryColor }: AutomationSimulato
               {activeNode.type === "agent" && (
                 <div className="space-y-3.5">
                   <div>
-                    <label className="text-[9.5px] font-black text-slate-500 uppercase tracking-wider block font-mono">Fallback Chatbot</label>
-                    <input
+                    <Label className="text-[9.5px] font-black text-slate-500 uppercase tracking-wider block font-mono">Fallback Chatbot</Label>
+                    <Input unstyled
                       type="text"
                       value={activeNode.config.team || ""}
                       onChange={(e) => handleUpdateNodeConfig({ team: e.target.value })}
@@ -292,13 +291,13 @@ export default function AutomationSimulator({ primaryColor }: AutomationSimulato
           </div>
 
           <div className="pt-4 border-t border-slate-900 shrink-0">
-            <button
+            <Button variant="unstyled"
               onClick={() => alert("Saved successfully!")}
               className="w-full text-white py-2 rounded-xl text-[10.5px] font-black uppercase tracking-wider border-none cursor-pointer text-center"
               style={{ backgroundColor: primaryColor }}
             >
               Save Config
-            </button>
+            </Button>
           </div>
         </div>
       </div>
