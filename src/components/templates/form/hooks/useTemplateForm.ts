@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import TurndownService from "turndown";
 import { AuthFormData, ButtonTemplate, CardButtonValue, MarketingType, MediaCard, ProductCard, UseTemplateFormProps } from "@/src/types/components/template";
 import { ROUTES } from "@/src/constants";
+import { applyDirectionMarksToHtml, plainTextToDirectionalHtml } from "@/src/utils/textDirection";
 
 export const makeId = () => Math.random().toString(36).substr(2, 9);
 
@@ -110,7 +111,7 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
       template_name: template.template_name || "",
       template_type: template.header?.format === "media" ? (template.header.media_type?.toLowerCase() || "none") : (template.header?.format?.toLowerCase() || (tType === "carousel_media" ? "image" : "none")),
       header_text: template.header?.text || "",
-      message_body: template.message_body || "",
+      message_body: plainTextToDirectionalHtml(template.message_body || ""),
       footer_text: template.footer_text || "",
       interactive_type: template.buttons?.length
         ? (template.buttons.some((b: any) => b.type === "quick_reply" || b.type === "catalog")
@@ -433,7 +434,7 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
     if (formData.marketing_type === "carousel_product" && productCards.length < 2) return toast.error("At least 2 product cards required");
     if (formData.marketing_type === "carousel_media" && mediaCards.length < 2) return toast.error("At least 2 media cards required");
 
-    const messageBody = turndownService.turndown(formData.message_body);
+    const messageBody = turndownService.turndown(applyDirectionMarksToHtml(formData.message_body));
 
     // Authentication template
     if (formData.category === "AUTHENTICATION") {

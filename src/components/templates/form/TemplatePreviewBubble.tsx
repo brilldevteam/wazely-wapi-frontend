@@ -20,6 +20,7 @@ import {
   StickyNote,
 } from "lucide-react";
 import Image from "next/image";
+import { RLM } from "@/src/utils/textDirection";
 
 export const TemplatePreviewBubble = ({
   templateType,
@@ -307,8 +308,16 @@ export const TemplatePreviewBubble = ({
         )}
 
         <div className={getBubblePadding()}>
-          <div className="text-sm leading-relaxed break-all whitespace-normal text-slate-800 dark:text-slate-100">
-            {bodyText}
+          <div className="text-sm leading-relaxed break-all text-slate-800 dark:text-slate-100">
+            {/* dir is set explicitly from the RLM mark applyDirectionMarksToHtml embeds (not
+                dir="auto"), so the preview mirrors exactly what the editor is set to: a line
+                with no explicit direction defaults to ltr here too, instead of the browser
+                auto-detecting rtl on its own just because the text happens to be Arabic. */}
+            {bodyText.split("\n").map((line, index) => (
+              <p key={index} dir={line.startsWith(RLM) ? "rtl" : "ltr"} className="whitespace-pre-wrap m-0">
+                {line || " "}
+              </p>
+            ))}
           </div>
           {isAuthentication && authData?.add_security_recommendation && (
             <div className="text-[11px] text-slate-500 dark:text-slate-400 italic mt-1">

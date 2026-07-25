@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { DecoupledEditor as DecoupledEditorType } from "@ckeditor/ckeditor5-editor-decoupled";
 import "ckeditor5/ckeditor5.css";
+import { createTextDirectionPlugin } from "./ckeditor-plugins/TextDirection";
 
 type EditorModules = {
   CKEditor: any;
@@ -38,9 +39,17 @@ const CKEditorInner = ({ value, onChange, onReady, placeholder, minHeight = "560
           FontColor,
           FontBackgroundColor,
           Strikethrough,
-          Underline
+          Underline,
+          Plugin,
+          Command,
+          Collection,
+          ViewModel,
+          createDropdown,
+          addListToDropdown,
         },
       ]) => {
+        const TextDirection = createTextDirectionPlugin({ Plugin, Command, Collection, ViewModel, createDropdown, addListToDropdown });
+
         setEditor({
           CKEditor,
           DecoupledEditor: DecoupledEditor as unknown as typeof DecoupledEditorType,
@@ -59,7 +68,8 @@ const CKEditorInner = ({ value, onChange, onReady, placeholder, minHeight = "560
             FontColor,
             FontBackgroundColor,
             Strikethrough,
-            Underline
+            Underline,
+            TextDirection,
           ],
         });
       }
@@ -101,7 +111,7 @@ const CKEditorInner = ({ value, onChange, onReady, placeholder, minHeight = "560
                   "link", "|",
                   "bulletedList", "numberedList", "|",
                   "blockQuote", "insertTable", "|",
-                  "alignment", "|",
+                  "alignment", "textDirection", "|",
                   "undo", "redo",
                 ],
               }}
