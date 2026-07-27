@@ -49,7 +49,7 @@ export const validateWizardStep = (
       !values.media_url &&
       !values.media_file
     ) {
-      return `Please select ${template.header.media_type || "header"} media for this template`;
+      return `Please select ${template.header?.media_type || "header"} media for this template`;
     }
     if (template.template_type === "carousel_media") {
       const cards = values.carousel_cards_data || [];

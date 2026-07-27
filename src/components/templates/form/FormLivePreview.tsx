@@ -4,12 +4,15 @@ import { ArrowLeft, Image as ImageIcon, Phone, Video, Info, Search, MoreVertical
 import { useEffect, useMemo } from "react";
 import { TemplatePreviewBubble } from "./TemplatePreviewBubble";
 import { getResolvedImageUrl } from "@/src/utils/image";
+import { applyDirectionMarksToHtml } from "@/src/utils/textDirection";
 
 const resolveBody = (messageBody: string, variables_example: { key: string; example: string }[]) => {
   if (!messageBody) return "Type your message here...";
-  let text = messageBody
+  // Apply RLM/LRM before stripping tags so the preview reflects each block's chosen direction
+  // the same way the actual delivered (plain-text) message will, via the Unicode bidi algorithm.
+  let text = applyDirectionMarksToHtml(messageBody)
     .replace(/&nbsp;/g, " ")
-    .replace(/<p>/g, "")
+    .replace(/<p[^>]*>/g, "")
     .replace(/<\/p>/g, "\n")
     .replace(/<br\s*\/?>/g, "\n")
     .replace(/<[^>]*>?/gm, "");
