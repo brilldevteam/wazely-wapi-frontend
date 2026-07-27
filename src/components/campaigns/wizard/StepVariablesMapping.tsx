@@ -4,14 +4,14 @@ import { Input } from "@/src/elements/ui/input";
 import { Label } from "@/src/elements/ui/label";
 import { useGetCustomFieldsQuery } from "@/src/redux/api/customFieldApi";
 import { useGetTemplateQuery } from "@/src/redux/api/templateApi";
-import { CampaignFormValues, Template, TemplateCarouselCard, CustomField } from "@/src/types/components";
+import { CampaignFormValues, TemplateCarouselCard, CustomField } from "@/src/types/components";
 import { FormikProps } from "formik";
 import { Image as ImageIcon, Layout, ShoppingBag, Sparkles, Tag, Ticket, Timer, MapPin, Loader2 } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { CarouselMediaEditor } from "./CarouselMediaEditor";
 import { CarouselProductEditor } from "./CarouselProductEditor";
 import { CatalogProductPicker } from "./CatalogProductPicker";
-import { formatExpirationTime, getTemplateVariables, hasMediaTemplateHeader, isMarketingTemplate } from "@/src/utils/template";
+import { formatExpirationTime, getTemplateHeaderFormat, getTemplateVariables, hasMediaTemplateHeader, isMarketingTemplate } from "@/src/utils/template";
 import { SectionCard, SectionHeading, VariableRow } from "./VariableMappingComponents";
 import LocationMapPicker from "@/src/components/shared/LocationMapPicker";
 import { CampaignCard, CarouselProduct } from "@/src/types/campaign";
@@ -128,7 +128,8 @@ const StepVariablesMapping = ({ formik }: { formik: FormikProps<CampaignFormValu
   const isCatalog = template?.template_type === "catalog";
   const isCarouselProduct = template?.template_type === "carousel_product" || (template?.template_type === "carousel" && (template?.carousel_cards?.[0]?.components?.[0]?.format === "product" || template?.carousel_cards?.[0]?.components?.find((c) => c.type === "header")?.format === "product"));
   const isCarouselMedia = template?.template_type === "carousel_media" || (template?.template_type === "carousel" && !isCarouselProduct);
-  const hasExtraFields = isCouponType || isLimitedOffer || isCatalog || isCarouselMedia || isCarouselProduct || template?.header?.format === "location";
+  const isLocationHeader = getTemplateHeaderFormat(template) === "location";
+  const hasExtraFields = isCouponType || isLimitedOffer || isCatalog || isCarouselMedia || isCarouselProduct || isLocationHeader;
   const hasVariables = variables.length > 0;
   const hasMediaHeader = hasMediaTemplateHeader(template);
 
@@ -252,7 +253,7 @@ const StepVariablesMapping = ({ formik }: { formik: FormikProps<CampaignFormValu
         )}
 
         {/* LOCATION HEADER — interactive map */}
-        {template?.header?.format === "location" && (
+        {isLocationHeader && (
           <SectionCard>
             <SectionHeading icon={<MapPin className="text-primary w-5 h-5" />} label={t("campaign_wizard_location_info_title")} sub={t("campaign_wizard_location_info_desc")} />
             <LocationMapPicker

@@ -264,10 +264,13 @@ export const TemplatePreviewBubble = ({
             ) : (
               <div className="w-full h-full bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
                 {templateType === "location" ? (
-                  <MapPin
-                    size={40}
-                    className="text-slate-200 dark:text-slate-800"
-                  />
+                  <div className="relative flex h-full w-full items-center justify-center overflow-hidden bg-emerald-50 dark:bg-emerald-950/30">
+                    <div className="absolute inset-0 opacity-40 [background-image:linear-gradient(to_right,#94a3b8_1px,transparent_1px),linear-gradient(to_bottom,#94a3b8_1px,transparent_1px)] [background-size:28px_28px]" />
+                    <div className="relative flex flex-col items-center gap-2 rounded-lg bg-white/90 px-4 py-3 text-primary shadow-md dark:bg-slate-900/90">
+                      <MapPin size={30} fill="currentColor" className="text-primary" />
+                      <span className="text-[10px] font-bold uppercase tracking-wide">Campaign location</span>
+                    </div>
+                  </div>
                 ) : templateType === "video" ? (
                   <Video
                     size={40}
@@ -286,19 +289,18 @@ export const TemplatePreviewBubble = ({
                 )}
               </div>
             )}
-            <div className="absolute inset-0 bg-black/10 flex items-center justify-center pointer-events-none">
+            {templateType !== "location" && <div className="absolute inset-0 bg-black/10 flex items-center justify-center pointer-events-none">
               <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center text-white">
                 {templateType === "image" && <ImageIcon size={20} />}
                 {templateType === "video" && <Video size={20} />}
                 {templateType === "document" && <FileText size={20} />}
-                {templateType === "location" && <MapPin size={20} />}
                 {templateType === "sticker" && <StickyNote size={20} />}
               </div>
-            </div>
+            </div>}
           </div>
         )}
 
-        {!isSpecial && headerText && (
+        {!isSpecial && templateType === "text" && headerText && (
           <div
             className={`p-3 font-bold text-sm text-slate-900 dark:text-slate-100 border-b ${getDividerStyle()} break-all whitespace-normal`}
           >

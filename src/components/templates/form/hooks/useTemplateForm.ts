@@ -656,7 +656,7 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
       toast.success("Template saved successfully");
       router.push(`${ROUTES.MessageTemplates}?platform=${platform}`);
     } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to save template");
+      toast.error(err?.data?.message || err?.data?.error || "Failed to save template");
     }
   };
 
