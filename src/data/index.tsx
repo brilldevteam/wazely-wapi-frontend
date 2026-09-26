@@ -1,4 +1,4 @@
-import { BarChart3, CircleDollarSign, Clock, CreditCard, FileText, Globe, MessageSquare, TrendingUp, Type, Wallet } from "lucide-react";
+import { BarChart3, FileText, Globe, MessageSquare, TrendingUp, Type } from "lucide-react";
 
 export const SUGGESTIONS = ["welcome", "pricing", "talk_to_rep", "support_query", "business_hours", "product_catalog", "payment_info", "technical_help", "demo_request"];
 
@@ -31,13 +31,6 @@ export const CHATBOTTRAINLIST = [
   { id: "q&a", label: "Q&A Pairs", icon: MessageSquare },
   { id: "website_url", label: "Website URL", icon: Globe },
   { id: "document", label: "Documents", icon: FileText },
-];
-
-export const PAYMENTMETHODLIST = [
-  { id: "stripe", name: "Stripe", icon: CreditCard, description: "Card, Apple/Google Pay" },
-  { id: "razorpay", name: "Razorpay", icon: Wallet, description: "UPI, Cards (India)" },
-  { id: "paypal", name: "PayPal", icon: CircleDollarSign, description: "PayPal, Credit Card" },
-  { id: "pending", name: "Cash", icon: Clock, description: "Transfer/Invoice" },
 ];
 
 export const PROTIPSSHORTLINK = ["Verify your number format to avoid redirection errors.", "Use clear call-to-actions (CTA) like 'Chat with Us' or 'Get Support'.", "Include your short link in social media bios for 40% more leads."];
