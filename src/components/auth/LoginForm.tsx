@@ -256,20 +256,20 @@ export const LoginPage = () => {
           <div className="bg-white dark:bg-(--card-color) rounded-3xl lg:rounded-l-none lg:rounded-r-3xl shadow-2xl p-4 sm:p-12 min-h-175 flex flex-col justify-center relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-emerald-100 to-blue-100 dark:from-emerald-500/20 dark:to-blue-500/20 opacity-50 dark:opacity-100 rounded-bl-full"></div>
             <div className="relative z-10 max-w-md mx-auto w-full">
-              <div className="mb-8 flex items-center lg:hidden">
-                <div className="h-10 w-[180px] overflow-hidden dark:hidden">
+              <div className="lg:hidden flex items-center gap-3 mb-8">
+                <div className="flex h-10 items-center dark:hidden">
                   <Image
                     src={getUrlWithBasePath("/assets/logos/wazely-crm-light-mobile.png")}
                     alt="Wazely CRM"
-                    width={180}
-                    height={60}
-                    className="relative -top-2.5 h-auto w-[180px] max-w-none"
+                    width={192}
+                    height={64}
+                    className="h-16 w-auto max-w-none object-contain"
                     unoptimized
                     priority
                   />
                 </div>
-                <div className="hidden h-10 w-[180px] dark:block">
-                  <DynamicLogo width={180} height={40} className="h-auto w-[180px] object-contain object-left" skeletonClassName="h-10 w-[180px]" />
+                <div className="hidden dark:block">
+                  <DynamicLogo width={140} height={40} className="h-10 w-auto object-contain" skeletonClassName="h-10 w-32" />
                 </div>
               </div>
               <div className="mb-8">

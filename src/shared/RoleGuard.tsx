@@ -9,6 +9,7 @@ import { usePermissions } from "../hooks/usePermissions";
 import { useGetMyPermissionsQuery } from "../redux/api/authApi";
 import { useAppDispatch } from "../redux/hooks";
 import { setPermissions } from "../redux/reducers/authSlice";
+import { ROUTES } from "../constants";
 
 interface RoleGuardProps {
   children: React.ReactNode;
@@ -40,7 +41,17 @@ const RoleGuard: React.FC<RoleGuardProps> = ({ children }) => {
   }, [permissionsRes, dispatch]);
 
   const isAllowed = useMemo(() => {
+    if (pathname.startsWith("/auth")) return true;
+
     if (!isAuthenticated) return true;
+
+    // The main layout initializes the selected workspace. Allow it to mount
+    // before evaluating workspace-scoped permissions.
+    if (!selectedWorkspace) {
+      return true;
+    }
+
+    if (!permissionsRes && !isPermissionsError) return null;
 
     if (isLoadingPermissions) return null;
 
@@ -69,11 +80,18 @@ const RoleGuard: React.FC<RoleGuardProps> = ({ children }) => {
     if (!permitted) return false;
 
     return true;
-  }, [isAuthenticated, isRoutePermitted, pathname, user?.role, permissions, isPermissionsError, isLoadingPermissions, isFetchingPermissions, permissionsRes?.data]);
+  }, [isAuthenticated, selectedWorkspace, isRoutePermitted, pathname, user?.role, permissions, isPermissionsError, isLoadingPermissions, isFetchingPermissions, permissionsRes?.data]);
 
   useEffect(() => {
     if (isAuthenticated && isAllowed === false && !isLoadingPermissions) {
-      const fallbackRoute = getFirstAvailableRoute();
+      const effectivePermissions = permissionsRes?.data || permissions || [];
+      const flatPerms: string[] = [];
+      effectivePermissions.forEach((group: any) => {
+        group.submodules?.forEach((sub: any) => {
+          flatPerms.push(sub.slug);
+        });
+      });
+      const fallbackRoute = getFirstAvailableRoute(flatPerms);
 
       if (fallbackRoute === pathname) {
         console.warn("Permission denied for current route, but no better fallback found.");
@@ -83,7 +101,7 @@ const RoleGuard: React.FC<RoleGuardProps> = ({ children }) => {
       setTimeout(() => setIsRedirecting(true), 0);
       router.push(fallbackRoute);
     }
-  }, [isAuthenticated, isAllowed, isLoadingPermissions, router, getFirstAvailableRoute, pathname]);
+  }, [isAuthenticated, isAllowed, isLoadingPermissions, router, getFirstAvailableRoute, pathname, permissionsRes?.data, permissions]);
 
   useEffect(() => {
     if (isAllowed && isRedirecting) {
