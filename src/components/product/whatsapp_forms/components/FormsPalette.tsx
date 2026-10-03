@@ -22,7 +22,7 @@ export default function FormsPalette({
         <div className="max-w-7xl mx-auto">
           <div className="mb-[calc(14px+(56-14)*((100vw-320px)/(1920-320)))] text-center max-w-2xl mx-auto">
             <span
-              className="text-xs bg-emerald-100 px-4 py-1.5 rounded-full uppercase tracking-wide font-bold text-primary font-mono"
+              className="text-xs bg-[var(--primary-opacity-20)] px-4 py-1.5 rounded-full uppercase tracking-wide font-bold text-primary font-mono"
               style={{ color: primaryColor }}
             >
               {componentsSection.badge || "Field Palette"}

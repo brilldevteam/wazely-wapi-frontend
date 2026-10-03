@@ -78,36 +78,27 @@ export const Step1KeywordsOptions: React.FC<Step1KeywordsOptionsProps> = ({
               className="inline-flex break-all whitespace-normal line-clamp-1 items-center px-3 py-1.5 rounded-full text-xs font-bold bg-primary text-white"
             >
               {kw}
-              {mediaType === "story" && (
-                <Button variant="unstyled"
-                  type="button"
-                  onClick={() =>
-                    setKeywords((prev) => prev.filter((k) => k !== kw))
-                  }
-                  className="ml-2 hover:bg-white/20 rounded-full p-0.5 transition-colors"
-                >
-                  <X size={12} />
-                </Button>
-              )}
+              <Button variant="unstyled"
+                type="button"
+                onClick={() =>
+                  setKeywords((prev) => prev.filter((k) => k !== kw))
+                }
+                className="ml-2 hover:bg-white/20 rounded-full p-0.5 transition-colors"
+              >
+                <X size={12} />
+              </Button>
             </span>
           ))}
-          {mediaType === "story" && (
-            <div className="flex-1 min-w-[120px]">
-              <Input
-                type="text"
-                placeholder="Type a keyword and press Enter..."
-                value={keywordInput}
-                onChange={(e) => setKeywordInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="h-8 border-none bg-transparent shadow-none focus-visible:ring-0 px-1 placeholder:text-slate-400 text-sm"
-              />
-            </div>
-          )}
-          {keywords.length === 0 && mediaType !== "story" && (
-            <span className="text-xs text-slate-400">
-              No keywords configured.
-            </span>
-          )}
+          <div className="flex-1 min-w-[120px]">
+            <Input
+              type="text"
+              placeholder="Type a keyword and press Enter..."
+              value={keywordInput}
+              onChange={(e) => setKeywordInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="h-8 border-none bg-transparent shadow-none focus-visible:ring-0 px-1 placeholder:text-slate-400 text-sm"
+            />
+          </div>
         </div>
       </div>
 

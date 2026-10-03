@@ -25,7 +25,7 @@ const FormCard = ({ form, onDelete, onPublish, onViewInfo, isPublishing, isDelet
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "published":
-        return "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400";
+        return "bg-primary/10 text-primary dark:text-primary";
       case "draft":
         return "bg-slate-100 text-slate-400 dark:bg-(--page-body-bg) dark:text-gray-500";
       case "deprecated":
@@ -40,7 +40,7 @@ const FormCard = ({ form, onDelete, onPublish, onViewInfo, isPublishing, isDelet
       <div className="sm:p-6 p-4 pb-4 flex items-start justify-between gap-4">
         <div className="space-y-1.5 flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h3 className="text-base font-extrabold text-slate-900 dark:text-white tracking-tight uppercase group-hover:text-emerald-600 transition-colors truncate">{form.name}</h3>
+            <h3 className="text-base font-extrabold text-slate-900 dark:text-white tracking-tight uppercase group-hover:text-primary transition-colors truncate">{form.name}</h3>
           </div>
           <p className="text-[12px] text-slate-400 font-medium flex items-center gap-1.5">
             <Layout size={12} className="text-slate-300" />
@@ -68,7 +68,7 @@ const FormCard = ({ form, onDelete, onPublish, onViewInfo, isPublishing, isDelet
               
 
               {!(isPublished || isDeprecated || isPublishing) && <DropdownMenuItem onClick={() => onPublish(form._id)} disabled={isPublished || isDeprecated || isPublishing} className="gap-2.5 px-3 py-2.5 cursor-pointer">
-                <Rocket size={16} className={cn("text-emerald-500", (isPublished || isDeprecated) && "text-slate-300")} />
+                <Rocket size={16} className={cn("text-primary", (isPublished || isDeprecated) && "text-slate-300")} />
                 <span className="font-semibold text-sm">{t("publish_to_meta")}</span>
               </DropdownMenuItem>}
 
@@ -111,7 +111,7 @@ const FormCard = ({ form, onDelete, onPublish, onViewInfo, isPublishing, isDelet
           <div className="space-y-1.5 p-3 rounded-lg bg-slate-50/50 dark:bg-(--page-body-bg) border border-slate-100/80 dark:border-(--card-border-color) transition-colors ">
             <p className="text-[12px] font-medium text-slate-400 ">{t("submissions")}</p>
             <div className="flex items-center gap-2">
-              <ClipboardList size={14} className="text-emerald-500" />
+              <ClipboardList size={14} className="text-primary" />
               <span className="font-mono text-lg font-bold text-slate-700 dark:text-slate-300">{form.stats?.submissions || 0}</span>
             </div>
           </div>
@@ -120,7 +120,7 @@ const FormCard = ({ form, onDelete, onPublish, onViewInfo, isPublishing, isDelet
             <p className="text-[12px] font-medium text-slate-400 ">{t("fields")}</p>
             <div className="flex items-center gap-2">
               <div className="flex -space-x-1">
-                <div className="w-5 h-5 rounded-full border-2 border-white dark:border-slate-800 bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-[10px] font-bold text-emerald-600 dark:text-emerald-400">{form.fields?.length || 0}</div>
+                <div className="w-5 h-5 rounded-full border-2 border-white dark:border-slate-800 bg-primary/10 dark:bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary dark:text-primary">{form.fields?.length || 0}</div>
               </div>
               <span className="text-sm font-bold text-slate-500">Active Fields</span>
             </div>
@@ -130,7 +130,7 @@ const FormCard = ({ form, onDelete, onPublish, onViewInfo, isPublishing, isDelet
         <div className="pb-6">
           <div className="p-4 rounded-lg bg-linear-to-br from-slate-50 to-slate-100/50 dark:from-(--card-color) dark:to-(--card-color) border border-slate-100/50 dark:border-(--card-border-color) flex items-center justify-between shadow-sm group-hover:shadow-md transition-all duration-500">
             <div className="flex items-center gap-3">
-              <div className={cn("w-9 h-9 rounded-full flex items-center justify-center shadow-sm ring-1", isPublished ? "bg-emerald-50 text-primary ring-emerald-100 dark:bg-(--dark-body) dark:ring-(--card-border-color)" : "bg-slate-100 text-slate-400 ring-slate-200 dark:bg-(--dark-body) dark:ring-(--card-border-color)")}>{isPublished ? <Rocket size={18} className="animate-bounce" style={{ animationDuration: "3s" }} /> : <Edit2 size={18} />}</div>
+              <div className={cn("w-9 h-9 rounded-full flex items-center justify-center shadow-sm ring-1", isPublished ? "bg-light-primary text-primary ring-[var(--primary-opacity-20)] dark:bg-(--dark-body) dark:ring-(--card-border-color)" : "bg-slate-100 text-slate-400 ring-slate-200 dark:bg-(--dark-body) dark:ring-(--card-border-color)")}>{isPublished ? <Rocket size={18} className="animate-bounce" style={{ animationDuration: "3s" }} /> : <Edit2 size={18} />}</div>
               <div className="space-y-0.5">
                 <p className={cn("text-[12px] font-medium", isPublished ? "text-primary" : "text-slate-600 dark:text-slate-400")}>{isPublished ? t("published_to_meta") : t("draft_status")}</p>
                 <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-none">{isPublished ? t("sync_with_meta_desc") : t("not_live_on_meta_desc")}</p>

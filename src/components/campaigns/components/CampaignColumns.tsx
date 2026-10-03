@@ -98,6 +98,14 @@ export const getCampaignColumns = ({
     className: "[@media(max-width:1800px)]:min-w-[120px]",
     accessorKey: "status",
     cell: (row) => {
+      if (row.is_paused) {
+        return (
+          <Badge className="flex items-center gap-1 border bg-amber-50 text-amber-600 border-amber-200 dark:bg-amber-950/20 dark:border-amber-900/30">
+            <Pause size={12} />
+            Paused
+          </Badge>
+        );
+      }
       const config = statusConfig[row.status] || statusConfig.draft;
       const Icon = config.icon;
       return (
@@ -130,7 +138,7 @@ export const getCampaignColumns = ({
             isRecurring
               ? "bg-blue-50 text-blue-600 border-blue-100 dark:border-blue-950/20 dark:bg-blue-950/20"
               : isPublished
-              ? "bg-emerald-50 text-emerald-600 border-emerald-100 dark:border-emerald-950/20 dark:bg-emerald-950/20"
+              ? "bg-light-primary text-primary border-[var(--primary-opacity-20)] dark:border-primary-darker/20 dark:bg-primary-darker/20"
               : "bg-gray-100 text-gray-600 border-gray-200 dark:border-(--card-border-color) dark:bg-(--dark-sidebar)"
           }`}
         >
@@ -155,7 +163,7 @@ export const getCampaignColumns = ({
     className: "[@media(max-width:1800px)]:min-w-[150px]",
     cell: (row) => (
       <div className="flex items-center gap-1 text-xs">
-        <span className="text-emerald-600 font-bold" title="Delivered">
+        <span className="text-primary font-bold" title="Delivered">
           {row.stats?.delivered_count || 0}
         </span>
       </div>
@@ -229,7 +237,7 @@ export const getCampaignColumns = ({
               size="sm"
               className={`w-10 h-10 border-none rounded-lg transition-all shadow-xs ${
                 row.is_paused
-                  ? "text-emerald-600 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/20"
+                  ? "text-primary hover:text-primary hover:bg-light-primary dark:hover:bg-primary-darker/20"
                   : "text-amber-600 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/20"
               }`}
               onClick={() =>
@@ -246,7 +254,7 @@ export const getCampaignColumns = ({
             <Button
               variant="outline"
               size="sm"
-              className="w-10 h-10 border-none text-emerald-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg dark:text-emerald-400 dark:hover:bg-emerald-950/20 transition-all shadow-xs"
+              className="w-10 h-10 border-none text-primary hover:text-primary hover:bg-light-primary rounded-lg dark:text-primary dark:hover:bg-primary-darker/20 transition-all shadow-xs"
               onClick={() => onPublish(row._id || (row as any).id)}
               title="Publish Campaign"
             >
@@ -269,7 +277,8 @@ export const getCampaignColumns = ({
         </Can>
         <Can permission="create.campaigns">
           {(row.status === "completed" ||
-            row.status === "completed_with_errors") && (
+            row.status === "completed_with_errors" ||
+            row.status === "failed") && (
             <Button
               variant="outline"
               size="sm"

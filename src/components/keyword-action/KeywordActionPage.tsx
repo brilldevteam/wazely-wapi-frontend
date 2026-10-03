@@ -88,7 +88,7 @@ const KeywordActionPage: React.FC = () => {
         cell: (row: KeywordAction) => {
           const platform = row.platform || "whatsapp";
           let color =
-            "bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20";
+            "bg-light-primary text-primary border-[var(--primary-opacity-20)] dark:bg-primary/10 dark:text-primary dark:border-primary/20";
           let label = t("platform_whatsapp", "WhatsApp");
           if (platform === "telegram") {
             color =
@@ -165,10 +165,10 @@ const KeywordActionPage: React.FC = () => {
         sortKey: "status",
         cell: (row: KeywordAction) => (
           <span
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${row.status === "active" ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400" : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"}`}
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${row.status === "active" ? "bg-light-primary text-primary dark:bg-primary/10 dark:text-primary" : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"}`}
           >
             <span
-              className={`w-1.5 h-1.5 rounded-full ${row.status === "active" ? "bg-emerald-500" : "bg-slate-400"}`}
+              className={`w-1.5 h-1.5 rounded-full ${row.status === "active" ? "bg-primary" : "bg-slate-400"}`}
             />
             {row.status === "active" ? t("keyword_status_active", "Active") : t("keyword_status_inactive", "Inactive")}
           </span>

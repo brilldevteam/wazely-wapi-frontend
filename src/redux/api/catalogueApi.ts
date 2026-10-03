@@ -61,7 +61,7 @@ export const catalogueApi = baseApi.enhanceEndpoints({ addTagTypes: ["Catalogue"
     }),
     getUserProducts: builder.query<{ success: boolean; data: { products: Product[]; pagination: Pagination } }, { type?: string; search?: string; page?: number; limit?: number }>({
       query: (params) => ({
-        url: "/ecommerce-catalog/user/products",
+        url: "/catalogue/user/products",
         params,
       }),
       providesTags: ["Product"],

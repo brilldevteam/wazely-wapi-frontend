@@ -193,7 +193,7 @@ const BookingDetailsModal: React.FC<BookingDetailsModalProps> = ({
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs text-slate-500">{t("amount_paid")}</p>
-                  <p className="text-sm font-bold text-emerald-600">
+                  <p className="text-sm font-bold text-primary">
                     {booking.amount_paid?.toFixed(2) || "0.00"}
                   </p>
                 </div>

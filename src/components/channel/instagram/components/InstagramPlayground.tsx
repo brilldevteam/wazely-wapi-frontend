@@ -237,7 +237,7 @@ export default function InstagramPlayground({
                           Comment Trigger Detected
                         </span>
                         {simStep >= 1 && (
-                          <span className="text-[9px] px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded-full font-bold">
+                          <span className="text-[9px] px-2 py-0.5 bg-light-primary text-primary rounded-full font-bold">
                             Active
                           </span>
                         )}
@@ -295,7 +295,7 @@ export default function InstagramPlayground({
                           Public Auto-Response
                         </span>
                         {simStep >= 2 && (
-                          <span className="text-[9px] px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded-full font-bold">
+                          <span className="text-[9px] px-2 py-0.5 bg-light-primary text-primary rounded-full font-bold">
                             Sent
                           </span>
                         )}
@@ -342,14 +342,14 @@ export default function InstagramPlayground({
                             size={14}
                             className={
                               simStep >= 3
-                                ? "text-emerald-500"
+                                ? "text-primary"
                                 : "text-slate-450"
                             }
                           />
                           Private DM Delivered
                         </span>
                         {simStep >= 3 && (
-                          <span className="text-[9px] px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded-full font-bold">
+                          <span className="text-[9px] px-2 py-0.5 bg-light-primary text-primary rounded-full font-bold">
                             Delivered
                           </span>
                         )}
@@ -359,7 +359,7 @@ export default function InstagramPlayground({
                         directly to their private Instagram inbox.
                       </p>
                       {simStep >= 3 && (
-                        <div className="mt-2.5 p-2 bg-emerald-50/40 rounded border border-emerald-100/30 text-[11px] font-bold text-slate-700">
+                        <div className="mt-2.5 p-2 bg-light-primary/40 rounded border border-[var(--primary-opacity-20)]/30 text-[11px] font-bold text-slate-700">
                           Inbox payload:{" "}
                           <span className="text-slate-500 font-medium">
                             {getDmResponseText()}
@@ -390,7 +390,7 @@ export default function InstagramPlayground({
                   <span className="text-xs font-black bg-gradient-to-r from-[#833AB4] to-[#E1306C] bg-clip-text text-transparent font-extrabold">
                     Instagram
                   </span>
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse" />
                 </div>
 
                 <div className="flex-1 p-3 flex flex-col justify-end space-y-2.5 bg-slate-50/50">

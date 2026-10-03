@@ -116,10 +116,10 @@ export const BasicInfoSection = ({
               key={cat.value}
               type="button"
               onClick={() => setCategory(cat.value)}
-              className={`flex h-17.25 justify-start items-center gap-3 p-4 rounded-lg border transition-all group ${category === cat.value ? "border-primary bg-emerald-50/50 dark:hover:bg-(--table-hover)! text-primary hover:bg-emerald-50/50! dark:bg-emerald-500/10" : "border-slate-100 bg-slate-50/30 dark:bg-(--table-hover) dark:border-(--table-hover) text-slate-500 hover:border-primary hover:bg-[unset]! dark:hover:border-(--card-border-color)"}`}
+              className={`flex h-17.25 justify-start items-center gap-3 p-4 rounded-lg border transition-all group ${category === cat.value ? "border-primary bg-primary/10 dark:hover:bg-(--table-hover)! text-primary hover:bg-primary/10! dark:bg-primary/10" : "border-slate-100 bg-slate-50/30 dark:bg-(--table-hover) dark:border-(--table-hover) text-slate-500 hover:border-primary hover:bg-[unset]! dark:hover:border-(--card-border-color)"}`}
             >
               <div
-                className={`p-2 rounded-lg transition-colors ${category === cat.value ? "bg-emerald-100 dark:bg-(--dark-sidebar)" : "bg-white dark:bg-(--page-body-bg) dark:text-amber-50 group-hover:bg-emerald-50 dark:group-hover:bg-(--card-color)"}`}
+                className={`p-2 rounded-lg transition-colors ${category === cat.value ? "bg-primary/20 dark:bg-(--table-hover)" : "bg-white dark:bg-(--page-body-bg) dark:text-amber-50 group-hover:bg-light-primary dark:group-hover:bg-(--card-color)"}`}
               >
                 {cat.icon}
               </div>
@@ -159,10 +159,10 @@ export const BasicInfoSection = ({
                   key={type.value}
                   type="button"
                   onClick={() => setMarketingType(type.value)}
-                  className={`flex h-15 items-center gap-3! px-4! justify-start py-3! rounded-lg! border-2! transition-all text-left! group ${isActive ? "border-primary! bg-emerald-50/60! dark:bg-emerald-500/10!" : "border-slate-100! dark:border-(--card-border-color)! bg-slate-50/30! dark:bg-(--table-hover)! hover:border-primary/30! dark:hover:border-(--card-border-color)!"}`}
+                  className={`flex h-15 items-center gap-3! px-4! justify-start py-3! rounded-lg! border-2! transition-all text-left! group ${isActive ? "border-primary! bg-primary/10! dark:bg-primary/10!" : "border-slate-100! dark:border-(--card-border-color)! bg-slate-50/30! dark:bg-(--table-hover)! hover:border-primary/30! dark:hover:border-(--card-border-color)!"}`}
                 >
                   <div
-                    className={`p-2 rounded-lg shrink-0 transition-colors ${isActive ? "bg-emerald-100 dark:bg-emerald-500/20 text-primary" : "bg-white dark:bg-(--page-body-bg) text-slate-400 group-hover:bg-emerald-50 dark:group-hover:bg-(--card-color)"}`}
+                    className={`p-2 rounded-lg shrink-0 transition-colors ${isActive ? "bg-primary/10 dark:bg-primary/20 text-primary" : "bg-white dark:bg-(--page-body-bg) text-slate-400 group-hover:bg-light-primary dark:group-hover:bg-(--card-color)"}`}
                   >
                     {type.icon}
                   </div>

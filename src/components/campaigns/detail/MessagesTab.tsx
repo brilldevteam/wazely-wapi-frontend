@@ -16,7 +16,7 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { DataTable } from "@/src/shared/DataTable";
 import { Column } from "@/src/types/shared";
-import { useGetCampaignByIdQuery } from "@/src/redux/api/campaignApi";
+import { useGetCampaignByIdQuery, useLazyGetCampaignByIdQuery } from "@/src/redux/api/campaignApi";
 
 const getFailureReason = (reason: Recipient["failure_reason"]): string => {
   if (!reason) return "";
@@ -35,6 +35,7 @@ export const MessagesTab = ({
   const [exportModalOpen, setExportModalOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [triggerGetCampaignById] = useLazyGetCampaignByIdQuery();
 
   const {
     data: campaignResult,
@@ -56,42 +57,56 @@ export const MessagesTab = ({
     setPage(1);
   };
 
-  const handleExport = (type: "csv" | "excel" | "print") => {
-    if (!recipients || recipients.length === 0) {
-      toast.error("No data to export");
-      return;
-    }
+  const handleExport = async (type: "csv" | "excel" | "print") => {
+    const toastId = toast.loading("Preparing report for download...");
+    try {
+      const result = await triggerGetCampaignById({
+        id: campaignId,
+        params: { all_recipients: true }
+      }).unwrap();
 
-    const headers = [
-      "Recipient",
-      "Status",
-      "Sent At",
-      "Delivered At",
-      "Read At",
-      "Error Info",
-    ];
-    const rowData = recipients.map((rec: Recipient) => [
-      rec.phone_number,
-      rec.status,
-      rec.sent_at ? new Date(rec.sent_at).toLocaleString() : "-",
-      rec.delivered_at ? new Date(rec.delivered_at).toLocaleString() : "-",
-      rec.read_at ? new Date(rec.read_at).toLocaleString() : "-",
-      getFailureReason(rec.failure_reason) || "-",
-    ]);
+      const exportRecipients = result?.data?.recipients || [];
 
-    if (type === "csv") {
-      exportToCSV(headers, rowData, "message_logs");
-    } else if (type === "excel") {
-      exportToExcel(headers, rowData, "message_logs", "Message Delivery Logs");
-    } else if (type === "print") {
-      exportToPrint(
-        headers,
-        rowData,
-        "Message Delivery Logs",
-        "Complete list of message deliveries for this campaign.",
-      );
+      if (!exportRecipients || exportRecipients.length === 0) {
+        toast.error("No data to export", { id: toastId });
+        return;
+      }
+
+      const headers = [
+        "Recipient",
+        "Status",
+        "Sent At",
+        "Delivered At",
+        "Read At",
+        "Error Info",
+      ];
+      const rowData = exportRecipients.map((rec: Recipient) => [
+        rec.phone_number,
+        rec.status,
+        rec.sent_at ? new Date(rec.sent_at).toLocaleString() : "-",
+        rec.delivered_at ? new Date(rec.delivered_at).toLocaleString() : "-",
+        rec.read_at ? new Date(rec.read_at).toLocaleString() : "-",
+        getFailureReason(rec.failure_reason) || "-",
+      ]);
+
+      if (type === "csv") {
+        exportToCSV(headers, rowData, "message_logs");
+      } else if (type === "excel") {
+        exportToExcel(headers, rowData, "message_logs", "Message Delivery Logs");
+      } else if (type === "print") {
+        exportToPrint(
+          headers,
+          rowData,
+          "Message Delivery Logs",
+          "Complete list of message deliveries for this campaign.",
+        );
+      }
+      toast.success("Report downloaded successfully", { id: toastId });
+      setExportModalOpen(false);
+    } catch (error) {
+      console.error("Export Error:", error);
+      toast.error("Failed to prepare report for download", { id: toastId });
     }
-    setExportModalOpen(false);
   };
 
   const columns = useMemo<Column<Recipient>[]>(
@@ -146,7 +161,7 @@ export const MessagesTab = ({
                 displayStatus === "sent"
                   ? "bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-950/30 dark:border-blue-900/50"
                   : displayStatus === "delivered"
-                    ? "bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-950/30 dark:border-emerald-900/50"
+                    ? "bg-light-primary text-primary border-[var(--primary-opacity-20)] dark:bg-primary-darker/30 dark:border-primary-darker/50"
                     : displayStatus === "read"
                       ? "bg-purple-50 text-purple-600 border-purple-100 dark:bg-purple-950/30 dark:border-purple-900/50"
                       : displayStatus === "failed"

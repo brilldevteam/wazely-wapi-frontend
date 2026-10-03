@@ -133,7 +133,7 @@ const SearchBar = ({ defaultOpen = false, onClose }: { defaultOpen?: boolean; on
             </Button>
 
             {filteredResults.length > 0 && (
-              <div className="absolute top-full left-0 custom-scrollbar w-full mt-2 z-110 bg-white dark:bg-(--card-color) overflow-y-auto border border-gray-200 dark:border-(--card-border-color) max-h-[70vh] rounded-lg shadow-lg overflow-hidden">
+              <div className="absolute top-full left-0 custom-scrollbar w-full mt-2 z-110 bg-white dark:bg-(--dark-body) overflow-y-auto border border-gray-200 dark:border-(--card-border-color) max-h-[70vh] rounded-lg shadow-lg overflow-hidden">
                 {filteredResults.map((result, index) => (
                   <div key={index} className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-(--table-hover) cursor-pointer border-b border-gray-100 dark:border-(--card-border-color) last:border-b-0" onClick={() => handleResultClick(result.path)}>
                     <span className="text-gray-500">{result.icon}</span>

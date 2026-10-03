@@ -10,13 +10,7 @@ export async function proxy(req: NextRequest) {
 
   const isAuthenticated = !!token;
 
-  if (pathname === "/") {
-    const destination = isAuthenticated
-      ? ROUTES.Dashboard
-      : ROUTES.Landing;
 
-    return NextResponse.redirect(new URL(getUrlWithBasePath(destination), req.url));
-  }
 
   const isAuthPage = pathname.startsWith("/auth");
   const isImpersonate = pathname === "/auth/impersonate";
@@ -28,7 +22,8 @@ export async function proxy(req: NextRequest) {
   }
 
   const isGuestAllowed =
-    pathname.startsWith(ROUTES.Landing) ||
+    pathname === "/" ||
+    pathname.startsWith("/landing") ||
     pathname.startsWith("/auth") ||
     pathname.startsWith("/page") ||
     pathname.startsWith("/product") ||
@@ -36,7 +31,7 @@ export async function proxy(req: NextRequest) {
 
   if (!isAuthenticated && !isGuestAllowed) {
     return NextResponse.redirect(
-      new URL(getUrlWithBasePath(ROUTES.Landing), req.url)
+      new URL(getUrlWithBasePath(ROUTES.Login), req.url)
     );
   }
 

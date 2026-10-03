@@ -3,6 +3,7 @@
 
 import { useDraggableScroll } from "@/src/hooks/useDraggableScroll";
 import { TemplatePreviewBubbleProps } from "@/src/types/components/template";
+import { formatTemplateBodyHtml } from "@/src/utils/templateFormatter";
 import {
   BookOpen,
   Copy,
@@ -144,6 +145,65 @@ export const TemplatePreviewBubble = ({
       : "";
 
   const renderChatBubbleGroup = () => {
+    if (isCallPermission) {
+      return (
+        <div className="flex flex-col w-full max-w-[90%] shrink-0">
+          {/* Bubble 1: Message body text */}
+          {bodyText && (
+            <div className={`overflow-hidden w-fit max-w-full mb-3 ${getBubbleStyle()}`}>
+              <div className={getBubblePadding()}>
+                <div
+                  className="text-sm leading-relaxed break-words whitespace-pre-wrap text-slate-800 dark:text-slate-100 [&_p]:my-0.5 [&_p]:min-h-[1.2em] [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4"
+                  dangerouslySetInnerHTML={{ __html: bodyText }}
+                />
+                {platform !== "instagram" && platform !== "facebook" && (
+                  <div className="text-[10px] text-slate-400 dark:text-slate-500 text-right mt-1 select-none">
+                    10:57 AM
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Bubble 2: Interactive Call Permission Card */}
+          <div className={`overflow-hidden w-fit max-w-full mb-3 ${getBubbleStyle()}`}>
+            <div className={`p-3 flex items-center gap-2.5 border-b ${getDividerStyle()} ${platform === "instagram" ? "bg-transparent" : ""}`}>
+              <div className="w-8 h-8 rounded-full bg-sky-100 dark:bg-sky-950/50 flex items-center justify-center shrink-0">
+                <Phone size={15} className="text-sky-500 dark:text-sky-400" />
+              </div>
+              <p className="text-[12px] font-bold text-slate-800 dark:text-slate-200">
+                Can Your Brand call you?
+              </p>
+            </div>
+            
+            <div className={getBubblePadding()}>
+              <div className="text-sm leading-relaxed break-all whitespace-normal text-slate-800 dark:text-slate-100">
+                You can update your preference anytime in the business profile.
+              </div>
+              {platform !== "instagram" && platform !== "facebook" && (
+                <div className="text-[10px] text-slate-400 dark:text-slate-500 text-right mt-1 select-none">
+                  10:57 AM
+                </div>
+              )}
+            </div>
+
+            <div className="border-t border-slate-100 dark:border-slate-800 bg-white/50 dark:bg-black/10">
+              <div className="w-full py-2.5 px-4 text-[12px] font-bold text-sky-500 dark:text-sky-400 flex items-center justify-center gap-1.5 cursor-pointer">
+                Choose preference
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
+                  <path
+                    fillRule="evenodd"
+                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     const bubbleContent = (
       <>
         {isLimitedTimeOffer && (
@@ -151,7 +211,7 @@ export const TemplatePreviewBubble = ({
             className={`p-3 border-b ${getDividerStyle()} ${platform === "instagram" ? "bg-transparent" : "bg-white dark:bg-slate-800"}`}
           >
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-950/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+              <div className="w-10 h-10 rounded-full bg-[var(--primary-opacity-20)] dark:bg-primary-darker/50 flex items-center justify-center text-primary dark:text-primary shrink-0">
                 <Gift size={20} />
               </div>
               <div className="flex-1 min-w-0">
@@ -180,7 +240,7 @@ export const TemplatePreviewBubble = ({
               <div className="w-14 h-14 rounded-lg bg-linear-to-br from-emerald-100 to-teal-100 dark:from-emerald-950 dark:to-teal-950 border border-slate-100 dark:border-slate-800 flex items-center justify-center shrink-0 overflow-hidden">
                 <ShoppingBag
                   size={22}
-                  className="text-emerald-500 dark:text-emerald-400"
+                  className="text-primary dark:text-primary"
                 />
               </div>
               <div className="flex-1 min-w-0">
@@ -289,9 +349,10 @@ export const TemplatePreviewBubble = ({
         )}
 
         <div className={getBubblePadding()}>
-          <div className="text-sm leading-relaxed break-all whitespace-normal text-slate-800 dark:text-slate-100">
-            {bodyText}
-          </div>
+          <div
+            className="text-sm leading-relaxed break-words whitespace-pre-wrap text-slate-800 dark:text-slate-100 [&_p]:my-0.5 [&_p]:min-h-[1.2em] [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4"
+            dangerouslySetInnerHTML={{ __html: bodyText }}
+          />
           {isAuthentication && authData?.add_security_recommendation && (
             <div className="text-[11px] text-slate-500 dark:text-slate-400 italic mt-1">
               For your security, do not share this code.
@@ -546,9 +607,10 @@ export const TemplatePreviewBubble = ({
                     />
                   )}
                 </div>
-                <div className="p-2 text-[11px] text-slate-600 dark:text-slate-300 leading-snug line-clamp-2">
-                  {card.body_text || "No body text yet"}
-                </div>
+                <div
+                  className="p-2 text-[11px] text-slate-600 dark:text-slate-300 leading-snug line-clamp-2 [&_p]:my-0"
+                  dangerouslySetInnerHTML={{ __html: card.body_text ? formatTemplateBodyHtml(card.body_text) : "No body text yet" }}
+                />
                 {(card.buttons || card.buttonValues || []).length > 0 && (
                   <div className="border-t border-slate-100 dark:border-slate-700">
                     {(card.buttons || card.buttonValues || []).map(

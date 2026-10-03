@@ -167,7 +167,7 @@ const FacebookAccountList: React.FC = () => {
 
       {(pagesData?.success || adsData?.success) && (
         <Button onClick={handleSync} disabled={isSyncing} variant="outline" className="flex items-center gap-2 px-4 py-5 h-12 rounded-lg font-medium border-slate-200 dark:border-(--card-border-color) hover:bg-slate-50 dark:hover:bg-(--table-hover) transition-all active:scale-95 shadow-sm min-w-35">
-          <CheckCircle2 className={`w-4 h-4 text-emerald-500 ${isSyncing ? "animate-spin" : ""}`} />
+          <CheckCircle2 className={`w-4 h-4 text-primary ${isSyncing ? "animate-spin" : ""}`} />
           <span>{isSyncing ? t("common_loading") : activeTab === "pages" ? t("sync_pages") : t("sync_ads")}</span>
         </Button>
       )}

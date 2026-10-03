@@ -245,7 +245,7 @@ const KeywordActionForm: React.FC<KeywordActionFormProps> = ({ editId }) => {
 
   const [recipientType, setRecipientType] = useState<
     "all_contacts" | "specific_contacts" | "tags" | "segments"
-  >("all_contacts");
+  >("specific_contacts");
   const [specificContacts, setSpecificContacts] = useState<string[]>([]);
   const [tagIds, setTagIds] = useState<string[]>([]);
   const [segmentIds, setSegmentIds] = useState<string[]>([]);
@@ -1322,7 +1322,7 @@ const KeywordActionForm: React.FC<KeywordActionFormProps> = ({ editId }) => {
                 )}
 
                 {recipientType === "all_contacts" && (
-                  <div className="flex items-center gap-3 p-4 bg-emerald-500/10 rounded-xl border border-emerald-500/20 shadow-xs text-emerald-800 dark:text-emerald-400">
+                  <div className="flex items-center gap-3 p-4 bg-primary/10 rounded-xl border border-primary/20 shadow-xs text-primary-darker dark:text-primary">
                     <Users size={20} className="shrink-0" />
                     <div>
                       <h4 className="text-sm font-bold">

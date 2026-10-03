@@ -20,7 +20,7 @@ const StepFooter = ({
           <Button
             variant="ghost"
             onClick={handleBack}
-            className="rounded-lg px-6 h-12 font-black text-slate-700 hover:text-emerald-600 bg-slate-100 dark:bg-(--card-color) hover:bg-emerald-50 dark:text-white dark:hover:bg-emerald-500/10 transition-all flex items-center gap-2"
+            className="rounded-lg px-6 h-12 font-black text-slate-700 hover:text-primary bg-slate-100 dark:bg-(--card-color) hover:bg-light-primary dark:text-white dark:hover:bg-primary/10 transition-all flex items-center gap-2"
           >
             <ArrowLeft size={18} /> Back
           </Button>
@@ -32,7 +32,7 @@ const StepFooter = ({
           <Button
             onClick={handleNext}
             disabled={!canNext}
-            className="bg-primary hover:bg-emerald-700 text-white rounded-lg px-10 h-11 font-bold transition-all hover:translate-x-1 group flex items-center gap-2"
+            className="bg-primary hover:bg-primary text-white rounded-lg px-10 h-11 font-bold transition-all hover:translate-x-1 group flex items-center gap-2"
           >
             Next Mapping{" "}
             <ArrowRight
@@ -44,7 +44,7 @@ const StepFooter = ({
           <Button
             onClick={handleSave}
             disabled={isMapping || !canSave}
-            className="bg-primary hover:bg-emerald-700 text-white rounded-lg px-12 h-11 font-bold transition-all hover:scale-[1.02] flex items-center gap-3"
+            className="bg-primary hover:bg-primary text-white rounded-lg px-12 h-11 font-bold transition-all hover:scale-[1.02] flex items-center gap-3"
           >
             {isMapping && <Loader2 className="animate-spin h-5 w-5" />}
             <CheckCircle2 size={20} /> Finish & Deploy

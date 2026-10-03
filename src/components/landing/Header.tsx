@@ -57,8 +57,13 @@ const Header = ({ isColor }: { isColor?: boolean }) => {
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  const isAnchorLink = (path?: string) => {
+    if (!path) return false;
+    return path.startsWith("#") || (!path.startsWith("/") && !path.startsWith("http://") && !path.startsWith("https://") && !path.startsWith("mailto:") && !path.startsWith("tel:"));
+  };
+
   const handleLinkClick = (item: MenuItem, e: React.MouseEvent) => {
-    if (item.path && (item.path.startsWith("#") || !item.path.startsWith("/"))) {
+    if (item.path && isAnchorLink(item.path)) {
       e.preventDefault();
       const cleanId = item.path.replace("#", "");
       scrollToSection(cleanId);
@@ -125,7 +130,7 @@ const Header = ({ isColor }: { isColor?: boolean }) => {
 
         {/* ─── Desktop navigation ─── */}
         <nav className="hidden min-[1100px]:flex items-center gap-8 flex-1 justify-center">
-          {menuItems.filter((item) => item.status).map((item) => {
+          {menuItems.filter((item) => item.status !== false).map((item) => {
             if (item.link_type === "Sub") {
               return (
                 <ProductDropdown
@@ -136,7 +141,7 @@ const Header = ({ isColor }: { isColor?: boolean }) => {
               );
             }
 
-            const isAnchor = item.path && (item.path.startsWith("#") || !item.path.startsWith("/"));
+            const isAnchor = item.path && isAnchorLink(item.path);
             const cleanPath = item.path ? item.path.replace("#", "") : "";
             const isActive = activeSection === cleanPath;
 
@@ -150,7 +155,7 @@ const Header = ({ isColor }: { isColor?: boolean }) => {
                 >
                   {item.title}
                   {item.badge_text && (
-                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${item.badge_color === "green" ? "bg-emerald-500!" : item.badge_color === "black" ? "bg-black!" : item.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}>
+                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${item.badge_color === "green" ? "bg-primary!" : item.badge_color === "black" ? "bg-black!" : item.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}>
                       {item.badge_text}
                     </span>
                   )}
@@ -173,7 +178,7 @@ const Header = ({ isColor }: { isColor?: boolean }) => {
               >
                 {item.title}
                 {item.badge_text && (
-                  <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${item.badge_color === "green" ? "bg-emerald-500!" : item.badge_color === "black" ? "bg-black!" : item.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}>
+                  <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${item.badge_color === "green" ? "bg-primary!" : item.badge_color === "black" ? "bg-black!" : item.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}>
                     {item.badge_text}
                   </span>
                 )}
@@ -226,7 +231,7 @@ const Header = ({ isColor }: { isColor?: boolean }) => {
 
           {/* Drawer nav */}
           <nav className="flex flex-col gap-1 px-4 pt-4 pb-6">
-            {menuItems.filter((item) => item.status).map((item) => {
+            {menuItems.filter((item) => item.status !== false).map((item) => {
               if (item.link_type === "Sub") {
                 const isSubOpen = !!openMobileSubMenus[item.title];
                 const subChildren = item.children || [];
@@ -240,7 +245,7 @@ const Header = ({ isColor }: { isColor?: boolean }) => {
                       <span className="flex items-center gap-1.5">
                         <span>{item.title}</span>
                         {item.badge_text && (
-                          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${item.badge_color === "green" ? "bg-emerald-500!" : item.badge_color === "black" ? "bg-black!" : item.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}>
+                          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${item.badge_color === "green" ? "bg-primary!" : item.badge_color === "black" ? "bg-black!" : item.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}>
                             {item.badge_text}
                           </span>
                         )}
@@ -250,9 +255,9 @@ const Header = ({ isColor }: { isColor?: boolean }) => {
 
                     {isSubOpen && (
                       <div className="mt-1 ml-2 flex flex-col gap-0.5 border-l border-white/10 pl-3 animate-in fade-in slide-in-from-top-2 duration-300">
-                        {subChildren.filter((c) => c.status).map((child) => {
+                        {subChildren.filter((c) => c.status !== false).map((child) => {
                           const icon = getMenuIcon(child.icon);
-                          const isAnchor = child.path && (child.path.startsWith("#") || !child.path.startsWith("/"));
+                          const isAnchor = child.path && isAnchorLink(child.path);
 
                           const imageOrIcon = child.link_image ? (
                             <Images src={child.link_image} alt="" className="w-6 h-6 rounded object-cover bg-white/5 border border-white/10 shrink-0 animate-in fade-in duration-300" width={24} height={24} unoptimized />
@@ -265,7 +270,7 @@ const Header = ({ isColor }: { isColor?: boolean }) => {
                               {imageOrIcon}
                               <span className="flex-1 leading-snug text-white">{child.title}</span>
                               {child.badge_text && (
-                                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}>
+                                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-primary!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}>
                                   {child.badge_text}
                                 </span>
                               )}
@@ -305,7 +310,7 @@ const Header = ({ isColor }: { isColor?: boolean }) => {
                 );
               }
 
-              const isAnchor = item.path && (item.path.startsWith("#") || !item.path.startsWith("/"));
+              const isAnchor = item.path && isAnchorLink(item.path);
               const cleanPath = item.path ? item.path.replace("#", "") : "";
               const isActive = activeSection === cleanPath;
 

@@ -107,7 +107,7 @@ const SyncSheetsModal: React.FC<SyncSheetsModalProps> = ({
         <div className="min-w-0 w-full overflow-hidden">
           {isLoadingList ? (
             <div className="flex flex-col items-center justify-center py-12 gap-3 text-slate-500">
-              <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
               <p>{t("loading")}</p>
             </div>
           ) : availableSheets.length > 0 ? (
@@ -135,7 +135,7 @@ const SyncSheetsModal: React.FC<SyncSheetsModalProps> = ({
                   variant="ghost"
                   size="sm"
                   onClick={fetchAvailableSheets}
-                  className="h-8 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 gap-2 shrink-0"
+                  className="h-8 text-primary hover:text-primary-dark hover:bg-light-primary dark:hover:bg-primary-darker/20 gap-2 shrink-0"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
                   {t("refresh")}
@@ -147,7 +147,7 @@ const SyncSheetsModal: React.FC<SyncSheetsModalProps> = ({
                   {availableSheets.map((sheet) => (
                     <div
                       key={sheet.id}
-                      className={`flex items-center gap-3 p-3 rounded-lg transition-colors cursor-pointer group min-w-0 overflow-hidden ${selectedSheets.has(sheet.id) ? "bg-emerald-50 dark:bg-emerald-900/20" : "hover:bg-slate-50 dark:hover:bg-(--table-hover)"}`}
+                      className={`flex items-center gap-3 p-3 rounded-lg transition-colors cursor-pointer group min-w-0 overflow-hidden ${selectedSheets.has(sheet.id) ? "bg-light-primary dark:bg-primary-darker/20" : "hover:bg-slate-50 dark:hover:bg-(--table-hover)"}`}
                       onClick={() => toggleSheet(sheet.id)}
                     >
                       <Checkbox
@@ -155,7 +155,7 @@ const SyncSheetsModal: React.FC<SyncSheetsModalProps> = ({
                         onCheckedChange={() => toggleSheet(sheet.id)}
                         onClick={(e) => e.stopPropagation()}
                       />
-                      <div className="w-8 h-8 rounded bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 shrink-0">
+                      <div className="w-8 h-8 rounded bg-[var(--primary-opacity-20)] dark:bg-primary-darker/30 flex items-center justify-center text-primary shrink-0">
                         <FileSpreadsheet size={16} />
                       </div>
                       <div className="flex-1 min-w-0 overflow-hidden">
@@ -206,7 +206,7 @@ const SyncSheetsModal: React.FC<SyncSheetsModalProps> = ({
           <Button
             onClick={handleSync}
             disabled={isSyncing || selectedSheets.size === 0}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white h-11 min-w-25 shrink-0 truncate"
+            className="bg-primary hover:bg-primary text-white h-11 min-w-25 shrink-0 truncate"
           >
             {isSyncing ? (
               <>

@@ -3,9 +3,11 @@
 import { ROUTES } from "@/src/constants/route";
 import { Badge } from "@/src/elements/ui/badge";
 import { Button } from "@/src/elements/ui/button";
+import { Switch } from "@/src/elements/ui/switch";
 import {
   useDeleteAppointmentConfigMutation,
   useListAppointmentConfigsQuery,
+  useUpdateAppointmentConfigMutation,
 } from "@/src/redux/api/appointmentApi";
 import { useAppSelector } from "@/src/redux/hooks";
 import CommonHeader from "@/src/shared/CommonHeader";
@@ -63,6 +65,9 @@ const AppointmentConfigList: React.FC = () => {
 
   const [deleteConfig, { isLoading: isDeleting }] =
     useDeleteAppointmentConfigMutation();
+
+  const [updateConfig, { isLoading: isUpdatingStatus }] =
+    useUpdateAppointmentConfigMutation();
 
   const handlePageChange = (newPage: number) => setPage(newPage);
   const handleLimitChange = (newLimit: number) => {
@@ -147,19 +152,39 @@ const AppointmentConfigList: React.FC = () => {
       {
         header: t("appointment_status"),
         accessorKey: "status",
-        className: "min-w-[120px] [@media(max-width:1920px)]:min-w-[150px]",
+        className: "min-w-[150px] [@media(max-width:1920px)]:min-w-[180px]",
         sortable: true,
         sortKey: "status",
-        cell: (item) =>
-          item.status === "active" ? (
-            <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 gap-1.5 px-2.5 py-0.5 font-bold">
-              <CheckCircle2 size={12} /> {t("active")}
-            </Badge>
-          ) : (
-            <Badge className="bg-red-500/10 text-red-600 border-red-500/20 gap-1.5 px-2.5 py-0.5 font-bold">
-              <XCircle size={12} /> {t("inactive")}
-            </Badge>
-          ),
+        cell: (item) => {
+          const handleToggleStatus = async (checked: boolean) => {
+            try {
+              const newStatus = checked ? "active" : "inactive";
+              await updateConfig({ id: item._id, status: newStatus }).unwrap();
+              toast.success(
+                t("status_updated_success", {
+                  defaultValue: "Status updated successfully",
+                }),
+              );
+            } catch (error: any) {
+              toast.error(
+                error?.data?.message ||
+                  t("failed_to_update_status", {
+                    defaultValue: "Failed to update status",
+                  }),
+              );
+            }
+          };
+
+          return (
+            <div className="flex items-center gap-3">
+              <Switch
+                checked={item.status === "active"}
+                onCheckedChange={handleToggleStatus}
+                disabled={isUpdatingStatus}
+              />
+            </div>
+          );
+        },
       },
       {
         header: t("created_at"),
@@ -229,7 +254,7 @@ const AppointmentConfigList: React.FC = () => {
     <Can permission="create.appointment_booking">
       <Button
         onClick={() => router.push(`${ROUTES.AppointmentBooking}/add`)}
-        className="flex items-center gap-2.5 px-4.5! py-5 bg-emerald-600 hover:bg-emerald-700 text-white h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group"
+        className="flex items-center gap-2.5 px-4.5! py-5 bg-primary text-white h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group"
       >
         <Plus className="w-5 h-5" />
         <span>{t("add_appointment_config")}</span>

@@ -36,7 +36,7 @@ const Step1Campaign: React.FC = () => {
   return (
     <div className="space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
       <div className="flex flex-col gap-1 mb-4 sm:mb-6">
-        <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-500">
+        <div className="flex items-center gap-2 text-primary dark:text-primary">
           <Info size={18} className="sm:w-5 sm:h-5" />
           <h2 className="text-lg sm:text-xl font-bold">{t("campaign_info")}</h2>
         </div>
@@ -61,7 +61,7 @@ const Step1Campaign: React.FC = () => {
             onChange={(e) => setFieldValue("name", e.target.value)}
             onBlur={handleBlur}
             className={cn(
-              "h-10 sm:h-11 bg-slate-50/50 dark:bg-(--page-body-bg) border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-emerald-600/20 transition-all text-sm sm:text-base",
+              "h-10 sm:h-11 bg-slate-50/50 dark:bg-(--page-body-bg) border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-primary/20 transition-all text-sm sm:text-base",
               touched.name && errors.name ? "border-red-500 bg-red-50/10" : "",
             )}
           />
@@ -85,7 +85,7 @@ const Step1Campaign: React.FC = () => {
           >
             <SelectTrigger
               className={cn(
-                "h-10 sm:h-11 py-5 sm:py-5.5 mb-0! bg-slate-50/50 dark:bg-(--page-body-bg) border-slate-200 dark:border-(--card-border-color) focus:ring-2 focus:ring-emerald-600/20 transition-all text-sm sm:text-base",
+                "h-10 sm:h-11 py-5 sm:py-5.5 mb-0! bg-slate-50/50 dark:bg-(--page-body-bg) border-slate-200 dark:border-(--card-border-color) focus:ring-2 focus:ring-primary/20 transition-all text-sm sm:text-base",
                 touched.objective && errors.objective
                   ? "border-red-500 bg-red-50/10"
                   : "",
@@ -130,7 +130,7 @@ const Step1Campaign: React.FC = () => {
               onChange={(e) => setFieldValue("daily_budget", e.target.value)}
               onBlur={handleBlur}
               className={cn(
-                "h-10 sm:h-11 bg-slate-50/50 dark:bg-(--page-body-bg) border-slate-200 dark:border-(--card-border-color) focus:ring-2 focus:ring-emerald-600/20 transition-all pl-10 text-sm sm:text-base",
+                "h-10 sm:h-11 bg-slate-50/50 dark:bg-(--page-body-bg) border-slate-200 dark:border-(--card-border-color) focus:ring-2 focus:ring-primary/20 transition-all pl-10 text-sm sm:text-base",
                 touched.daily_budget && errors.daily_budget
                   ? "border-red-500 bg-red-50/10"
                   : "",

@@ -95,7 +95,7 @@ const DynamicSettingsProvider = ({ children }: DynamicSettingsProviderProps) => 
   const { t } = useTranslation();
   const { data: settingsData, isLoading, isError, refetch: refetchSettings } = useGetSettingsQuery({}, { refetchOnMountOrArgChange: true });
   const { data: authSetupData, refetch: refetchAuthSetup } = useGetAuthPageSetupQuery(undefined, { refetchOnMountOrArgChange: true });
-  const { app_name, favicon_url, app_description, pageTitle, pageDescription, landing_page_enabled, isSettingsLoaded } = useAppSelector((state) => state.setting);
+  const { app_name, favicon_url, app_description, pageTitle, pageDescription, landing_page_enabled, isSettingsLoaded, theme_primary_color, theme_light_background_color } = useAppSelector((state) => state.setting);
   const [mounted, setMounted] = useState(false);
   const { setTheme } = useTheme();
 
@@ -156,16 +156,54 @@ const DynamicSettingsProvider = ({ children }: DynamicSettingsProviderProps) => 
     if (!mounted) return;
 
     let faviconHref = "";
-    if (isSettingsLoaded) {
+    if (isLoading) {
+      if (isSettingsLoaded && favicon_url) {
+        const resolved = resolveUrl(favicon_url);
+        faviconHref = resolved ? getUrlWithBasePath(resolved) : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+      } else {
+        faviconHref = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+      }
+    } else if (isSettingsLoaded) {
       const resolved = resolveUrl(favicon_url);
       faviconHref = resolved ? getUrlWithBasePath(resolved) : getUrlWithBasePath(DEFAULT_FAVICON);
-    } else if (isLoading) {
-      faviconHref = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
     } else if (isError) {
       faviconHref = getUrlWithBasePath(DEFAULT_FAVICON);
     } else {
       faviconHref = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
     }
+
+    const applyThemeColors = (primary?: string, lightBg?: string) => {
+      const root = document.documentElement;
+      if (primary) {
+        root.style.setProperty("--primary", primary, "important");
+        root.style.setProperty("--text-green-primary", primary, "important");
+        root.style.setProperty("--sidebar-primary", primary, "important");
+        root.style.setProperty("--ring", primary, "important");
+        root.style.setProperty("--sidebar-ring", primary, "important");
+
+        const hexToRgb = (hex: string) => {
+          const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+          const fullHex = hex.replace(shorthandRegex, (_, r, g, b) => r + r + g + g + b + b);
+          const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(fullHex);
+          return result
+            ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
+            : null;
+        };
+
+        const rgb = hexToRgb(primary);
+        if (rgb) {
+          root.style.setProperty("--primary-rgb", rgb, "important");
+          root.style.setProperty("--primary-opacity-30", `rgba(${rgb}, 0.34)`, "important");
+          root.style.setProperty("--primary-opacity-20", `rgba(${rgb}, 0.20)`, "important");
+        }
+
+        root.style.setProperty("--primary-hover", primary, "important");
+        root.style.setProperty("--primary-dark", primary, "important");
+      }
+      if (lightBg) {
+        root.style.setProperty("--light-background", lightBg, "important");
+      }
+    };
 
     // Title update
     if (isSettingsLoaded) {
@@ -189,13 +227,14 @@ const DynamicSettingsProvider = ({ children }: DynamicSettingsProviderProps) => 
           meta.setAttribute("content", description);
         }
       }
+      applyThemeColors(theme_primary_color, theme_light_background_color);
     }
 
     // Favicon update
     if (faviconHref) {
       applyFavicon(faviconHref);
     }
-  }, [app_name, app_description, favicon_url, pathname, mounted, pageTitle, pageDescription, t, isSettingsLoaded, isLoading, isError]);
+  }, [app_name, app_description, favicon_url, pathname, mounted, pageTitle, pageDescription, t, isSettingsLoaded, isLoading, isError, theme_primary_color, theme_light_background_color]);
 
   return <>{children}</>;
 };

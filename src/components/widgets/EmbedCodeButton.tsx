@@ -63,7 +63,7 @@ const EmbedCodeButton: React.FC<EmbedCodeButtonProps> = ({
             </Button>
           </div>
           <div className="p-4 text-left">
-            <pre className="bg-slate-900 text-emerald-400 text-xs p-4 rounded-lg overflow-x-auto font-mono leading-relaxed whitespace-pre-wrap break-all border border-slate-800">
+            <pre className="bg-slate-900 text-primary text-xs p-4 rounded-lg overflow-x-auto font-mono leading-relaxed whitespace-pre-wrap break-all border border-slate-800">
               {code}
             </pre>
           </div>

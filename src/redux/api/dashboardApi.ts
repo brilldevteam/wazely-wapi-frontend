@@ -24,7 +24,7 @@ export type {
 
 export const dashboardApi = baseApi.enhanceEndpoints({ addTagTypes: ["Dashboard"] }).injectEndpoints({
   endpoints: (builder) => ({
-    getDashboard: builder.query<{ success: boolean; data: DashboardData }, { dateRange?: string; startDate?: string; endDate?: string } | void>({
+    getDashboard: builder.query<{ success: boolean; data: DashboardData }, { dateRange?: string; startDate?: string; endDate?: string; workspace_id?: string } | void>({
       query: (params) => ({
         url: "/dashboard",
         params: params || {},

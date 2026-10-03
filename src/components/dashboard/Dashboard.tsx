@@ -25,7 +25,13 @@ const Dashboard = () => {
   const [filters, setFilters] = useState<{ dateRange: string; startDate?: string; endDate?: string }>({
     dateRange: "this_year",
   });
-  const { data, isLoading } = useGetDashboardQuery(filters);
+  const selectedWorkspace = useAppSelector((state) => state.workspace?.selectedWorkspace);
+  const workspaceId = selectedWorkspace?._id;
+
+  const { data, isLoading } = useGetDashboardQuery({
+    ...filters,
+    workspace_id: workspaceId,
+  });
   const d = data?.data;
 
   const enhancedCounts = {
@@ -44,7 +50,7 @@ const Dashboard = () => {
         spread: 120,
         origin: { y: 0.6 },
         zIndex: 9999,
-        colors: ["#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "#059669"],
+        colors: ["#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "var(--primary)"],
       });
       localStorage.removeItem("whatsappcrm_new_registration");
     }

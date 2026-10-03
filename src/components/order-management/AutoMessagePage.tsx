@@ -61,7 +61,7 @@ const AutoMessagePage = () => {
       {/* Payment Link Settings */}
       <div className="mb-6 p-5 rounded-xl border bg-white dark:bg-(--card-color) dark:border-(--card-border-color) shadow-xs flex flex-col gap-5">
         <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-          <CreditCard className="w-5 h-5 text-emerald-500" />
+          <CreditCard className="w-5 h-5 text-primary" />
           Catalog Payment Link Settings
         </h3>
         

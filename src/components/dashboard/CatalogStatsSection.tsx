@@ -23,7 +23,7 @@ const CatalogStatsSection = ({ data, isLoading, filters }: CatalogStatsSectionPr
 
   const STATS_CONFIG = [
     { label: t("orders_received_label"), key: "ordersFromWhatsApp" as const, icon: <ShoppingCart size={16} />, color: "text-amber-500", prefix: "", decimals: 0 },
-    { label: t("revenue_generated_label"), key: "revenueFromWhatsApp" as const, icon: <DollarSign size={16} />, color: "text-emerald-500", prefix: selectedCurrency?.symbol, decimals: 2 },
+    { label: t("revenue_generated_label"), key: "revenueFromWhatsApp" as const, icon: <DollarSign size={16} />, color: "text-primary", prefix: selectedCurrency?.symbol, decimals: 2 },
     { label: t("live_inventory_label"), key: "totalProducts" as const, icon: <Package size={16} />, color: "text-primary", prefix: "", decimals: 0 },
   ];
 

@@ -4,7 +4,7 @@
 import { ROUTES } from "@/src/constants";
 import { Badge } from "@/src/elements/ui/badge";
 import { Button } from "@/src/elements/ui/button";
-import { useGetMessageLogsQuery, useGetTriggerLogsQuery } from "@/src/redux/api/webhookApi";
+import { useGetWebhookMessageLogsQuery, useGetTriggerLogsQuery } from "@/src/redux/api/webhookApi";
 import CommonHeader from "@/src/shared/CommonHeader";
 import { DataTable } from "@/src/shared/DataTable";
 import { Column } from "@/src/types/shared";
@@ -41,7 +41,7 @@ const WebhookLogs = () => {
 
   const { data: triggerLogsResult, isLoading: isTriggerLoading, isFetching: isTriggerFetching, refetch: refetchTrigger } = useGetTriggerLogsQuery({ id: selectedWebhookId, page, limit, search: searchTerm }, { skip: !selectedWebhookId || activeTab !== "trigger" });
 
-  const { data: messageLogsResult, isLoading: isMessageLoading, isFetching: isMessageFetching, refetch: refetchMessage } = useGetMessageLogsQuery({ id: selectedWebhookId, page, limit, search: searchTerm }, { skip: !selectedWebhookId || activeTab !== "message" });
+  const { data: messageLogsResult, isLoading: isMessageLoading, isFetching: isMessageFetching, refetch: refetchMessage } = useGetWebhookMessageLogsQuery({ id: selectedWebhookId, page, limit, search: searchTerm }, { skip: !selectedWebhookId || activeTab !== "message" });
 
   const handleRefresh = () => {
     if (activeTab === "trigger") refetchTrigger();
@@ -55,7 +55,7 @@ const WebhookLogs = () => {
     let label = status;
 
     if (status === "success" || status === "sent" || status === "delivered" || status === "read") {
-      badgeClass = "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-100 dark:border-emerald-500/20";
+      badgeClass = "bg-light-primary dark:bg-primary/10 text-primary-dark dark:text-primary border-[var(--primary-opacity-20)] dark:border-primary/20";
       icon = <CheckCircle2 size={12} />;
       label = status.charAt(0).toUpperCase() + status.slice(1);
     } else if (status === "failed") {
@@ -89,7 +89,7 @@ const WebhookLogs = () => {
     {
       header: "Method",
       accessorKey: "method",
-      cell: (row) => <span className={cn("text-[10px] font-black px-2 py-0.5 rounded uppercase", row.method === "GET" ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" : "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400")}>{row.method || "POST"}</span>,
+      cell: (row) => <span className={cn("text-[10px] font-black px-2 py-0.5 rounded uppercase", row.method === "GET" ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" : "bg-[var(--primary-opacity-20)] text-primary-dark dark:bg-primary-darker/30 dark:text-primary")}>{row.method || "POST"}</span>,
     },
     {
       header: "Status",

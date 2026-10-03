@@ -4,7 +4,6 @@ export const contactApi = baseApi.enhanceEndpoints({ addTagTypes: ["Contact"] })
   endpoints: (builder) => ({
     getContact: builder.query({
       query: (params) => {
-        console.log("getContact query params:", params);
         const queryParams = new URLSearchParams();
         if (params.page) queryParams.append("page", params.page.toString());
         if (params.limit) queryParams.append("limit", params.limit.toString());

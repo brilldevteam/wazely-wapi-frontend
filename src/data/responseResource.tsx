@@ -52,7 +52,7 @@ export const TYPE_FALLBACK_ICON: Record<ReplyMaterialType, React.ReactNode> = {
   sticker: <Smile size={28} className="text-pink-400" />,
   sequence: <Zap size={28} className="text-yellow-400" />,
   template: <Layout size={28} className="text-indigo-400" />,
-  catalog: <ShoppingBag size={28} className="text-emerald-400" />,
+  catalog: <ShoppingBag size={28} className="text-primary" />,
   chatbot: <Bot size={28} className="text-cyan-400" />,
   flow: <GitBranch size={28} className="text-orange-400" />,
 };
@@ -65,7 +65,7 @@ export const TYPE_ACCENT: Record<ReplyMaterialType, string> = {
   sticker: "bg-pink-50 dark:bg-pink-500/10",
   sequence: "bg-yellow-50 dark:bg-yellow-500/10",
   template: "bg-indigo-50 dark:bg-indigo-500/10",
-  catalog: "bg-emerald-50 dark:bg-emerald-500/10",
+  catalog: "bg-light-primary dark:bg-primary/10",
   chatbot: "bg-cyan-50 dark:bg-cyan-500/10",
   flow: "bg-orange-50 dark:bg-orange-500/10",
 };
@@ -215,7 +215,7 @@ export const TYPE_ICONS: Record<
 
 export const badgeStyles: Record<string, string> = {
   whatsapp:
-    "bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30",
+    "bg-light-primary text-primary-dark border-[var(--primary-opacity-20)] dark:bg-primary-darker/20 dark:text-primary dark:border-primary-darker/30",
   telegram:
     "bg-sky-50 text-sky-700 border-sky-100 dark:bg-sky-950/20 dark:text-sky-400 dark:border-sky-900/30",
   facebook:

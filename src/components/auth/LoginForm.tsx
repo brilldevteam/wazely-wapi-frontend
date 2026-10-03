@@ -169,7 +169,7 @@ export const LoginPage = () => {
 
   const features = content.side_panel.bullets.map((bullet, index) => {
     const icons = [Users, MessageSquare, TrendingUp, Shield];
-    const colors = ["bg-emerald-500", "bg-blue-500", "bg-purple-500", "bg-orange-500"];
+    const colors = ["bg-primary", "bg-blue-500", "bg-purple-500", "bg-orange-500"];
     return {
       icon: icons[index % icons.length],
       label: bullet.title,
@@ -178,16 +178,16 @@ export const LoginPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-100 via-white-50 to-emerald-50 flex items-center dark:bg-none dark:bg-(--page-body-bg) justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-linear-to-br from-slate-100 via-white-50 to-primary/5 flex items-center dark:bg-none dark:bg-(--page-body-bg) justify-center p-4 relative overflow-hidden">
       <AuthControls />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-emerald-200/30 dark:bg-emerald-600/15 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-[var(--primary-opacity-30)]/30 dark:bg-primary/15 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-blue-200/30 dark:bg-blue-600/15 rounded-full blur-3xl"></div>
       </div>
 
       <div className="relative z-10 w-full max-w-md lg:max-w-6xl">
         <div className="grid lg:grid-cols-2 gap-0 items-center">
-          <div className="hidden lg:flex flex-col justify-center p-12 bg-linear-to-br from-emerald-600 via-emerald-700 to-teal-800 h-full rounded-tr-none rounded-br-none rounded-3xl relative overflow-hidden min-h-175">
+          <div className="hidden lg:flex flex-col justify-center p-12 bg-linear-to-br from-primary via-primary-dark to-primary-darker h-full rounded-tr-none rounded-br-none rounded-3xl relative overflow-hidden min-h-175">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32"></div>
             <div className="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full -ml-40 -mb-40"></div>
             <div className="absolute top-1/2 right-10 w-2 h-32 bg-white/10 rotate-12"></div>
@@ -196,7 +196,7 @@ export const LoginPage = () => {
             <div className="relative z-10 space-y-8">
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <DynamicLogo />
+                  <DynamicLogo logoType="dark" />
                 </div>
                 <h2 className="text-4xl text-white mt-8 leading-tight">
                   {isAuthSetupLoading ? (
@@ -208,7 +208,7 @@ export const LoginPage = () => {
                     content.side_panel.title
                   )}
                 </h2>
-                <div className="text-emerald-100 text-lg">{isAuthSetupLoading ? <Skeleton className="h-6 w-full bg-white/20" /> : content.side_panel.description}</div>
+                <div className="text-white/70 text-lg">{isAuthSetupLoading ? <Skeleton className="h-6 w-full bg-white/20" /> : content.side_panel.description}</div>
               </div>
 
               <div className="grid grid-cols-2 gap-4 pt-8">
@@ -230,7 +230,7 @@ export const LoginPage = () => {
                         </div>
                         <p className="text-white text-sm font-medium">{feature.label}</p>
                         {content.side_panel.bullets[index]?.points.map((point, pIndex) => (
-                          <p key={pIndex} className="text-emerald-100 text-xs mt-1">
+                          <p key={pIndex} className="text-[var(--primary-opacity-20)] text-xs mt-1">
                             {point}
                           </p>
                         ))}
@@ -244,7 +244,7 @@ export const LoginPage = () => {
                   {content.side_panel.footer.map((item, index) => (
                     <div key={index} className="space-y-1">
                       <p className="text-white text-xl font-bold">{item.title}</p>
-                      <p className="text-emerald-100 text-xs opacity-80">{item.points[0]}</p>
+                      <p className="text-[var(--primary-opacity-20)] text-xs opacity-80">{item.points[0]}</p>
                     </div>
                   ))}
                 </div>
@@ -253,10 +253,10 @@ export const LoginPage = () => {
           </div>
 
           <div className="bg-white dark:bg-(--card-color) rounded-3xl lg:rounded-l-none lg:rounded-r-3xl shadow-2xl p-4 sm:p-12 min-h-175 flex flex-col justify-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-emerald-100 to-blue-100 dark:from-emerald-500/20 dark:to-blue-500/20 opacity-50 dark:opacity-100 rounded-bl-full"></div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-primary/20 to-primary/10 dark:from-primary/30 dark:to-primary/20 opacity-50 dark:opacity-100 rounded-bl-full"></div>
             <div className="relative z-10 max-w-md mx-auto w-full">
               <div className="lg:hidden flex items-center gap-3 mb-8">
-                <DynamicLogo width={140} height={40} className="h-10 w-auto object-contain" skeletonClassName="h-10 w-32" />
+                <DynamicLogo logoType="light" width={140} height={40} className="h-10 w-auto object-contain" skeletonClassName="h-10 w-32" />
               </div>
               <div className="mb-8">
                 <h2 className="text-3xl text-slate-900 dark:text-white font-bold mb-2">{isAuthSetupLoading ? <Skeleton className="h-9 w-48" /> : content.title}</h2>
@@ -269,7 +269,7 @@ export const LoginPage = () => {
                 <div className="space-y-3 flex flex-col">
                   <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">{t("select_role", "Choose your workspace")}</Label>
                   <div className="grid grid-cols-2 gap-3 p-1 bg-slate-100 dark:bg-(--page-body-bg) rounded-xl relative">
-                    <Button type="button" onClick={() => setRoleType("user")} className={`relative z-10! flex items-center justify-center gap-2! py-2.5! rounded-lg! text-sm! font-medium! transition-all duration-300 ${roleType === "user" ? "text-emerald-700! dark:text-emerald-400! bg-white! dark:bg-(--card-color)! shadow-sm!" : "text-slate-500! dark:text-slate-400! bg-[unset]! hover:text-slate-700! dark:hover:text-slate-300!"}`}>
+                    <Button type="button" onClick={() => setRoleType("user")} className={`relative z-10! flex items-center justify-center gap-2! py-2.5! rounded-lg! text-sm! font-medium! transition-all duration-300 ${roleType === "user" ? "text-primary! dark:text-primary! bg-white! dark:bg-(--card-color)! shadow-sm!" : "text-slate-500! dark:text-slate-400! bg-[unset]! hover:text-slate-700! dark:hover:text-slate-300!"}`}>
                       <User className={`w-4 h-4 transition-transform duration-300 ${roleType === "user" ? "scale-110" : "scale-100"}`} />
                       User
                     </Button>
@@ -319,12 +319,12 @@ export const LoginPage = () => {
                       <span className="text-sm text-slate-600 dark:text-slate-400">{t("keep_signed_in")}</span>
                     </Label>
                   </div>
-                  <Button type="button" onClick={onNavigateToForgetPass} className="bg-transparent hover:bg-transparent text-sm font-medium text-primary hover:text-emerald-700 transition-colors">
+                  <Button type="button" onClick={onNavigateToForgetPass} className="bg-transparent hover:bg-transparent text-sm font-medium text-primary hover:text-primary transition-colors">
                     {isAuthSetupLoading ? <Skeleton className="h-4 w-24" /> : content.forgot_password_text}
                   </Button>
                 </div>
 
-                <Button type="submit" className="px-4.5 py-5 h-13 bg-primary hover:to-teal-700 text-white rounded-lg shadow-lg shadow-emerald-500/30 transition-all w-full text-sm font-semibold mb-0!" disabled={isLoading || isAuthSetupLoading}>
+                <Button type="submit" className="px-4.5 py-5 h-13 bg-primary hover:bg-primary text-white rounded-lg shadow-lg shadow-primary/30 transition-all w-full text-sm font-semibold mb-0!" disabled={isLoading || isAuthSetupLoading}>
                   {isLoading ? (
                     <div className="flex items-center gap-2">
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -363,7 +363,7 @@ export const LoginPage = () => {
                 <div className="mt-8 text-center">
                   <div className="text-slate-600 dark:text-slate-400">
                     {isAuthSetupLoading ? <Skeleton className="h-4 w-32 inline-block mr-2" /> : content.signup_text}{" "}
-                    <Button onClick={onNavigateToRegister} className="p-0 bg-transparent hover:bg-transparent font-semibold text-primary hover:text-emerald-700 transition-colors">
+                    <Button onClick={onNavigateToRegister} className="p-0 bg-transparent hover:bg-transparent font-semibold text-primary hover:text-primary transition-colors">
                       {isAuthSetupLoading ? <Skeleton className="h-4 w-24 inline-block" /> : content.signup_link_text}
                     </Button>
                   </div>

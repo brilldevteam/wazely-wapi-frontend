@@ -34,7 +34,7 @@ export const TopRecipientsTable = ({ list }: TopRecipientsTableProps) => {
                 "bg-slate-100 text-slate-700 dark:bg-(--dark-body) dark:text-slate-300";
               if (item.status === "delivered" || item.status === "sent") {
                 statusColor =
-                  "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400";
+                  "bg-light-primary text-primary dark:bg-primary-darker/20 dark:text-primary";
               } else if (item.status === "read") {
                 statusColor =
                   "bg-indigo-50 text-indigo-600 dark:bg-indigo-950/20 dark:text-indigo-400";

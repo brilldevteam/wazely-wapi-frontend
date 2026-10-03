@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { FooterProps } from "../../types/landingPage";
 import { useGetPublicPagesQuery } from "@/src/redux/api/pageApi";
+import { useGetLandingPageQuery } from "@/src/redux/api/landingPageApi";
 import { FOOTEROPTIONS } from "@/src/data";
 import { Button } from "@/src/elements/ui/button";
 import { useTranslation } from "react-i18next";
@@ -27,6 +28,32 @@ const Footer: React.FC<FooterProps> = ({ data }) => {
   const socialLinks = data.social_links && data.social_links[0] ? data.social_links[0] : null;
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const { app_name, logo_dark_url } = useAppSelector((state) => state.setting);
+
+  const { data: landingResponse } = useGetLandingPageQuery();
+  const landingData = landingResponse?.data;
+
+  const hasTestimonials = landingData
+    ? (landingData.testimonials_section?.testimonials || [])
+        .map((item) => item?._id)
+        .filter((item) => !!item && typeof item === "object").length > 0
+    : true;
+
+  const hasFaqs = landingData
+    ? (landingData.faq_section?.faqs || [])
+        .map((f) => f?._id)
+        .filter(Boolean).length > 0
+    : true;
+
+  const filteredFooterOptions = FOOTEROPTIONS.filter((option) => {
+    const optLower = option.toLowerCase();
+    if (optLower === "testimonials") {
+      return hasTestimonials;
+    }
+    if (optLower === "faqs") {
+      return hasFaqs;
+    }
+    return true;
+  });
 
   const scrollToSection = (id: string) => {
     const mapping: Record<string, string> = {
@@ -61,7 +88,7 @@ const Footer: React.FC<FooterProps> = ({ data }) => {
   return (
     <footer className="relative bg-slate-900 text-white overflow-hidden">
       {/* Background pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pointer-events-none" />
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-8">
         {/* Main Footer Content */}
@@ -101,7 +128,7 @@ const Footer: React.FC<FooterProps> = ({ data }) => {
             <div>
               <h4 className="text-xs font-bold uppercase tracking-widest text-white/40 mb-6">Sections</h4>
               <div className="space-y-4">
-                {FOOTEROPTIONS.map((col, i) => (
+                {filteredFooterOptions.map((col, i) => (
                   <a
                     key={i}
                     onClick={() => scrollToSection(col.toLowerCase())}
@@ -142,13 +169,7 @@ const Footer: React.FC<FooterProps> = ({ data }) => {
                     : "h-12 bg-transparent border-2 border-white/20 hover:bg-white/10 text-white font-bold text-sm rounded-xl transition-all"
                   }
                   onClick={() => {
-                    if (isAuthenticated) {
-                      const isAgent = user?.role === "agent";
-                      const targetLink = isAgent ? ROUTES.WAChat : btn.link;
-                      router.push(targetLink);
-                    } else {
-                      router.push(ROUTES.Login);
-                    }
+                    router.push(btn.link || "");
                   }}
                 >
                   {btn.text}

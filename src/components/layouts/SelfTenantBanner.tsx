@@ -35,7 +35,7 @@ export default function SelfTenantBanner() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="w-9 h-9 sm:w-10 sm:h-10 p-2 sm:p-2.5 rounded-lg cursor-pointer transition-all border border-emerald-250 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/45 text-emerald-600 dark:text-emerald-400 shadow-md hover:bg-emerald-100 dark:hover:bg-emerald-950/60 animate-self-tenant" title="Self-Tenant Mode">
+        <Button variant="ghost" size="icon" className="w-9 h-9 sm:w-10 sm:h-10 p-2 sm:p-2.5 rounded-lg cursor-pointer transition-all border border-emerald-250 dark:border-primary-darker bg-light-primary dark:bg-primary-darker/45 text-primary dark:text-primary shadow-md hover:bg-[var(--primary-opacity-20)] dark:hover:bg-primary-darker/60 animate-self-tenant" title="Self-Tenant Mode">
           <ShieldCheck className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
         </Button>
       </DropdownMenuTrigger>
@@ -43,7 +43,7 @@ export default function SelfTenantBanner() {
       <DropdownMenuContent align="end" className="w-72 bg-white dark:bg-(--card-color) border border-gray-200 dark:border-(--card-border-color) shadow-xl rounded-xl p-4" sideOffset={8}>
         <div className="flex flex-col gap-3">
           <div className="flex items-start gap-2.5">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:bg-emerald-400/10 dark:text-emerald-400">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary dark:bg-primary/10 dark:text-primary">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
@@ -54,7 +54,7 @@ export default function SelfTenantBanner() {
             </div>
           </div>
           <div className="border-t border-slate-100 dark:border-(--card-border-color) pt-3">
-            <Button onClick={handleBackToAdmin} disabled={isLoading} className="w-full justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm py-2 rounded-lg transition-colors cursor-pointer">
+            <Button onClick={handleBackToAdmin} disabled={isLoading} className="w-full justify-center gap-2 bg-primary hover:bg-primary text-white font-medium text-sm py-2 rounded-lg transition-colors cursor-pointer">
               {isLoading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <LogOut className="w-4 h-4" />}
               {isLoading ? "Returning..." : "Back to Admin"}
             </Button>

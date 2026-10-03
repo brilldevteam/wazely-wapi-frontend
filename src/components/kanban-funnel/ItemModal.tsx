@@ -90,7 +90,7 @@ const ItemModal: React.FC<ItemModalProps> = ({
                       "flex flex-col items-center justify-center p-4 rounded-lg border transition-all gap-2 group",
                       isSelected
                         ? p.value === "low"
-                          ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-900/20"
+                          ? "border-primary bg-light-primary/50 dark:bg-primary-darker/20"
                           : p.value === "medium"
                             ? "border-amber-500 bg-amber-50/50 dark:bg-amber-900/20"
                             : "border-red-500 bg-red-50/50 dark:bg-red-900/20"
@@ -101,7 +101,7 @@ const ItemModal: React.FC<ItemModalProps> = ({
                       className={cn(
                         "w-3 h-3 rounded-full",
                         p.value === "low"
-                          ? "bg-emerald-500"
+                          ? "bg-primary"
                           : p.value === "medium"
                             ? "bg-amber-500"
                             : "bg-red-500",
@@ -112,7 +112,7 @@ const ItemModal: React.FC<ItemModalProps> = ({
                         "text-xs font-bold uppercase tracking-wider",
                         isSelected
                           ? p.value === "low"
-                            ? "text-emerald-600 dark:text-emerald-400"
+                            ? "text-primary dark:text-primary"
                             : p.value === "medium"
                               ? "text-amber-600 dark:text-amber-400"
                               : "text-red-600 dark:text-red-400"

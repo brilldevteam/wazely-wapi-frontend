@@ -34,7 +34,6 @@ const Step3Ad: React.FC = () => {
   const { t } = useTranslation();
   const { values, errors, touched, setFieldValue, handleBlur } =
     useFormikContext<any>();
-  console.log("ad", values);
 
   const [isMediaModalOpen, setIsMediaModalOpen] = React.useState(false);
   const [activeCardIndex, setActiveCardIndex] = React.useState<number | null>(
@@ -108,7 +107,7 @@ const Step3Ad: React.FC = () => {
     <div className="grid grid-cols-1 lg:grid-cols-10 gap-6 sm:gap-10 items-start animate-in fade-in slide-in-from-right-4 duration-500">
       <div className="space-y-6 sm:space-y-8 lg:col-span-6">
         <div className="flex flex-col gap-1 mb-4 sm:mb-6">
-          <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-500">
+          <div className="flex items-center gap-2 text-primary dark:text-primary">
             <PlayCircle size={18} className="sm:w-5 sm:h-5" />
             <h2 className="text-lg sm:text-xl font-bold">{t("ad_info")}</h2>
           </div>
@@ -185,7 +184,7 @@ const Step3Ad: React.FC = () => {
               <SelectContent className="bg-white dark:bg-(--page-body-bg) border-slate-200 dark:border-slate-800">
                 {isLoadingLeadForms ? (
                   <div className="flex items-center justify-center p-4">
-                    <Loader2 className="w-4 h-4 animate-spin text-emerald-500" />
+                    <Loader2 className="w-4 h-4 animate-spin text-primary" />
                   </div>
                 ) : (
                   leadFormsData?.data?.map((form: any) => (
@@ -267,7 +266,7 @@ const Step3Ad: React.FC = () => {
                             type="button"
                             variant="ghost"
                             size="sm"
-                            className="h-7 sm:h-8 text-[10px] sm:text-xs font-bold gap-1 sm:gap-2 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 shrink-0"
+                            className="h-7 sm:h-8 text-[10px] sm:text-xs font-bold gap-1 sm:gap-2 text-primary hover:text-primary-dark hover:bg-light-primary shrink-0"
                             onClick={() => {
                               setActiveCardIndex(null);
                               setMediaTarget("video_url");
@@ -305,7 +304,7 @@ const Step3Ad: React.FC = () => {
                             type="button"
                             variant="ghost"
                             size="sm"
-                            className="h-7 sm:h-8 text-[10px] sm:text-xs font-bold gap-1 sm:gap-2 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 shrink-0"
+                            className="h-7 sm:h-8 text-[10px] sm:text-xs font-bold gap-1 sm:gap-2 text-primary hover:text-primary-dark hover:bg-light-primary shrink-0"
                             onClick={() => {
                               setActiveCardIndex(null);
                               setMediaTarget("image_url");
@@ -348,7 +347,7 @@ const Step3Ad: React.FC = () => {
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="h-7 sm:h-8 text-[10px] sm:text-xs font-bold gap-1 sm:gap-2 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 shrink-0"
+                          className="h-7 sm:h-8 text-[10px] sm:text-xs font-bold gap-1 sm:gap-2 text-primary hover:text-primary-dark hover:bg-light-primary shrink-0"
                           onClick={() => {
                             setActiveCardIndex(null);
                             setMediaTarget("image_url");
@@ -419,7 +418,7 @@ const Step3Ad: React.FC = () => {
                                   type="button"
                                   variant="ghost"
                                   size="sm"
-                                  className="h-7 sm:h-8 text-[10px] sm:text-xs font-bold gap-1 text-emerald-600 hover:bg-emerald-50"
+                                  className="h-7 sm:h-8 text-[10px] sm:text-xs font-bold gap-1 text-primary hover:bg-light-primary"
                                   onClick={() => {
                                     setActiveCardIndex(index);
                                     setIsMediaModalOpen(true);
@@ -590,7 +589,7 @@ const Step3Ad: React.FC = () => {
                       </SelectItem>
                       {isLoadingFlows ? (
                         <div className="flex items-center justify-center p-4">
-                          <Loader2 className="w-4 h-4 animate-spin text-emerald-500" />
+                          <Loader2 className="w-4 h-4 animate-spin text-primary" />
                         </div>
                       ) : (
                         flowsData?.data?.map((flow: any) => (

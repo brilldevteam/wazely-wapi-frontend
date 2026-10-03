@@ -189,4 +189,6 @@ export interface ManualPaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedPlan: Plan | null;
+  mode?: "upgrade" | "downgrade" | "none";
+  currentSubscriptionId?: string;
 }

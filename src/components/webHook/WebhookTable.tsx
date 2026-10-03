@@ -50,7 +50,7 @@ const WebhookTable = ({ data, isLoading, localStatuses, onEdit, onDelete, onTogg
       sortable: true,
       sortKey: "method",
       cell: (row: Webhook) => (
-        <span className={cn("text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider", row.method === "GET" ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" : "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400")}>
+        <span className={cn("text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider", row.method === "GET" ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" : "bg-[var(--primary-opacity-20)] text-primary-dark dark:bg-primary-darker/30 dark:text-primary")}>
           {row.method || "POST"}
         </span>
       ),
@@ -93,10 +93,10 @@ const WebhookTable = ({ data, isLoading, localStatuses, onEdit, onDelete, onTogg
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48 p-2 border-slate-100 dark:border-(--card-border-color) shadow-xl rounded-xl">
-                <DropdownMenuItem onClick={() => router.push(`${ROUTES.WebhooksMapTemplate}/${id}?type=customer`)} className="gap-2.5 px-3 py-2.5 cursor-pointer text-slate-800 dark:text-slate-200 font-medium text-xs hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:text-primary transition-colors">
+                <DropdownMenuItem onClick={() => router.push(`${ROUTES.WebhooksMapTemplate}/${id}?type=customer`)} className="gap-2.5 px-3 py-2.5 cursor-pointer text-slate-800 dark:text-slate-200 font-medium text-xs hover:bg-light-primary dark:hover:bg-primary/10 hover:text-primary transition-colors">
                   {t("map_for_customer", "Map for Customer")}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push(`${ROUTES.WebhooksMapTemplate}/${id}?type=owner`)} className="gap-2.5 px-3 py-2.5 cursor-pointer text-slate-800 dark:text-slate-200 font-medium text-xs hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:text-primary transition-colors border-t border-slate-50 dark:border-white/5">
+                <DropdownMenuItem onClick={() => router.push(`${ROUTES.WebhooksMapTemplate}/${id}?type=owner`)} className="gap-2.5 px-3 py-2.5 cursor-pointer text-slate-800 dark:text-slate-200 font-medium text-xs hover:bg-light-primary dark:hover:bg-primary/10 hover:text-primary transition-colors border-t border-slate-50 dark:border-white/5">
                   {t("map_for_owner", "Map for Owner")}
                 </DropdownMenuItem>
               </DropdownMenuContent>

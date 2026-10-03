@@ -81,7 +81,7 @@ const ProfileChatNote = ({ initialNote = "", onSave, onDelete, isLoading, notes 
         </div>
       </div>
 
-      <Textarea placeholder="Add your notes here..." className="min-h-30 bg-(--input-color) dark:bg-(--page-body-bg) dark:border-(--card-border-color) rounded-lg resize-none focus-visible:ring-1 focus-visible:ring-emerald-500 text-sm" value={note} onChange={(e) => setNote(e.target.value)} />
+      <Textarea placeholder="Add your notes here..." className="min-h-30 bg-(--input-color) dark:bg-(--page-body-bg) dark:border-(--card-border-color) rounded-lg resize-none focus-visible:ring-1 focus-visible:ring-primary text-sm" value={note} onChange={(e) => setNote(e.target.value)} />
 
       {showAll && notes.length > 0 && (
         <div className="pt-2 space-y-3 border-t border-gray-100 dark:border-(--card-border-color)">

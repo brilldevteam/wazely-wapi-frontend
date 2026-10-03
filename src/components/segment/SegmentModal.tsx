@@ -16,7 +16,7 @@ import { useGetContactQuery } from "@/src/redux/api/contactApi";
 import { useGetSegmentContactsQuery } from "@/src/redux/api/segmentApi";
 import { SegmentModalProps } from "@/src/types/segment";
 import { Loader2, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 const SegmentModal = ({
@@ -31,20 +31,44 @@ const SegmentModal = ({
   const [description, setDescription] = useState("");
   const [contactIds, setContactIds] = useState<string[]>([]);
 
-  const { data: contactsResult } = useGetContactQuery({ page: 1, limit: 1000 });
-  const contacts = contactsResult?.data?.contacts || [];
-  const contactOptions: Option[] = contacts.map(
-    (c: { name: string; phone_number: string; _id: string }) => ({
-      label: `${c.name}  ${c.phone_number ? `(${c.phone_number})` : ""}`,
-      value: c._id,
-    }),
+  const { data: contactsResult } = useGetContactQuery(
+    { page: 1, limit: 10000 },
+    { skip: !isOpen }
   );
 
   const { data: segmentContactsResult, isFetching: isFetchingSegmentContacts } =
     useGetSegmentContactsQuery(
-      { segmentId: segment?._id, limit: 1000 },
+      { segmentId: segment?._id, limit: 10000 },
       { skip: !segment?._id || !isOpen },
     );
+
+  const contactOptions: Option[] = useMemo(() => {
+    const map = new Map<string, Option>();
+
+    const generalContacts = contactsResult?.data?.contacts || [];
+    generalContacts.forEach((c: { name?: string; phone_number?: string; _id: string }) => {
+      if (c?._id) {
+        const contactName = c.name || "Unnamed Contact";
+        map.set(c._id, {
+          label: `${contactName} ${c.phone_number ? `(${c.phone_number})` : ""}`,
+          value: c._id,
+        });
+      }
+    });
+
+    const segmentContacts = segmentContactsResult?.data?.contacts || [];
+    segmentContacts.forEach((c: { name?: string; phone_number?: string; _id: string }) => {
+      if (c?._id) {
+        const contactName = c.name || "Unnamed Contact";
+        map.set(c._id, {
+          label: `${contactName} ${c.phone_number ? `(${c.phone_number})` : ""}`,
+          value: c._id,
+        });
+      }
+    });
+
+    return Array.from(map.values());
+  }, [contactsResult, segmentContactsResult]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -114,12 +138,20 @@ const SegmentModal = ({
           </div>
 
           <div className="space-y-2">
-            <Label>{t("contacts")}</Label>
+            <div className="flex items-center justify-between">
+              <Label>{t("contacts")}</Label>
+              {contactIds.length > 0 && (
+                <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                  {contactIds.length} {contactIds.length === 1 ? "contact" : "contacts"} selected
+                </span>
+              )}
+            </div>
             <MultiSelect
               options={contactOptions}
               selected={contactIds}
               onChange={setContactIds}
               placeholder="Select contacts for this segment..."
+              maxCount={10}
             />
             {isFetchingSegmentContacts && (
               <p className="text-xs text-muted-foreground animate-pulse">

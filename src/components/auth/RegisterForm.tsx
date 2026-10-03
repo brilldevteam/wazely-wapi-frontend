@@ -131,6 +131,7 @@ export const RegisterPage = () => {
 
           toast.success(t("registration_success"));
           localStorage.setItem("whatsappcrm_new_registration", btoa(values.email));
+          localStorage.setItem("whatsappcrm_new_registration_phone", btoa(`${values.countryCode}${values.phone}`));
           const identifier = values.email;
           dispatch(setAuthRedirectField(identifier));
 
@@ -174,10 +175,10 @@ export const RegisterPage = () => {
 
   if (!allow_user_signup) {
     return (
-      <div className="w-full h-full min-h-screen flex items-center justify-center bg-linear-to-br from-slate-100 via-white-50 to-emerald-50 dark:bg-none dark:bg-(--page-body-bg)">
+      <div className="w-full h-full min-h-screen flex items-center justify-center bg-linear-to-br from-slate-100 via-white-50 to-primary/5 dark:bg-none dark:bg-(--page-body-bg)">
         <AuthControls />
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 -left-32 w-96 h-96 bg-emerald-200/30 dark:bg-emerald-600/15 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/4 -left-32 w-96 h-96 bg-[var(--primary-opacity-30)]/30 dark:bg-primary/15 rounded-full blur-3xl"></div>
           <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-blue-200/30 dark:bg-blue-600/15 rounded-full blur-3xl"></div>
         </div>
         <div className="flex flex-col items-center justify-center">
@@ -192,30 +193,30 @@ export const RegisterPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-emerald-50 dark:bg-none dark:bg-(--page-body-bg) flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-primary/5 dark:bg-none dark:bg-(--page-body-bg) flex items-center justify-center p-4 relative overflow-hidden">
       <AuthControls />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-emerald-200/30 dark:bg-emerald-600/15 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-[var(--primary-opacity-30)]/30 dark:bg-primary/15 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-blue-200/30 dark:bg-blue-600/15 rounded-full blur-3xl"></div>
       </div>
 
       <div className="relative z-10 w-full max-w-2xl lg:max-w-7xl">
         <div className="grid lg:grid-cols-5 gap-0 items-stretch">
-          <div className="hidden lg:flex flex-col justify-between p-10 bg-linear-to-br from-slate-900 via-slate-800 to-emerald-900 rounded-l-3xl relative overflow-hidden lg:col-span-2">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full -mr-32 -mt-32"></div>
-            <div className="absolute bottom-0 left-0 w-80 h-80 bg-emerald-500/5 rounded-full -ml-40 -mb-40"></div>
-            <div className="absolute top-1/3 right-8 w-1 h-40 bg-emerald-500/20 rotate-12"></div>
-            <div className="absolute bottom-1/3 left-8 w-1 h-32 bg-emerald-500/20 -rotate-12"></div>
+          <div className="hidden lg:flex flex-col justify-between p-10 bg-linear-to-br from-slate-900 via-slate-800 to-primary-darker rounded-l-3xl relative overflow-hidden lg:col-span-2">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-80 h-80 bg-primary/5 rounded-full -ml-40 -mb-40"></div>
+            <div className="absolute top-1/3 right-8 w-1 h-40 bg-primary/20 rotate-12"></div>
+            <div className="absolute bottom-1/3 left-8 w-1 h-32 bg-primary/20 -rotate-12"></div>
 
             <div className="relative z-10 space-y-10">
               <div className="flex items-center gap-3">
-                <DynamicLogo />
+                <DynamicLogo logoType="dark" />
               </div>
 
               <div>
-                <div className="inline-flex items-center gap-2 bg-emerald-500/20 px-4 py-2 rounded-full mb-4">
-                  <Sparkles className="w-4 h-4 text-emerald-300" />
-                  <span className="text-emerald-200 text-sm font-medium">{isAuthSetupLoading ? <Skeleton className="h-4 w-24 bg-white/20" /> : content.side_panel.badge}</span>
+                <div className="inline-flex items-center gap-2 bg-primary/20 px-4 py-2 rounded-full mb-4">
+                  <Sparkles className="w-4 h-4 text-primary" />
+                  <span className="text-white/70 text-sm font-medium">{isAuthSetupLoading ? <Skeleton className="h-4 w-24 bg-white/20" /> : content.side_panel.badge}</span>
                 </div>
                 <h2 className="text-3xl text-white leading-tight mb-4">
                   {isAuthSetupLoading ? (
@@ -242,8 +243,8 @@ export const RegisterPage = () => {
                     ))
                   : content.side_panel.bullets.map((benefit, index) => (
                     <div key={index} className="flex items-center gap-3 text-slate-200">
-                      <div className="w-6 h-6 bg-emerald-500/20 rounded-full flex items-center justify-center shrink-0">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      <div className="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center shrink-0">
+                        <CheckCircle2 className="w-4 h-4 text-primary" />
                       </div>
                       <div className="flex flex-col">
                         <span className="font-medium">{benefit.title}</span>
@@ -282,11 +283,11 @@ export const RegisterPage = () => {
           </div>
 
           <div className="bg-white dark:bg-(--card-color) rounded-3xl lg:rounded-l-none lg:rounded-r-3xl shadow-2xl p-8 lg:p-10 flex flex-col justify-center relative lg:col-span-3 min-h-200 overflow-hidden">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-linear-to-br from-emerald-100 to-blue-100 dark:from-emerald-500/20 dark:to-blue-500/20 opacity-40 dark:opacity-100 rounded-bl-[100px]"></div>
+            <div className="absolute top-0 right-0 w-40 h-40 bg-linear-to-br from-primary/20 to-primary/10 dark:from-primary/30 dark:to-primary/20 opacity-40 dark:opacity-100 rounded-bl-[100px]"></div>
 
             <div className="relative z-10 max-w-2xl mx-auto w-full">
               <div className="lg:hidden flex items-center gap-3 mb-8">
-                <DynamicLogo width={140} height={40} className="h-10 w-auto object-contain" skeletonClassName="h-10 w-32" />
+                <DynamicLogo logoType="light" width={140} height={40} className="h-10 w-auto object-contain" skeletonClassName="h-10 w-32" />
               </div>
 
               <div className="mb-8">
@@ -301,7 +302,7 @@ export const RegisterPage = () => {
                       {t("full_name")}
                     </Label>
                     <div className="relative group">
-                      <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-emerald-600 transition-colors" />
+                      <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                       <Input id="fullName" name="fullName" placeholder={t("full_name_placeholder")} value={formik.values.fullName} onChange={formik.handleChange} onBlur={formik.handleBlur} className="pl-12 h-11 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-primary rounded-lg" />
                     </div>
                     {formik.touched.fullName && formik.errors.fullName && <p className="text-red-500 text-xs mt-1">{formik.errors.fullName}</p>}
@@ -312,7 +313,7 @@ export const RegisterPage = () => {
                       {t("email_address")}
                     </Label>
                     <div className="relative group">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-emerald-600 transition-colors" />
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                       <Input id="email" name="email" type="email" placeholder={t("email_placeholder")} value={formik.values.email} onChange={formik.handleChange} onBlur={formik.handleBlur} className="pl-12 h-11 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-primary rounded-lg" />
                     </div>
                     {formik.touched.email && formik.errors.email && <p className="text-red-500 text-xs mt-1">{formik.errors.email}</p>}
@@ -325,8 +326,8 @@ export const RegisterPage = () => {
                       {t("phone_number")}
                     </Label>
                     <div className="relative group">
-                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-emerald-600 transition-colors" />
-                      <Input id="phone" name="phone" type="number" placeholder={t("phone_placeholder")} value={formik.values.phone} onChange={(e) => formik.setFieldValue("phone", e.target.value.replace(/\D/g, ""))} onBlur={formik.handleBlur} className="pl-12 h-12 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-emerald-500 rounded-lg" />
+                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                      <Input id="phone" name="phone" type="number" placeholder={t("phone_placeholder")} value={formik.values.phone} onChange={(e) => formik.setFieldValue("phone", e.target.value.replace(/\D/g, ""))} onBlur={formik.handleBlur} className="pl-12 h-12 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-primary rounded-lg" />
                     </div>
                     {formik.touched.phone && formik.errors.phone && <p className="text-red-500 text-xs mt-1">{formik.errors.phone}</p>}
                   </div>
@@ -347,8 +348,8 @@ export const RegisterPage = () => {
                       {t("password")}
                     </Label>
                     <div className="relative group">
-                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-emerald-600 transition-colors" />
-                      <Input id="password" name="password" type={showPassword ? "text" : "password"} placeholder={t("password_placeholder")} value={formik.values.password} onChange={formik.handleChange} onBlur={formik.handleBlur} className="pl-12 pr-12 h-12 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-emerald-500 rounded-lg" />
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                      <Input id="password" name="password" type={showPassword ? "text" : "password"} placeholder={t("password_placeholder")} value={formik.values.password} onChange={formik.handleChange} onBlur={formik.handleBlur} className="pl-12 pr-12 h-12 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-primary rounded-lg" />
                       <Button type="button" onClick={() => setShowPassword(!showPassword)} className="bg-transparent hover:bg-transparent absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                         {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                       </Button>
@@ -361,8 +362,8 @@ export const RegisterPage = () => {
                       {t("confirm_password")}
                     </Label>
                     <div className="relative group">
-                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-emerald-600 transition-colors" />
-                      <Input id="confirmPassword" name="confirmPassword" type={showConfirmPassword ? "text" : "password"} placeholder={t("confirm_password_placeholder")} value={formik.values.confirmPassword} onChange={formik.handleChange} onBlur={formik.handleBlur} className="pl-12 pr-12 h-12 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-emerald-500 rounded-lg" />
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                      <Input id="confirmPassword" name="confirmPassword" type={showConfirmPassword ? "text" : "password"} placeholder={t("confirm_password_placeholder")} value={formik.values.confirmPassword} onChange={formik.handleChange} onBlur={formik.handleBlur} className="pl-12 pr-12 h-12 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-primary rounded-lg" />
                       <Button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="bg-transparent hover:bg-transparent absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                         {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                       </Button>
@@ -376,8 +377,8 @@ export const RegisterPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {passwordRequirements.map((req, index) => (
                       <div key={index} className="flex items-center gap-2.5 text-sm">
-                        {req.met ? <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" /> : <div className="w-4 h-4 rounded-full border-2 border-slate-300 dark:border-slate-600 shrink-0"></div>}
-                        <span className={req.met ? "text-emerald-700 dark:text-emerald-400 font-medium" : "text-slate-600 dark:text-slate-400"}>{req.label}</span>
+                        {req.met ? <CheckCircle2 className="w-4 h-4 text-primary dark:text-primary shrink-0" /> : <div className="w-4 h-4 rounded-full border-2 border-slate-300 dark:border-slate-600 shrink-0"></div>}
+                        <span className={req.met ? "text-primary dark:text-primary font-medium" : "text-slate-600 dark:text-slate-400"}>{req.label}</span>
                       </div>
                     ))}
                   </div>
@@ -396,7 +397,7 @@ export const RegisterPage = () => {
                         href={agreementHref}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-primary! hover:text-emerald-700 font-semibold underline transition-colors"
+                        className="text-primary! hover:text-primary-dark font-semibold underline transition-colors"
                         onClick={(e) => e.stopPropagation()}
                       >
                         {agreementLinkText}
@@ -405,7 +406,7 @@ export const RegisterPage = () => {
                   </div>
                 )}
 
-                <Button type="submit" className="w-full h-13 mt-4 bg-primary text-white rounded-lg shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 transition-all text-base font-semibold group" disabled={isLoading || isVerifying || formik.isSubmitting || !allRequirementsMet || !passwordsMatch || isAuthSetupLoading || (showAgreement && !formik.values.agreePrivacyPolicy)}>
+                <Button type="submit" className="w-full h-13 mt-4 bg-primary text-white rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all text-base font-semibold group" disabled={isLoading || isVerifying || formik.isSubmitting || !allRequirementsMet || !passwordsMatch || isAuthSetupLoading || (showAgreement && !formik.values.agreePrivacyPolicy)}>
                   {isLoading || isVerifying || formik.isSubmitting ? (
                     <div className="flex items-center gap-2">
                       <div className="w-5 h-5 border border-white/30 border-t-white rounded-full animate-spin" />
@@ -456,7 +457,7 @@ export const RegisterPage = () => {
               <div className="mt-8 text-center">
                 <div className="text-slate-600 dark:text-slate-400">
                   {isAuthSetupLoading ? <Skeleton className="h-4 w-32 inline-block mr-2" /> : content.login_text}{" "}
-                  <Button onClick={onNavigateToLogin} className="bg-transparent hover:bg-[unset] px-2 font-semibold text-primary hover:text-emerald-700 transition-colors">
+                  <Button onClick={onNavigateToLogin} className="bg-transparent hover:bg-[unset] px-2 font-semibold text-primary hover:text-primary-dark transition-colors">
                     {isAuthSetupLoading ? <Skeleton className="h-4 w-24 inline-block" /> : content.login_link_text}
                   </Button>
                 </div>

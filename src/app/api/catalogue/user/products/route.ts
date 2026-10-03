@@ -16,6 +16,7 @@ export async function GET(req: Request) {
       headers: {
         "Content-Type": "application/json",
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(req.headers.get("x-workspace-id") ? { "x-workspace-id": req.headers.get("x-workspace-id") as string } : {}),
       },
     });
 

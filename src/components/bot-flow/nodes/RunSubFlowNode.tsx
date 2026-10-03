@@ -8,12 +8,14 @@ import { useState } from "react";
 import { BaseNode } from "./BaseNode";
 import { NodeField } from "./NodeField";
 import { useGetAutomationFlowsQuery } from "@/src/redux/api/automationApi";
-
+import { useParams } from "next/navigation";
 import { useAppSelector } from "@/src/redux/hooks";
 
 export function RunSubFlowNode({ data, id }: any) {
   const { setNodes } = useReactFlow();
   const [touched, setTouched] = useState(false);
+  const params = useParams();
+  const currentFlowId = params?.id as string;
 
   const { selectedWorkspace } = useAppSelector((state) => state.workspace);
   const workspace_id = selectedWorkspace?._id;
@@ -26,7 +28,9 @@ export function RunSubFlowNode({ data, id }: any) {
   );
 
   const availableFlows =
-    flowsData?.data?.filter((f: any) => f.is_active && !f.is_paused) || [];
+    flowsData?.data?.filter(
+      (f: any) => f.is_active && !f.is_paused && f._id !== currentFlowId
+    ) || [];
 
   const errors: string[] = [];
   if (touched || data.forceValidation) {

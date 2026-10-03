@@ -1,5 +1,6 @@
 import {
   AlertCircle,
+  AlertTriangle,
   Calendar,
   CheckCircle2,
   Clock,
@@ -18,7 +19,7 @@ import {
 export const colors = {
   blue: "bg-blue-50/50 text-blue-600 border-blue-100 dark:bg-(--page-body-bg) dark:text-blue-400 dark:border-none",
   emerald:
-    "bg-emerald-50/50 text-emerald-600 border-emerald-100 dark:bg-(--page-body-bg) dark:text-emerald-400 dark:border-none",
+    "bg-light-primary/50 text-primary border-[var(--primary-opacity-20)] dark:bg-(--page-body-bg) dark:text-primary dark:border-none",
   purple:
     "bg-purple-50/50 text-purple-600 border-purple-100 dark:bg-(--page-body-bg) dark:text-purple-400 dark:border-none",
   red: "bg-red-50/50 text-red-600 border-red-100 dark:bg-(--page-body-bg) dark:text-red-400 dark:border-none",
@@ -158,7 +159,7 @@ export const statusConfig: any = {
   completed: {
     icon: CheckCircle2,
     className:
-      "bg-emerald-50 text-emerald-600 border-emerald-100 dark:border-(--card-border-color) dark:bg-(--dark-sidebar) dark:hover:bg-(--table-hover)",
+      "bg-light-primary text-primary border-[var(--primary-opacity-20)] dark:border-(--card-border-color) dark:bg-(--dark-sidebar) dark:hover:bg-(--table-hover)",
     label: "Completed",
   },
   failed: {
@@ -168,10 +169,10 @@ export const statusConfig: any = {
     label: "Failed",
   },
   completed_with_errors: {
-    icon: AlertCircle,
+    icon: AlertTriangle,
     className:
-      "bg-red-50 text-red-600 border-red-100 dark:border-(--card-border-color) dark:bg-(--dark-sidebar) dark:hover:bg-(--table-hover)",
-    label: "Failed",
+      "bg-amber-50 text-amber-600 border-amber-100 dark:border-(--card-border-color) dark:bg-(--dark-sidebar) dark:hover:bg-(--table-hover)",
+    label: "Partially Delivered",
   },
   cancelled: {
     icon: AlertCircle,

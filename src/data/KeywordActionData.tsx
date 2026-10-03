@@ -66,7 +66,7 @@ export const REPLY_TYPES: ReplyTypeConfig[] = [
     value: "media",
     label: "Image",
     icon: <ImageIcon size={18} />,
-    color: "text-emerald-500",
+    color: "text-primary",
     source: "reply_material",
     materialType: "image",
   },
@@ -147,11 +147,11 @@ export const platforms = [
     id: "whatsapp",
     name: "WhatsApp",
     desc: "Auto-reply on WhatsApp",
-    color: "text-emerald-500",
-    bg: "bg-emerald-500/10",
-    border: "border-emerald-500/20",
-    activeBorder: "border-emerald-500 bg-emerald-500/5",
-    icon: <MessageCircle size={20} className="text-emerald-500" />,
+    color: "text-primary",
+    bg: "bg-primary/10",
+    border: "border-primary/20",
+    activeBorder: "border-primary bg-primary/5",
+    icon: <MessageCircle size={20} className="text-primary" />,
   },
   {
     id: "telegram",
@@ -190,10 +190,10 @@ export const recipientOptions = [
     id: "all_contacts",
     title: "All Contacts",
     desc: "Trigger for everyone in database",
-    icon: <Users size={20} className="text-emerald-500" />,
-    bg: "bg-emerald-500/10",
-    border: "border-emerald-500/20",
-    activeBorder: "border-emerald-500 bg-emerald-500/5",
+    icon: <Users size={20} className="text-primary" />,
+    bg: "bg-primary/10",
+    border: "border-primary/20",
+    activeBorder: "border-primary bg-primary/5",
   },
   {
     id: "specific_contacts",
@@ -236,7 +236,7 @@ export const MATCHING_METHOD_COLORS: Record<string, string> = {
   exact:
     "bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20 dark:border-(--card-border-color)",
   contains:
-    "bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-(--card-border-color)",
+    "bg-light-primary text-primary border-[var(--primary-opacity-20)] dark:bg-primary/10 dark:text-primary dark:border-(--card-border-color)",
   partial:
     "bg-amber-50 text-amber-600 border-amber-100 dark:bg-amber-500/10 dark:text-amber-400 dark:border-(--card-border-color)",
   starts_with:

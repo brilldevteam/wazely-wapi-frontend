@@ -129,7 +129,7 @@ const InteractiveMessage: React.FC<InteractiveMessageProps> = ({ message, isWind
     return (
       <div className="p-3 border-b border-slate-100 dark:border-white/10">
         <div className="flex items-center gap-3 p-2 rounded-lg bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5">
-          <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600">
+          <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-[var(--primary-opacity-20)] dark:bg-primary-darker/30 text-primary">
             <FileText size={20} />
           </div>
           <div className="flex-1 min-w-0">
@@ -179,7 +179,7 @@ const InteractiveMessage: React.FC<InteractiveMessageProps> = ({ message, isWind
           {interactiveData?.interactiveType === "button" && interactiveData.buttons && (
             <div className={cn("flex flex-col border-t m-1 mx-2 gap-1 pt-1", isOutgoing ? "border-white/10" : "border-slate-100 dark:border-white/10")}>
               {interactiveData.buttons.map((btn: any, index: number) => (
-                <Button key={index} className={cn("w-full text-[13.5px] py-1.5 border rounded-lg font-semibold transition-colors text-center", isOutgoing ? "border-white/20 text-white hover:bg-white/10" : "border-primary/20 text-primary hover:bg-emerald-50 dark:border-primary/20 dark:hover:bg-primary/10")} disabled>
+                <Button key={index} className={cn("w-full text-[13.5px] py-1.5 border rounded-lg font-semibold transition-colors text-center", isOutgoing ? "border-white/20 text-white hover:bg-white/10" : "border-primary/20 text-primary hover:bg-light-primary dark:border-primary/20 dark:hover:bg-primary/10")} disabled>
                   {btn.title}
                 </Button>
               ))}
@@ -188,7 +188,7 @@ const InteractiveMessage: React.FC<InteractiveMessageProps> = ({ message, isWind
 
           {interactiveData?.interactiveType === "list" && interactiveData.list && (
             <div className={cn("border-t m-1 mx-2 pt-1", isOutgoing ? "border-white/10" : "border-slate-100 dark:border-white/10")}>
-              <div onClick={() => setIsListModalOpen(true)} className={cn("flex items-center justify-center gap-2 cursor-pointer px-4 py-1.5 border rounded-lg transition-colors", isOutgoing ? "border-primary/50 hover:bg-white/10 dark:hover:bg-(--table-hover) " : "border-primary/20 hover:bg-emerald-50 dark:hover:bg-primary/10")}>
+              <div onClick={() => setIsListModalOpen(true)} className={cn("flex items-center justify-center gap-2 cursor-pointer px-4 py-1.5 border rounded-lg transition-colors", isOutgoing ? "border-primary/50 hover:bg-white/10 dark:hover:bg-(--table-hover) " : "border-primary/20 hover:bg-light-primary dark:hover:bg-primary/10")}>
                 <List size={15} className={isOutgoing ? "text-primary" : "text-primary"} />
                 <span className={cn("text-[13.5px] font-bold", isOutgoing ? "text-slate-600 dark:text-gray-500" : "text-white/80")}>{interactiveData.list.buttonTitle}</span>
               </div>
@@ -197,7 +197,7 @@ const InteractiveMessage: React.FC<InteractiveMessageProps> = ({ message, isWind
 
           {interactiveData?.interactiveType === "flow" && interactiveData.flow_cta && (
             <div className={cn("border-t m-1 mx-2 pt-1", isOutgoing ? "border-white/10" : "border-slate-100 dark:border-white/10")}>
-              <Button className={cn("w-full text-[13.5px] py-1.5 border rounded-lg font-semibold transition-colors text-center", isOutgoing ? "border-white/20 text-white hover:bg-white/10" : "border-primary/20 text-primary hover:bg-emerald-50 dark:border-primary/20 dark:hover:bg-primary/10")} disabled>
+              <Button className={cn("w-full text-[13.5px] py-1.5 border rounded-lg font-semibold transition-colors text-center", isOutgoing ? "border-white/20 text-white hover:bg-white/10" : "border-primary/20 text-primary hover:bg-light-primary dark:border-primary/20 dark:hover:bg-primary/10")} disabled>
                 {interactiveData.flow_cta}
               </Button>
             </div>

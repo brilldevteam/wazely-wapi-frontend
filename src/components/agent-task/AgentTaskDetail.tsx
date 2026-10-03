@@ -86,7 +86,7 @@ const AgentTaskDetail = ({ taskId, onToggleSidebar }: AgentTaskDetailProps) => {
     { label: "Pending", value: "pending", color: "bg-slate-400" },
     { label: "In Progress", value: "in_progress", color: "bg-amber-500" },
     { label: "On Hold", value: "on_hold", color: "bg-blue-500" },
-    { label: "Completed", value: "completed", color: "bg-emerald-500" },
+    { label: "Completed", value: "completed", color: "bg-primary" },
     { label: "Cancelled", value: "cancelled", color: "bg-red-500" },
   ];
 
@@ -126,7 +126,7 @@ const AgentTaskDetail = ({ taskId, onToggleSidebar }: AgentTaskDetailProps) => {
             </Button>
           </Can>
           <Can permission="update.agent-task">
-            <Button className="bg-primary text-white gap-2.5 h-10 px-6 font-bold rounded-lg shadow-lg shadow-emerald-500/10 transition-all [@media(max-width:335px)]:ml-auto rtl:[@media(max-width:375px)]:mr-auto rtl:[@media(max-width:375px)]:ml-0 active:scale-95" disabled={task.status === "completed" || isUpdatingStatus} onClick={() => handleStatusChange("completed")}>
+            <Button className="bg-primary text-white gap-2.5 h-10 px-6 font-bold rounded-lg shadow-lg shadow-primary/10 transition-all [@media(max-width:335px)]:ml-auto rtl:[@media(max-width:375px)]:mr-auto rtl:[@media(max-width:375px)]:ml-0 active:scale-95" disabled={task.status === "completed" || isUpdatingStatus} onClick={() => handleStatusChange("completed")}>
               <Check size={18} />
               Mark Complete
             </Button>

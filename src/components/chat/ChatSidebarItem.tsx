@@ -99,7 +99,7 @@ const ChatSidebarItem: React.FC<ChatSidebarItemProps> = ({
             : "bg-(--light-primary) dark:bg-(--dark-body) border-primary"
           : "border-transparent bg-gray-50",
         isSelectionMode && isSelected
-          ? "ring-1 ring-primary ring-inset bg-emerald-50 dark:bg-emerald-500/10"
+          ? "ring-1 ring-primary ring-inset bg-light-primary dark:bg-primary/10"
           : "",
       )}
       style={
@@ -190,7 +190,7 @@ const ChatSidebarItem: React.FC<ChatSidebarItemProps> = ({
                   : maskSensitiveData(contact.number, "phone", is_demo_mode)}
               </h3>
               {contact.chat_status === "resolved" && (
-                <Badge className="h-4 px-1.5 text-[8px] bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20 font-bold uppercase tracking-tighter">
+                <Badge className="h-4 px-1.5 text-[8px] bg-[var(--primary-opacity-20)] text-primary-dark border-[var(--primary-opacity-30)] dark:bg-primary/10 dark:text-primary dark:border-primary/20 font-bold uppercase tracking-tighter">
                   Resolved
                 </Badge>
               )}
@@ -202,7 +202,7 @@ const ChatSidebarItem: React.FC<ChatSidebarItemProps> = ({
                     className={cn(
                       "text-[11px] whitespace-nowrap",
                       lastMessage.unreadCount && lastMessage.unreadCount !== "0"
-                        ? "text-emerald-600 font-bold"
+                        ? "text-primary font-bold"
                         : "text-slate-500 dark:text-gray-400",
                     )}
                   >

@@ -51,7 +51,7 @@ const CurrencyDropdown = ({ onDark = false }: { onDark?: boolean }) => {
           currencies?.map((currency) => {
             const isActive = selectedCurrency?._id === currency._id;
             return (
-              <DropdownMenuItem key={currency._id} onClick={() => dispatch(setSelectedCurrency(currency))} className={`cursor-pointer rounded-md flex items-center gap-2.5 p-2 mb-0.5 last:mb-0 transition-colors ${isActive ? "bg-green-50 text-primary dark:bg-emerald-900/20 dark:text-emerald-400 focus:bg-green-50 dark:focus:bg-emerald-900/20" : "hover:bg-slate-50 dark:hover:bg-(--dark-sidebar) focus:bg-slate-50 dark:focus:bg-(--focus-bg-color)/30"}`}>
+              <DropdownMenuItem key={currency._id} onClick={() => dispatch(setSelectedCurrency(currency))} className={`cursor-pointer rounded-md flex items-center gap-2.5 p-2 mb-0.5 last:mb-0 transition-colors ${isActive ? "bg-green-50 text-primary dark:bg-primary-darker/20 dark:text-primary focus:bg-green-50 dark:focus:bg-primary-darker/20" : "hover:bg-slate-50 dark:hover:bg-(--dark-sidebar) focus:bg-slate-50 dark:focus:bg-(--focus-bg-color)/30"}`}>
                 <span className="w-7 text-base font-semibold shrink-0 text-center">{currency.symbol}</span>
                 <div className="flex flex-col min-w-0">
                   <span className="text-sm font-medium leading-none">{currency?.code}</span>

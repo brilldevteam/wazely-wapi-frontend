@@ -9,7 +9,7 @@ export const ExecutionLogs: React.FC<ExecutionLogsProps> = ({
   return (
     <div className="space-y-3">
       <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-        <Terminal size={14} className="text-emerald-500" />
+        <Terminal size={14} className="text-primary" />
         Live Execution Traces
       </h4>
       <div className="border border-slate-100 dark:border-(--card-border-color) rounded-lg overflow-auto bg-slate-950 dark:bg-(--page-body-bg) text-slate-200 font-mono text-sm h-[300px] p-3 overflow-y-auto space-y-1.5 no-scrollbar">
@@ -25,7 +25,7 @@ export const ExecutionLogs: React.FC<ExecutionLogsProps> = ({
                   className={cn(
                     "font-bold text-sm",
                     log.status === "success"
-                      ? "text-emerald-400"
+                      ? "text-primary"
                       : "text-rose-400",
                   )}
                 >

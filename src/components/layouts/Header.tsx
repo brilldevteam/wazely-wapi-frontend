@@ -73,7 +73,7 @@ const Header = () => {
 
             <div className="flex items-center gap-1 xs:gap-1.5 sm:gap-3 ml-0 min-[1025px]:ml-3 sm:ml-6 rtl:mr-3 rtl:ml-0 min-w-0">
               {/* Mobile-only search icon */}
-              <Button variant="ghost" size="icon" onClick={() => setMobileSearchOpen(true)} className="w-9 h-9 sm:w-10 sm:h-10 p-2 sm:p-2.5 rounded-lg transition-all duration-200 cursor-pointer dark:bg-(--page-body-bg) dark:text-gray-500 dark:hover:text-white dark:hover:bg-(--focus-bg-color) bg-white text-slate-500 hover:text-success-green hover:bg-green-50 shadow-sm border border-slate-100 dark:border-none min-[1025px]:hidden" title="Search">
+              <Button variant="ghost" size="icon" onClick={() => setMobileSearchOpen(true)} className="w-9 h-9 sm:w-10 sm:h-10 p-2 sm:p-2.5 rounded-lg transition-all duration-200 cursor-pointer dark:bg-(--page-body-bg) dark:text-gray-500 dark:hover:text-white dark:hover:bg-(--table-hover) bg-white text-slate-500 hover:text-primary hover:bg-primary/10 shadow-sm border border-slate-100 dark:border-none min-[1025px]:hidden" title="Search">
                 <Search size={18} />
               </Button>
               <SelfTenantBanner />
@@ -82,10 +82,10 @@ const Header = () => {
                 <span className="truncate hidden sm:inline">{selectedWorkspace?.name ?? "Workspace"}</span>
               </Button>
 
-              <Button variant="ghost" size="icon" onClick={() => dispatch(setRTL())} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg cursor-pointer transition-all [@media(max-width:575px)]:hidden ${isRTL ? "bg-emerald-50 text-primary hover:bg-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-400" : "text-slate-500 shadow-sm hover:bg-slate-100 dark:text-gray-500 dark:bg-(--page-body-bg) dark:hover:bg-(--table-hover)"}`} title={isRTL ? "Switch to LTR" : "Switch to RTL"}>
+              <Button variant="ghost" size="icon" onClick={() => dispatch(setRTL())} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg cursor-pointer transition-all [@media(max-width:575px)]:hidden ${isRTL ? "bg-light-primary text-primary hover:bg-[var(--primary-opacity-20)] dark:bg-primary-darker/20 dark:text-primary" : "text-slate-500 shadow-sm hover:bg-slate-100 dark:text-gray-500 dark:bg-(--page-body-bg) dark:hover:bg-(--table-hover)"}`} title={isRTL ? "Switch to LTR" : "Switch to RTL"}>
                 {!isRTL ? <PilcrowRight size={18} className={`sm:w-5 sm:h-5 transition-transform duration-300`} /> : <PilcrowLeft size={18} className={`sm:w-5 sm:h-5 transition-transform duration-300`} />}
               </Button>
-              <Button ref={themeBtnRef} onClick={handleThemeToggle} className={`w-9 h-9 sm:w-10 sm:h-10 p-2 sm:p-2.5 rounded-lg transition-all duration-200 cursor-pointer dark:bg-(--page-body-bg) dark:text-gray-500 dark:hover:text-white dark:hover:bg-(--focus-bg-color) bg-white text-slate-500 hover:text-success-green hover:bg-green-50 shadow-sm border border-slate-100 dark:border-none`}>
+              <Button ref={themeBtnRef} onClick={handleThemeToggle} className={`w-9 h-9 sm:w-10 sm:h-10 p-2 sm:p-2.5 rounded-lg transition-all duration-200 cursor-pointer dark:bg-(--page-body-bg) dark:text-gray-500 dark:hover:text-white dark:hover:bg-(--table-hover) bg-white text-slate-500 hover:text-primary hover:bg-primary/10 shadow-sm border border-slate-100 dark:border-none`}>
                 {darkMode ? <Sun className="w-4.5 h-4.5 sm:w-5 sm:h-5" /> : <Moon className="w-4.5 h-4.5 sm:w-5 sm:h-5" />}
               </Button>
               <LanguageDropdown />
@@ -93,7 +93,7 @@ const Header = () => {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg text-white flex items-center justify-center font-semibold hover:bg-green-700 transition-colors">
+                  <Button className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg text-white flex items-center justify-center font-semibold hover:bg-primary transition-colors">
                     <span>{user ? user.name?.charAt(0)?.toUpperCase() : "U"}</span>
                   </Button>
                 </DropdownMenuTrigger>

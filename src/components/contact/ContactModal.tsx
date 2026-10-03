@@ -43,18 +43,30 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onSave, co
   const extractPhoneInfo = (fullNumber: string) => {
     if (!fullNumber) return { code: "+91", phone: "" };
 
-    // Sort countries by dial_code length descending to match the longest one first
-    const sortedCountries = [...COUNTRIES].sort((a, b) => b.dial_code.length - a.dial_code.length);
-    const match = sortedCountries.find(c => fullNumber.startsWith(c.dial_code));
+    // Clean any non-digit characters from the input phone number
+    const cleanNumber = fullNumber.replace(/\D/g, "");
+
+    // Sort countries by their digit-only dial code length descending to match the longest one first
+    const sortedCountries = [...COUNTRIES].sort((a, b) => {
+      const cleanA = a.dial_code.replace(/\D/g, "");
+      const cleanB = b.dial_code.replace(/\D/g, "");
+      return cleanB.length - cleanA.length;
+    });
+
+    const match = sortedCountries.find(c => {
+      const cleanDialCode = c.dial_code.replace(/\D/g, "");
+      return cleanNumber.startsWith(cleanDialCode);
+    });
 
     if (match) {
+      const cleanDialCode = match.dial_code.replace(/\D/g, "");
       return {
         code: match.dial_code,
-        phone: fullNumber.slice(match.dial_code.length)
+        phone: cleanNumber.slice(cleanDialCode.length)
       };
     }
 
-    return { code: "+91", phone: fullNumber };
+    return { code: "+91", phone: cleanNumber };
   };
 
   const phoneInfo = extractPhoneInfo(contact?.phone_number || "");

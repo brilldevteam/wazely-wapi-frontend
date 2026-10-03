@@ -99,7 +99,7 @@ const CallSettingsModal = ({ isOpen, onClose }: CallSettingsModalProps) => {
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <p className="font-bold text-slate-900 dark:text-gray-500 flex items-center gap-2">
-                  <ShieldCheck size={16} className="text-emerald-500" />
+                  <ShieldCheck size={16} className="text-primary" />
                   {t("ai_calling_status", "AI Calling Status")}
                 </p>
                 <p className="text-xs text-slate-500">{t("ai_calling_status_desc", "Enable or disable AI voice calls for this number.")}</p>

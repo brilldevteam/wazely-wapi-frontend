@@ -6,8 +6,8 @@ export const WABA_SETUP_STEPS: WabaSetupStep[] = [
     iconName: "Phone",
     title: "step1_title",
     description: "step1_desc",
-    color: "text-emerald-500",
-    bgColor: "bg-emerald-500/10",
+    color: "text-primary",
+    bgColor: "bg-primary/10",
   },
   {
     id: "step2",

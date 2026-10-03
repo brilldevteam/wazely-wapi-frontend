@@ -1,5 +1,5 @@
 export const ROUTES = {
-  Landing: "/landing",
+  Landing: "/",
   Workspace: "/workspace",
   Dashboard: "/dashboard",
   Login: "/auth/login",
@@ -60,6 +60,7 @@ export const ROUTES = {
   WhatsappForm: "/whatsapp_form",
   WhatsappFormCreate: "/whatsapp_form/create",
   BillingPlans: "/billing_plans",
+  BillingHistory: "/billing_history",
   MessageCampaigns: "/broadcast_campaigns",
   MessageCampaignsAdd: "/broadcast_campaigns/add",
   Orders: "/order_management",
@@ -92,6 +93,9 @@ export const ROUTES = {
   FacebookLeadMapping: "/lead_generation_forms/:id/mapping",
   ShopifyConnect: "/shopify_connect",
   ShopifyProducts: "/shopify_products",
+  SocialMediaConnect: "/social_media/connect",
+  SocialMediaPublish: "/social_media/publish",
+  SocialMediaActivity: "/social_media/activity",
 };
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;

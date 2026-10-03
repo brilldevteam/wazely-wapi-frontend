@@ -1,10 +1,10 @@
-import { ImageBaseUrl } from "@/src/constants/route";
+import { getResolvedImageUrl } from "@/src/utils/image";
 import { VideoMessageProps } from "@/src/types/components/chat";
 import React from "react";
 import BaseMessage from "./BaseMessage";
 
 const VideoMessage: React.FC<VideoMessageProps> = ({ message, isWindowExpired }) => {
-  const resolvedUrl = message.fileUrl?.startsWith("http") ? message.fileUrl : `${ImageBaseUrl}${message.fileUrl}`;
+  const resolvedUrl = getResolvedImageUrl(message.fileUrl);
 
   return (
     <BaseMessage message={message} isWindowExpired={isWindowExpired}>

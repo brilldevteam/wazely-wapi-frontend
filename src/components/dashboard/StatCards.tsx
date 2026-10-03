@@ -3,6 +3,7 @@
 import { ROUTES } from "@/src/constants";
 import { usePermissions } from "@/src/hooks/usePermissions";
 import { useGetUserSubscriptionQuery } from "@/src/redux/api/subscriptionApi";
+import { useAppSelector } from "@/src/redux/hooks";
 import { StatCardsPropsData } from "@/src/types/dashboard";
 import {
   Database,
@@ -24,6 +25,7 @@ import UsageStatCard from "./UsageStatCard";
 const StatCards = ({ counts, isLoading, section }: StatCardsPropsData) => {
   const { t } = useTranslation();
   const { hasPermission } = usePermissions();
+  const selectedWorkspace = useAppSelector((state) => state.workspace?.selectedWorkspace);
   const { data: subData } = useGetUserSubscriptionQuery();
   const subscription = subData?.data;
   const isActive =
@@ -41,8 +43,9 @@ const StatCards = ({ counts, isLoading, section }: StatCardsPropsData) => {
       const isSnapshot = subscription.features && Object.keys(subscription.features).length > 0;
       limit = isSnapshot 
         ? subscription.features?.[featureKey] 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         : (subscription.plan_id as any)?.features?.[featureKey];
-      current = subscription.usage?.[usageKey] ?? dashboardCount;
+      current = selectedWorkspace ? dashboardCount : (subscription.usage?.[usageKey] ?? dashboardCount);
     }
 
     return { current, limit: Number(limit) || 0 };
@@ -72,7 +75,7 @@ const StatCards = ({ counts, isLoading, section }: StatCardsPropsData) => {
         label: t("contacts_label"),
         ...getStatData("contacts", "contacts_used", counts?.totalContacts || 0),
         icon: <Users size={18} />,
-        color: "text-emerald-500",
+        color: "text-primary",
         trend: "5",
         path: ROUTES.ContactDirectory,
         section: "metrics",
@@ -226,6 +229,7 @@ const StatCards = ({ counts, isLoading, section }: StatCardsPropsData) => {
             isActive &&
             ![
               t("orders_label"),
+              t("webhooks_label"),
             ].includes(stat.label)
           }
         />

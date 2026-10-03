@@ -20,14 +20,24 @@ interface MultiSelectProps {
   onChange: (selected: string[]) => void;
   placeholder?: string;
   className?: string;
+  maxCount?: number;
 }
 
-export function MultiSelect({ options, selected, onChange, placeholder = "Select items...", className }: MultiSelectProps) {
+export function MultiSelect({ options, selected, onChange, placeholder = "Select items...", className, maxCount = 10 }: MultiSelectProps) {
   const [open, setOpen] = React.useState(false);
+
+  const optionMap = React.useMemo(() => {
+    const map = new Map<string, Option>();
+    options.forEach((o) => map.set(o.value, o));
+    return map;
+  }, [options]);
 
   const handleUnselect = (item: string) => {
     onChange(selected.filter((i) => i !== item));
   };
+
+  const visibleSelected = selected.slice(0, maxCount);
+  const hiddenCount = selected.length - maxCount;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -42,10 +52,10 @@ export function MultiSelect({ options, selected, onChange, placeholder = "Select
             className
           )}
         >
-          <div className="flex flex-wrap gap-1.5 custom-scrollbar w-full">
+          <div className="flex flex-wrap gap-1.5 custom-scrollbar w-full items-center">
             {selected.length === 0 && <span className="text-muted-foreground font-normal">{placeholder}</span>}
-            {selected.map((item) => {
-              const option = options.find((o) => o.value === item);
+            {visibleSelected.map((item) => {
+              const option = optionMap.get(item);
               return (
                 <Badge
                   variant="secondary"
@@ -72,6 +82,14 @@ export function MultiSelect({ options, selected, onChange, placeholder = "Select
                 </Badge>
               );
             })}
+            {hiddenCount > 0 && (
+              <Badge
+                variant="outline"
+                className="py-1 px-2.5 h-auto text-xs font-semibold bg-primary/10 text-primary border-primary/20"
+              >
+                + {hiddenCount} more
+              </Badge>
+            )}
           </div>
         </Button>
       </PopoverTrigger>

@@ -191,7 +191,7 @@ const WidgetTable: React.FC = () => {
               onClick={() =>
                 router.push(`${ROUTES.ToolsWidgetsConfig}/${item._id}`)
               }
-              className="w-10 h-10 text-primary hover:text-primary border-none hover:bg-emerald-50 rounded-lg dark:hover:bg-primary/20 transition-all"
+              className="w-10 h-10 text-primary hover:text-primary border-none hover:bg-light-primary rounded-lg dark:hover:bg-primary/20 transition-all"
               title="Edit Widget"
             >
               <Edit2 size={14} />

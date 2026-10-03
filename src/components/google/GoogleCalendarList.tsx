@@ -171,7 +171,7 @@ const GoogleCalendarList: React.FC<GoogleCalendarListProps> = ({
         sortKey: "is_linked",
         cell: (item) =>
           item.is_linked ? (
-            <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 gap-1.5 px-2.5 py-0.5 font-bold">
+            <Badge className="bg-primary/10 text-primary border-primary/20 gap-1.5 px-2.5 py-0.5 font-bold">
               <CheckCircle2 size={12} /> {t("linked")}
             </Badge>
           ) : (
@@ -217,7 +217,7 @@ const GoogleCalendarList: React.FC<GoogleCalendarListProps> = ({
               className={cn(
                 "w-10 h-10 border-none rounded-lg transition-all shadow-xs",
                 item.is_linked
-                  ? "text-primary hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-500/10"
+                  ? "text-primary hover:text-primary hover:bg-light-primary dark:hover:bg-primary/10"
                   : "text-slate-600 hover:text-primary hover:bg-primary/10 dark:hover:bg-primary/20",
               )}
               onClick={() => setCalendarToLink(item)}

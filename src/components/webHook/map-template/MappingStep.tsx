@@ -76,7 +76,7 @@ const MappingStep = ({
       <div className="bg-white dark:bg-(--card-color) sm:p-6 p-4 rounded-lg shadow-xl space-y-6">
         <div className="flex items-center justify-between gap-3 border-b dark:border-white/5 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-emerald-500/10 rounded-lg">
+            <div className="p-2 bg-primary/10 rounded-lg">
               <Database size={18} className="text-primary" />
             </div>
             <div>
@@ -129,7 +129,7 @@ const MappingStep = ({
                       if (country) setSelectedCountry(country);
                     }}
                   >
-                    <SelectTrigger className="w-30 h-12 py-6 rounded-lg bg-slate-50/50 dark:bg-(--page-body-bg) border-slate-100 dark:border-(--card-border-color) font-bold text-xs shadow-xs focus:ring-emerald-500/20">
+                    <SelectTrigger className="w-30 h-12 py-6 rounded-lg bg-slate-50/50 dark:bg-(--page-body-bg) border-slate-100 dark:border-(--card-border-color) font-bold text-xs shadow-xs focus:ring-primary/20">
                       <SelectValue>
                         <div className="flex items-center gap-2">
                           <span className="text-slate-400">
@@ -141,7 +141,7 @@ const MappingStep = ({
                     </SelectTrigger>
                     <SelectContent className="max-h-60 rounded-xl border-slate-100 dark:border-(--card-border-color) shadow-2xl dark:bg-(--card-color)">
                       {COUNTRIES.map((country) => (
-                        <SelectItem key={country.code} value={country.code} className="hover:bg-emerald-50 dark:hover:bg-emerald-500/10 cursor-pointer py-2.5 px-3 rounded-lg mx-1 transition-colors">
+                        <SelectItem key={country.code} value={country.code} className="hover:bg-light-primary dark:hover:bg-primary/10 cursor-pointer py-2.5 px-3 rounded-lg mx-1 transition-colors">
                           <div className="flex items-center justify-between gap-3 w-full">
                             <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{country.name}</span>
                             <span className="text-[10px] font-black text-primary bg-primary/10 px-2 py-0.5 rounded-md">{country.dial_code}</span>
@@ -154,11 +154,11 @@ const MappingStep = ({
                     value={newRecipient}
                     onChange={(e) => setNewRecipient(e.target.value.replace(/\D/g, ""))}
                     placeholder="Enter number (e.g. 9876543210)"
-                    className="h-12 rounded-lg bg-slate-50/50 dark:bg-(--page-body-bg) font-bold text-sm border-slate-100 focus:ring-emerald-500/20 shadow-xs"
+                    className="h-12 rounded-lg bg-slate-50/50 dark:bg-(--page-body-bg) font-bold text-sm border-slate-100 focus:ring-primary/20 shadow-xs"
                     onKeyDown={(e) => e.key === "Enter" && addRecipient()}
                   />
                 </div>
-                <Button onClick={addRecipient} className="h-12 w-12 bg-primary hover:bg-primary shadow-lg shadow-emerald-500/20 rounded-lg shrink-0 active:scale-95 transition-all">
+                <Button onClick={addRecipient} className="h-12 w-12 bg-primary hover:bg-primary shadow-lg shadow-primary/20 rounded-lg shrink-0 active:scale-95 transition-all">
                   <Plus size={20} />
                 </Button>
               </div>
@@ -190,7 +190,7 @@ const MappingStep = ({
           <h3 className="font-black text-slate-800 dark:text-white text-sm uppercase tracking-widest flex items-center gap-2">
             <Settings2 size={16} className="text-primary" /> Template Placeholders
           </h3>
-          <Badge className="bg-emerald-500/10 text-primary border-none font-black text-[10px] px-3">{variables.length} Variables to map</Badge>
+          <Badge className="bg-primary/10 text-primary border-none font-black text-[10px] px-3">{variables.length} Variables to map</Badge>
         </div>
 
         <div className="grid grid-cols-1 gap-5">
@@ -206,12 +206,12 @@ const MappingStep = ({
                   key={index}
                   className={cn(
                     "group bg-white dark:bg-(--card-color) p-6 rounded-lg border transition-all hover:shadow-2xl space-y-5",
-                    error ? "" : "border-gray-50 dark:border-(--card-border-color) hover:border-emerald-500/30 hover:shadow-emerald-500/5"
+                    error ? "" : "border-gray-50 dark:border-(--card-border-color) hover:border-primary/30 hover:shadow-primary/5"
                   )}
                 >
                   <div className="flex items-center justify-between gap-4 flex-wrap">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 bg-emerald-500 rounded-lg flex items-center justify-center text-white font-black text-sm shadow-lg shadow-emerald-500/20 ">
+                      <div className="h-10 w-10 bg-primary rounded-lg flex items-center justify-center text-white font-black text-sm shadow-lg shadow-primary/20 ">
                         <Locate />
                       </div>
                       <div>
@@ -221,10 +221,10 @@ const MappingStep = ({
                     </div>
 
                     <div className="flex bg-slate-100 h-8.5 dark:bg-black/40 p-1 rounded-lg">
-                      <Button onClick={() => setVariableMappings((prev) => ({ ...prev, [key]: "" }))} className={cn("px-3 h-6.25 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all", !currentVal.startsWith("{{") ? "bg-white! dark:bg-emerald-500! text-emerald-600 dark:text-white shadow-sm" : "text-slate-400 bg-[unset]!")}>
+                      <Button onClick={() => setVariableMappings((prev) => ({ ...prev, [key]: "" }))} className={cn("px-3 h-6.25 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all", !currentVal.startsWith("{{") ? "bg-white! dark:bg-primary! text-primary dark:text-white shadow-sm" : "text-slate-400 bg-[unset]!")}>
                         Manual
                       </Button>
-                      <Button onClick={() => setVariableMappings((prev) => ({ ...prev, [key]: "{{" }))} className={cn("px-3 h-6.25 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all", currentVal.startsWith("{{") ? "bg-white! dark:bg-emerald-500! text-emerald-600 dark:text-white shadow-sm" : "text-slate-400 bg-[unset]!")}>
+                      <Button onClick={() => setVariableMappings((prev) => ({ ...prev, [key]: "{{" }))} className={cn("px-3 h-6.25 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all", currentVal.startsWith("{{") ? "bg-white! dark:bg-primary! text-primary dark:text-white shadow-sm" : "text-slate-400 bg-[unset]!")}>
                         Payload
                       </Button>
                     </div>
@@ -237,7 +237,7 @@ const MappingStep = ({
                         value={currentVal.replace("{{", "").replace("}}", "")}
                         onChange={(val) => setVariableMappings((prev) => ({ ...prev, [key]: val ? `{{${val}}}` : "{{" }))}
                         placeholder="Choose field from JSON..."
-                        className={cn("h-12 rounded-lg bg-emerald-50/20 dark:border-none", error ? "border border-red-500" : "border-emerald-500/10")}
+                        className={cn("h-12 rounded-lg bg-light-primary/20 dark:border-none", error ? "border border-red-500" : "border-primary/10")}
                       />
                     </div>
                   ) : (
@@ -246,7 +246,7 @@ const MappingStep = ({
                         placeholder="Enter custom text here..."
                         value={currentVal}
                         onChange={(e) => setVariableMappings((prev) => ({ ...prev, [key]: e.target.value }))}
-                        className={cn("h-12 rounded-lg bg-slate-50/50 dark:bg-(--page-body-bg) font-bold text-sm", error ? "border-red-500 focus:ring-red-500/20" : "border-slate-100 focus:ring-emerald-500/20")}
+                        className={cn("h-12 rounded-lg bg-slate-50/50 dark:bg-(--page-body-bg) font-bold text-sm", error ? "border-red-500 focus:ring-red-500/20" : "border-slate-100 focus:ring-primary/20")}
                       />
                     </div>
                   )}
@@ -255,13 +255,13 @@ const MappingStep = ({
               );
             })
           ) : (
-            <div className="bg-emerald-50/50 dark:bg-(--card-color) sm:p-8 p-4 rounded-lg border border-dashed border-emerald-200/50 dark:border-(--card-border-color) text-center space-y-4">
-              <div className="h-16 w-16 bg-emerald-100 dark:bg-(--page-body-bg) rounded-lg flex items-center justify-center mx-auto">
+            <div className="bg-light-primary/50 dark:bg-(--card-color) sm:p-8 p-4 rounded-lg border border-dashed border-[var(--primary-opacity-30)]/50 dark:border-(--card-border-color) text-center space-y-4">
+              <div className="h-16 w-16 bg-[var(--primary-opacity-20)] dark:bg-(--page-body-bg) rounded-lg flex items-center justify-center mx-auto">
                 <CheckCircle2 className="h-8 w-8 text-primary" />
               </div>
               <div className="space-y-1">
-                <h4 className="font-black text-lg text-primary dark:text-emerald-400">Zero Variables</h4>
-                <p className="text-sm text-emerald-600/70 dark:text-emerald-400/60 font-medium">This template is static. No variable mapping required!</p>
+                <h4 className="font-black text-lg text-primary dark:text-primary">Zero Variables</h4>
+                <p className="text-sm text-primary/70 dark:text-primary/60 font-medium">This template is static. No variable mapping required!</p>
               </div>
             </div>
           )}
@@ -280,7 +280,7 @@ const MappingStep = ({
             <FormLivePreview templateType={template.header?.format || "text"} headerText={template.header?.text || ""} messageBody={template.message_body || ""} variables_example={previewVariables} footerText={template.footer_text || ""} buttons={template.buttons || []} headerFile={null} />
           ) : (
             <div className="flex flex-col items-center gap-4">
-              <Loader2 className="animate-spin text-emerald-500 h-10 w-10" />
+              <Loader2 className="animate-spin text-primary h-10 w-10" />
               <p className="text-[10px] uppercase font-black tracking-widest text-slate-400">Loading Preview...</p>
             </div>
           )}

@@ -30,7 +30,7 @@ const getPlatformColor = (platform?: string) => {
       return "#E1306C";
     case "whatsapp":
     default:
-      return "#059669";
+      return "var(--primary)";
   }
 };
 

@@ -106,9 +106,9 @@ const AppointmentTemplateMapper: React.FC<AppointmentTemplateMapperProps> = ({
       {isMarketing && (
         <div className="space-y-4 sm:p-5 p-2 bg-white dark:bg-(--page-body-bg) rounded-lg border border-slate-200 dark:border-(--card-border-color) shadow-sm animate-in zoom-in-95 duration-300">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[var(--primary-opacity-20)] dark:bg-primary-darker/30 flex items-center justify-center">
               <Sparkles
-                className="text-emerald-600 dark:text-emerald-400"
+                className="text-primary dark:text-primary"
                 size={18}
               />
             </div>

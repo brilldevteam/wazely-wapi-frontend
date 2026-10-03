@@ -94,7 +94,7 @@ const ShortLinkForm: React.FC<ShortLinkFormProps> = ({ initialData, onSuccess })
                         if (country) setDialCode(country.dial_code);
                       }}
                     >
-                      <SelectTrigger className="h-12 py-6 bg-slate-50 dark:bg-(--page-body-bg) border-slate-200 dark:border-(--card-border-color) rounded-lg font-bold focus:ring-emerald-500/20">
+                      <SelectTrigger className="h-12 py-6 bg-slate-50 dark:bg-(--page-body-bg) border-slate-200 dark:border-(--card-border-color) rounded-lg font-bold focus:ring-primary/20">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="max-h-64 rounded-lg dark:bg-(--card-color)">
@@ -114,12 +114,12 @@ const ShortLinkForm: React.FC<ShortLinkFormProps> = ({ initialData, onSuccess })
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ""))}
                     placeholder="e.g. 9876543210"
-                    className="flex-1 h-12 px-4 rounded-lg border border-slate-200 dark:border-(--card-border-color) bg-slate-50 dark:bg-(--page-body-bg) text-slate-800 dark:text-slate-100 text-sm font-bold outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all placeholder:text-slate-300 placeholder:font-normal"
+                    className="flex-1 h-12 px-4 rounded-lg border border-slate-200 dark:border-(--card-border-color) bg-slate-50 dark:bg-(--page-body-bg) text-slate-800 dark:text-slate-100 text-sm font-bold outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all placeholder:text-slate-300 placeholder:font-normal"
                   />
                 </div>
                 <p className="text-[11px] text-slate-400 font-medium italic">
                   Preview:{" "}
-                  <span className="text-emerald-500 font-bold not-italic">
+                  <span className="text-primary font-bold not-italic">
                     {dialCode} {phoneNumber || "XXXXXXXXXX"}
                   </span>
                 </p>
@@ -129,7 +129,7 @@ const ShortLinkForm: React.FC<ShortLinkFormProps> = ({ initialData, onSuccess })
                 <Label className="text-sm font-bold text-slate-700 dark:text-slate-200 ">
                   Welcome Message <span className="text-slate-400 font-normal ml-2">(Optional)</span>
                 </Label>
-                <Textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Hi! I'm interested in your services..." rows={4} className="w-full px-4 py-3 custom-scrollbar rounded-lg border border-slate-200 dark:border-(--card-border-color) bg-slate-50 dark:bg-(--page-body-bg) text-slate-800 dark:text-slate-100 text-sm font-medium outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all placeholder:text-slate-300 resize-none leading-relaxed" />
+                <Textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Hi! I'm interested in your services..." rows={4} className="w-full px-4 py-3 custom-scrollbar rounded-lg border border-slate-200 dark:border-(--card-border-color) bg-slate-50 dark:bg-(--page-body-bg) text-slate-800 dark:text-slate-100 text-sm font-medium outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all placeholder:text-slate-300 resize-none leading-relaxed" />
                 <p className="text-[11px] text-slate-400 font-medium leading-tight">{"Pre-filled in customer's WhatsApp chat when they tap your link."}</p>
               </div>
             </div>
@@ -139,7 +139,7 @@ const ShortLinkForm: React.FC<ShortLinkFormProps> = ({ initialData, onSuccess })
                 Cancel
               </Button>
               <Can permission={initialData ? "update.short_links" : "create.short_links"}>
-                <Button type="submit" disabled={isLoading} className="w-full sm:w-auto h-12 px-12 gap-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition-all active:scale-95">
+                <Button type="submit" disabled={isLoading} className="w-full sm:w-auto h-12 px-12 gap-3 bg-primary hover:bg-primary/80 text-white font-bold text-sm transition-all active:scale-95">
                   {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : initialData ? <Save size={18} /> : <Rocket size={18} />}
                   <span>{initialData ? "Update Link" : "Generate Link"}</span>
                 </Button>

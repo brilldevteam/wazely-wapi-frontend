@@ -176,7 +176,7 @@ const StepVariablesMapping = ({ formik }: { formik: FormikProps<CampaignFormValu
 
         {/* No variables and no extra fields */}
         {!hasVariables && !hasExtraFields && (
-          <div className="bg-emerald-50/50 dark:bg-(--dark-body) dark:border-none rounded-lg border border-emerald-100 p-10 text-center space-y-4">
+          <div className="bg-light-primary/50 dark:bg-(--dark-body) dark:border-none rounded-lg border border-primary/20 p-10 text-center space-y-4">
             <Sparkles className="mx-auto text-primary" size={40} />
             <p className="text-primary font-bold mb-1 text-sm">{t("campaign_wizard_variables_no_variables")}</p>
             <p className="text-xs text-slate-400 font-medium">{t("campaign_wizard_variables_proceed_recipients")}</p>
@@ -242,6 +242,7 @@ const StepVariablesMapping = ({ formik }: { formik: FormikProps<CampaignFormValu
               <MediaHeaderEditor
                 mediaUrl={formik.values.media_url}
                 mediaFile={formik.values.media_file}
+                mediaType={template?.header?.media_type}
                 onChange={(val) => {
                   formik.setFieldValue("media_url", val.link);
                   formik.setFieldValue("media_file", val.localFile);

@@ -14,7 +14,7 @@ const ShortLinkSteps: React.FC<ShortLinkStepsProps> = ({ variant = "horizontal" 
       <div className="bg-white dark:bg-(--card-color) rounded-lg border border-slate-200 dark:border-(--card-border-color) sm:p-6 p-4 shadow-sm h-fit space-y-8">
         <div className="space-y-6">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-primary/10 text-emerald-600 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
               <Layout size={20} />
             </div>
             <h2 className="text-lg font-bold text-slate-800 dark:text-white">Simple Steps</h2>
@@ -61,7 +61,7 @@ const ShortLinkSteps: React.FC<ShortLinkStepsProps> = ({ variant = "horizontal" 
               <div className="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center">
                 <Target size={16} />
               </div>
-              <p className="text-xs font-bold text-emerald-700 dark:text-emerald-400">Marketing Tip</p>
+              <p className="text-xs font-bold text-primary-dark dark:text-primary">Marketing Tip</p>
             </div>
             <p className="text-[11px] font-bold text-slate-600 dark:text-slate-400 leading-relaxed">Add your WhatsApp QR code to physical banners, business cards, and product packaging to bridge the gap between offline and online engagement efficiently.</p>
           </div>
@@ -73,7 +73,7 @@ const ShortLinkSteps: React.FC<ShortLinkStepsProps> = ({ variant = "horizontal" 
   return (
     <div className="bg-white dark:bg-(--card-color) rounded-2xl border border-slate-200 dark:border-(--card-border-color) p-8 shadow-sm">
       <div className="flex items-center gap-3 mb-8">
-        <div className="w-10 h-10 rounded-xl bg-primary/10 text-emerald-600 flex items-center justify-center">
+        <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
           <Layout size={22} />
         </div>
         <h2 className="text-xl font-bold text-slate-800 dark:text-white">Simple Steps to Create WhatsApp Link</h2>

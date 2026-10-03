@@ -75,7 +75,7 @@ const WabaPhoneNumbers = () => {
     );
   }
 
-  return <PhoneNumbers wabaId={activeWaba.id || (activeWaba._id as string)} />;
+  return <PhoneNumbers waba={activeWaba} wabaId={activeWaba.id || (activeWaba._id as string)} />;
 };
 
 export default WabaPhoneNumbers;

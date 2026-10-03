@@ -47,7 +47,7 @@ export const statuses = [
   { id: "viewed", label: "Viewed", color: "bg-indigo-500" },
   { id: "in_progress", label: "In Progress", color: "bg-amber-500" },
   { id: "contacted", label: "Contacted", color: "bg-cyan-500" },
-  { id: "qualified", label: "Qualified", color: "bg-emerald-500" },
+  { id: "qualified", label: "Qualified", color: "bg-primary" },
   { id: "closed", label: "Closed", color: "bg-slate-500" },
   { id: "failed", label: "Failed", color: "bg-red-500" },
 ];

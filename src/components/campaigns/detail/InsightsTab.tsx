@@ -81,19 +81,24 @@ export const InsightsTab = ({
   let marketingType: MarketingType = "none";
   const category = template?.category?.toUpperCase();
 
-  if (template?.is_limited_time_offer) {
+  const isCallPermission =
+    template?.call_permission === "true" ||
+    template?.call_permission === true ||
+    template?.template_type === "call_permission";
+
+  if (isCallPermission) {
+    marketingType = "call_permission";
+  } else if (template?.is_limited_time_offer) {
     marketingType = "limited_time_offer";
   } else if (category === "AUTHENTICATION") {
     marketingType = "authentication" as any;
-  } else if (category === "MARKETING") {
-    const hasCopyCode = template.buttons?.some(
+  } else if (category === "MARKETING" || !category) {
+    const hasCopyCode = template?.buttons?.some(
       (b: any) => b.type === "copy_code",
     );
-    const hasCatalog = template.buttons?.some((b: any) => b.type === "catalog");
-    const isCallPermission =
-      template.call_permission === "true" || template.call_permission === true;
+    const hasCatalog = template?.buttons?.some((b: any) => b.type === "catalog");
     const isCarousel =
-      template.template_type === "carousel" || !!template.carousel_cards;
+      template?.template_type === "carousel" || !!template?.carousel_cards;
 
     if (isCarousel) {
       const firstCard = template.carousel_cards?.[0];
@@ -105,8 +110,6 @@ export const InsightsTab = ({
         marketingType = "carousel_media";
     } else if (hasCatalog) {
       marketingType = "catalog";
-    } else if (isCallPermission) {
-      marketingType = "call_permission";
     } else if (hasCopyCode && !template.header && !template.footer_text) {
       marketingType = "coupon_code";
     }
@@ -157,12 +160,13 @@ export const InsightsTab = ({
         })
       : [];
 
-  const variablesExample = variablesMapping
-    ? Object.entries(variablesMapping).map(([key, value]) => ({
-        key,
-        example: String(value),
-      }))
-    : [];
+  const variablesExample =
+    variablesMapping && Object.keys(variablesMapping).length > 0
+      ? Object.entries(variablesMapping).map(([key, value]) => ({
+          key,
+          example: String(value),
+        }))
+      : template?.variables_example || template?.body_variables || template?.variables || [];
 
   // Summary Metrics inside the Engagement panel
   const summaryItems = [
@@ -176,7 +180,7 @@ export const InsightsTab = ({
       label: "Messages Delivered",
       count: data.summary_cards.delivered,
       icon: CheckCircle2,
-      color: "text-emerald-500 bg-emerald-50 dark:bg-emerald-950/20",
+      color: "text-primary bg-light-primary dark:bg-primary-darker/20",
     },
     {
       label: "Messages Read",
@@ -220,7 +224,7 @@ export const InsightsTab = ({
               <span
                 className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-md border ${
                   data.benchmarking.performance === "Above Average"
-                    ? "bg-emerald-50 text-emerald-600 border-emerald-250 dark:bg-emerald-950/20 dark:text-emerald-450 dark:border-emerald-900"
+                    ? "bg-light-primary text-primary border-emerald-250 dark:bg-primary-darker/20 dark:text-emerald-450 dark:border-primary-darker"
                     : "bg-amber-50 text-amber-600 border-amber-250 dark:bg-amber-950/20 dark:text-amber-450 dark:border-amber-900"
                 }`}
               >

@@ -37,6 +37,7 @@ export const PAYMENTMETHODLIST = [
   { id: "stripe", name: "Stripe", icon: CreditCard, description: "Card, Apple/Google Pay" },
   { id: "razorpay", name: "Razorpay", icon: Wallet, description: "UPI, Cards (India)" },
   { id: "paypal", name: "PayPal", icon: CircleDollarSign, description: "PayPal, Credit Card" },
+  { id: "midtrans", name: "Midtrans", icon: CreditCard, description: "GoPay, Cards (Indo)" },
   { id: "pending", name: "Cash", icon: Clock, description: "Transfer/Invoice" },
 ];
 

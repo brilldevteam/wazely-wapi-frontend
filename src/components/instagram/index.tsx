@@ -188,7 +188,7 @@ const InstagramAccountsList: React.FC = () => {
             variant={item.status === "Active" ? "success" : "secondary"}
             className={`font-bold uppercase tracking-wider text-[10px] px-2.5 py-1 rounded-full ${
               item.status === "Active"
-                ? "bg-green-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 border border-green-100 dark:border-emerald-500/20"
+                ? "bg-green-50 text-primary-dark dark:bg-primary-darker/30 dark:text-primary border border-green-100 dark:border-primary/20"
                 : ""
             }`}
           >

@@ -132,7 +132,7 @@ const InsightsTrendChart: React.FC<InsightsTrendChartProps> = ({
     <Card className="sm:p-6 p-4 border-slate-100 dark:bg-(--card-color) dark:border-(--card-border-color) shadow-sm h-full">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-8">
         <div className="flex items-center gap-3 sm:gap-4">
-          <div className="p-2 sm:p-3 bg-emerald-50 dark:bg-emerald-500/10 rounded-lg text-emerald-600 shrink-0">
+          <div className="p-2 sm:p-3 bg-light-primary dark:bg-primary/10 rounded-lg text-primary shrink-0">
             <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
           <div>

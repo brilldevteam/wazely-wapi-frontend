@@ -4,18 +4,26 @@ import { Badge } from "@/src/elements/ui/badge";
 import { Button } from "@/src/elements/ui/button";
 import { Template } from "@/src/types/components";
 import { Edit3, Trash2, Eye, Send } from "lucide-react";
+import { formatTemplateCardSummary } from "@/src/utils/templateFormatter";
 import Can from "@/src/components/shared/Can";
 
 export const TemplateCard = ({ template, onPreview, onEdit, onDelete, onPublish, getStatusBadge }: { template: Template; onSelect: (template: Template) => void; onPreview: (template: Template) => void; onEdit: (id: string) => void; onDelete: (id: string) => void; onPublish?: (id: string) => void; getStatusBadge: (status: string) => React.ReactNode }) => {
   return (
-    <div className="group relative bg-white dark:border-none dark:bg-(--card-color) rounded-lg border border-slate-100 dark:border-neutral-800 shadow-sm hover:shadow-xl hover:border-emerald-500/50 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer h-full flex flex-col" onClick={() => onPreview(template)}>
+    <div className="group relative bg-white dark:border-none dark:bg-(--card-color) rounded-lg border border-slate-100 dark:border-neutral-800 shadow-sm hover:shadow-xl hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer h-full flex flex-col" onClick={() => onPreview(template)}>
       <div className="p-5 flex items-center justify-between gap-3 border-b border-slate-50 dark:border-(--card-border-color)">
         <h3 className="font-bold text-slate-800 dark:text-white text-sm truncate uppercase tracking-tight flex-1">{template.template_name}</h3>
         {getStatusBadge(template.status)}
       </div>
 
       <div className="p-5 flex-1 bg-slate-50/30 dark:bg-(--card-color)">
-        <p className="text-sm text-slate-500 dark:text-gray-500 break-all whitespace-normal line-clamp-3 leading-relaxed font-regular">{template.message_body || <span className="italic opacity-50">No text content</span>}</p>
+        {template.message_body ? (
+          <div
+            className="text-sm text-slate-500 dark:text-gray-500 break-all whitespace-pre-line line-clamp-3 leading-relaxed font-regular [&_p]:my-0"
+            dangerouslySetInnerHTML={{ __html: formatTemplateCardSummary(template.message_body) }}
+          />
+        ) : (
+          <p className="text-sm text-slate-500 dark:text-gray-500 italic opacity-50">No text content</p>
+        )}
       </div>
 
       <div className="p-4 px-5 bg-white dark:bg-(--card-color) border-t border-slate-50 dark:border-(--card-border-color) flex items-center justify-between gap-2">
@@ -58,7 +66,7 @@ export const TemplateCard = ({ template, onPreview, onEdit, onDelete, onPublish,
           <Button
             variant="outline"
             size="icon"
-            className="h-10 w-10 rounded-lg border-slate-200 bg-white shadow-lg hover:border-emerald-500 hover:text-emerald-500 hover:bg-emerald-50 hover:scale-110 transition-all"
+            className="h-10 w-10 rounded-lg border-slate-200 bg-white shadow-lg hover:border-primary hover:text-primary hover:bg-light-primary hover:scale-110 transition-all"
             onClick={(e) => {
               e.stopPropagation();
               onEdit(template._id);
