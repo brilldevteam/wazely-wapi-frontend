@@ -17,7 +17,7 @@ const SequenceFormModal: React.FC<SequenceFormModalProps> = ({ isOpen, onClose, 
 
   const filteredOptions = useMemo(() => {
     return [
-      { id: "whatsapp", name: "WhatsApp", icon: <MessageSquare size={16} />, gradient: "from-emerald-400 to-teal-500", textHover: "group-hover:text-emerald-500" },
+      { id: "whatsapp", name: "WhatsApp", icon: <MessageSquare size={16} />, gradient: "from-emerald-400 to-teal-500", textHover: "group-hover:text-primary" },
       { id: "telegram", name: "Telegram", icon: <Send size={16} />, gradient: "from-sky-400 to-blue-500", textHover: "group-hover:text-sky-500" },
       { id: "facebook", name: "Facebook", icon: <Facebook size={16} />, gradient: "from-blue-500 to-indigo-600", textHover: "group-hover:text-blue-500" },
       { id: "instagram", name: "Instagram", icon: <Instagram size={16} />, gradient: "from-pink-500 to-rose-500", textHover: "group-hover:text-pink-500" },

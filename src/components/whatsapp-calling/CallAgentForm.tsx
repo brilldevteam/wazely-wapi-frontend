@@ -50,7 +50,7 @@ const CallAgentForm: React.FC<CallAgentFormProps> = ({ agent, onSave, isLoading 
       name: agent?.name || "",
       welcome_message: agent?.welcome_message || "",
       ai_config: {
-        model_id: agent?.ai_config?.model_id || "gemini-2.5-flash-lite",
+        model_id: agent?.ai_config?.model_id || "gemini-3.5-flash-lite",
         api_key: agent?.ai_config?.api_key || "",
         prompt: agent?.ai_config?.prompt || "",
         training_url: agent?.ai_config?.training_url || "",

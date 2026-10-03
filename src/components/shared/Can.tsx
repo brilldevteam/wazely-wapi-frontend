@@ -1,3 +1,5 @@
+"use client";
+
 import { usePermissions } from "@/src/hooks/usePermissions";
 import React from "react";
 import { CanProps } from "@/src/types/shared";

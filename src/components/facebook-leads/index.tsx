@@ -93,7 +93,7 @@ const FacebookLeads = () => {
       header: "Status",
       accessorKey: "status",
       cell: (row) => (
-        <Badge variant="outline" className={row.status === "ACTIVE" ? "bg-emerald-50 dark:bg-(--table-hover) dark:border-(--card-border-color) text-emerald-700 border-emerald-100" : "bg-gray-50 dark:bg-(--card-color) dark:border-(--card-border-color) text-gray-600 border-gray-200"}>
+        <Badge variant="outline" className={row.status === "ACTIVE" ? "bg-light-primary dark:bg-(--table-hover) dark:border-(--card-border-color) text-primary-dark border-[var(--primary-opacity-20)]" : "bg-gray-50 dark:bg-(--card-color) dark:border-(--card-border-color) text-gray-600 border-gray-200"}>
           {row.status}
         </Badge>
       ),
@@ -155,7 +155,7 @@ const FacebookLeads = () => {
       header: "Webhook",
       accessorKey: "webhook_subscribed",
       cell: (row) => (
-        <Badge variant="outline" className={row.webhook_subscribed ? "bg-emerald-50 dark:bg-(--table-hover) text-emerald-700 dark:border-(--card-border-color) border-emerald-100" : "bg-red-50 text-red-700 border-red-100"}>
+        <Badge variant="outline" className={row.webhook_subscribed ? "bg-light-primary dark:bg-(--table-hover) text-primary-dark dark:border-(--card-border-color) border-[var(--primary-opacity-20)]" : "bg-red-50 text-red-700 border-red-100"}>
           <div className="flex items-center gap-1">
             {row.webhook_subscribed ? <CheckCircle2 size={12} /> : <XCircle size={12} />}
             {row.webhook_subscribed ? "Subscribed" : "Failed"}

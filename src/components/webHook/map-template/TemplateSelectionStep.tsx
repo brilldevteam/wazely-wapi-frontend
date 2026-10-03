@@ -7,6 +7,7 @@ import { Label } from "@/src/elements/ui/label";
 import { AlertCircle, CheckCircle2, Database, LayoutTemplate, Settings2 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 import { TemplateSelectionStepProps } from "@/src/types/webhook";
+import { formatTemplateCardSummary } from "@/src/utils/templateFormatter";
 
 const TemplateSelectionStep = ({ webhookData, connectionsData, selectedWabaId, templatesData, isTemplatesLoading, selectedTemplateId, setSelectedTemplateId, setVariableMappings }: TemplateSelectionStepProps) => {
   const approveTemplete = useMemo(() => templatesData?.data?.filter((item) => item.status === "approved"), [templatesData]);
@@ -15,7 +16,7 @@ const TemplateSelectionStep = ({ webhookData, connectionsData, selectedWabaId, t
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-left-4 duration-500">
       <div className="lg:col-span-1 space-y-6">
         <Card className="rounded-lg border-none shadow-sm overflow-hidden bg-white dark:bg-(--card-color)">
-          <CardHeader className="bg-emerald-50/50 dark:bg-emerald-500/5 pb-4 border-b dark:border-white/5">
+          <CardHeader className="bg-light-primary/50 dark:bg-primary/5 pb-4 border-b dark:border-white/5">
             <CardTitle className="text-sm font-bold flex items-center gap-2  tracking-wider text-primary">
               <Database className="h-4 w-4" /> Webhook Context
             </CardTitle>
@@ -27,7 +28,7 @@ const TemplateSelectionStep = ({ webhookData, connectionsData, selectedWabaId, t
             </div>
             <div className="space-y-1">
               <Label className="text-[10px] text-slate-400 font-black tracking-widest">Platform</Label>
-              <Badge className="bg-emerald-50 text-primary dark:bg-emerald-500/10 dark:text-primary border-none hover:bg-(--light-primary) font-bold text-[10px] px-2 py-0.5">{webhookData?.webhook?.platform?.toUpperCase() || "CUSTOM"}</Badge>
+              <Badge className="bg-light-primary text-primary dark:bg-primary/10 dark:text-primary border-none hover:bg-(--light-primary) font-bold text-[10px] px-2 py-0.5">{webhookData?.webhook?.platform?.toUpperCase() || "CUSTOM"}</Badge>
             </div>
           </CardContent>
         </Card>
@@ -53,7 +54,7 @@ const TemplateSelectionStep = ({ webhookData, connectionsData, selectedWabaId, t
       <div className="lg:col-span-3 space-y-4">
         <div className="flex items-center justify-between px-2 flex-wrap">
           <h3 className="font-bold text-slate-800 dark:text-white flex items-center gap-2">
-            <LayoutTemplate className="h-5 w-5 text-emerald-500" /> Choose Message Template
+            <LayoutTemplate className="h-5 w-5 text-primary" /> Choose Message Template
           </h3>
           {approveTemplete && <Badge className="bg-slate-100 text-slate-600 dark:bg-white/10 dark:text-gray-500 border-none px-2.5 py-1 text-[11px] font-bold">{approveTemplete.length} Templates Found</Badge>}
         </div>
@@ -83,10 +84,10 @@ const TemplateSelectionStep = ({ webhookData, connectionsData, selectedWabaId, t
                   setSelectedTemplateId(template._id);
                   setVariableMappings({});
                 }}
-                className={cn("p-5 rounded-lg border transition-all cursor-pointer relative group flex flex-col h-full", selectedTemplateId === template._id ? "border-primary bg-(--light-primary) dark:bg-primary/10 shadow-xl shadow-emerald-500/5 ring-1 ring-emerald-500/20" : "border-gray-50 dark:border-white/5 bg-white dark:bg-(--card-color) hover:border-emerald-200 dark:hover:border-emerald-500/30 hover:shadow-lg")}
+                className={cn("p-5 rounded-lg border transition-all cursor-pointer relative group flex flex-col h-full", selectedTemplateId === template._id ? "border-primary bg-(--light-primary) dark:bg-primary/10 shadow-xl shadow-primary/5 ring-1 ring-primary/20" : "border-gray-50 dark:border-white/5 bg-white dark:bg-(--card-color) hover:border-[var(--primary-opacity-30)] dark:hover:border-primary/30 hover:shadow-lg")}
               >
                 <div className="flex items-center justify-between mb-4">
-                  <Badge className="bg-emerald-50 text-primary dark:bg-emerald-500/10 dark:text-primary border-none font-black text-[10px] uppercase tracking-tighter px-2">{template.category}</Badge>
+                  <Badge className="bg-light-primary text-primary dark:bg-primary/10 dark:text-primary border-none font-black text-[10px] uppercase tracking-tighter px-2">{template.category}</Badge>
                   {selectedTemplateId === template._id && (
                     <div className="h-6 w-6 bg-primary rounded-full flex items-center justify-center shadow-lg animate-in zoom-in duration-300">
                       <CheckCircle2 className="h-3.5 w-3.5 text-white" />
@@ -94,7 +95,14 @@ const TemplateSelectionStep = ({ webhookData, connectionsData, selectedWabaId, t
                   )}
                 </div>
                 <h4 className="font-black text-slate-800 dark:text-white break-all whitespace-normal line-clamp-3 text-sm leading-tight mb-2 group-hover:text-primary transition-colors">{template.template_name.replace(/_/g, " ")}</h4>
-                <p className="text-[11px] text-slate-500 dark:text-gray-500 line-clamp-3 font-medium leading-relaxed mb-4 flex-1">{template.message_body}</p>
+                {template.message_body ? (
+                  <div
+                    className="text-[11px] text-slate-500 dark:text-gray-500 line-clamp-3 font-medium leading-relaxed mb-4 flex-1 whitespace-pre-line [&_p]:my-0"
+                    dangerouslySetInnerHTML={{ __html: formatTemplateCardSummary(template.message_body) }}
+                  />
+                ) : (
+                  <p className="text-[11px] text-slate-500 dark:text-gray-500 italic opacity-50 mb-4 flex-1">No text content</p>
+                )}
                 <div className="pt-3 border-t dark:border-white/5 flex items-center justify-between">
                   <span className="text-[10px] font-bold text-slate-300 dark:text-slate-600 uppercase">{template.language}</span>
                   <div className="flex gap-1">

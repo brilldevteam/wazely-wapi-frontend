@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PricingPlanProps } from "../../types/landingPage";
 import { Button } from "@/src/elements/ui/button";
+import { isFeaturePlatformAllowed } from "@/src/utils";
 
 
 // ─── Billing cycle types
@@ -20,7 +21,7 @@ const getHeaderPillBg = (idx: number, name: string): string => {
     return "bg-sky-500 text-white shadow-sky-500/20";
   if (n.includes("ultimate") || n.includes("enterprise") || idx === 2)
     return "bg-amber-500 text-white shadow-amber-500/25";
-  return "bg-emerald-500 text-white shadow-emerald-500/20";
+  return "bg-primary text-white shadow-primary/20";
 };
 
 const PricingPlan: React.FC<PricingPlanProps> = ({ data }) => {
@@ -64,6 +65,7 @@ const PricingPlan: React.FC<PricingPlanProps> = ({ data }) => {
 
   const [isExpanded, setIsExpanded] = useState(false);
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const { setting } = useAppSelector((state) => state.setting);
   const { t } = useTranslation();
 
   const DEFAULT_VISIBLE = 10;
@@ -79,7 +81,10 @@ const PricingPlan: React.FC<PricingPlanProps> = ({ data }) => {
       if (!planDoc) return null;
 
       const formattedFeatures = Object.entries(planDoc.features || {})
-        .filter(([key]) => !["_id", "id", "__v"].includes(key))
+        .filter(([key]) => {
+          if (["_id", "id", "__v"].includes(key)) return false;
+          return isFeaturePlatformAllowed(key, setting?.omnichannel_platforms);
+        })
         .map(([key, value]) => ({
           key,
           label: t(`plan_features_${key}`, key.replace(/_/g, " ")),
@@ -122,22 +127,63 @@ const PricingPlan: React.FC<PricingPlanProps> = ({ data }) => {
       }
     }
 
-    // Check if value is 0, "0", or false
-    if (value === 0 || value === "0" || value === false) {
+    let displayValue = value;
+    const isBooleanFeature =
+      ["rest_api", "whatsapp_webhook", "auto_replies", "analytics", "priority_support", "free_trial"].includes(key) ||
+      key.startsWith("omnichannel_") ||
+      key.startsWith("fb_") ||
+      key.startsWith("ig_") ||
+      key.startsWith("tg_") ||
+      key.startsWith("tw_");
+
+    if (value === false) {
       isDisabled = true;
+    } else if (value === 0 || value === "0" || (typeof value === "number" && value <= 0)) {
+      if (!isBooleanFeature) {
+        displayValue = "Unlimited";
+      } else {
+        isDisabled = true;
+      }
     }
 
-    return { value, isDisabled };
+    return { value: displayValue, isDisabled };
   };
 
-  // All unique feature labels across visible plans, keeping only those that are enabled in at least one plan
+  const getLabelSortPriority = (label: string) => {
+    let hasUnlimited = false;
+    let hasNumber = false;
+    let hasTick = false;
+
+    plans.forEach((plan) => {
+      const { value, isDisabled } = getFeatureInfoForPlan(plan, label);
+      if (isDisabled) return;
+
+      if (value === "Unlimited" || value === "unlimited") {
+        hasUnlimited = true;
+      } else if (typeof value === "number" || (!isNaN(Number(value)) && typeof value !== "boolean")) {
+        hasNumber = true;
+      } else if (value === true || value === "Yes" || value === "yes" || value === "active") {
+        hasTick = true;
+      }
+    });
+
+    if (hasUnlimited) return 1; // "Unlimited" options first
+    if (hasNumber) return 2;    // then numeric values
+    if (hasTick) return 3;      // then tick options
+    return 4;                   // then cross options (all disabled)
+  };
+
+  // All unique feature labels across visible plans, sorted by priority (Unlimited, Numbers, Ticks, Crosses)
   const allFeatureLabels = Array.from(
     new Set(plans.flatMap((plan) => plan!.features.map((f) => f.label))),
-  ).filter((label) => {
-    return plans.some((plan) => {
-      const { isDisabled } = getFeatureInfoForPlan(plan, label);
-      return !isDisabled;
-    });
+  ).sort((a, b) => {
+    const priorityA = getLabelSortPriority(a);
+    const priorityB = getLabelSortPriority(b);
+    if (priorityA !== priorityB) {
+      return priorityA - priorityB;
+    }
+    // Secondary sort: alphabetical
+    return a.localeCompare(b);
   });
 
   const renderFeatureValue = (value: any, isDisabled: boolean) => {
@@ -150,7 +196,7 @@ const PricingPlan: React.FC<PricingPlanProps> = ({ data }) => {
     }
     if (typeof value === "boolean") {
       return value ? (
-        <span className="bg-emerald-100 text-emerald-700 text-[10px] font-black p-2 rounded-full inline-block">
+        <span className="bg-primary/10 text-primary text-[10px] font-black p-2 rounded-full inline-block">
           <Check size={16} />
         </span>
       ) : (

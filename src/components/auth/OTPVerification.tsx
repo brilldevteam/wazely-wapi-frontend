@@ -42,6 +42,18 @@ export const OTPVerificationPage = ({
   const { authRedirectField: identifier } = useAppSelector(
     (state) => state.auth,
   );
+  const [registeredPhone, setRegisteredPhone] = useState("");
+
+  useEffect(() => {
+    const savedPhone = localStorage.getItem("whatsappcrm_new_registration_phone");
+    if (savedPhone) {
+      try {
+        setRegisteredPhone(atob(savedPhone));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, []);
 
   // Forgot password mutations
   const [verifyOtp, { isLoading: isVerifyingForgot }] = useVerifyOtpMutation();
@@ -232,22 +244,22 @@ export const OTPVerificationPage = ({
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-emerald-50 dark:bg-none dark:bg-(--page-body-bg) flex items-center justify-center p-2 sm:p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-primary/5 dark:bg-none dark:bg-(--page-body-bg) flex items-center justify-center p-2 sm:p-4 relative overflow-hidden">
       <AuthControls />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-emerald-200/30 dark:bg-emerald-600/15 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-[var(--primary-opacity-30)]/30 dark:bg-primary/15 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-blue-200/30 dark:bg-blue-600/15 rounded-full blur-3xl"></div>
       </div>
 
       <div className="relative z-10 w-full max-w-md lg:max-w-5xl">
         <div className="grid lg:grid-cols-2 gap-0 items-center">
-          <div className="hidden lg:flex flex-col justify-center p-12 bg-linear-to-br from-slate-900 via-slate-800 to-emerald-900 rounded-l-3xl relative overflow-hidden min-h-150">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full -mr-24 -mt-24"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/5 rounded-full -ml-32 -mb-32"></div>
+          <div className="hidden lg:flex flex-col justify-center p-12 bg-linear-to-br from-slate-900 via-slate-800 to-primary-darker rounded-l-3xl relative overflow-hidden min-h-150">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-primary/10 rounded-full -mr-24 -mt-24"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/5 rounded-full -ml-32 -mb-32"></div>
 
             <div className="relative z-10 space-y-8">
               <div className="flex items-center gap-3 mb-6">
-                <DynamicLogo />
+                <DynamicLogo logoType="dark" />
               </div>
 
               <div>
@@ -258,7 +270,7 @@ export const OTPVerificationPage = ({
                     content.side_panel.title
                   )}
                 </h2>
-                <div className="text-emerald-100 text-lg">
+                <div className="text-white/70 text-lg">
                   {isAuthSetupLoading ? (
                     <Skeleton className="h-6 w-full bg-white/20" />
                   ) : (
@@ -274,7 +286,7 @@ export const OTPVerificationPage = ({
                       .map((_, i) => (
                         <div
                           key={i}
-                          className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-5"
+                          className="bg-primary/10 border border-primary/20 rounded-lg p-5"
                         >
                           <div className="flex items-start gap-4">
                             <Skeleton className="w-10 h-10 rounded-lg bg-white/20 shrink-0" />
@@ -293,13 +305,13 @@ export const OTPVerificationPage = ({
                       return (
                         <div
                           key={index}
-                          className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-5"
+                          className="bg-primary/10 border border-primary/20 rounded-lg p-5"
                         >
                           <div className="flex items-start gap-4">
                             <div
-                              className={`w-10 h-10 ${color} rounded-lg flex items-center justify-center shrink-0 border border-emerald-500/30`}
+                              className={`w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0 border border-primary/30`}
                             >
-                              <Icon className="w-5 h-5 text-emerald-100" />
+                              <Icon className="w-5 h-5 text-white" />
                             </div>
                             <div>
                               <p className="text-white font-semibold mb-1">
@@ -308,15 +320,15 @@ export const OTPVerificationPage = ({
                               {bullet.points.map((point, pIndex) => (
                                 <p
                                   key={pIndex}
-                                  className="text-emerald-100 text-sm"
+                                  className="text-white/50 text-sm"
                                 >
                                   {point.includes("{email}")
-                                    ? point.replace("{email}", identifier)
+                                    ? point.replace("{email}", isWhatsApp && registeredPhone ? registeredPhone : identifier)
                                     : point}{" "}
                                   {(point === t("sent_code_to") ||
                                     point === t("sent_code_to_whatsapp")) && (
                                     <span className="font-semibold">
-                                      {identifier}
+                                      {isWhatsApp && registeredPhone ? registeredPhone : identifier}
                                     </span>
                                   )}
                                 </p>
@@ -337,13 +349,13 @@ export const OTPVerificationPage = ({
                 ) : (
                   content.side_panel.footer.map((footerItem, index) => (
                     <div key={index}>
-                      <p className="text-emerald-200 text-sm font-medium mb-2">
+                      <p className="text-white/70 text-sm font-medium mb-2">
                         💡 {footerItem.title}
                       </p>
-                      <ul className="text-emerald-100 text-sm space-y-1">
+                      <ul className="text-white/60 text-sm space-y-1">
                         {footerItem.points.map((point, i) => (
                           <li key={i}>
-                            • {point.replace("{email}", identifier)}
+                            • {point.replace("{email}", isWhatsApp && registeredPhone ? registeredPhone : identifier)}
                           </li>
                         ))}
                       </ul>
@@ -355,7 +367,7 @@ export const OTPVerificationPage = ({
           </div>
 
           <div className="bg-white dark:bg-(--card-color) rounded-3xl lg:rounded-l-none lg:rounded-r-3xl shadow-2xl px-4 py-8 sm:p-12 h-full flex flex-col justify-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-emerald-100/50 to-teal-100/50 dark:from-emerald-500/20 dark:to-teal-500/20 rounded-bl-full"></div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 rounded-bl-full"></div>
 
             <div className="relative z-10 max-w-md mx-auto w-full">
               <Button
@@ -370,6 +382,7 @@ export const OTPVerificationPage = ({
 
               <div className="lg:hidden flex items-center gap-3 mb-8">
                 <DynamicLogo
+                  logoType="light"
                   width={140}
                   height={40}
                   className="h-10 w-auto object-contain"
@@ -392,7 +405,7 @@ export const OTPVerificationPage = ({
                     <>
                       {content.subtitle}{" "}
                       <span className="font-semibold text-slate-900 dark:text-white">
-                        {identifier}
+                        {isWhatsApp && registeredPhone ? registeredPhone : identifier}
                       </span>
                     </>
                   )}
@@ -420,7 +433,7 @@ export const OTPVerificationPage = ({
                         value={digit}
                         onChange={(e) => handleChange(index, e.target.value)}
                         onKeyDown={(e) => handleKeyDown(index, e)}
-                        className="sm:w-14 sm:h-14 w-9 h-9 text-center sm:text-2xl text-xl font-bold border border-(--input-border-color) rounded-lg focus:border-primary focus:ring-4 focus:ring-emerald-100 dark:focus:ring-emerald-900/30 outline-none transition-all bg-(--input-color) dark:bg-(--page-body-bg) dark:text-white focus:bg-white dark:focus:bg-(--page-body-bg)"
+                        className="sm:w-14 sm:h-14 w-9 h-9 text-center sm:text-2xl text-xl font-bold border border-(--input-border-color) rounded-lg focus:border-primary focus:ring-4 focus:ring-[var(--primary-opacity-20)] dark:focus:ring-primary-darker/30 outline-none transition-all bg-(--input-color) dark:bg-(--page-body-bg) dark:text-white focus:bg-white dark:focus:bg-(--page-body-bg)"
                       />
                     ))}
                   </div>
@@ -465,7 +478,7 @@ export const OTPVerificationPage = ({
 
                 <Button
                   type="submit"
-                  className="w-full h-12 bg-primary text-white rounded-lg shadow-lg shadow-emerald-500/30 transition-all text-base font-semibold"
+                  className="w-full h-12 bg-primary text-white rounded-lg shadow-lg shadow-primary/30 transition-all text-base font-semibold"
                   disabled={
                     isLoading || otp.some((d) => !d) || isAuthSetupLoading
                   }
@@ -492,27 +505,27 @@ export const OTPVerificationPage = ({
               </div>
 
               {type === "signup" && !isAuthSetupLoading && (
-                <div className="mt-8 p-4 bg-emerald-50/50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 rounded-xl flex items-start gap-3 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                  <div className="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/50 rounded-lg flex items-center justify-center shrink-0 shadow-sm">
+                <div className="mt-8 p-4 bg-light-primary/50 dark:bg-primary-darker/20 border border-[var(--primary-opacity-20)] dark:border-primary-darker rounded-xl flex items-start gap-3 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                  <div className="w-10 h-10 bg-[var(--primary-opacity-20)] dark:bg-primary-darker/50 rounded-lg flex items-center justify-center shrink-0 shadow-sm">
                     {isWhatsApp ? (
-                      <MessageCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                      <MessageCircle className="w-5 h-5 text-primary dark:text-primary" />
                     ) : (
-                      <Mail className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                      <Mail className="w-5 h-5 text-primary dark:text-primary" />
                     )}
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-semibold text-emerald-900 dark:text-emerald-400 mb-0.5">
+                    <p className="text-sm font-semibold text-primary-darker dark:text-primary mb-0.5">
                       {isWhatsApp
                         ? t("sent_code_to_whatsapp")
                         : t("sent_code_to")}
                     </p>
-                    <p className="text-xs text-emerald-700 dark:text-emerald-200/70 leading-relaxed">
+                    <p className="text-xs text-primary-dark dark:text-[var(--primary-opacity-30)]/70 leading-relaxed">
                       {t("check_your_delivery_method", {
                         method: isWhatsApp ? "WhatsApp" : t("email_address"),
                       })}
                       :{" "}
-                      <span className="font-bold text-emerald-800 dark:text-emerald-300 underline decoration-emerald-200 dark:decoration-emerald-800 decoration-2 underline-offset-2">
-                        {identifier}
+                      <span className="font-bold text-primary-darker dark:text-primary decoration-primary/30 dark:decoration-primary/40 decoration-2 underline-offset-2">
+                        {isWhatsApp && registeredPhone ? registeredPhone : identifier}
                       </span>
                     </p>
                   </div>

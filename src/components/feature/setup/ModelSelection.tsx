@@ -13,7 +13,7 @@ const ModelSelection: React.FC<ModelSelectionProps> = ({ models, selectedModel, 
   return (
     <Card className="dark:border-(--card-border-color) border shadow-sm bg-white dark:bg-(--card-color) overflow-hidden">
       <CardHeader className="flex flex-row items-center gap-4 pb-2">
-        <div className="p-3 rounded-lg bg-primary text-white shadow-lg shadow-emerald-500/20">
+        <div className="p-3 rounded-lg bg-primary text-white shadow-lg shadow-primary/20">
           <Sparkles size={24} />
         </div>
         <div className="flex-1">
@@ -29,11 +29,11 @@ const ModelSelection: React.FC<ModelSelectionProps> = ({ models, selectedModel, 
             key={model._id}
             onClick={() => onSelect(model._id)}
             className={`relative p-3 sm:p-4 rounded-lg border transition-all cursor-pointer group flex items-center gap-3 sm:gap-4 [@media(max-width:400px)]:flex-col [@media(max-width:400px)]:items-start
-              ${selectedModel === model._id ? "border-primary bg-emerald-50/30 dark:bg-(--table-hover) shadow-md shadow-emerald-500/10" : "border-slate-100 dark:border-(--card-border-color) hover:border-(--hover-card-color) dark:hover:border-(--card-border-color) hover:bg-slate-50/50 dark:hover:bg-(--table-hover)"}`}
+              ${selectedModel === model._id ? "border-primary bg-light-primary/30 dark:bg-(--table-hover) shadow-md shadow-primary/10" : "border-slate-100 dark:border-(--card-border-color) hover:border-(--hover-card-color) dark:hover:border-(--card-border-color) hover:bg-slate-50/50 dark:hover:bg-(--table-hover)"}`}
           >
             <div
               className={`p-2.5 rounded-lg shrink-0 w-9 h-9 flex items-center justify-center transition-colors
-              ${selectedModel === model._id ? "bg-primary text-white" : "bg-slate-100 dark:bg-(--dark-sidebar) text-slate-500 group-hover:bg-(--light-primary) group-hover:text-primary dark:group-hover:bg-emerald-500/20"}
+              ${selectedModel === model._id ? "bg-primary text-white" : "bg-slate-100 dark:bg-(--dark-sidebar) text-slate-500 group-hover:bg-(--light-primary) group-hover:text-primary dark:group-hover:bg-primary/20"}
             `}
             >
               {model.icon ? <Image src={model.icon} alt={model.display_name} width={24} height={24} className="object-contain w-6 h-6" /> : <Sparkles size={20} />}

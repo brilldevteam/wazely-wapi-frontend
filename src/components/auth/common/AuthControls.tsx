@@ -67,7 +67,7 @@ export const AuthControls = () => {
         variant="ghost"
         size="icon"
         onClick={handleThemeToggle}
-        className="w-9 h-9 rounded-lg cursor-pointer transition-all hover:scale-105 active:scale-95 text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:text-white dark:hover:text-emerald-300 dark:hover:bg-(--table-hover)"
+        className="w-9 h-9 rounded-lg cursor-pointer transition-all hover:scale-105 active:scale-95 text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:text-white dark:hover:text-primary dark:hover:bg-(--table-hover)"
         title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
       >
         {darkMode ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}

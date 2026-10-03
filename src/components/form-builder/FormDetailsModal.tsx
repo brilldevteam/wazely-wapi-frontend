@@ -31,7 +31,7 @@ const FormDetailsModal: React.FC<FormDetailsModalProps> = ({ isOpen, onClose, fo
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "published":
-        return "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400";
+        return "bg-primary/10 text-primary dark:text-primary";
       case "draft":
         return "bg-slate-100 text-slate-400 dark:bg-(--page-body-bg) dark:text-gray-500";
       case "deprecated":
@@ -112,7 +112,7 @@ const FormDetailsModal: React.FC<FormDetailsModalProps> = ({ isOpen, onClose, fo
                 className={cn(
                   "px-1 pb-3 pt-1 rounded-none border-b-2 font-bold text-sm transition-all focus:outline-none shadow-none",
                   activeTab === "overview" 
-                    ? "border-primary text-primary bg-transparent dark:text-emerald-400 dark:border-emerald-400" 
+                    ? "border-primary text-primary bg-transparent dark:text-primary dark:border-primary" 
                     : "border-transparent text-slate-500 hover:text-slate-700 hover:bg-transparent dark:text-gray-400 dark:hover:text-slate-200 dark:hover:bg-transparent"
                 )}
               >
@@ -127,7 +127,7 @@ const FormDetailsModal: React.FC<FormDetailsModalProps> = ({ isOpen, onClose, fo
                 className={cn(
                   "px-1 pb-3 pt-1 rounded-none border-b-2 font-bold text-sm transition-all focus:outline-none shadow-none",
                   activeTab === "fields" 
-                    ? "border-primary text-primary bg-transparent dark:text-emerald-400 dark:border-emerald-400" 
+                    ? "border-primary text-primary bg-transparent dark:text-primary dark:border-primary" 
                     : "border-transparent text-slate-500 hover:text-slate-700 hover:bg-transparent dark:text-gray-400 dark:hover:text-slate-200 dark:hover:bg-transparent"
                 )}
               >

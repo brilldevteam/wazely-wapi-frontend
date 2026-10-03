@@ -2,6 +2,7 @@
 
 import { Button } from "@/src/elements/ui/button";
 import { Input } from "@/src/elements/ui/input";
+import { useAppSelector } from "@/src/redux/hooks";
 import { CatalogItem, CatalogPlaygroundProps } from "@/src/types/product";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -30,6 +31,7 @@ export default function CatalogPlayground({
   const [newItemName, setNewItemName] = useState("");
   const [newItemPrice, setNewItemPrice] = useState("");
   const [newItemEmoji, setNewItemEmoji] = useState("🏷️");
+  const { app_name } = useAppSelector((state) => state.setting);
 
   // Initialize simulator products
   useEffect(() => {
@@ -182,7 +184,7 @@ export default function CatalogPlayground({
     });
     msg += `----------------------------------------\n`;
     msg += `*Grand Total:* $${getCartTotal()}\n\n`;
-    msg += `Payment link generated dynamically via WAPI:\n`;
+    msg += `Payment link generated dynamically via Platform:\n`;
     msg += `🔗 https://checkout.stripe.com/pay/wapi_inv_${Math.floor(Math.random() * 900000 + 100000)}`;
 
     setCheckoutMessage(msg);
@@ -367,7 +369,7 @@ export default function CatalogPlayground({
                 </div>
                 <div className="text-left">
                   <h4 className="text-xs font-black tracking-wide">
-                    WAPI Live Shop
+                    {app_name || ''} Live Shop
                   </h4>
                   <p className="text-[10px] text-emerald-300 font-bold">
                     Online storefront catalog

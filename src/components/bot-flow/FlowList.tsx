@@ -11,10 +11,19 @@ import {
 } from "@/src/data/botFlow";
 import { Button } from "@/src/elements/ui/button";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/src/elements/ui/dropdown-menu";
+import {
   useDeleteAutomationFlowMutation,
   useGetAutomationFlowsQuery,
   useToggleAutomationFlowMutation,
   useTogglePauseAutomationFlowMutation,
+  useCloneAutomationFlowMutation,
+  useLazyGetAutomationFlowQuery,
+  useCreateAutomationFlowMutation,
 } from "@/src/redux/api/automationApi";
 import { useAppSelector } from "@/src/redux/hooks";
 import CommonHeader from "@/src/shared/CommonHeader";
@@ -22,12 +31,13 @@ import ConfirmModal from "@/src/shared/ConfirmModal";
 import { DataTable } from "@/src/shared/DataTable";
 import { Column } from "@/src/types/shared";
 import useDebounce from "@/src/utils/hooks/useDebounce";
-import { Edit2, Pause, Play, Trash2 } from "lucide-react";
+import { Copy, Edit2, MoreVertical, Pause, Play, Trash2, Download } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import FlowImportModal from "./FlowImportModal";
 
 export default function FlowList() {
   const { t } = useTranslation();
@@ -70,6 +80,12 @@ export default function FlowList() {
     id: string;
     isPaused: boolean;
   } | null>(null);
+  const [cloneId, setCloneId] = useState<string | null>(null);
+  const [cloneFlow, { isLoading: isCloning }] = useCloneAutomationFlowMutation();
+  const [triggerGetFlow] = useLazyGetAutomationFlowQuery();
+  const [createFlow] = useCreateAutomationFlowMutation();
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isImportLoading, setIsImportLoading] = useState(false);
   const [localStatuses, setLocalStatuses] = useState<Record<string, boolean>>(
     {},
   );
@@ -102,6 +118,123 @@ export default function FlowList() {
     }
   };
 
+  const handleClone = async () => {
+    if (cloneId) {
+      try {
+        await cloneFlow({
+          flowId: cloneId,
+          workspace_id: workspaceId,
+        }).unwrap();
+        toast.success("Flow cloned successfully");
+        setCloneId(null);
+      } catch {
+        toast.error("Failed to clone flow");
+      }
+    }
+  };
+
+  const handleExport = async (flowId: string, flowName: string) => {
+    try {
+      toast.loading("Exporting flow...", { id: "export-flow" });
+      const response = await triggerGetFlow({ flowId, workspace_id: workspaceId }).unwrap();
+      const flowData = response?.data;
+      if (!flowData) {
+        toast.error("Failed to export: flow data not found.", { id: "export-flow" });
+        return;
+      }
+
+      const cleanExport = {
+        name: flowData.name,
+        description: flowData.description,
+        platform: flowData.platform,
+        triggers: flowData.triggers || [],
+        nodes: flowData.nodes || [],
+        connections: flowData.connections || [],
+      };
+
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(cleanExport, null, 2));
+      const downloadAnchor = document.createElement("a");
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `${flowName.replace(/\s+/g, "_")}_export.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+
+      toast.success("Flow exported successfully!", { id: "export-flow" });
+    } catch {
+      toast.error("Failed to export flow.", { id: "export-flow" });
+    }
+  };
+
+  const handleImport = async (fileContent: any) => {
+    try {
+      setIsImportLoading(true);
+      const flowsArray = Array.isArray(fileContent) ? fileContent : [fileContent];
+      
+      toast.loading(`Importing ${flowsArray.length} flow(s)...`, { id: "import-flow" });
+
+      const importPromises = flowsArray.map((flow) => {
+        const payload = {
+          name: flow.name || "Imported Flow",
+          description: flow.description || "Imported flow description",
+          platform: flow.platform || "all",
+          triggers: flow.triggers || [],
+          nodes: flow.nodes || [],
+          connections: flow.connections || [],
+          is_active: false,
+          workspace_id: workspaceId,
+        };
+        return createFlow(payload).unwrap();
+      });
+
+      await Promise.all(importPromises);
+      toast.success(`Successfully imported ${flowsArray.length} flow(s)!`, { id: "import-flow" });
+      setIsImportModalOpen(false);
+      refetch();
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to import flow(s).", { id: "import-flow" });
+    } finally {
+      setIsImportLoading(false);
+    }
+  };
+
+  const handleBulkExport = async () => {
+    if (selectedIds.length === 0) return;
+    try {
+      toast.loading(`Exporting ${selectedIds.length} flows...`, { id: "bulk-export-flow" });
+
+      const fetchPromises = selectedIds.map((id) =>
+        triggerGetFlow({ flowId: id, workspace_id: workspaceId }).unwrap()
+      );
+
+      const results = await Promise.all(fetchPromises);
+
+      const cleanExports = results
+        .map((response) => response?.data)
+        .filter(Boolean)
+        .map((flowData) => ({
+          name: flowData.name,
+          description: flowData.description,
+          platform: flowData.platform,
+          triggers: flowData.triggers || [],
+          nodes: flowData.nodes || [],
+          connections: flowData.connections || [],
+        }));
+
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(cleanExports, null, 2));
+      const downloadAnchor = document.createElement("a");
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `wapi_flows_export_${Date.now()}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+
+      toast.success(`Successfully exported ${cleanExports.length} flows!`, { id: "bulk-export-flow" });
+      setSelectedIds([]);
+    } catch {
+      toast.error("Failed to export selected flows.", { id: "bulk-export-flow" });
+    }
+  };
   const handlePauseConfirm = async () => {
     if (pauseFlowItem) {
       try {
@@ -111,11 +244,15 @@ export default function FlowList() {
           workspace_id: workspaceId,
         }).unwrap();
         toast.success(
-          `Flow ${!pauseFlowItem.isPaused ? "paused" : "resumed"} successfully`,
+          `Flow ${!pauseFlowItem.isPaused ? "paused" : "resumed"} successfully`
         );
         setPauseFlowItem(null);
-      } catch {
-        toast.error("Failed to update flow pause state");
+      } catch (error: any) {
+        toast.error(
+          error?.data?.error ||
+            error?.data?.message ||
+            "Failed to update flow pause state",
+        );
       }
     }
   };
@@ -247,7 +384,7 @@ export default function FlowList() {
           <span
             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
               isActive
-                ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-indigo-900/30"
+                ? "bg-light-primary text-primary-dark border-[var(--primary-opacity-30)] dark:bg-primary-darker/20 dark:text-primary dark:border-indigo-900/30"
                 : "bg-gray-50 text-gray-600 border-gray-200 dark:bg-gray-900/10 dark:text-gray-400 dark:border-gray-800/30"
             }`}
           >
@@ -294,7 +431,7 @@ export default function FlowList() {
                   !isActive
                     ? "text-gray-400 cursor-not-allowed bg-transparent"
                     : isPaused
-                      ? "text-emerald-600 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/20"
+                      ? "text-primary hover:text-primary hover:bg-light-primary dark:hover:bg-primary-darker/20"
                       : "text-amber-600 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/20"
                 }`}
                 onClick={() => setPauseFlowItem({ id: flow._id, isPaused })}
@@ -311,6 +448,35 @@ export default function FlowList() {
               >
                 <Trash2 size={14} />
               </Button>
+            </Can>
+            <Can permission="create.automation_flows">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-10 h-10 border-none text-gray-600 dark:text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg dark:hover:bg-primary/20 transition-all"
+                  >
+                    <MoreVertical size={14} />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 p-2 border-slate-100 dark:border-(--card-border-color) shadow-xl rounded-xl">
+                  <DropdownMenuItem
+                    onClick={() => setCloneId(flow._id)}
+                    className="gap-2.5 px-3 py-2.5 cursor-pointer text-slate-800 dark:text-slate-200 font-medium text-xs hover:bg-light-primary dark:hover:bg-primary/10 hover:text-primary transition-colors"
+                  >
+                    <Copy size={12} />
+                    Clone Flow
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleExport(flow._id, flow.name)}
+                    className="gap-2.5 px-3 py-2.5 cursor-pointer text-slate-800 dark:text-slate-200 font-medium text-xs hover:bg-light-primary dark:hover:bg-primary/10 hover:text-primary transition-colors"
+                  >
+                    <Download size={12} />
+                    Export Flow
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </Can>
           </div>
         );
@@ -335,8 +501,23 @@ export default function FlowList() {
         isLoading={isLoading}
         columns={visibleColumns}
         onColumnToggle={handleColumnToggle}
-        onBulkDelete={handleBulkDelete}
+        // onBulkDelete={handleBulkDelete}
         selectedCount={selectedIds.length}
+        onImport={() => setIsImportModalOpen(true)}
+        isImportLoading={isImportLoading}
+        importPermission="create.automation_flows"
+        extraActions={
+          selectedIds.length > 0 && (
+            <Button
+              onClick={handleBulkExport}
+              variant="outline"
+              className="h-11 px-4 gap-2 bg-white dark:bg-(--page-body-bg) border-slate-200 text-slate-600 dark:border-none dark:text-gray-400 hover:text-slate-900 rounded-lg font-semibold transition-all shadow-sm active:scale-95"
+            >
+              <Download className="w-4 h-4 text-slate-400" />
+              <span className="text-sm">Export ({selectedIds.length})</span>
+            </Button>
+          )
+        }
       />
 
       {/* Filter Tabs */}
@@ -374,7 +555,7 @@ export default function FlowList() {
           limit={limit}
           onPageChange={handlePageChange}
           onLimitChange={handleLimitChange}
-          enableSelection={false}
+          enableSelection={true}
           selectedIds={selectedIds}
           onSelectionChange={setSelectedIds}
           getRowId={(item) => item._id}
@@ -431,6 +612,22 @@ export default function FlowList() {
         }
         confirmText={pauseFlowItem?.isPaused ? "Resume Flow" : "Pause Flow"}
         variant={pauseFlowItem?.isPaused ? "primary" : "warning"}
+      />
+      <ConfirmModal
+        isOpen={!!cloneId}
+        onClose={() => setCloneId(null)}
+        onConfirm={handleClone}
+        isLoading={isCloning}
+        title="Clone Automation Flow"
+        subtitle="Are you sure you want to clone this automation flow? This will create an exact copy of the flow in draft status."
+        confirmText="Clone Flow"
+        variant="primary"
+      />
+      <FlowImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        onImport={handleImport}
+        isLoading={isImportLoading}
       />
     </div>
   );

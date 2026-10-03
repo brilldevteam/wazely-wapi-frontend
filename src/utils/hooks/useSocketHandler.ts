@@ -86,6 +86,7 @@ const groupNewMessage = (existingData: DateGroupedMessages[], newMessage: ChatMe
     for (const group of dateGroup.messageGroups) {
       const idx = group.messages.findIndex((m) => {
         if (m.id === newMessage.id) return true;
+        if (m.wa_message_id && newMessage.wa_message_id && m.wa_message_id === newMessage.wa_message_id) return true;
 
         const isTypeMatch =
           m.messageType === newMessage.messageType ||
@@ -221,14 +222,17 @@ export const useSocketHandler = () => {
         if (query?.endpointName === "getMessages" && query?.status === "fulfilled") {
           const originalArgs = query.originalArgs;
           const queryContactId = String(originalArgs.contact_id);
+          const queryPhoneId = originalArgs.whatsapp_phone_number_id;
+          const msgPhoneId = newMessage.whatsapp_phone_number_id;
 
           const matchContactId =
             queryContactId === msgContactId ||
             queryContactId === msgSenderId ||
             queryContactId === msgRecipientId;
 
+          const matchPhone = !queryPhoneId || !msgPhoneId || String(queryPhoneId) === String(msgPhoneId);
 
-          if (matchContactId) {
+          if (matchContactId && matchPhone) {
             dispatch(
               chatApi.util.updateQueryData("getMessages", originalArgs, (draft) => {
                 if (!draft || !draft.messages) return;
@@ -271,6 +275,13 @@ export const useSocketHandler = () => {
       activeQueries.forEach((query: any) => {
         if (query?.endpointName === "getRecentChats" && query?.status === "fulfilled") {
           const originalArgs = query.originalArgs;
+          const queryPhoneId = originalArgs.whatsapp_phone_number_id;
+          const msgPhoneId = newMessage.whatsapp_phone_number_id;
+
+          if (queryPhoneId && msgPhoneId && String(queryPhoneId) !== String(msgPhoneId)) {
+            return;
+          }
+
           dispatch(
             chatApi.util.updateQueryData("getRecentChats", originalArgs, (draft) => {
               if (!draft || !draft.data) {
@@ -363,6 +374,13 @@ export const useSocketHandler = () => {
           activeQueries.forEach((query: any) => {
             if (query?.endpointName === "getRecentChats" && query?.status === "fulfilled") {
               const originalArgs = query.originalArgs;
+              const queryPhoneId = originalArgs.whatsapp_phone_number_id;
+              const msgPhoneId = updatedMessage.whatsapp_phone_number_id;
+
+              if (queryPhoneId && msgPhoneId && String(queryPhoneId) !== String(msgPhoneId)) {
+                return;
+              }
+
               dispatch(
                 chatApi.util.updateQueryData("getRecentChats", originalArgs, (draft) => {
                   if (!draft || !draft.data) return;
@@ -384,19 +402,23 @@ export const useSocketHandler = () => {
       const msgContactId = String(updatedMessage.contact_id);
       const msgSenderId = String(updatedMessage.sender.id);
       const msgRecipientId = String(updatedMessage.recipient.id);
+      const msgPhoneId = updatedMessage.whatsapp_phone_number_id;
 
       const activeQueries = Object.values(queriesRef.current || {});
       activeQueries.forEach((query: any) => {
         if (query?.endpointName === "getMessages" && query?.status === "fulfilled") {
           const originalArgs = query.originalArgs;
           const queryContactId = String(originalArgs.contact_id);
+          const queryPhoneId = originalArgs.whatsapp_phone_number_id;
 
           const matchContactId =
             queryContactId === msgContactId ||
             queryContactId === msgSenderId ||
             queryContactId === msgRecipientId;
 
-          if (matchContactId) {
+          const matchPhone = !queryPhoneId || !msgPhoneId || String(queryPhoneId) === String(msgPhoneId);
+
+          if (matchContactId && matchPhone) {
             dispatch(
               chatApi.util.updateQueryData("getMessages", originalArgs, (draft) => {
                 if (!draft || !draft.messages) return;
@@ -425,7 +447,7 @@ export const useSocketHandler = () => {
         }
       });
     },
-    [dispatch, user, selectedWorkspace]
+    [dispatch, user, selectedWorkspace, selectedPhoneNumberId]
   );
 
   const handleMessage = useCallback(
@@ -721,6 +743,11 @@ export const useSocketHandler = () => {
   }, [dispatch, user, selectedWorkspace]);
 
   useEffect(() => {
+    const currentUserId = user?.id || selectedWorkspace?.user_id;
+    if (currentUserId) {
+      socket.emit("join_user", currentUserId);
+    }
+
     socket.on(SOCKET.Listeners.Whatsapp_Message, handleMessage);
     socket.on(SOCKET.Listeners.Whatsapp_Status, handleStatusUpdate);
     socket.on(SOCKET.Listeners.Whatsapp_Connection_Update, handleConnectionUpdate);
@@ -734,7 +761,7 @@ export const useSocketHandler = () => {
       socket.off('snooze_reminder', handleSnoozeReminder);
       socket.off('agent:escalation', handleAgentEscalation);
     };
-  }, [handleMessage, handleStatusUpdate, handleConnectionUpdate, handleSnoozeReminder, handleAgentEscalation]);
+  }, [handleMessage, handleStatusUpdate, handleConnectionUpdate, handleSnoozeReminder, handleAgentEscalation, user?.id, selectedWorkspace?.user_id]);
 
   useEffect(() => {
     return () => {

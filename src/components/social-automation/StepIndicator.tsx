@@ -9,7 +9,7 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
   labels,
   onStepClick,
 }) => (
-  <div className="flex items-center">
+  <div className="flex items-center overflow-auto table-custom-scrollbar pb-2">
     {Array.from({ length: total }, (_, i) => i + 1).map((s) => (
       <React.Fragment key={s}>
         <div

@@ -132,7 +132,7 @@ const CreativePerformanceTable: React.FC<CreativePerformanceTableProps> = ({
                   <TableCell className="text-right">
                     <Badge
                       variant="secondary"
-                      className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-black"
+                      className="bg-primary/10 text-primary border-primary/20 font-black"
                     >
                       {ad.results}
                     </Badge>

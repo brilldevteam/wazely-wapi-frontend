@@ -27,7 +27,7 @@
  --page-body-bg: var(--page-body-bg);
  --color-background: var(--background);
  --color-foreground: var(--foreground);
- --font-sans: var(--font-mona-sans);
+ --font-sans: var(--font-global-sans);
  --light-border: var(--light-border);
  --dark-body: var(--dark-body);
  --light-background: var(--light-background);
@@ -165,7 +165,7 @@
 }
 
 :root {
-  --chat-user-bg: #05966933 !important;
+  --chat-user-bg: rgba(var(--primary-rgb), 0.2) !important;
   --color-slate-800: #1d293d !important;
   --status-card: #ECE5DD !important;
   --form-card-color: #E5DDD5 !important;
@@ -193,7 +193,7 @@
  --card: #ffffff;
  --dark-body: #011314 !important;
  --card-foreground: #0f0f0f;
- --light-primary: #ecfdf8 !important;
+ --light-primary: color-mix(in srgb, var(--primary), white 85%) !important;
  --popover: #ffffff;
  --popover-foreground: #0f0f0f;
  --primary: #059669;
@@ -243,19 +243,19 @@
  --slate-200: #E2E8F0;
  --blue-500: #3b82f6;
  --dark-accent: #333333;
- --primary-dark: #065F46;
+ --primary-dark: color-mix(in srgb, var(--primary) 70%, #000);
  --emerald-400: #34d399;
- --primary-darker: #021F19;
+ --primary-darker: color-mix(in srgb, var(--primary) 40%, #000);
  --feature-card-border: #F0FDF4;
  --features-bg-start: #F0FDF9;
- --primary-hover: #047857;
+ --primary-hover: color-mix(in srgb, var(--primary) 85%, #000);
  --pink-500: #ec4899;
  --google-green: #34a853;
  --google-blue: #4285f4;
- --landing-theme-dark: #0a2a20;
- --landing-card-dark: #041a1c;
- --landing-body-dark: #122727;
- --landing-accent-dark: #1a2b3b;
+ --landing-theme-dark: color-mix(in srgb, var(--primary), black 85%);
+ --landing-card-dark: color-mix(in srgb, var(--primary), black 90%);
+ --landing-body-dark: color-mix(in srgb, var(--primary), black 80%);
+ --landing-accent-dark: color-mix(in srgb, var(--primary), black 75%);
  --landing-success: #31f06f;
  --landing-warning: #facb15;
  --orange-500: #f97316;
@@ -312,12 +312,14 @@
  --popover-foreground: oklch(0.985 0 0);
  /* --primary: oklch(0.922 0 0); */
  /* --page-body-bg: #102210 !important; */
- --dark-body: #011314 !important;
- --page-body-bg: #122727 !important;
- --card-color: #041a1c !important;
- --dark-sidebar: #05966912 !important;
- --chat-send-color: #05966940 !important;
- --table-hover: #05966912 !important;
+ --dark-body: color-mix(in srgb, var(--primary), black 85%) !important;
+ --page-body-bg: color-mix(in srgb, var(--primary), black 75%) !important;
+ --primary: #059669 !important;
+ --card-color: color-mix(in srgb, var(--primary), transparent 95%) !important;
+
+ --dark-sidebar: color-mix(in srgb, var(--primary), black 85%) !important;
+ --chat-send-color: rgba(var(--primary-rgb), 0.25) !important;
+ --table-hover: color-mix(in srgb, var(--primary), black 85%) !important;
  --card-border-color: #ffffff20 !important;
  --primary-foreground: oklch(0.205 0 0);
  --secondary: oklch(0.269 0 0);
@@ -345,14 +347,14 @@
  --sidebar-ring: oklch(0.556 0 0);
  --feature-card-border: #041a1c;
  --features-bg-start: #011314;
- --primary-hover: #059669;
+ --primary-hover: var(--primary-hover);
  --pink-500: #ec4899;
  --google-green: #34a853;
  --google-blue: #4285f4;
- --landing-theme-dark: #0a2a20;
- --landing-card-dark: #041a1c;
- --landing-body-dark: #122727;
- --landing-accent-dark: #1a2b3b;
+ --landing-theme-dark: color-mix(in srgb, var(--primary), black 85%);
+ --landing-card-dark: color-mix(in srgb, var(--primary), black 90%);
+ --landing-body-dark: color-mix(in srgb, var(--primary), black 80%);
+ --landing-accent-dark: color-mix(in srgb, var(--primary), black 75%);
  --landing-success: #31f06f;
  --landing-warning: #facb15;
  --orange-500: #f97316;
@@ -402,7 +404,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-mona-sans);
+    font-family: var(--font-global-sans);
   }
   .custom-scrollbar {
     &::-webkit-scrollbar-track {
@@ -621,7 +623,7 @@ input[type="number"] {
 }
 .slider-box {
   padding: 10px !important;
-  background: linear-gradient(180deg, rgba(5, 150, 105, 0.12) 0%, rgba(5, 150, 105, 0) 100%);
+  background: linear-gradient(180deg, rgba(var(--primary-rgb), 0.12) 0%, rgba(var(--primary-rgb), 0) 100%);
   border-radius: 30px;
   color: rgba(var(--white), 1);
 
@@ -633,7 +635,7 @@ input[type="number"] {
     border-radius: 30px;
 
     /* UPDATED gradient border */
-    background: linear-gradient(180deg, rgba(5, 150, 105, 0.5) 0%, rgba(5, 150, 105, 0) 50%, rgba(5, 150, 105, 0.5) 100%);
+    background: linear-gradient(180deg, rgba(var(--primary-rgb), 0.5) 0%, rgba(var(--primary-rgb), 0) 50%, rgba(var(--primary-rgb), 0.5) 100%);
 
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
@@ -644,7 +646,7 @@ input[type="number"] {
 .feature-box {
   position: relative;
   padding: 14px !important;
-  background: linear-gradient(180deg, rgba(5, 150, 105, 0.12) 0%, rgba(5, 150, 105, 0.012) 100%);
+  background: linear-gradient(180deg, rgba(var(--primary-rgb), 0.12) 0%, rgba(var(--primary-rgb), 0.012) 100%);
   border-radius: 30px;
   color: rgba(var(--white), 1);
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -658,7 +660,7 @@ input[type="number"] {
     border-radius: 30px;
 
     /* UPDATED gradient border */
-    background: linear-gradient(180deg, rgba(5, 150, 105, 0.5) 0%, rgba(5, 150, 105, 0) 66.24%);
+    background: linear-gradient(180deg, rgba(var(--primary-rgb), 0.5) 0%, rgba(var(--primary-rgb), 0) 66.24%);
 
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
@@ -669,22 +671,22 @@ input[type="number"] {
   &:hover {
     transform: translateY(-10px);
     background: white !important;
-    box-shadow: 0 40px 80px -20px rgba(5, 150, 105, 0.15);
+    box-shadow: 0 40px 80px -20px rgba(var(--primary-rgb), 0.15);
 
     &::before {
-      background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
+      background: var(--primary);
       opacity: 1;
     }
 
     .max-h-75 {
       transform: scale(0.98);
-      box-shadow: inset 0 0 20px rgba(5, 150, 105, 0.1);
+      box-shadow: inset 0 0 20px rgba(var(--primary-rgb), 0.1);
     }
 
     .bg-primary {
       transform: rotate(12deg) scale(1.1);
-      background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-      box-shadow: 0 10px 20px -5px rgba(5, 150, 105, 0.4);
+      background: var(--primary);
+      box-shadow: 0 10px 20px -5px rgba(var(--primary-rgb), 0.4);
     }
 
     h4 {
@@ -713,7 +715,7 @@ input[type="number"] {
   position: relative;
   padding: 10px !important;
   border-radius: 20px;
-  background: linear-gradient(180deg, rgba(5, 150, 105, 0.12) 0%, rgba(5, 150, 105, 0.012) 100%);
+  background: linear-gradient(180deg, rgba(var(--primary-rgb), 0.12) 0%, rgba(var(--primary-rgb), 0.012) 100%);
   z-index: 10;
   color: rgba(var(--white), 1);
 
@@ -726,7 +728,7 @@ input[type="number"] {
     z-index: -1;
     border-radius: 20px;
 
-    background: linear-gradient(180deg, rgba(5, 150, 105, 0.5) 0%, rgba(5, 150, 105, 0) 66.24%);
+    background: linear-gradient(180deg, rgba(var(--primary-rgb), 0.5) 0%, rgba(var(--primary-rgb), 0) 66.24%);
 
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
@@ -736,7 +738,7 @@ input[type="number"] {
 .platform-border {
   position: relative;
   padding: 10px !important;
-  background: linear-gradient(180deg, rgba(5, 150, 105, 0.12) 0%, rgba(5, 150, 105, 0) 100%);
+  background: linear-gradient(180deg, rgba(var(--primary-rgb), 0.12) 0%, rgba(var(--primary-rgb), 0) 100%);
   border-radius: 30px;
   color: rgba(var(--white), 1);
   bottom: -16px;
@@ -747,7 +749,7 @@ input[type="number"] {
     inset: 0;
     padding: 2px;
     border-radius: 35px 35px 0 0;
-    background: linear-gradient(180deg, rgba(5, 150, 105, 0.5) 0%, rgba(5, 150, 105, 0) 66.24%);
+    background: linear-gradient(180deg, rgba(var(--primary-rgb), 0.5) 0%, rgba(var(--primary-rgb), 0) 66.24%);
 
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
@@ -821,7 +823,7 @@ input[type="number"] {
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: rgba(22, 163, 74, 0.6);
+    background-color: var(--primary) !important;
     cursor: grab;
   }
 }
@@ -988,14 +990,30 @@ input[type="number"] {
 }
 .full-calendar-container .fc-event {
   cursor: pointer;
-  transition: transform 0.1s;
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   border: none !important;
-  border-radius: 4px !important;
-  padding: 2px 4px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
 }
 .full-calendar-container .fc-event:hover {
-  transform: scale(1.02);
-  opacity: 0.9;
+  transform: translateY(-1px) scale(1.01);
+}
+.full-calendar-container .fc-event-main {
+  padding: 0 !important;
+}
+.full-calendar-container .fc-daygrid-event {
+  margin: 2px 6px !important;
+  background: transparent !important;
+  border: none !important;
+}
+.full-calendar-container .fc-timegrid-event {
+  margin: 1px 2px !important;
+  background: transparent !important;
+  border: none !important;
+}
+.full-calendar-container .fc-daygrid-event-dot {
+  display: none !important;
 }
 .fc-col-header-cell.fc-day {
   border-color: #ddd !important;
@@ -1224,4 +1242,15 @@ th {
 
 .animate-self-tenant {
   animation: self-tenant-glow 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Payment Gateway Modals (Razorpay, Midtrans Snap) High Z-Index Overrides */
+.razorpay-container,
+.razorpay-checkout-frame {
+  z-index: 2147483647 !important;
+}
+
+#snap-midtrans,
+.snap-container {
+  z-index: 2147483647 !important;
 }

@@ -40,7 +40,7 @@ export function FormFlowNode({ data, id }: any) {
   };
 
   return (
-    <BaseNode id={id} title="Form Flow" icon={<Form size={18} />} iconBgColor="bg-purple-600" iconColor="text-white" borderColor="border-emerald-200" handleColor="bg-emerald-500!" errors={errors}>
+    <BaseNode id={id} title="Form Flow" icon={<Form size={18} />} iconBgColor="bg-purple-600" iconColor="text-white" borderColor="border-[var(--primary-opacity-30)]" handleColor="bg-primary!" errors={errors}>
       <div className="space-y-4">
         <NodeField label="Select Form" required error={(touched || data.forceValidation) && !data.form_id ? "Selection is required." : ""}>
           <Select value={data.form_id || ""} onValueChange={(value) => updateNodeData("form_id", value)} disabled={isLoading}>
@@ -65,10 +65,10 @@ export function FormFlowNode({ data, id }: any) {
           <Input placeholder="Start Registration" value={data.button_text || ""} onFocus={() => setTouched(true)} onChange={(e) => updateNodeData("button_text", e.target.value)} className="text-sm bg-gray-50 border-gray-200 focus:bg-white dark:bg-(--page-body-bg) dark:border-(--card-border-color) dark:focus:bg-(--page-body-bg)" />
         </NodeField>
 
-        <div className="flex items-center gap-2 p-2 bg-emerald-50 dark:bg-emerald-900/10 rounded-md border border-emerald-100 dark:border-emerald-900/20 mt-4">
-          <Zap size={12} className="text-emerald-500 shrink-0" />
-          <p className="text-[10px] leading-tight text-emerald-600 dark:text-emerald-400">
-            Tip: Use <code className="bg-emerald-100 dark:bg-emerald-800/30 px-1 rounded text-emerald-700 dark:text-emerald-300 font-bold">{"{{variable}}"}</code> syntax to map dynamic values from your flow.
+        <div className="flex items-center gap-2 p-2 bg-light-primary dark:bg-primary-darker/10 rounded-md border border-[var(--primary-opacity-20)] dark:border-primary-darker/20 mt-4">
+          <Zap size={12} className="text-primary shrink-0" />
+          <p className="text-[10px] leading-tight text-primary dark:text-primary">
+            Tip: Use <code className="bg-[var(--primary-opacity-20)] dark:bg-primary-darker/30 px-1 rounded text-primary-dark dark:text-emerald-300 font-bold">{"{{variable}}"}</code> syntax to map dynamic values from your flow.
           </p>
         </div>
       </div>

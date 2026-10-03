@@ -73,7 +73,7 @@ const SetupManager = () => {
                 <h1 className="text-2xl font-bold tracking-tight text-primary">{t("ai_config_page_title")}</h1>
                 <p className="text-slate-500 text-sm dark:text-gray-500">{t("ai_config_page_description")}</p>
               </div>
-              <Button type="submit" disabled={isUpdating} className="h-11 px-8 rounded-lg bg-primary text-white font-bold shadow-lg shadow-emerald-600/20 text-sm sm:text-base transition-all hover:scale-[1.02] active:scale-[0.98]">
+              <Button type="submit" disabled={isUpdating} className="h-11 px-8 rounded-lg bg-primary text-white font-bold shadow-lg shadow-primary/20 text-sm sm:text-base transition-all hover:scale-[1.02] active:scale-[0.98]">
                 {isUpdating ? (
                   <>
                     <Loader2 size={18} className="mr-2 animate-spin" /> {t("updating")}

@@ -3,6 +3,7 @@ export const LANGUAGES = [
   { value: "en_GB", label: "English (UK)" },
   { value: "es_ES", label: "Spanish" },
   { value: "pt_BR", label: "Portuguese (Brazil)" },
+  { value: "pt_PT", label: "Portuguese (Portugal)" },
   { value: "hi_IN", label: "Hindi" },
   { value: "other", label: "Other" },
 ];

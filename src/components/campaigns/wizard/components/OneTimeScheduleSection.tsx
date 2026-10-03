@@ -15,7 +15,7 @@ export const OneTimeScheduleSection = ({
 }: OneTimeScheduleSectionProps) => {
   const { t } = useTranslation();
   return (
-    <div className="p-4 sm:p-6 rounded-lg border border-emerald-500/20 bg-emerald-50/30 dark:bg-emerald-500/5 space-y-5 animate-in fade-in slide-in-from-top-2 duration-300">
+    <div className="p-4 sm:p-6 rounded-lg border border-primary/20 bg-light-primary/30 dark:bg-primary/5 space-y-5 animate-in fade-in slide-in-from-top-2 duration-300">
       <h3 className="font-bold text-lg text-primary">
         {t("campaign_wizard_schedule_one_time_title")}
       </h3>
@@ -45,7 +45,7 @@ export const OneTimeScheduleSection = ({
             }
             showTime={true}
             disabled={{ before: new Date() }}
-            className="h-12 sm:h-13 pl-10 sm:pl-11 font-bold text-sm sm:text-base border-[var(--primary-opacity-30)] bg-white dark:bg-(--page-body-bg)"
+            className="h-12 sm:h-13 pl-10 sm:pl-11 font-bold text-sm sm:text-base border-primary/30 bg-white dark:bg-(--page-body-bg)"
           />
           <Calendar
             className="absolute left-3.5 top-1/2 -translate-y-1/2 text-primary pointer-events-none"

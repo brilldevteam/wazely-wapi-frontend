@@ -96,8 +96,8 @@ export const options: ChannelOption[] = [
       "Send automated messages, catalog templates, and run interactive chats.",
     icon: <MessageSquare size={24} className="text-white" />,
     gradient: "from-emerald-500 to-teal-600",
-    borderHover: "hover:border-emerald-500/50 focus:border-emerald-500/50",
-    textHover: "group-hover:text-emerald-500",
+    borderHover: "hover:border-primary/50 focus:border-primary/50",
+    textHover: "group-hover:text-primary",
     glowColor: "rgba(16, 185, 129, 0.15)",
   },
   {
@@ -172,7 +172,7 @@ export const prefixMap: Record<string, string> = {
 
   export const badgeStyles: Record<string, string> = {
           all: "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/20 dark:text-indigo-400 dark:border-indigo-900/30",
-          whatsapp: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30",
+          whatsapp: "bg-light-primary text-primary-dark border-[var(--primary-opacity-30)] dark:bg-primary-darker/20 dark:text-primary dark:border-primary-darker/30",
           telegram: "bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/20 dark:text-sky-400 dark:border-sky-900/30",
           facebook: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/20 dark:text-blue-400 dark:border-blue-900/30",
           instagram: "bg-pink-50 text-pink-700 border-pink-200 dark:bg-pink-950/20 dark:text-pink-400 dark:border-pink-900/30",

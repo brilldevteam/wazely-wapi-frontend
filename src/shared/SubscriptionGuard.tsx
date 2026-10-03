@@ -61,7 +61,7 @@ const SubscriptionGuard: React.FC<SubscriptionGuardProps> = ({ children }) => {
 
             <div className="mt-8 space-y-4">
               <div className="flex items-center gap-4 p-4 rounded-lg bg-slate-50 dark:bg-(--page-body-bg) border border-slate-100 dark:border-none transition-colors hover:bg-slate-100/50 dark:hover:bg-(--table-hover)">
-                <div className="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-(--dark-body) flex items-center justify-center text-primary">
+                <div className="w-10 h-10 rounded-lg bg-[var(--primary-opacity-20)] dark:bg-(--dark-body) flex items-center justify-center text-primary">
                   <ShieldAlert className="h-5 w-5" />
                 </div>
                 <div>

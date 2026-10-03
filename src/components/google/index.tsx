@@ -111,7 +111,7 @@ const GoogleAccountList: React.FC = () => {
         sortKey: "status",
         cell: (item) =>
           item.status === "active" ? (
-            <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 gap-1.5 px-2.5 py-0.5 font-bold">
+            <Badge className="bg-primary/10 text-primary border-primary/20 gap-1.5 px-2.5 py-0.5 font-bold">
               <CheckCircle2 size={12} /> {t("google_account_active")}
             </Badge>
           ) : (
@@ -139,7 +139,7 @@ const GoogleAccountList: React.FC = () => {
               </Button>
             </Can>
             <Can permission="update.google_account">
-              <Button variant="outline" size="sm" className="w-10 h-10 border-none text-emerald-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all dark:hover:bg-emerald-900/20 shadow-xs" onClick={() => router.push(`${ROUTES.GoogleAccount}/${item._id}/sheets`)} title={t("google_account_view_sheets")}>
+              <Button variant="outline" size="sm" className="w-10 h-10 border-none text-primary hover:text-primary hover:bg-light-primary rounded-lg transition-all dark:hover:bg-primary-darker/20 shadow-xs" onClick={() => router.push(`${ROUTES.GoogleAccount}/${item._id}/sheets`)} title={t("google_account_view_sheets")}>
                 <FileSpreadsheet size={16} />
               </Button>
             </Can>

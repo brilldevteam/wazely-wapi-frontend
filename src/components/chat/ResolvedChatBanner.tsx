@@ -6,10 +6,12 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { ResolvedChatBannerProps } from "@/src/types/components/chat";
 import { useChatTheme } from "@/src/hooks/useChatTheme";
-import { useAppSelector } from "@/src/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
+import { updateSelectedChatStatus } from "@/src/redux/reducers/messenger/chatSlice";
 
 const ResolvedChatBanner: React.FC<ResolvedChatBannerProps> = ({ contactId, phoneNumberId }) => {
   const { isCustom } = useChatTheme();
+  const dispatch = useAppDispatch();
   const [updateStatus, { isLoading }] = useUpdateChatStatusMutation();
   const { userSetting } = useAppSelector((state) => state.setting);
   const userSettingData = userSetting?.data;
@@ -21,6 +23,7 @@ const ResolvedChatBanner: React.FC<ResolvedChatBannerProps> = ({ contactId, phon
         whatsapp_phone_number_id: phoneNumberId,
         status: "open",
       }).unwrap();
+      dispatch(updateSelectedChatStatus("open"));
       toast.success("Chat reopened successfully");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {

@@ -79,7 +79,7 @@ const ButtonForm = forwardRef<ButtonFormHandle, ButtonFormProps>(({ onSend, setI
         <div className="flex items-center justify-between">
           <Label className="text-sm font-semibold flex items-center gap-2">Buttons ({buttons.length}/3)</Label>
           {buttons.length < 3 && (
-            <Button type="button" variant="outline" size="sm" onClick={handleAddButton} className="h-8 gap-1.5 text-xs font-bold border-dashed border-emerald-500/50 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-500/10">
+            <Button type="button" variant="outline" size="sm" onClick={handleAddButton} className="h-8 gap-1.5 text-xs font-bold border-dashed border-primary/50 text-primary hover:bg-light-primary dark:hover:bg-primary/10">
               <Plus size={14} /> Add Button
             </Button>
           )}

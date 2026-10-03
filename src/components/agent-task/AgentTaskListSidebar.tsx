@@ -63,7 +63,7 @@ const AgentTaskListSidebar = ({ agentId, onSelectTask, onClose }: AgentTaskListS
       case "on_hold":
         return "bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-500/10 dark:text-blue-500 dark:border-blue-500/20  text-[10px] font-medium";
       case "completed":
-        return "bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-500 dark:border-emerald-500/20  text-[10px] font-medium";
+        return "bg-[var(--primary-opacity-20)] text-primary-dark border-[var(--primary-opacity-30)] dark:bg-primary/10 dark:text-primary dark:border-primary/20  text-[10px] font-medium";
       case "cancelled":
         return "bg-red-50 text-red-600 border-red-100 dark:bg-red-500/10 dark:text-red-500 dark:border-red-500/20 text-[10px]  font-medium";
       default:

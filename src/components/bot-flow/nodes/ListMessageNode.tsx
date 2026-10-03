@@ -6,7 +6,7 @@ import { Input } from "@/src/elements/ui/input";
 import { Label } from "@/src/elements/ui/label";
 import { Textarea } from "@/src/elements/ui/textarea";
 import { Handle, Position, useReactFlow } from "@xyflow/react";
-import { Menu, Plus, X } from "lucide-react";
+import { AlertCircle, Menu, Plus, X } from "lucide-react";
 import { useState } from "react";
 import { BaseNode } from "./BaseNode";
 import { NodeField } from "./NodeField";
@@ -23,12 +23,23 @@ export function ListMessageNode({ data, id }: any) {
       errors.push("At least one section is required");
     } else {
       data.sections.forEach((section: any, sIdx: number) => {
-        if (!section.title) errors.push(`Section ${sIdx + 1} title is required`);
+        if (!section.title) {
+          errors.push(`Section ${sIdx + 1} title is required`);
+        } else if (section.title.length > 24) {
+          errors.push(`Section ${sIdx + 1} title must be 24 characters or less`);
+        }
         if (!section.items || section.items.length === 0) {
           errors.push(`Section ${sIdx + 1} must have at least one item`);
         } else {
           section.items.forEach((item: any, iIdx: number) => {
-            if (!item.title) errors.push(`Section ${sIdx + 1} item ${iIdx + 1} title is required`);
+            if (!item.title) {
+              errors.push(`Section ${sIdx + 1} item ${iIdx + 1} title is required`);
+            } else if (item.title.length > 24) {
+              errors.push(`Section ${sIdx + 1} item ${iIdx + 1} title must be 24 characters or less`);
+            }
+            if (item.description && item.description.length > 72) {
+              errors.push(`Section ${sIdx + 1} item ${iIdx + 1} description must be 72 characters or less`);
+            }
           });
         }
       });
@@ -104,6 +115,20 @@ export function ListMessageNode({ data, id }: any) {
           <Input value={data.buttonText || ""} onFocus={() => setTouched(true)} onChange={(e) => updateNodeData("buttonText", e.target.value)} placeholder="e.g., View Menu" className="h-9 text-sm bg-gray-50 border-gray-200 dark:bg-(--page-body-bg) dark:border-(--card-border-color)" maxLength={20} />
         </NodeField>
 
+        <div className="rounded-lg bg-amber-50/50 p-2.5 dark:bg-amber-950/10 border border-amber-100/50 dark:border-amber-950/20 text-amber-800 dark:text-amber-400">
+          <div className="flex items-start gap-1.5">
+            <AlertCircle size={14} className="mt-0.5 flex-shrink-0 text-amber-600 dark:text-amber-500" />
+            <div className="text-[11px] leading-normal">
+              <span className="font-semibold">WhatsApp Character Limits:</span>
+              <ul className="list-disc pl-3.5 mt-0.5 space-y-0.5 text-gray-600 dark:text-gray-400">
+                <li>Section Category: Max 24 characters</li>
+                <li>Menu Item Title: Max 24 characters</li>
+                <li>Menu Item Description: Max 72 characters</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
         <div className="space-y-4 pt-4 border-t border-gray-100 dark:border-(--card-border-color)">
           <div className="flex items-center justify-between px-1">
             <Label className="text-[11px] font-bold uppercase tracking-wider text-gray-500">Menu Structure</Label>
@@ -112,7 +137,7 @@ export function ListMessageNode({ data, id }: any) {
           {(data.sections || []).map((section: any, sIdx: number) => (
             <div key={sIdx} className="space-y-3 rounded-lg border border-gray-100 bg-gray-50/30 p-3 dark:border-(--card-border-color) dark:bg-(--page-body-bg)">
               <div className="flex items-center justify-between pb-2 border-b border-gray-100/50 dark:border-(--card-border-color)">
-                <Input value={section.title || ""} onFocus={() => setTouched(true)} onChange={(e) => updateSectionTitle(sIdx, e.target.value)} placeholder="Section Category" className="h-7 bg-(--input-color) text-xs font-bold border-none shadow-none focus-visible:ring-0 px-1" />
+                <Input value={section.title || ""} onFocus={() => setTouched(true)} onChange={(e) => updateSectionTitle(sIdx, e.target.value)} placeholder="Section Category" className="h-7 bg-(--input-color) text-xs font-bold border-none shadow-none focus-visible:ring-0 px-1" maxLength={24} />
                 <Button variant="ghost" size="icon" onClick={() => removeSection(sIdx)} className="p-1 rounded hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors">
                   <X size={12} />
                 </Button>
@@ -125,8 +150,8 @@ export function ListMessageNode({ data, id }: any) {
                       <X size={10} />
                     </Button>
                     <Handle type="source" id={`src-item-${sIdx}-${iIdx}`} position={Position.Right} style={{ top: "50%" }} className="w-3! h-3! bg-violet-500! border-2! border-white! dark:border-dark-gray! shadow-sm -right-4 z-50" />
-                    <Input value={item.title || ""} onFocus={() => setTouched(true)} onChange={(e) => updateItem(sIdx, iIdx, "title", e.target.value)} placeholder="Title" className="h-7 bg-(--input-color) text-[11px] font-semibold border-none shadow-none focus-visible:ring-0 px-1 mb-0.5" />
-                    <Input value={item.description || ""} onFocus={() => setTouched(true)} onChange={(e) => updateItem(sIdx, iIdx, "description", e.target.value)} placeholder="Short description" className="h-5 bg-(--input-color) text-[10px] text-gray-500 border-none shadow-none focus-visible:ring-0 px-1" />
+                    <Input value={item.title || ""} onFocus={() => setTouched(true)} onChange={(e) => updateItem(sIdx, iIdx, "title", e.target.value)} placeholder="Title" className="h-7 bg-(--input-color) text-[11px] font-semibold border-none shadow-none focus-visible:ring-0 px-1 mb-0.5" maxLength={24} />
+                    <Input value={item.description || ""} onFocus={() => setTouched(true)} onChange={(e) => updateItem(sIdx, iIdx, "description", e.target.value)} placeholder="Short description" className="h-5 bg-(--input-color) text-[10px] text-gray-500 border-none shadow-none focus-visible:ring-0 px-1" maxLength={72} />
                   </div>
                 ))}
 

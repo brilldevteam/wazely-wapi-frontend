@@ -4,7 +4,7 @@ export const defaultMenuItems: MenuItem[] = [
     {
       title: "Home",
       link_type: "Link",
-      path: "/landing",
+      path: "/",
       status: true,
     },
     {
@@ -38,7 +38,7 @@ export const defaultMenuItems: MenuItem[] = [
     {
       title: "Pricing",
       link_type: "Link",
-      path: "/landing#pricing",
+      path: "/#pricing",
       status: true,
     },
   ];

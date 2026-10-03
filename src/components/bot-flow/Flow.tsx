@@ -1409,7 +1409,7 @@ const FlowCanvas = () => {
                   placeholder="Search components..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="h-9 px-10 text-sm focus-visible:ring-emerald-500 border-gray-100 dark:border-(--card-border-color) bg-white dark:bg-(--page-body-bg)"
+                  className="h-9 px-10 text-sm focus-visible:ring-primary border-gray-100 dark:border-(--card-border-color) bg-white dark:bg-(--page-body-bg)"
                 />
                 {searchQuery && (
                   <Button
@@ -1594,9 +1594,9 @@ const FlowCanvas = () => {
           </div>
 
           <div className="hidden sm:flex flex-1 px-1 md:px-2 min-w-0">
-            <div className="flex items-center gap-1.5 truncate bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded-full">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-              <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 truncate md:text-[10px]">
+            <div className="flex items-center gap-1.5 truncate bg-light-primary dark:bg-primary/10 px-2 py-0.5 rounded-full">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse shrink-0" />
+              <span className="text-[9px] font-bold text-primary dark:text-primary truncate md:text-[10px]">
                 {nodes.length} Nodes
               </span>
             </div>
@@ -1606,7 +1606,7 @@ const FlowCanvas = () => {
             <Button
               onClick={() => setIsAIModalOpen(true)}
               variant="outline"
-              className="gap-1.5 shadow-sm transition-all font-bold px-3 h-8.5 rounded-lg active:scale-95 md:gap-2 md:px-4 md:h-10 shrink-0 border border-emerald-200 dark:border-emerald-500/20 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400"
+              className="gap-1.5 shadow-sm transition-all font-bold px-3 h-8.5 rounded-lg active:scale-95 md:gap-2 md:px-4 md:h-10 shrink-0 border border-[var(--primary-opacity-30)] dark:border-primary/20 hover:bg-light-primary dark:hover:bg-primary-darker/20 text-primary dark:text-primary"
             >
               <Sparkles size={14} className="md:size-4" />
               <span className="text-[10px] md:text-xs">Build with AI</span>

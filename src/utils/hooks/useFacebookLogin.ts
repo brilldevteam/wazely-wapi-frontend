@@ -33,7 +33,6 @@ export const useFacebookLogin = (onFinish?: (data: any) => void) => {
                 }
               }
             } catch (error: any) {
-              console.log(error);
               toast.error(error?.data?.error || "Failed to connect Facebook account.");
             } finally {
               setIsConnecting(false);

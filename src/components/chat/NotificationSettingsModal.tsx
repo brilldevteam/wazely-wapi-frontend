@@ -92,13 +92,13 @@ export const NotificationSettingsModal: React.FC<
               className={cn(
                 "p-4 rounded-lg border flex items-center justify-between transition-all flex-wrap gap-3",
                 permission === "granted"
-                  ? "bg-emerald-50/50 border-emerald-100 dark:bg-emerald-500/5 dark:border-emerald-500/20"
+                  ? "bg-light-primary/50 border-[var(--primary-opacity-20)] dark:bg-primary/5 dark:border-primary/20"
                   : "bg-amber-50/50 border-amber-100 dark:bg-amber-500/5 dark:border-amber-500/20",
               )}
             >
               <div className="flex items-center gap-3">
                 {permission === "granted" ? (
-                  <ShieldCheck className="w-5 h-5 text-emerald-500" />
+                  <ShieldCheck className="w-5 h-5 text-primary" />
                 ) : (
                   <ShieldAlert className="w-5 h-5 text-amber-500" />
                 )}
@@ -195,7 +195,7 @@ export const NotificationSettingsModal: React.FC<
                       className={cn(
                         "text-sm font-medium",
                         selectedTone === tone.id
-                          ? "text-primary dark:text-emerald-400"
+                          ? "text-primary dark:text-primary"
                           : "text-slate-600 dark:text-slate-400",
                       )}
                     >

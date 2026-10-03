@@ -43,7 +43,7 @@ const TemplateInsightsSection = ({ data, isLoading }: TemplateInsightsSectionDat
     {
       header: t("waba_status_label"),
       accessorKey: "status",
-      cell: (row) => <Badge className={`text-[10px] font-black uppercase tracking-wider border-none px-3 py-1 rounded-full ${row.status === "approved" ? "bg-emerald-500/10 text-primary dark:text-emerald-400" : "bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400"}`}>{row.status}</Badge>,
+      cell: (row) => <Badge className={`text-[10px] font-black uppercase tracking-wider border-none px-3 py-1 rounded-full ${row.status === "approved" ? "bg-primary/10 text-primary dark:text-primary" : "bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400"}`}>{row.status}</Badge>,
     },
     {
       header: t("usage_label"),
@@ -72,13 +72,13 @@ const TemplateInsightsSection = ({ data, isLoading }: TemplateInsightsSectionDat
 
         <div className="flex gap-4 flex-wrap items-center">
           <div className="flex items-center gap-4 flex-wrap">
-            <div className="flex items-center gap-3 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-lg px-4 py-2 border border-emerald-500/10 transition-transform hover:scale-[1.02] cursor-default">
+            <div className="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 rounded-lg px-4 py-2 border border-primary/10 transition-transform hover:scale-[1.02] cursor-default">
               <div className="flex items-center gap-2 text-primary dark:text-primary">
                 <CheckCircle2 size={16} />
                 <span className="text-[11px] font-black uppercase tracking-widest">{t("approved")}</span>
               </div>
               {isLoading ? (
-                <div className="h-6 w-8 bg-emerald-100 dark:bg-(--card-color) rounded animate-pulse" />
+                <div className="h-6 w-8 bg-primary/10 dark:bg-(--card-color) rounded animate-pulse" />
               ) : (
                 <p className="text-[11px] font-black text-primary dark:text-primary leading-none">
                   <CountUp end={data?.totalTemplatesApproved || 0} duration={1.5} />

@@ -7,7 +7,7 @@ import { Bot, Brain, Edit2, Trash2 } from "lucide-react";
 import Can from "../shared/Can";
 
 const ChatbotCard: React.FC<ChatbotCardProps> = ({ chatbot, onEdit, onDelete, onTrain }) => {
-  const modelName = typeof chatbot.ai_model === "object" ? chatbot.ai_model.display_name : chatbot.ai_model;
+  const modelName = typeof chatbot.ai_model === "object" ? chatbot?.ai_model?.display_name : chatbot?.ai_model;
 
   return (
     <div className="group relative bg-white dark:bg-(--card-color) rounded-lg border border-slate-100 dark:border-(--card-border-color) p-5 shadow-sm hover:shadow-md transition-all flex flex-col gap-4">
@@ -19,7 +19,7 @@ const ChatbotCard: React.FC<ChatbotCardProps> = ({ chatbot, onEdit, onDelete, on
           <h3 className="font-bold text-slate-900 dark:text-white truncate uppercase tracking-tight text-sm">{chatbot.name}</h3>
           <p className="text-[11px] text-slate-400 font-medium truncate mt-0.5">{modelName}</p>
         </div>
-        <Badge variant={chatbot.status === "active" ? "outline" : "secondary"} className={chatbot.status === "active" ? "bg-emerald-50 dark:bg-primary/20 dark:border-(--card-border-color) text-emerald-600 border-emerald-100" : ""}>
+        <Badge variant={chatbot.status === "active" ? "outline" : "secondary"} className={chatbot.status === "active" ? "bg-light-primary dark:bg-primary/20 dark:border-(--card-border-color) text-primary border-[var(--primary-opacity-20)]" : ""}>
           {chatbot.status === "active" ? "Active" : "Inactive"}
         </Badge>
       </div>

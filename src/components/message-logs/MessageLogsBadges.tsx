@@ -7,7 +7,7 @@ export const getStatusBadge = (status: string, error?: string | null) => {
   switch (formattedStatus) {
     case "read":
       return (
-        <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:bg-emerald-500/20 dark:text-emerald-400 gap-1 px-2.5 py-0.5 font-bold uppercase text-[10px] tracking-wide">
+        <Badge className="bg-primary/10 text-primary border-primary/20 dark:bg-primary/20 dark:text-primary gap-1 px-2.5 py-0.5 font-bold uppercase text-[10px] tracking-wide">
           <CheckCircle2 size={12} /> Read
         </Badge>
       );
@@ -52,7 +52,7 @@ export const getPlatformBadge = (platform: string) => {
   switch (p) {
     case "whatsapp":
       return (
-        <Badge className="bg-emerald-55! bg-emerald-50! text-emerald-700 border-emerald-200 dark:bg-(--card-color)! dark:text-emerald-400 dark:border-(--card-border-color) font-semibold gap-1 px-2.5 py-0.5">
+        <Badge className="bg-primary/10! text-primary border-primary/10! dark:bg-(--card-color)! dark:text-primary dark:border-(--card-border-color) font-semibold gap-1 px-2.5 py-0.5">
           <MessageSquare size={12} /> WhatsApp
         </Badge>
       );

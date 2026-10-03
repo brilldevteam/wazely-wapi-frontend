@@ -1,4 +1,4 @@
-import { ImageBaseUrl } from "@/src/constants/route";
+import { getResolvedImageUrl } from "@/src/utils/image";
 import { DocumentMessageProps } from "@/src/types/components/chat";
 import { Download, FileText, Loader2 } from "lucide-react";
 import React, { useState } from "react";
@@ -8,7 +8,7 @@ import { Button } from "@/src/elements/ui/button";
 
 const DocumentMessage: React.FC<DocumentMessageProps> = ({ message, isWindowExpired }) => {
   const [isDownloading, setIsDownloading] = useState(false);
-  const resolvedUrl = message.fileUrl?.startsWith("http") ? message.fileUrl : `${ImageBaseUrl}${message.fileUrl}`;
+  const resolvedUrl = getResolvedImageUrl(message.fileUrl);
   const fileName = message.fileUrl?.split("/").pop() || "Document";
 
   const handleDownload = async (e: React.MouseEvent) => {
@@ -41,7 +41,7 @@ const DocumentMessage: React.FC<DocumentMessageProps> = ({ message, isWindowExpi
     <BaseMessage message={message} isWindowExpired={isWindowExpired}>
       <div className="flex flex-col gap-2 min-w-57.5">
         <div className="flex items-center gap-3 p-2 rounded-lg bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5">
-          <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600">
+          <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-[var(--primary-opacity-20)] dark:bg-primary-darker/30 text-primary">
             <FileText size={20} />
           </div>
           <div className="flex-1 min-w-0">

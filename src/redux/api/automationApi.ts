@@ -118,12 +118,25 @@ export const automationApi = baseApi.enhanceEndpoints({ addTagTypes: ["Automatio
         body,
       }),
     }),
+    cloneAutomationFlow: builder.mutation({
+      query: ({ flowId, workspace_id }) => {
+        const queryParams = new URLSearchParams();
+        if (workspace_id) queryParams.append("workspace_id", workspace_id);
+        const qStr = queryParams.toString();
+        return {
+          url: `/automation/${flowId}/clone${qStr ? `?${qStr}` : ""}`,
+          method: "POST",
+        };
+      },
+      invalidatesTags: ["AutomationFlow"],
+    }),
   }),
 });
 
 export const {
   useGetAutomationFlowsQuery,
   useGetAutomationFlowQuery,
+  useLazyGetAutomationFlowQuery,
   useCreateAutomationFlowMutation,
   useUpdateAutomationFlowMutation,
   useDeleteAutomationFlowMutation,
@@ -131,4 +144,5 @@ export const {
   useTogglePauseAutomationFlowMutation,
   useTestAutomationFlowMutation,
   useSuggestAutomationFlowMutation,
+  useCloneAutomationFlowMutation,
 } = automationApi;

@@ -1,5 +1,11 @@
 # Changelog
 
+## WAPI v3.3 custom upgrade - 2026-10-03
+
+- Upgrade the CRM frontend to the WAPI v3.3 vendor release (social media publishing, WhatsApp-formatted template bodies with rich preview, campaign batch stats, inquiry and settings updates).
+- Keep all custom features: Wazely login logo, WhatsApp subscription request flow (the v3.3 Midtrans/Mollie checkout changes do not apply), searchable country code selects, +94 default contact code, campaign paused badge and "Completed with errors" label, and the custom favicon handling.
+- Combine the Text Direction (RTL/LTR) control with the new WhatsApp formatting so direction and bold/italic/strikethrough both survive saving and reloading a template.
+
 ## WAPI v3.2 custom upgrade - 2026-07-16
 
 - Upgrade the CRM frontend to the complete WAPI v3.2 vendor release.

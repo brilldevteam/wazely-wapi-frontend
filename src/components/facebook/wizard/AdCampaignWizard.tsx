@@ -810,7 +810,7 @@ const AdCampaignWizard: React.FC<AdCampaignWizardProps> = ({
             <ArrowLeft size={18} className="sm:w-5 sm:h-5" />
           </Button>
           <div className="min-w-0">
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-emerald-600 dark:text-emerald-500 truncate">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-primary dark:text-primary truncate">
               {getPageTitle()}
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 truncate sm:whitespace-normal">
@@ -863,10 +863,10 @@ const AdCampaignWizard: React.FC<AdCampaignWizardProps> = ({
                               className={cn(
                                 "w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold transition-all duration-300 shrink-0",
                                 isActive
-                                  ? "bg-emerald-600 text-white ring-4 ring-emerald-600/15 shadow-lg shadow-emerald-600/20"
+                                  ? "bg-primary text-white ring-4 ring-primary/15 shadow-lg shadow-primary/20"
                                   : isCompleted
-                                    ? "bg-emerald-600 text-white"
-                                    : "bg-white dark:bg-(--dark-body) text-slate-400 border border-slate-200 dark:border-(--card-border-color) font-bold group-hover:border-emerald-200 dark:group-hover:border-(--table-hover)",
+                                    ? "bg-primary text-white"
+                                    : "bg-white dark:bg-(--dark-body) text-slate-400 border border-slate-200 dark:border-(--card-border-color) font-bold group-hover:border-[var(--primary-opacity-30)] dark:group-hover:border-(--table-hover)",
                               )}
                             >
                               {isCompleted ? (
@@ -884,7 +884,7 @@ const AdCampaignWizard: React.FC<AdCampaignWizardProps> = ({
                                 className={cn(
                                   "text-[8px] sm:text-[10px] font-black uppercase tracking-widest leading-none mb-0.5 sm:mb-1",
                                   isActive || isCompleted
-                                    ? "text-emerald-600 dark:text-emerald-500"
+                                    ? "text-primary dark:text-primary"
                                     : "text-slate-400 group-hover:text-slate-500",
                                 )}
                               >
@@ -896,7 +896,7 @@ const AdCampaignWizard: React.FC<AdCampaignWizardProps> = ({
                                   isActive
                                     ? "text-slate-900 dark:text-white"
                                     : isCompleted
-                                      ? "text-emerald-600/80"
+                                      ? "text-primary/80"
                                       : "text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300",
                                 )}
                               >
@@ -909,7 +909,7 @@ const AdCampaignWizard: React.FC<AdCampaignWizardProps> = ({
                               className={cn(
                                 "flex-1 h-px sm:h-0.5 mx-2 sm:mx-6 rounded-full min-w-5 transition-colors duration-500",
                                 isCompleted
-                                  ? "bg-emerald-600"
+                                  ? "bg-primary"
                                   : "bg-slate-200 dark:bg-(--page-body-bg)",
                               )}
                             />
@@ -959,7 +959,7 @@ const AdCampaignWizard: React.FC<AdCampaignWizardProps> = ({
                       handleFooterNext(validateForm, submitForm, setTouched)
                     }
                     disabled={isLoading}
-                    className="rounded-lg px-10 h-11 gap-2 bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg shadow-emerald-600/20 transition-all active:scale-95 font-bold"
+                    className="rounded-lg px-10 h-11 gap-2 bg-primary text-white hover:bg-primary shadow-lg shadow-primary/20 transition-all active:scale-95 font-bold"
                   >
                     {isLoading ? (
                       <RotateCw className="w-4 h-4 animate-spin" />

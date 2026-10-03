@@ -74,7 +74,7 @@ export const webhookApi = baseApi.enhanceEndpoints({ addTagTypes: ["Webhook"] })
       }),
       providesTags: (result, error, { id }) => [{ type: "Webhook", id: `${id}-trigger-logs` }],
     }),
-    getMessageLogs: builder.query<any, { id: string; page?: number; limit?: number; search?: string }>({
+    getWebhookMessageLogs: builder.query<any, { id: string; page?: number; limit?: number; search?: string }>({
       query: ({ id, ...params }) => ({
         url: `/webhooks/${id}/message-logs`,
         params,
@@ -84,4 +84,4 @@ export const webhookApi = baseApi.enhanceEndpoints({ addTagTypes: ["Webhook"] })
   }),
 });
 
-export const { useListWebhooksQuery, useGetWebhookQuery, useCreateWebhookMutation, useUpdateWebhookMutation, useDeleteWebhookMutation, useToggleWebhookMutation, useMapTemplateMutation, useUpdateMerchantNotificationMutation, useGetTriggerLogsQuery, useGetMessageLogsQuery } = webhookApi;
+export const { useListWebhooksQuery, useGetWebhookQuery, useCreateWebhookMutation, useUpdateWebhookMutation, useDeleteWebhookMutation, useToggleWebhookMutation, useMapTemplateMutation, useUpdateMerchantNotificationMutation, useGetTriggerLogsQuery, useGetWebhookMessageLogsQuery } = webhookApi;

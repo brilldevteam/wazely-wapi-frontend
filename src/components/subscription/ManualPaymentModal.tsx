@@ -7,9 +7,9 @@ import { Input } from "@/src/elements/ui/input";
 import { Label } from "@/src/elements/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/elements/ui/select";
 import { cn } from "@/src/lib/utils";
-import { useCreateManualSubscriptionMutation } from "@/src/redux/api/subscriptionApi";
+import { useChangePlanSubscriptionMutation, useCreateManualSubscriptionMutation } from "@/src/redux/api/subscriptionApi";
 import CurrencyValue from "@/src/shared/CurrencyValue";
-import { ManualPaymentModalProps, Plan } from "@/src/types/subscription";
+import { ManualPaymentModalProps } from "@/src/types/subscription";
 import { validationManualPaymentSchema } from "@/src/utils/validationSchema";
 import { Form, Formik } from "formik";
 import { Banknote, Landmark, Loader2, ReceiptText, ShieldCheck, Upload } from "lucide-react";
@@ -17,12 +17,14 @@ import Image from "next/image";
 import React, { useRef, useState } from "react";
 import { toast } from "sonner";
 
-
-
-const ManualPaymentModal: React.FC<ManualPaymentModalProps> = ({ isOpen, onClose, selectedPlan }) => {
-  const [createManual, { isLoading }] = useCreateManualSubscriptionMutation();
+const ManualPaymentModal: React.FC<ManualPaymentModalProps> = ({ isOpen, onClose, selectedPlan, mode = "none", currentSubscriptionId }) => {
+  const [createManual, { isLoading: isCreateLoading }] = useCreateManualSubscriptionMutation();
+  const [changePlan, { isLoading: isChangeLoading }] = useChangePlanSubscriptionMutation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const isUpgradeOrDowngrade = mode === "upgrade" || mode === "downgrade";
+  const isLoading = isCreateLoading || isChangeLoading;
 
   const initialValues = {
     manual_payment_type: "cash",
@@ -40,7 +42,9 @@ const ManualPaymentModal: React.FC<ManualPaymentModalProps> = ({ isOpen, onClose
     if (!selectedPlan) return;
 
     const formData = new FormData();
+    formData.append("new_plan_id", selectedPlan._id);
     formData.append("plan_id", selectedPlan._id);
+    formData.append("payment_gateway", "manual");
     formData.append("manual_payment_type", values.manual_payment_type);
     formData.append("payment_reference", values.payment_reference);
 
@@ -58,7 +62,13 @@ const ManualPaymentModal: React.FC<ManualPaymentModalProps> = ({ isOpen, onClose
     }
 
     try {
-      const response = await createManual(formData).unwrap();
+      let response: any;
+      if (isUpgradeOrDowngrade && currentSubscriptionId) {
+        response = await changePlan({ id: currentSubscriptionId, body: formData }).unwrap();
+      } else {
+        response = await createManual(formData).unwrap();
+      }
+
       if (response.success) {
         toast.success(response.message || "Subscription request submitted successfully");
         onClose();
@@ -220,7 +230,7 @@ const ManualPaymentModal: React.FC<ManualPaymentModalProps> = ({ isOpen, onClose
                 </div>
 
                 <div className="flex items-center justify-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                  <ShieldCheck className="h-4 w-4 text-emerald-500" />
+                  <ShieldCheck className="h-4 w-4 text-primary" />
                   Secure Transaction Layer
                 </div>
               </Form>

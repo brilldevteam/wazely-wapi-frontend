@@ -794,7 +794,7 @@ const PipelineManage: React.FC<PipelineManageProps> = ({ id }) => {
                                                               : item.priority ===
                                                                   "medium"
                                                                 ? "bg-amber-50 text-amber-600 dark:bg-amber-950/30 dark:text-amber-400"
-                                                                : "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400",
+                                                                : "bg-light-primary text-primary dark:bg-primary-darker/30 dark:text-primary",
                                                           )}
                                                         >
                                                           <span
@@ -806,7 +806,7 @@ const PipelineManage: React.FC<PipelineManageProps> = ({ id }) => {
                                                                 : item.priority ===
                                                                     "medium"
                                                                   ? "bg-amber-500"
-                                                                  : "bg-emerald-500",
+                                                                  : "bg-primary",
                                                             )}
                                                           />
                                                           {item.priority}

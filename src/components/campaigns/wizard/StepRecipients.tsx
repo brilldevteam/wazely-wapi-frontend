@@ -21,6 +21,8 @@ import { useTranslation } from "react-i18next";
 
 import { ContactsResponse, TagsResponse, SegmentsResponse } from "@/src/types/campaign";
 
+import { calculateAudienceCount } from "./utils/audience";
+
 const StepRecipients = ({ formik }: { formik: FormikProps<CampaignFormValues> }) => {
   const { t } = useTranslation();
   const { data: contactsResult } = useGetContactQuery({
@@ -62,6 +64,26 @@ const StepRecipients = ({ formik }: { formik: FormikProps<CampaignFormValues> })
     });
   }, [isFeatureEnabled, t]);
 
+  const audienceCount = useMemo(() => {
+    return calculateAudienceCount({
+      recipient_type: formik.values.recipient_type,
+      avoid_unsubscribers: formik.values.avoid_unsubscribers,
+      specific_contacts: formik.values.specific_contacts,
+      tag_ids: formik.values.tag_ids,
+      segment_ids: formik.values.segment_ids,
+      contacts,
+      segments,
+    });
+  }, [
+    formik.values.recipient_type,
+    formik.values.avoid_unsubscribers,
+    formik.values.specific_contacts,
+    formik.values.tag_ids,
+    formik.values.segment_ids,
+    contacts,
+    segments,
+  ]);
+
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-500">
       <div className="flex items-center gap-4">
@@ -101,10 +123,10 @@ const StepRecipients = ({ formik }: { formik: FormikProps<CampaignFormValues> })
             {t("campaign_wizard_recipients_avoid_unsubscribers_desc")}
           </p>
         </div>
-        <Switch id="avoid_unsubscribers" checked={formik.values.avoid_unsubscribers} onCheckedChange={(checked) => formik.setFieldValue("avoid_unsubscribers", checked)} className="data-[state=checked]:bg-emerald-500" />
+        <Switch id="avoid_unsubscribers" checked={formik.values.avoid_unsubscribers} onCheckedChange={(checked) => formik.setFieldValue("avoid_unsubscribers", checked)} className="data-[state=checked]:bg-primary" />
       </div>
 
-      <div className="min-h-25 animate-in fade-in slide-in-from-top-4">
+      <div className="min-h-25 animate-in fade-in slide-in-from-top-4 space-y-4">
         {formik.values.recipient_type === "specific_contacts" && (
           <RecipientSelectionField
             label={t("campaign_wizard_recipients_search_contacts_label")}
@@ -138,6 +160,29 @@ const StepRecipients = ({ formik }: { formik: FormikProps<CampaignFormValues> })
             selectedValues={formik.values.segment_ids}
             onChange={(vals) => formik.setFieldValue("segment_ids", vals)}
           />
+        )}
+
+        {formik.values.recipient_type !== "all_contacts" && (
+          <div className="p-4 bg-primary/5 dark:bg-(--card-color) rounded-lg border border-primary/20 dark:border-(--card-border-color) flex items-center justify-between shadow-xs">
+            <div className="flex items-center gap-2.5">
+              <Users className="w-5 h-5 text-primary shrink-0" />
+              <div>
+                <p className="text-xs font-bold text-slate-700 dark:text-slate-200">
+                  {t("campaign_wizard_recipients_target_reach", "Target Audience Reach")}
+                </p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                  {formik.values.avoid_unsubscribers
+                    ? t("campaign_wizard_recipients_unsub_excluded", "Unsubscribed contacts are automatically excluded")
+                    : t("campaign_wizard_recipients_all_included", "Including unsubscribed contacts")}
+                </p>
+              </div>
+            </div>
+            <div className="text-right shrink-0">
+              <span className="inline-block px-3 py-1 bg-primary text-white font-black text-sm rounded-full shadow-xs">
+                {audienceCount} {t("contacts_label", "Contacts")}
+              </span>
+            </div>
+          </div>
         )}
 
         {formik.values.recipient_type === "all_contacts" && (

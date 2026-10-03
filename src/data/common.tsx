@@ -154,7 +154,7 @@ export const INFOMODALDATE: Record<string, InfoModalItem> = {
         subContent: [
           {
             label: "Restricted Features (QR Code)",
-            value: "The following pages are not accessible for QR Code workspaces: Order Management, Product Catalogues, and Ecommerce Webhooks.",
+            value: "The following pages are not accessible for QR Code workspaces: Order Management, Product Catalogues, Ecommerce Webhooks, WhatsApp Appointment, WhatsApp Form, and AI Call Assistant.",
           },
         ],
       },

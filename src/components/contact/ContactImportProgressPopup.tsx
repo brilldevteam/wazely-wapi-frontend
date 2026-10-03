@@ -40,7 +40,7 @@ const ContactImportProgressPopup = () => {
     { label: "Total", value: totalRecords, color: "text-slate-600 dark:text-slate-300" },
   ];
   const CONTACTIMPORTCOMPLETED = [
-    { label: "Imported", value: processedCount, color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-950/30" },
+    { label: "Imported", value: processedCount, color: "text-primary dark:text-primary", bg: "bg-light-primary dark:bg-primary-darker/30" },
     { label: "Failed", value: errorCount, color: "text-red-500", bg: "bg-red-50 dark:bg-red-950/30" },
     { label: "Total", value: totalRecords, color: "text-slate-700 dark:text-slate-200", bg: "bg-slate-50 dark:bg-white/5" },
   ];
@@ -83,11 +83,11 @@ const ContactImportProgressPopup = () => {
   return (
     <div className="fixed bottom-6 left-6 z-9999 w-88 max-w-[calc(100vw-3rem)] animate-in slide-in-from-bottom-4 fade-in duration-300">
       <div className="bg-white dark:bg-(--card-color) rounded-2xl shadow-2xl shadow-black/10 dark:shadow-black/40 border border-slate-100 dark:border-(--card-border-color) overflow-hidden">
-        <div className={`px-5 py-4 flex items-center gap-3 ${isRunning ? "bg-primary/5 dark:bg-primary/10" : isCompleted ? "bg-emerald-50 dark:bg-emerald-950/30" : "bg-red-50 dark:bg-red-950/30"}`}>
-          <div className={`shrink-0 p-2 rounded-xl ${isRunning ? "bg-primary/10 dark:bg-primary/20" : isCompleted ? "bg-emerald-100 dark:bg-emerald-900/40" : "bg-red-100 dark:bg-red-900/40"}`}>{isRunning ? <UploadCloud size={16} className="text-primary animate-pulse" /> : isCompleted ? <CheckCircle2 size={16} className="text-emerald-600 dark:text-emerald-400" /> : <AlertCircle size={16} className="text-red-500" />}</div>
+        <div className={`px-5 py-4 flex items-center gap-3 ${isRunning ? "bg-primary/5 dark:bg-primary/10" : isCompleted ? "bg-light-primary dark:bg-primary-darker/30" : "bg-red-50 dark:bg-red-950/30"}`}>
+          <div className={`shrink-0 p-2 rounded-xl ${isRunning ? "bg-primary/10 dark:bg-primary/20" : isCompleted ? "bg-[var(--primary-opacity-20)] dark:bg-primary-darker/40" : "bg-red-100 dark:bg-red-900/40"}`}>{isRunning ? <UploadCloud size={16} className="text-primary animate-pulse" /> : isCompleted ? <CheckCircle2 size={16} className="text-primary dark:text-primary" /> : <AlertCircle size={16} className="text-red-500" />}</div>
 
           <div className="flex-1 min-w-0">
-            <p className={`text-xs font-bold truncate ${isRunning ? "text-primary" : isCompleted ? "text-emerald-700 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>{isRunning ? "Importing Contacts…" : isCompleted ? "Import Complete" : "Import Failed"}</p>
+            <p className={`text-xs font-bold truncate ${isRunning ? "text-primary" : isCompleted ? "text-primary-dark dark:text-primary" : "text-red-600 dark:text-red-400"}`}>{isRunning ? "Importing Contacts…" : isCompleted ? "Import Complete" : "Import Failed"}</p>
             <p className="text-[10px] text-slate-400 truncate mt-0.5 max-w-45" title={fileName}>
               {fileName || "contacts file"}
             </p>
@@ -146,9 +146,9 @@ const ContactImportProgressPopup = () => {
               </div>
 
               {errorCount === 0 && (
-                <div className="flex items-center gap-2 py-2.5 px-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/40">
-                  <CheckCircle2 size={14} className="text-emerald-500 shrink-0" />
-                  <span className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">All contacts imported successfully!</span>
+                <div className="flex items-center gap-2 py-2.5 px-3 rounded-xl bg-light-primary dark:bg-primary-darker/30 border border-[var(--primary-opacity-20)] dark:border-primary-darker/40">
+                  <CheckCircle2 size={14} className="text-primary shrink-0" />
+                  <span className="text-xs text-primary dark:text-primary font-medium">All contacts imported successfully!</span>
                 </div>
               )}
 

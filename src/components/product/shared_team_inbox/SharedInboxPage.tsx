@@ -28,7 +28,7 @@ const SharedInboxPage = ({ pageData }: SharedInboxPageProps) => {
   const dc = isPageValid ? page.dynamic_content : {};
 
   const colorConfig = page?.color_config || {};
-  const primaryColor = colorConfig.primary_color || "#059669";
+  const primaryColor = colorConfig.primary_color || "#967205";
 
   const hero = {
     badge: dc.hero?.badge || "Omnichannel Team Hub",
@@ -78,8 +78,8 @@ const SharedInboxPage = ({ pageData }: SharedInboxPageProps) => {
   return (
     <div className="relative overflow-x-hidden bg-[#FCFCFD] text-slate-800 font-sans text-left">
 
-      <div className="absolute top-[2%] left-[-15%] w-[60vw] h-[60vw] rounded-full blur-[130px] pointer-events-none" style={{ backgroundColor: "#059669", opacity: 0.10 }} />
-      <div className="absolute top-[35%] right-[-10%] w-[50vw] h-[50vw] rounded-full blur-[120px] pointer-events-none" style={{ backgroundColor: "#059669", opacity: 0.10 }} />
+      <div className="absolute top-[2%] left-[-15%] w-[60vw] h-[60vw] rounded-full blur-[130px] pointer-events-none" style={{ backgroundColor: "var(--primary)", opacity: 0.10 }} />
+      <div className="absolute top-[35%] right-[-10%] w-[50vw] h-[50vw] rounded-full blur-[120px] pointer-events-none" style={{ backgroundColor: "var(--primary)", opacity: 0.10 }} />
 
       <div className="absolute inset-0 opacity-40 pointer-events-none -z-10" style={{ backgroundImage: "radial-gradient(ellipse at center, #e2e8f0 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
 

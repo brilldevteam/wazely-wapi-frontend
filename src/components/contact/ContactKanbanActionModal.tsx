@@ -37,7 +37,6 @@ const ContactKanbanActionModal: React.FC<ContactKanbanActionModalProps> = ({
   } = useGetContactKanbanStatusQuery(contact?._id, {
     skip: !isOpen || !contact?._id,
   });
-  console.log("statusData", statusData);
   const [handleAction, { isLoading: isSubmitting }] =
     useHandleContactKanbanActionMutation();
 

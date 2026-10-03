@@ -178,6 +178,7 @@ export interface RecentChatResponseItem {
     id: string;
     number: string;
     name: string;
+    phone_number?: string;
     avatar: string | null;
     labels: ContactLabel[];
     chat_status?: "open" | "resolved";
@@ -527,6 +528,7 @@ export interface MediaSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelect: (selectedMedia: Attachment[]) => void;
+  allowedTypes?: "image" | "video" | "all";
 }
 
 export interface MessageDateFilterModalProps {

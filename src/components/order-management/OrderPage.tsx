@@ -163,7 +163,7 @@ const OrderPage = () => {
           <Badge
             className={`capitalize font-semibold px-3 py-1 border ${
               isPaid
-                ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 hover:bg-emerald-500/20"
+                ? "bg-primary/10 text-primary border-primary/20 hover:bg-primary/20"
                 : "bg-rose-500/10 text-rose-600 border-rose-500/20 hover:bg-rose-500/20"
             }`}
           >
@@ -244,7 +244,7 @@ const OrderPage = () => {
                   handleSendPaymentLink(row._id);
                 }}
                 disabled={isSendingPaymentLink}
-                className="w-10 h-10 flex items-center justify-center p-2 rounded-lg bg-emerald-500/8 dark:bg-emerald-500/15 hover:bg-emerald-500/15 dark:hover:bg-emerald-500/25 text-emerald-600 dark:text-emerald-500 transition-all group"
+                className="w-10 h-10 flex items-center justify-center p-2 rounded-lg bg-primary/8 dark:bg-primary/15 hover:bg-primary/15 dark:hover:bg-primary/25 text-primary dark:text-primary transition-all group"
                 title={t("send_payment_link") || "Send Payment Link"}
               >
                 <CreditCard size={16} className="group-hover:scale-110 transition-transform" />

@@ -82,7 +82,6 @@ const FormBuilderList = () => {
       const response: any = await publishForm(id).unwrap();
       toast.success(response?.data?.message || "Form published to Meta successfully");
     } catch (error: any) {
-      console.log(error);
       toast.error(error?.data?.error || "Failed to publish form");
     }
   };

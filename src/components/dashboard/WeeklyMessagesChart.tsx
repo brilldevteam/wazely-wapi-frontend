@@ -95,9 +95,9 @@ const WeeklyMessagesChart = ({ data, isLoading }: WeeklyMessagesChartData) => {
             <p className="text-sm text-slate-400 font-bold">{t("traffic_analysis_desc")}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-950/30 rounded-full">
-          <Zap size={14} className="text-emerald-500" />
-          <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">{t("live_tracking")}</span>
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-light-primary dark:bg-primary-darker/30 rounded-full">
+          <Zap size={14} className="text-primary" />
+          <span className="text-[10px] font-black text-primary dark:text-primary uppercase tracking-wider">{t("live_tracking")}</span>
         </div>
       </div>
 

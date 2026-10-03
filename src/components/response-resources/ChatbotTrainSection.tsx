@@ -80,13 +80,8 @@ const ChatbotTrainSection: React.FC<ChatbotTrainSectionProps> = ({ chatbot, onBa
         knowledgeType: activeType,
       };
 
-      if (activeType === "q&a") {
-        payload.training_data = trainingData.filter((qa) => qa.question.trim() || qa.answer.trim());
-        payload.raw_training_text = "";
-      } else {
-        payload.raw_training_text = rawText;
-        payload.training_data = [];
-      }
+      payload.training_data = trainingData.filter((qa) => qa.question.trim() || qa.answer.trim());
+      payload.raw_training_text = rawText;
 
       await trainChatbot({
         id: chatbot._id,

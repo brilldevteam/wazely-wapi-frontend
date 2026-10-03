@@ -181,9 +181,9 @@ const LocationPickerModal = ({
               placeholder="Search for a place or address..."
               className="pl-10 sm:pl-12 pr-10 h-10 sm:h-12 text-sm sm:text-base bg-(--input-color) dark:bg-(--page-body-bg) border-slate-100 dark:border-(--card-border-color) rounded-lg focus-visible:ring-primary transition-all font-medium"
             />
-            <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 sm:w-5 sm:h-5 group-focus-within:text-emerald-500 transition-colors" />
+            <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 sm:w-5 sm:h-5 group-focus-within:text-primary transition-colors" />
             {isSearching && (
-              <Loader2 className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-emerald-500 w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+              <Loader2 className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-primary w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
             )}
           </form>
 
@@ -226,8 +226,8 @@ const LocationPickerModal = ({
           {/* Location Info */}
           <div className="p-3 sm:p-4 bg-slate-50 dark:bg-(--table-hover) rounded-lg border border-slate-100 dark:border-(--card-border-color) transition-all">
             <div className="flex items-start gap-2 sm:gap-3">
-              <div className="mt-0.5 sm:mt-1 p-1.5 sm:p-2 bg-emerald-100 dark:bg-(--table-hover) rounded-lg shrink-0">
-                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary dark:text-emerald-400" />
+              <div className="mt-0.5 sm:mt-1 p-1.5 sm:p-2 bg-[var(--primary-opacity-20)] dark:bg-(--table-hover) rounded-lg shrink-0">
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary dark:text-primary" />
               </div>
               <div className="flex-1 space-y-1 min-w-0">
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
@@ -266,7 +266,7 @@ const LocationPickerModal = ({
             <Button
               onClick={handleSendLocation}
               disabled={!position || isSearching || isReverseGeocoding}
-              className="flex-1 sm:flex-2 h-10 sm:h-12 text-sm sm:text-base rounded-lg bg-primary text-white font-bold shadow-md px-3 sm:px-4 py-4 sm:py-5 shadow-emerald-500/20 flex items-center justify-center gap-2"
+              className="flex-1 sm:flex-2 h-10 sm:h-12 text-sm sm:text-base rounded-lg bg-primary text-white font-bold shadow-md px-3 sm:px-4 py-4 sm:py-5 shadow-primary/20 flex items-center justify-center gap-2"
             >
               <SendIcon className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
               <span className="hidden xs:inline">{t("share_location")}</span>

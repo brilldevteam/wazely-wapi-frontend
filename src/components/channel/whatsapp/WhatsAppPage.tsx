@@ -177,7 +177,15 @@ export default function WhatsAppPage({ pageData }: WhatsAppPageProps) {
   };
 
   return (
-    <div className="relative overflow-hidden bg-white text-slate-800">
+    <div 
+      className="relative overflow-hidden bg-white text-slate-800"
+      style={{
+        "--primary": primaryColor,
+        "--primary-rgb": "5, 150, 105",
+        "--light-primary": "#05966926",
+        "--primary-opacity-20": "rgba(5, 150, 105, 0.2)",
+      } as React.CSSProperties}
+    >
       <div
         className="absolute top-[3%] left-[-15%] w-[45vw] h-[45vw] rounded-full blur-[130px] pointer-events-none"
         style={{ backgroundColor: primaryColor, opacity: 0.08 }}

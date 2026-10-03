@@ -1,5 +1,5 @@
 ​import { MenuItem } from "@/src/types/components";
-import { BookImage, BookKey, BotMessageSquare, Cable, ChartSpline, CheckSquare, ClipboardClock, Columns, Contact, CreditCard, Database, FileImage, Form, FormInput, GitBranch, HatGlasses, Image as ImageIcon, Import, Instagram, LayoutDashboard, LayoutTemplate, ListOrdered, MailCheck, Megaphone, Menu, MessageCircle, MessageSquare, MessageSquareText, Navigation, Package, Phone, PhoneCall, PlayCircle, Plug, PlugZap, Receipt, Settings, ShieldUser, ShoppingBag, Signpost, SquareKanban, Tags, Target, Timer, UserRoundPen, Users, Webhook, Workflow, Wrench, Zap, Send, Facebook, UserStar, Video, Sparkles, XIcon, Twitter, ListChecks } from "lucide-react";
+import { BookImage, BookKey, BotMessageSquare, Cable, ChartSpline, CheckSquare, ClipboardClock, Columns, Contact, CreditCard, Database, FileImage, Form, FormInput, GitBranch, HatGlasses, Image as ImageIcon, Import, Instagram, LayoutDashboard, LayoutTemplate, ListOrdered, MailCheck, Megaphone, Menu, MessageCircle, MessageSquare, MessageSquareText, Navigation, Package, Phone, PhoneCall, PlayCircle, Plug, PlugZap, Receipt, Settings, ShieldUser, ShoppingBag, Signpost, SquareKanban, Tags, Target, Timer, UserRoundPen, Users, Webhook, Workflow, Wrench, Zap, Send, Facebook, UserStar, Video, Sparkles, XIcon, Twitter, ListChecks, Link2, Landmark } from "lucide-react";
 import { ROUTES } from "../constants";
 import { TwitterIcon } from "../utils/customIcon";
 
@@ -91,6 +91,30 @@ export const MENUITEMS: MenuItem[] = [
     section: "facebook_sidebar_title",
     order: 1,
     permission: "view.waba_configuration",
+  },
+  {
+    icon: <Link2 size={20} />,
+    label: "connect_platforms",
+    path: ROUTES.SocialMediaConnect,
+    section: "social_media_sidebar_title",
+    order: 1,
+    permission: "view.social_media_connections",
+  },
+  {
+    icon: <Send size={20} />,
+    label: "social_media_publish",
+    path: ROUTES.SocialMediaPublish,
+    section: "social_media_sidebar_title",
+    order: 2,
+    permission: "publish.social_publish",
+  },
+  {
+    icon: <ListChecks size={20} />,
+    label: "social_media_activity",
+    path: ROUTES.SocialMediaActivity,
+    section: "social_media_sidebar_title",
+    order: 3,
+    permission: "view.social_publish",
   },
   // {
   //   icon: <TwitterIcon className="h-4 w-4" />,
@@ -422,6 +446,7 @@ export const MENUITEMS: MenuItem[] = [
     section: "marketing_sidebar_title",
     order: 5,
     permission: "view.ecommerce_webhooks",
+    featureKey: "whatsapp_webhook",
   },
 
   // 8. TOOLS
@@ -473,11 +498,19 @@ export const MENUITEMS: MenuItem[] = [
     permission: "view.subscriptions",
   },
   {
+    icon: <Landmark size={20} />,
+    label: "billing_history_sidebar_label",
+    path: ROUTES.BillingHistory,
+    section: "billing_settings_sidebar_title",
+    order: 2,
+    permission: "view.subscriptions",
+  },
+  {
     icon: <CreditCard size={20} />,
     label: "payment_gateway",
     path: ROUTES.PaymentGateway,
     section: "billing_settings_sidebar_title",
-    order: 2,
+    order: 3,
     permission: "view.payment_gateways",
   },
   {
@@ -485,7 +518,7 @@ export const MENUITEMS: MenuItem[] = [
     label: "payment_transactions_title",
     path: ROUTES.PaymentTransactions,
     section: "billing_settings_sidebar_title",
-    order: 3,
+    order: 4,
     permission: "view.payment_gateways",
   },
   {
@@ -493,7 +526,7 @@ export const MENUITEMS: MenuItem[] = [
     label: "setup",
     path: ROUTES.AIConfig,
     section: "billing_settings_sidebar_title",
-    order: 4,
+    order: 5,
     permission: "view.user_settings",
     featureKey: "ai_prompts",
   },

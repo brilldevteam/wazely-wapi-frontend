@@ -84,7 +84,7 @@ const ManageProducts = () => {
       accessorKey: "price",
       cell: (row) => (
         <div className="flex flex-col">
-          <span className="font-bold text-slate-900 dark:text-emerald-400">{typeof row.price === "string" ? row.price : `${row.currency} ${(row.price / 100).toLocaleString(undefined, { minimumFractionDigits: 2 })}`}</span>
+          <span className="font-bold text-slate-900 dark:text-primary">{typeof row.price === "string" ? row.price : `${row.currency} ${(row.price / 100).toLocaleString(undefined, { minimumFractionDigits: 2 })}`}</span>
           {row.sale_price && Number(row.sale_price) < Number(row.price) && <span className="text-[10px] text-slate-400 line-through">{typeof row.sale_price === "string" ? row.sale_price : `${row.currency} ${(row.sale_price / 100).toLocaleString()}`}</span>}
         </div>
       ),
@@ -94,8 +94,8 @@ const ManageProducts = () => {
       accessorKey: "availability",
       cell: (row) => (
         <div className="flex items-center gap-2">
-          <div className={`h-1.5 w-1.5 rounded-full ${row.availability === "in stock" ? "bg-emerald-500 animate-pulse" : "bg-slate-300"}`} />
-          <Badge variant="outline" className={`capitalize text-[10px] font-bold border-none px-2 py-0 h-5 ${row.availability === "in stock" ? "bg-emerald-50 text-primary dark:bg-emerald-900/20 dark:text-emerald-400" : "bg-slate-100 text-slate-600 dark:bg-(--dark-body) dark:text-gray-500"}`}>
+          <div className={`h-1.5 w-1.5 rounded-full ${row.availability === "in stock" ? "bg-primary animate-pulse" : "bg-slate-300"}`} />
+          <Badge variant="outline" className={`capitalize text-[10px] font-bold border-none px-2 py-0 h-5 ${row.availability === "in stock" ? "bg-light-primary text-primary dark:bg-primary-darker/20 dark:text-primary" : "bg-slate-100 text-slate-600 dark:bg-(--dark-body) dark:text-gray-500"}`}>
             {row.availability}
           </Badge>
         </div>

@@ -99,7 +99,7 @@ const SubmissionsPage = () => {
       viewed: { variant: "secondary", color: "bg-indigo-500/10 text-indigo-600 border-indigo-200 dark:border-(--card-border-color)" },
       in_progress: { variant: "outline", color: "bg-amber-500/10 text-amber-600 border-amber-200 dark:border-(--card-border-color)" },
       contacted: { variant: "outline", color: "bg-cyan-500/10 text-cyan-600 border-cyan-200  dark:border-(--card-border-color)" },
-      qualified: { variant: "default", color: "bg-emerald-500/10 text-emerald-600 border-emerald-200  dark:border-(--card-border-color)" },
+      qualified: { variant: "default", color: "bg-primary/10 text-primary border-[var(--primary-opacity-30)]  dark:border-(--card-border-color)" },
       closed: { variant: "secondary", color: "bg-slate-500/10 text-slate-600 border-slate-200  dark:border-(--card-border-color)" },
       failed: { variant: "destructive", color: "bg-red-500/10 text-red-600 border-red-200  dark:border-(--card-border-color)" },
     };
@@ -161,7 +161,7 @@ const SubmissionsPage = () => {
           <Button variant="outline" size="icon" title="View Details" className="h-10 w-10 dark:bg-(--page-body-bg) shadow-xs text-indigo-600 hover:text-indigo-600 hover:bg-indigo-50 border-none" onClick={() => handleViewDetails(row._id || row.id)}>
             <Eye size={14} />
           </Button>
-          {/* <Button variant="outline" size="icon" title="Update Status" className="h-8 w-8 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 border-none" onClick={() => handleOpenStatusModal(row._id || row.id, row.status)}>
+          {/* <Button variant="outline" size="icon" title="Update Status" className="h-8 w-8 text-slate-500 hover:text-primary hover:bg-light-primary border-none" onClick={() => handleOpenStatusModal(row._id || row.id, row.status)}>
             <Clock size={14} />
           </Button> */}
           <Button

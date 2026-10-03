@@ -38,7 +38,7 @@ export const CampaignWizardSidebar = ({
               className={cn(
                 "w-10 h-10 rounded-lg flex items-center justify-center shrink-0 font-bold transition-all",
                 isCompleted
-                  ? "bg-emerald-500 text-white"
+                  ? "bg-primary text-white"
                   : isActive
                     ? "bg-primary text-white scale-110 shadow-lg shadow-primary/20"
                     : "bg-slate-100 dark:bg-(--dark-sidebar) text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700",

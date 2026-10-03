@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { ROUTES } from "@/src/constants";
 import { Badge } from "@/src/elements/ui/badge";
+import { Button } from "@/src/elements/ui/button";
 import {
   Select,
   SelectContent,
@@ -12,8 +14,8 @@ import {
 import {
   useDeleteTemplateMutation,
   useGetTemplatesQuery,
-  useSyncTemplatesStatusMutation,
   usePublishTemplateMutation,
+  useSyncTemplatesStatusMutation,
 } from "@/src/redux/api/templateApi";
 import { useGetConnectionsQuery } from "@/src/redux/api/whatsappApi";
 import CommonHeader from "@/src/shared/CommonHeader";
@@ -21,7 +23,7 @@ import ConfirmModal from "@/src/shared/ConfirmModal";
 import { Template } from "@/src/types/components";
 import { MessageTemplatesProps } from "@/src/types/components/template";
 import { WABAConnection } from "@/src/types/whatsapp";
-import { Database, Loader2, Settings2, Plus } from "lucide-react";
+import { Database, Loader2, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -29,9 +31,6 @@ import { toast } from "sonner";
 import { SyncTemplateModal } from "./list/SyncTemplateModal";
 import { TemplateCard } from "./list/TemplateCard";
 import { TemplatePreviewModal } from "./list/TemplatePreviewModal";
-import { TemplateSettingsModal } from "./list/TemplateSettingsModal";
-import { ROUTES } from "@/src/constants";
-import { Button } from "@/src/elements/ui/button";
 
 const getPlatformColor = (platform?: string) => {
   switch (platform) {
@@ -42,8 +41,9 @@ const getPlatformColor = (platform?: string) => {
     case "instagram":
       return "#E1306C";
     case "whatsapp":
+      return "var(--primary)";
     default:
-      return "#059669";
+      return "var(--primary)";
   }
 };
 
@@ -151,7 +151,7 @@ const MessageTemplates = ({
     switch (s) {
       case "APPROVED":
         return (
-          <Badge className="bg-emerald-50 text-primary border-emerald-100 dark:border-primary dark:bg-transparent hover:bg-emerald-50 px-2 py-0.5 text-[10px] font-bold">
+          <Badge className="bg-light-primary text-primary border-[var(--primary-opacity-20)] dark:border-primary dark:bg-transparent hover:bg-light-primary px-2 py-0.5 text-[10px] font-bold">
             APPROVED
           </Badge>
         );

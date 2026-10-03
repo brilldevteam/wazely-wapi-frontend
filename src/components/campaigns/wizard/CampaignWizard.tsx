@@ -65,7 +65,7 @@ const CampaignWizard = ({ platform: platformProp }: CampaignWizardProps) => {
       template_id: "",
       platform: platformParam,
       variables_mapping: {},
-      recipient_type: isDirectMode ? "specific_contacts" : "all_contacts",
+      recipient_type: "specific_contacts",
       specific_contacts: isDirectMode && contactId ? [contactId] : [],
       tag_ids: [],
       segment_ids: [],

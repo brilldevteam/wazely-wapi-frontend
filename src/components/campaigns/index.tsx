@@ -176,6 +176,7 @@ const CampaignsPage = ({ platform }: CampaignsPageProps) => {
           `Campaign ${!pauseCampaignItem.isPaused ? "paused" : "resumed"} successfully`,
         );
         setPauseCampaignItem(null);
+        refetch();
       } catch (error: any) {
         toast.error(
           error?.data?.error ||

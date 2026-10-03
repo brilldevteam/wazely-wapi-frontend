@@ -32,7 +32,7 @@ export function UserMenu({ user, isOpen, onToggle, onClose, onLogout, initials }
             </div>
           </div>
           <div className="p-1">
-            <Button onClick={onLogout} className="flex items-center gap-2.5 w-full px-3 py-2.5 text-sm text-slate-600 dark:text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:text-red-400 dark:hover:bg-red-900/15 rounded-lg transition-colors">
+            <Button onClick={onLogout} className="flex items-center gap-2.5 w-full px-3 py-2.5 bg-destructive/10 text-destructive hover:bg-destructive hover:text-white text-sm rounded-lg transition-colors">
               <LogOut size={14} />
               Sign out
             </Button>

@@ -23,7 +23,7 @@ const CampaignStatsSection = ({ data, isLoading, filters }: CampaignStatsSection
   const STATS_CONFIG = [
     { label: t("total_campaigns_label"), key: "totalCampaignsCreated" as const, icon: <Megaphone size={14} />, color: "text-orange-500" },
     { label: t("messages_sent_label"), key: "totalSent" as const, icon: <Send size={14} />, color: "text-primary" },
-    { label: t("delivered_label"), key: "messagesDelivered" as const, icon: <CheckCircle2 size={14} />, color: "text-emerald-500" },
+    { label: t("delivered_label"), key: "messagesDelivered" as const, icon: <CheckCircle2 size={14} />, color: "text-primary" },
     { label: t("read_label"), key: "messagesRead" as const, icon: <Eye size={14} />, color: "text-violet-500" },
   ];
 

@@ -113,7 +113,7 @@ const SetupRecurringModal: React.FC<SetupRecurringModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-xl! max-w-[calc(100%-2rem)]! max-h-[90vh] flex flex-col p-0! overflow-auto no-scrollbar dark:bg-(--card-color) gap-0 border-0 rounded-lg shadow-2xl">
+      <DialogContent className="sm:max-w-xl! max-w-[calc(100%-2rem)]! max-h-[90vh] flex flex-col p-0! overflow-auto no-scrollbar dark:bg-(--dark-body) gap-0 border-0 rounded-lg shadow-2xl">
         <DialogHeader className="sm:p-6 p-4 bg-white dark:bg-(--card-color) border-b border-slate-100 dark:border-(--card-border-color) shrink-0">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-primary/10 rounded-lg">
@@ -238,7 +238,7 @@ const SetupRecurringModal: React.FC<SetupRecurringModalProps> = ({
                         }
                       }}
                     >
-                      <SelectTrigger className="h-12 py-5.5 font-semibold text-sm border-[var(--primary-opacity-30)] bg-white dark:bg-zinc-950">
+                      <SelectTrigger className="h-12 py-5.5 font-semibold text-sm border-primary/30 bg-white dark:bg-zinc-950">
                         <SelectValue placeholder="Select a cron interval" />
                       </SelectTrigger>
                       <SelectContent>
@@ -264,7 +264,7 @@ const SetupRecurringModal: React.FC<SetupRecurringModalProps> = ({
                     placeholder="e.g. 0 9 * * 1 (Every Monday at 9:00 AM)"
                     value={cronExpression}
                     onChange={(e) => setCronExpression(e.target.value)}
-                    className="h-12 font-bold text-sm border-[var(--primary-opacity-30)] bg-white dark:bg-zinc-950"
+                    className="h-12 font-bold text-sm border-primary/30 bg-white dark:bg-zinc-950"
                   />
                   <p className="text-[11px] text-slate-400 font-medium ml-1">
                     Format: minute hour day-of-month month day-of-week. Use standard cron syntax.

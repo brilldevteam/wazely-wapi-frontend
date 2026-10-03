@@ -97,7 +97,7 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({
         credentials: { ...credentials },
       };
 
-      if (gateway === "paypal" && !payload.credentials.mode) {
+      if ((gateway === "paypal" || gateway === "midtrans") && !payload.credentials.mode) {
         payload.credentials.mode = "sandbox";
       }
 
@@ -214,6 +214,102 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({
     </>
   );
 
+  const renderMidtransFields = () => (
+    <>
+      <div className="grid gap-2">
+        <Label htmlFor="merchant_id">{t("gateway_merchant_id", "Merchant ID")}</Label>
+        <Input
+          className="h-11"
+          id="merchant_id"
+          value={credentials.merchant_id || ""}
+          onChange={(e) => handleCredentialChange("merchant_id", e.target.value)}
+          placeholder="Merchant ID"
+          disabled={isLoading}
+        />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="client_key">{t("gateway_client_key", "Client Key")}</Label>
+        <Input
+          className="h-11"
+          id="client_key"
+          value={credentials.client_key || ""}
+          onChange={(e) => handleCredentialChange("client_key", e.target.value)}
+          placeholder="Client Key"
+          disabled={isLoading}
+        />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="server_key">{t("gateway_server_key", "Server Key")}</Label>
+        <Input
+          className="h-11"
+          id="server_key"
+          type="password"
+          value={credentials.server_key || ""}
+          onChange={(e) => handleCredentialChange("server_key", e.target.value)}
+          placeholder={editData ? "••••••••" : "Server Key"}
+          disabled={isLoading}
+        />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="mode">{t("gateway_mode")}</Label>
+        <Select
+          value={credentials.mode || "sandbox"}
+          onValueChange={(value) => handleCredentialChange("mode", value)}
+          disabled={isLoading}
+        >
+          <SelectTrigger id="mode">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="dark:bg-(--card-color)">
+            <SelectItem className="dark:hover:bg-(--table-hover)" value="sandbox">
+              {t("gateway_mode_sandbox")}
+            </SelectItem>
+            <SelectItem className="dark:hover:bg-(--table-hover)" value="live">
+              {t("gateway_mode_live")}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </>
+  );
+
+  const renderMollieFields = () => (
+    <>
+      <div className="grid gap-2">
+        <Label htmlFor="api_key">{t("gateway_api_key", "API Key")}</Label>
+        <Input
+          className="h-11"
+          id="api_key"
+          type="password"
+          value={credentials.api_key || ""}
+          onChange={(e) => handleCredentialChange("api_key", e.target.value)}
+          placeholder={editData ? "••••••••" : "test_..."}
+          disabled={isLoading}
+        />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="mode">{t("gateway_mode")}</Label>
+        <Select
+          value={credentials.mode || "sandbox"}
+          onValueChange={(value) => handleCredentialChange("mode", value)}
+          disabled={isLoading}
+        >
+          <SelectTrigger id="mode">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="dark:bg-(--card-color)">
+            <SelectItem className="dark:hover:bg-(--table-hover)" value="sandbox">
+              {t("gateway_mode_sandbox")}
+            </SelectItem>
+            <SelectItem className="dark:hover:bg-(--table-hover)" value="live">
+              {t("gateway_mode_live")}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </>
+  );
+
   const renderHelpSection = () => {
     let helpText = "";
     let dashboardUrl = "";
@@ -231,6 +327,14 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({
       helpText = t("gateway_info_paypal");
       dashboardUrl = "https://developer.paypal.com/dashboard/";
       providerName = "PayPal";
+    } else if (gateway === "midtrans") {
+      helpText = t("gateway_info_midtrans", "Configure your Midtrans credentials here.");
+      dashboardUrl = "https://dashboard.midtrans.com/";
+      providerName = "Midtrans";
+    } else if (gateway === "mollie") {
+      helpText = t("gateway_info_mollie", "Configure your Mollie API key here.");
+      dashboardUrl = "https://my.mollie.com/dashboard/";
+      providerName = "Mollie";
     }
 
     if (!helpText) return null;
@@ -280,6 +384,10 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({
       return !!(credentials.publishable_key && credentials.secret_key);
     if (gateway === "paypal")
       return !!(credentials.client_id && credentials.client_secret);
+    if (gateway === "midtrans")
+      return !!(credentials.merchant_id && credentials.client_key && credentials.server_key);
+    if (gateway === "mollie")
+      return !!credentials.api_key;
     return false;
   };
 
@@ -336,6 +444,18 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({
                 >
                   {t("gateway_paypal")}
                 </SelectItem>
+                <SelectItem
+                  className="dark:hover:bg-(--table-hover)"
+                  value="midtrans"
+                >
+                  Midtrans
+                </SelectItem>
+                <SelectItem
+                  className="dark:hover:bg-(--table-hover)"
+                  value="mollie"
+                >
+                  Mollie
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -343,6 +463,8 @@ const PaymentGatewayModal: React.FC<PaymentGatewayModalProps> = ({
           {gateway === "razorpay" && renderRazorpayFields()}
           {gateway === "stripe" && renderStripeFields()}
           {gateway === "paypal" && renderPaypalFields()}
+          {gateway === "midtrans" && renderMidtransFields()}
+          {gateway === "mollie" && renderMollieFields()}
 
           {renderHelpSection()}
         </div>

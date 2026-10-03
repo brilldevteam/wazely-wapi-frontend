@@ -32,7 +32,7 @@ const WabaStatusCard = () => {
   const enabledMethods = setting?.connection_method || ["manual", "qr_scan", "embedded_signup"];
 
   const connectionMethods = [
-    { id: "embedded_signup", label: t("embedded_connection"), icon: <ShieldCheck size={20} />, color: "text-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-500/10" },
+    { id: "embedded_signup", label: t("embedded_connection"), icon: <ShieldCheck size={20} />, color: "text-primary", bg: "bg-light-primary dark:bg-primary/10" },
     { id: "qr_scan", label: t("connect_via_qr"), icon: <QrCode size={20} />, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-500/10" },
     { id: "manual", label: t("manual_connection"), icon: <Settings2 size={20} />, color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-500/10" },
   ].filter((method) => enabledMethods.includes(method.id));
@@ -40,15 +40,15 @@ const WabaStatusCard = () => {
   return (
     <>
       <Card className="group h-full relative overflow-hidden transition-all duration-500 border border-slate-100 dark:border-(--card-border-color) bg-white dark:bg-(--card-color) shadow-sm hover:shadow-xl hover:shadow-primary/5 rounded-lg">
-        <div className={`absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.08] transition-all duration-700 rotate-12 group-hover:rotate-0 scale-150 ${isConnected ? "text-emerald-500" : "text-amber-500"}`}>
+        <div className={`absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.08] transition-all duration-700 rotate-12 group-hover:rotate-0 scale-150 ${isConnected ? "text-primary" : "text-amber-500"}`}>
           <MessageCircle size={120} />
         </div>
 
         <CardContent className="p-4 sm:p-6 flex flex-col justify-between relative z-10">
           <div className="space-y-4">
             <div className="flex justify-between items-start">
-              <div className={`p-3.5 rounded-lg shadow-sm border ${isConnected ? "bg-emerald-50 dark:bg-emerald-500/10 text-primary border-emerald-100/50 dark:border-emerald-500/20" : "bg-amber-50 dark:bg-amber-500/10 text-amber-600 border-amber-100/50 dark:border-amber-500/20"} transition-all group-hover:scale-105 duration-500`}>{isConnected ? <ShieldCheck size={28} /> : <Zap size={28} />}</div>
-              <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.15em] border ${isConnected ? "bg-primary/10 text-primary border-emerald-500/20" : "bg-amber-500/10 text-amber-600 border-amber-500/20"}`}>{isConnected ? t("verified") : t("action_required")}</div>
+              <div className={`p-3.5 rounded-lg shadow-sm border ${isConnected ? "bg-light-primary dark:bg-primary/10 text-primary border-[var(--primary-opacity-20)]/50 dark:border-primary/20" : "bg-amber-50 dark:bg-amber-500/10 text-amber-600 border-amber-100/50 dark:border-amber-500/20"} transition-all group-hover:scale-105 duration-500`}>{isConnected ? <ShieldCheck size={28} /> : <Zap size={28} />}</div>
+              <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.15em] border ${isConnected ? "bg-primary/10 text-primary border-primary/20" : "bg-amber-500/10 text-amber-600 border-amber-500/20"}`}>{isConnected ? t("verified") : t("action_required")}</div>
             </div>
 
             <div className="space-y-4">
