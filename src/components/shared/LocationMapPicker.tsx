@@ -43,7 +43,7 @@ const LocationMapPicker: React.FC<LocationMapPickerProps> = ({
       try {
         const res = await fetch(
           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,
-          { headers: { "User-Agent": "CRM-Chat-App" } },
+          { headers: { "User-Agent": "CRM-Chat-App" }, referrerPolicy: "strict-origin-when-cross-origin" },
         );
         const data = await res.json();
         const displayName: string =
@@ -91,7 +91,7 @@ const LocationMapPicker: React.FC<LocationMapPickerProps> = ({
     try {
       const res = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=1`,
-        { headers: { "User-Agent": "CRM-Chat-App" } },
+        { headers: { "User-Agent": "CRM-Chat-App" }, referrerPolicy: "strict-origin-when-cross-origin" },
       );
       const data = await res.json();
       if (data && data.length > 0) {

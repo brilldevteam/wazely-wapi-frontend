@@ -66,7 +66,7 @@ const LocationPickerModal = ({
     try {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,
-        { headers: { "User-Agent": "CRM-Chat-App" } },
+        { headers: { "User-Agent": "CRM-Chat-App" }, referrerPolicy: "strict-origin-when-cross-origin" },
       );
       const data = await response.json();
       setAddress(data.display_name || `${lat.toFixed(6)}, ${lng.toFixed(6)}`);
@@ -96,7 +96,7 @@ const LocationPickerModal = ({
     try {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=1`,
-        { headers: { "User-Agent": "CRM-Chat-App" } },
+        { headers: { "User-Agent": "CRM-Chat-App" }, referrerPolicy: "strict-origin-when-cross-origin" },
       );
       const data = await response.json();
       if (data && data.length > 0) {
@@ -197,7 +197,8 @@ const LocationPickerModal = ({
             >
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+                referrerPolicy="strict-origin-when-cross-origin"
               />
               <ChangeView center={position} />
               <MapEvents onLocationSelect={handleLocationSelect} />

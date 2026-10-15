@@ -100,7 +100,7 @@ const GeoLocationSelector: React.FC<GeoLocationSelectorProps> = ({
 
         const response = await fetch(
           `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(countryName)}&limit=1`,
-          { headers: { "User-Agent": "CRM-Ads-Wizard" } },
+          { headers: { "User-Agent": "CRM-Ads-Wizard" }, referrerPolicy: "strict-origin-when-cross-origin" },
         );
         const data = await response.json();
         if (data && data.length > 0) {
@@ -125,7 +125,7 @@ const GeoLocationSelector: React.FC<GeoLocationSelectorProps> = ({
     try {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=3&addressdetails=1`,
-        { headers: { "User-Agent": "CRM-Ads-Wizard" } },
+        { headers: { "User-Agent": "CRM-Ads-Wizard" }, referrerPolicy: "strict-origin-when-cross-origin" },
       );
       const data = await response.json();
       const countryCode = data?.address?.country_code?.toUpperCase();
@@ -250,7 +250,8 @@ const GeoLocationSelector: React.FC<GeoLocationSelectorProps> = ({
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+            referrerPolicy="strict-origin-when-cross-origin"
           />
           <ChangeView center={mapCenter} zoom={mapZoom} />
           <MapEvents onMapClick={handleMapClick} />
