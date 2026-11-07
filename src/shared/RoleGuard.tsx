@@ -55,6 +55,12 @@ const RoleGuard: React.FC<RoleGuardProps> = ({ children }) => {
 
     if (isLoadingPermissions) return null;
 
+    // A failed permissions request means "unknown", not "denied": never
+    // redirect the user away because of it.
+    if (isPermissionsError) {
+      return true;
+    }
+
     const effectivePermissions = permissionsRes?.data || permissions || [];
     const flatPerms: string[] = [];
     effectivePermissions.forEach((group: any) => {
@@ -70,10 +76,6 @@ const RoleGuard: React.FC<RoleGuardProps> = ({ children }) => {
         return true;
       }
       return null;
-    }
-
-    if (isPermissionsError) {
-      return true;
     }
 
     const permitted = isRoutePermitted(pathname, flatPerms);

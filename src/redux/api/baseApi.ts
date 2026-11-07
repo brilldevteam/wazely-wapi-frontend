@@ -17,7 +17,12 @@ const getCachedSession = async () => {
 
   if (sessionPromise) return sessionPromise;
 
-  sessionPromise = getSession().finally(() => {
+  sessionPromise = getSession().then((session) => {
+    // Don't keep a session without a token (e.g. right after login), or the
+    // next requests go out unauthenticated for up to 2 seconds.
+    if (!session?.accessToken) sessionPromise = null;
+    return session;
+  }).finally(() => {
     setTimeout(() => {
       sessionPromise = null;
     }, 2000);
