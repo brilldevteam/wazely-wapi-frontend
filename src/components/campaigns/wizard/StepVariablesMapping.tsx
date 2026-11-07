@@ -257,6 +257,7 @@ const StepVariablesMapping = ({ formik }: { formik: FormikProps<CampaignFormValu
           <SectionCard>
             <SectionHeading icon={<MapPin className="text-primary w-5 h-5" />} label={t("campaign_wizard_location_info_title")} sub={t("campaign_wizard_location_info_desc")} />
             <LocationMapPicker
+              required
               value={{
                 latitude: formik.values.location_data?.latitude || "",
                 longitude: formik.values.location_data?.longitude || "",

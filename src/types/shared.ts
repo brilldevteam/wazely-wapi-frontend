@@ -153,6 +153,7 @@ export interface LocationData {
 export interface LocationMapPickerProps {
   value: LocationData;
   onChange: (data: LocationData) => void;
+  required?: boolean;
 }
 
 export interface TagInputProps {
