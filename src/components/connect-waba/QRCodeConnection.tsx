@@ -11,7 +11,7 @@ import { useAppSelector } from "@/src/redux/hooks";
 import { QRCodeConnectionProps } from "@/src/types/wabaConfiguration";
 import { AlertCircle, CheckCircle2, Loader2, QrCode, RefreshCw, Smartphone } from "lucide-react";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import InfoModal from "../common/InfoModal";
@@ -35,6 +35,54 @@ const QRCodeConnection = ({ isDisabled }: QRCodeConnectionProps) => {
   const connectionStatus = latestWorkspace?.connection_status || selectedWorkspace?.connection_status;
   const currentWabaId = latestWorkspace?.waba_id || selectedWorkspace?.waba_id;
   const isConnected = isBaileys ? !!currentWabaId && connectionStatus === "connected" : !!currentWabaId;
+  const existingInstanceId = isBaileys ? wabaId || currentWabaId : null;
+
+  // The server starts WhatsApp in the background, so the QR code is usually not
+  // ready on the first request. Keep asking for up to 60 seconds instead of
+  // showing an error straight away.
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const stopPolling = useCallback(() => {
+    if (pollRef.current) {
+      clearInterval(pollRef.current);
+      pollRef.current = null;
+    }
+  }, []);
+  useEffect(() => stopPolling, [stopPolling]);
+
+  const waitForQR = useCallback(
+    async (id: string) => {
+      stopPolling();
+      const startedAt = Date.now();
+      const check = async () => {
+        try {
+          const res = await getQRCode(id).unwrap();
+          if (res?.data?.qr_code || res?.data?.status === "connected") {
+            stopPolling();
+            refetchWorkspaces();
+            return true;
+          }
+        } catch (error: any) {
+          // A 4xx means the request itself is wrong (e.g. connection not found): stop and say so.
+          if (typeof error?.status === "number" && error.status < 500) {
+            stopPolling();
+            setStatus("failed");
+            toast.error(error?.data?.error || error?.data?.message || t("failed_fetch_qr"));
+            return true;
+          }
+        }
+        if (Date.now() - startedAt > 60000) {
+          stopPolling();
+          setStatus("failed");
+          toast.error(t("failed_fetch_qr"));
+          return true;
+        }
+        return false;
+      };
+      if (await check()) return;
+      pollRef.current = setInterval(check, 2000);
+    },
+    [getQRCode, refetchWorkspaces, stopPolling, t]
+  );
 
   const handleGenerateQR = useCallback(async () => {
     try {
@@ -44,33 +92,8 @@ const QRCodeConnection = ({ isDisabled }: QRCodeConnectionProps) => {
       const targetWabaId = wabaId || latestWorkspace?.waba_id || selectedWorkspace?.waba_id;
 
       if (isBaileys && targetWabaId) {
-        try {
-          const res = await getQRCode(targetWabaId).unwrap();
-          if (res?.success) {
-            if (res?.data?.status === 'generating' || (!res?.data?.qr_code && res?.data?.status !== 'connected')) {
-              const poll = setInterval(async () => {
-                try {
-                  const pollRes = await getQRCode(targetWabaId).unwrap();
-                  if (pollRes?.data?.qr_code || pollRes?.data?.status === 'connected') {
-                    clearInterval(poll);
-                    refetchWorkspaces();
-                  }
-                } catch {
-                  clearInterval(poll);
-                }
-              }, 2000);
-              setTimeout(() => clearInterval(poll), 60000);
-              return;
-            }
-            refetchWorkspaces();
-            return;
-          }
-        } catch (error: any) {
-          console.error("Direct QR fetch failed:", error);
-          setStatus("failed");
-          toast.error(error?.data?.message || error?.message || t("failed_fetch_qr"));
-          return;
-        }
+        await waitForQR(targetWabaId);
+        return;
       }
 
       if (!isBaileys || !targetWabaId) {
@@ -93,13 +116,7 @@ const QRCodeConnection = ({ isDisabled }: QRCodeConnectionProps) => {
           const newWabaId = response.data.waba_id;
           setWabaId(newWabaId);
 
-          const qrRes = await getQRCode(newWabaId).unwrap();
-          if (qrRes?.success && qrRes.data?.qr_code) {
-            refetchWorkspaces();
-          } else {
-            setStatus("failed");
-            toast.error(t("qr_fetch_failed_after_connect"));
-          }
+          await waitForQR(newWabaId);
         } else {
           throw new Error(response.message || t("failed_get_connection_id"));
         }
@@ -108,7 +125,7 @@ const QRCodeConnection = ({ isDisabled }: QRCodeConnectionProps) => {
       setStatus("failed");
       toast.error(error?.data?.message || error?.message || t("failed_init_connection"));
     }
-  }, [isBaileys, wabaId, latestWorkspace, selectedWorkspace, instanceName, getQRCode, refetchWorkspaces, connectWhatsApp, t]);
+  }, [isBaileys, wabaId, latestWorkspace, selectedWorkspace, instanceName, waitForQR, connectWhatsApp, t]);
 
   useEffect(() => {
     if (selectedWorkspace && isBaileys && selectedWorkspace.waba_id && !wabaId) {
@@ -190,7 +207,12 @@ const QRCodeConnection = ({ isDisabled }: QRCodeConnectionProps) => {
                 <Label className="text-sm font-semibold text-gray-700 dark:text-gray-400">
                   {t("instance_name")} <span className="text-red-500">*</span>
                 </Label>
-                <Input placeholder={t("instance_name_placeholder")} className="h-11 border-(--input-border-color) bg-(--input-color) focus:border-primary dark:border-(--card-border-color) focus:ring-primary" value={instanceName} onChange={(e) => setInstanceName(e.target.value)} disabled={status !== "idle" && status !== "failed"} />
+                <Input placeholder={t("instance_name_placeholder")} className="h-11 border-(--input-border-color) bg-(--input-color) focus:border-primary dark:border-(--card-border-color) focus:ring-primary" value={instanceName} onChange={(e) => setInstanceName(e.target.value)} disabled={!!existingInstanceId || (status !== "idle" && status !== "failed")} />
+                {existingInstanceId && (
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    {t("qr_instance_exists", "This workspace already has a QR instance, so the name can't be changed here. Just scan the QR code to connect.")}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-4">

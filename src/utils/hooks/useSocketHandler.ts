@@ -172,6 +172,7 @@ export const useSocketHandler = () => {
   const { userSetting } = useAppSelector((state) => state.setting);
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const { selectedWorkspace } = useAppSelector((state) => state.workspace);
+  const isAgent = user?.role === "agent";
   const { sendNotification, startBlinking } = useNotifications();
   const { refetch: refetchWorkspaces } = useGetWorkspacesQuery(undefined, {
     skip: !isAuthenticated,
@@ -193,7 +194,9 @@ export const useSocketHandler = () => {
     {
       whatsapp_phone_number_id: selectedPhoneNumberId || undefined,
     },
-    { skip: !selectedPhoneNumberId }
+    // Agents always load their list: the server only returns chats assigned to them,
+    // and it is used below to decide which messages should alert the agent.
+    { skip: !selectedPhoneNumberId && !isAgent }
   );
 
   useEffect(() => {
@@ -450,6 +453,17 @@ export const useSocketHandler = () => {
     [dispatch, user, selectedWorkspace, selectedPhoneNumberId]
   );
 
+  // Agents should only be alerted about chats assigned to them. The server sends
+  // every message of the business to everyone, so check against the agent's list.
+  const isChatForMe = useCallback(
+    (msg: ChatMessage) => {
+      if (!isAgent) return true;
+      const ids = [msg.contact_id, msg.sender?.id, msg.recipient?.id].filter(Boolean).map(String);
+      return (recentChatsRef.current || []).some((c: any) => ids.includes(String(c.contact?.id)) || ids.includes(String(c.contact?.number)));
+    },
+    [isAgent]
+  );
+
   const handleMessage = useCallback(
     (newMessage: ChatMessage) => {
       try {
@@ -482,6 +496,7 @@ export const useSocketHandler = () => {
         if (notificationsEnabled && (!isChatPage || !isCurrentChat || !document.hasFocus())) {
           const isCorrectUser = !newMessage.user_id || newMessage.user_id === user?.id || newMessage.user_id === selectedWorkspace?.user_id;
           if (!isCorrectUser) return;
+          if (!isChatForMe(newMessage)) return;
 
           unreadCountRef.current += 1;
           const countStr = unreadCountRef.current > 0 ? `(${unreadCountRef.current}) ` : "";
@@ -544,7 +559,7 @@ export const useSocketHandler = () => {
         }
       }
     },
-    [updateSidebar, updateChatArea, scheduleBotReplyFetch, pathname, selectedChat, sendNotification, startBlinking, dispatch, router, selectedPhoneNumberId, userSetting, user, selectedWorkspace]
+    [updateSidebar, updateChatArea, scheduleBotReplyFetch, pathname, selectedChat, sendNotification, startBlinking, dispatch, router, selectedPhoneNumberId, userSetting, user, selectedWorkspace, isChatForMe]
   );
 
   const handleConnectionUpdate = useCallback(
