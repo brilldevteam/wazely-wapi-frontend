@@ -5,7 +5,7 @@ import { Button } from "@/src/elements/ui/button";
 import { Card, CardContent } from "@/src/elements/ui/card";
 import { Input } from "@/src/elements/ui/input";
 import { Label } from "@/src/elements/ui/label";
-import { useConnectWhatsAppMutation, useLazyGetBaileysQRCodeQuery } from "@/src/redux/api/whatsappApi";
+import { useConnectWhatsAppMutation, useGetConnectionsQuery, useLazyGetBaileysQRCodeQuery, useUpdateWhatsAppConnectionMutation } from "@/src/redux/api/whatsappApi";
 import { useGetWorkspacesQuery } from "@/src/redux/api/workspaceApi";
 import { useAppSelector } from "@/src/redux/hooks";
 import { QRCodeConnectionProps } from "@/src/types/wabaConfiguration";
@@ -19,7 +19,6 @@ import InfoModal from "../common/InfoModal";
 const QRCodeConnection = ({ isDisabled }: QRCodeConnectionProps) => {
   const { t } = useTranslation();
   const { selectedWorkspace }: any = useAppSelector((state) => state.workspace);
-  const isBaileys = selectedWorkspace?.waba_type === "baileys";
 
   const [instanceName, setInstanceName] = useState("");
   const [wabaId, setWabaId] = useState<string | null>(selectedWorkspace?.waba_id || null);
@@ -32,10 +31,22 @@ const QRCodeConnection = ({ isDisabled }: QRCodeConnectionProps) => {
   const { data: workspacesData, refetch: refetchWorkspaces } = useGetWorkspacesQuery();
 
   const latestWorkspace = workspacesData?.data?.find((ws: any) => ws._id === selectedWorkspace?._id);
+  // Use the freshly loaded workspace first: the saved copy from login can be out of date
+  // (e.g. a QR connection created after login), which made the page think none existed.
+  const isBaileys = (latestWorkspace?.waba_type || selectedWorkspace?.waba_type) === "baileys";
   const connectionStatus = latestWorkspace?.connection_status || selectedWorkspace?.connection_status;
   const currentWabaId = latestWorkspace?.waba_id || selectedWorkspace?.waba_id;
   const isConnected = isBaileys ? !!currentWabaId && connectionStatus === "connected" : !!currentWabaId;
   const existingInstanceId = isBaileys ? wabaId || currentWabaId : null;
+
+  // Show the existing QR connection's name, and let the user rename it.
+  const [updateConnection] = useUpdateWhatsAppConnectionMutation();
+  const { data: connectionsData } = useGetConnectionsQuery(undefined, { skip: !existingInstanceId });
+  const existingName = connectionsData?.data?.find((c: any) => String(c.id || c._id) === String(existingInstanceId))?.name || "";
+  const nameTouched = useRef(false);
+  useEffect(() => {
+    if (existingName && !nameTouched.current) setInstanceName(existingName);
+  }, [existingName]);
 
   // The server starts WhatsApp in the background, so the QR code is usually not
   // ready on the first request. Keep asking for up to 60 seconds instead of
@@ -92,6 +103,14 @@ const QRCodeConnection = ({ isDisabled }: QRCodeConnectionProps) => {
       const targetWabaId = wabaId || latestWorkspace?.waba_id || selectedWorkspace?.waba_id;
 
       if (isBaileys && targetWabaId) {
+        const newName = instanceName.trim();
+        if (newName && newName !== existingName) {
+          try {
+            await updateConnection({ id: String(targetWabaId), name: newName }).unwrap();
+          } catch {
+            // Renaming is optional: still show the QR code.
+          }
+        }
         await waitForQR(targetWabaId);
         return;
       }
@@ -125,7 +144,7 @@ const QRCodeConnection = ({ isDisabled }: QRCodeConnectionProps) => {
       setStatus("failed");
       toast.error(error?.data?.message || error?.message || t("failed_init_connection"));
     }
-  }, [isBaileys, wabaId, latestWorkspace, selectedWorkspace, instanceName, waitForQR, connectWhatsApp, t]);
+  }, [isBaileys, wabaId, latestWorkspace, selectedWorkspace, instanceName, existingName, updateConnection, waitForQR, connectWhatsApp, t]);
 
   useEffect(() => {
     if (selectedWorkspace && isBaileys && selectedWorkspace.waba_id && !wabaId) {
@@ -207,10 +226,10 @@ const QRCodeConnection = ({ isDisabled }: QRCodeConnectionProps) => {
                 <Label className="text-sm font-semibold text-gray-700 dark:text-gray-400">
                   {t("instance_name")} <span className="text-red-500">*</span>
                 </Label>
-                <Input placeholder={t("instance_name_placeholder")} className="h-11 border-(--input-border-color) bg-(--input-color) focus:border-primary dark:border-(--card-border-color) focus:ring-primary" value={instanceName} onChange={(e) => setInstanceName(e.target.value)} disabled={!!existingInstanceId || (status !== "idle" && status !== "failed")} />
+                <Input placeholder={t("instance_name_placeholder")} className="h-11 border-(--input-border-color) bg-(--input-color) focus:border-primary dark:border-(--card-border-color) focus:ring-primary" value={instanceName} onChange={(e) => { nameTouched.current = true; setInstanceName(e.target.value); }} disabled={status !== "idle" && status !== "failed"} />
                 {existingInstanceId && (
                   <p className="text-xs text-slate-500 dark:text-slate-400">
-                    {t("qr_instance_exists", "This workspace already has a QR instance, so the name can't be changed here. Just scan the QR code to connect.")}
+                    {t("qr_instance_rename_hint", "This workspace already has a QR connection. Change the name here if you want; it is saved when you click Generate.")}
                   </p>
                 )}
               </div>
