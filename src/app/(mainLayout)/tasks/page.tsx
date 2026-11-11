@@ -23,7 +23,7 @@ const AgentTaskPage = () => {
   return (
     <div className="flex gap-4 h-[calc(100vh-100px)] overflow-hidden [@media(max-width:991px)]:h-[calc(100vh-90px)] mt-4 mx-4 [@media(max-width:639px)]:mx-3 [@media(max-width:639px)]:mt-3 animate-in fade-in duration-500 relative">
       <aside
-        className={`w-96 shrink-0 border rounded-lg border-gray-100 dark:border-(--card-border-color) h-full overflow-hidden flex flex-col bg-white dark:bg-(--card-color) transition-all duration-300 z-50
+        className={`w-80 shrink-0 border rounded-lg border-gray-100 dark:border-(--card-border-color) h-full overflow-hidden flex flex-col bg-white dark:bg-(--card-color) transition-all duration-300 z-50
         [@media(max-width:991px)]:absolute [@media(max-width:991px)]:top-0 [@media(max-width:991px)]:left-0 [@media(max-width:991px)]:h-full [@media(max-width:991px)]:w-70 [@media(max-width:991px)]:bg-white [@media(max-width:991px)]:dark:bg-(--card-color)
         ${isSidebarOpen ? "[@media(max-width:991px)]:translate-x-0" : "[@media(max-width:991px)]:-translate-x-full"}`}
       >
