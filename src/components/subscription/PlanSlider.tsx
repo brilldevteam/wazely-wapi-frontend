@@ -105,7 +105,7 @@ const PlanSlider: React.FC<PlanSliderProps> = ({ plans, activePlanId, mode = "no
           modules={[Navigation, Pagination]}
           centeredSlides={true}
           grabCursor={true}
-          loop={plans.length > 3}
+          loop={false}
           slideToClickedSlide={true}
           pagination={{ clickable: true, dynamicBullets: true }}
           className="pb-12!"
