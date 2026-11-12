@@ -80,13 +80,16 @@ const Subscription = () => {
     setIsModalOpen(true);
   };
 
+  // Plans now come in Monthly / Yearly / One Time, so "cheaper" or "dearer" by price is
+  // not meaningful across cycles (a yearly price is always higher than a monthly one).
+  // Upgrade and Downgrade both open the full list with all billing tabs.
   const handleShowUpgrade = () => {
-    setFilterMode("upgrade");
+    setFilterMode("none");
     setShowAllPlans(true);
   };
 
   const handleShowDowngrade = () => {
-    setFilterMode("downgrade");
+    setFilterMode("none");
     setShowAllPlans(true);
   };
 
@@ -112,6 +115,8 @@ const Subscription = () => {
     : availableTabs[0]?.id || "monthly";
 
   const filteredPlans = plansForMode.filter((p) => tabOfPlan(p) === billingTab);
+  const currentPlanId = (currentSubscription?.plan_id as any)?._id;
+  const otherPlansCount = plans.filter((p: Plan) => (p as any)._id !== currentPlanId).length;
 
   const handleCancelSubscription = async () => {
     try {
@@ -331,12 +336,8 @@ const Subscription = () => {
         onUpgrade={handleShowUpgrade}
         onDowngrade={handleShowDowngrade}
         onCancel={() => setIsConfirmOpen(true)}
-        upgradePlansCount={
-          plans.filter((p: Plan) => p.price > currentPlanPrice).length
-        }
-        downgradePlansCount={
-          plans.filter((p: Plan) => p.price < currentPlanPrice).length
-        }
+        upgradePlansCount={otherPlansCount}
+        downgradePlansCount={otherPlansCount}
       />
 
       <ConfirmModal
