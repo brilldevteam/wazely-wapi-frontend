@@ -128,7 +128,7 @@ const PlanSlider: React.FC<PlanSliderProps> = ({ plans, activePlanId, mode = "no
                   <Card className={cn("relative flex flex-col h-fit transition-all duration-500 overflow-hidden rounded-lg border dark:border-(--card-border-color) bg-white dark:bg-(--card-color) shadow-sm cursor-pointer", isActive ? cn("shadow-xl scale-105 z-20", theme.border) : "scale-95 opacity-60")}>
                     {plan.is_featured && (
                       <div className="absolute top-0 right-0 z-10">
-                        <Badge className={cn("border font-bold text-[10px] px-3 py-1 rounded-full", theme.badge)}>{t("most_popular")}</Badge>
+                        <Badge className={"border border-primary/80 bg-primary/20 text-primary font-bold text-[10px] px-3 py-1 rounded-full"}>{t("most_popular")}</Badge>
                       </div>
                     )}
 
