@@ -22,7 +22,7 @@ const getPlanTheme = (planName: string) => {
       color: "amber",
       border: "border-amber-100 ring-amber-500/20",
       bg: "bg-amber-50/40",
-      badge: "bg-amber-500",
+      badge: "bg-amber-500 border-amber-500 text-white",
       button: "bg-amber-600 hover:bg-amber-700 shadow-amber-500/20",
       text: "text-amber-600",
       icon: <Rocket className="h-5 w-5" />,
@@ -34,7 +34,7 @@ const getPlanTheme = (planName: string) => {
       color: "violet",
       border: "border-violet-100 ring-violet-500/20",
       bg: "bg-violet-50/40",
-      badge: "bg-violet-500/10",
+      badge: "bg-violet-500/10 border-violet-300 text-violet-700 dark:text-violet-300",
       button: "bg-violet-600 hover:bg-violet-700 shadow-violet-500/20",
       text: "text-violet-600",
       icon: <Crown className="h-5 w-5" />,
@@ -46,7 +46,7 @@ const getPlanTheme = (planName: string) => {
       color: "indigo",
       border: "border-indigo-100 ring-indigo-500/20",
       bg: "bg-indigo-50/40",
-      badge: "bg-indigo-500",
+      badge: "bg-indigo-500 border-indigo-500 text-white",
       button: "bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/20",
       text: "text-indigo-600",
       icon: <Zap className="h-5 w-5" />,
@@ -57,7 +57,7 @@ const getPlanTheme = (planName: string) => {
     color: "emerald",
     border: "border-[var(--primary-opacity-30)] ring-primary/20",
     bg: "bg-light-primary/40",
-    badge: "bg-primary/20",
+    badge: "bg-primary/20 border-primary/80 text-primary",
     button: "bg-primary shadow-primary/20",
     text: "text-primary",
     icon: <Target className="h-5 w-5" />,
@@ -128,7 +128,7 @@ const PlanSlider: React.FC<PlanSliderProps> = ({ plans, activePlanId, mode = "no
                   <Card className={cn("relative flex flex-col h-fit transition-all duration-500 overflow-hidden rounded-lg border dark:border-(--card-border-color) bg-white dark:bg-(--card-color) shadow-sm cursor-pointer", isActive ? cn("shadow-xl scale-105 z-20", theme.border) : "scale-95 opacity-60")}>
                     {plan.is_featured && (
                       <div className="absolute top-0 right-0 z-10">
-                        <Badge className={cn("border border-primary/80 font-bold text-[10px] px-3 py-1 rounded-full text-primary", theme.badge)}>{t("most_popular")}</Badge>
+                        <Badge className={cn("border font-bold text-[10px] px-3 py-1 rounded-full", theme.badge)}>{t("most_popular")}</Badge>
                       </div>
                     )}
 
