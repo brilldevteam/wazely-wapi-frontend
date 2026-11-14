@@ -23,7 +23,7 @@ import BillingInfo from "./BillingInfo";
 import EmptyState from "./EmptyState";
 import ManagePlanModal from "./ManagePlanModal";
 import NoPlansState from "./NoPlansState";
-import PlanSlider from "./PlanSlider";
+import PlanComparisonTable from "./PlanComparisonTable";
 import SubscriptionModal from "./SubscriptionModal";
 import UsageStatsGrid from "./UsageStatsGrid";
 import Can from "../shared/Can";
@@ -46,7 +46,7 @@ const Subscription = () => {
   const { data: subscriptionResponse, isLoading: isSubLoading } =
     useGetUserSubscriptionQuery();
   const { data: plansResponse, isLoading: isPlansLoading } =
-    useGetAllPlansQuery({});
+    useGetAllPlansQuery({ limit: 100 });
   const [cancelSubscription, { isLoading: isCancelling }] =
     useCancelSubscriptionMutation();
 
@@ -272,12 +272,11 @@ const Subscription = () => {
               </div>
             )}
             {filteredPlans.length > 0 ? (
-              <PlanSlider
+              <PlanComparisonTable
                 plans={filteredPlans}
+                billingTab={billingTab}
                 activePlanId={(currentSubscription?.plan_id as any)?._id}
-                mode={filterMode}
                 onSubscribe={handleSubscribe}
-                onBack={() => setShowAllPlans(!showAllPlans)}
                 isFreeTrial={isFreeTrialEnabled}
               />
             ) : (
