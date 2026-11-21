@@ -6,6 +6,7 @@ import { signOut, useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { XCircle } from "lucide-react";
 import { Button } from "@/src/elements/ui/button";
+import { markLeavingToOtherApp } from "@/src/utils/logout";
 
 export default function ImpersonationBanner() {
   const { data: session }: any = useSession();
@@ -21,6 +22,7 @@ export default function ImpersonationBanner() {
       const result = await stopImpersonation().unwrap();
       toast.success("Impersonation stopped");
 
+      markLeavingToOtherApp();
       await signOut({ redirect: false });
 
       // Pass the restored admin token so admin panel can auto-login

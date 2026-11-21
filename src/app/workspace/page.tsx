@@ -5,10 +5,9 @@ import { useRouter } from "next/navigation";
 import { useGetWorkspacesQuery, useDeleteWorkspaceMutation } from "@/src/redux/api/workspaceApi";
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
 import { setWorkspace, clearWorkspace } from "@/src/redux/reducers/workspaceSlice";
-import { setLogout } from "@/src/redux/reducers/authSlice";
 import { Workspace } from "@/src/types/workspace";
 import { Plus } from "lucide-react";
-import { signOut } from "next-auth/react";
+import { performLogout } from "@/src/utils/logout";
 import { useTheme } from "next-themes";
 import WorkspaceFormModal from "@/src/components/workspace/WorkspaceFormModal";
 import ConfirmDeleteModal from "@/src/components/workspace/ConfirmDeleteModal";
@@ -67,10 +66,8 @@ export default function WorkspacePage() {
   }, []);
 
   const handleLogout = useCallback(async () => {
-    dispatch(clearWorkspace());
-    dispatch(setLogout());
-    await signOut({ callbackUrl: ROUTES.Login });
-  }, [dispatch]);
+    await performLogout(ROUTES.Login);
+  }, []);
 
   const confirmDelete = useCallback(async () => {
     if (!deleteId) return;

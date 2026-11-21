@@ -104,3 +104,9 @@ export const PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const ImagePath: string = "/assets/images";
 export const ImageBaseUrl = process.env.NEXT_PUBLIC_STORAGE_URL;
+
+const GUEST_PATH_PREFIXES = ["/landing", "/auth", "/page", "/product", "/channel"];
+
+/** Pages anyone can open without logging in (the landing page, login/register, public pages). */
+export const isGuestPath = (pathname: string): boolean =>
+  pathname === ROUTES.Landing || GUEST_PATH_PREFIXES.some((prefix) => pathname.startsWith(prefix));

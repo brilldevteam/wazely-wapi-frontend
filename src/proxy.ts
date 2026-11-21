@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { ROUTES } from "./constants";
+import { ROUTES, isGuestPath } from "./constants";
 import { getUrlWithBasePath } from "./utils";
 
 export async function proxy(req: NextRequest) {
@@ -21,13 +21,7 @@ export async function proxy(req: NextRequest) {
     );
   }
 
-  const isGuestAllowed =
-    pathname === "/" ||
-    pathname.startsWith("/landing") ||
-    pathname.startsWith("/auth") ||
-    pathname.startsWith("/page") ||
-    pathname.startsWith("/product") ||
-    pathname.startsWith("/channel");
+  const isGuestAllowed = isGuestPath(pathname);
 
   if (!isAuthenticated && !isGuestAllowed) {
     return NextResponse.redirect(

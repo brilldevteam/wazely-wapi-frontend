@@ -13,18 +13,49 @@ import Profile from "./Profile";
 import SearchBar from "./SearchBar";
 import WorkspaceSwitcherModal from "@/src/components/workspace/WorkspaceSwitcherModal";
 import SelfTenantBanner from "./SelfTenantBanner";
+import ConfirmModal from "@/src/shared/ConfirmModal";
+import { ROUTES } from "@/src/constants";
+import { performLogout } from "@/src/utils/logout";
+import { useTranslation } from "react-i18next";
 
 const Header = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const { sidebarToggle, isRTL } = useAppSelector((state) => state.layout);
   const { selectedWorkspace } = useAppSelector((state) => state.workspace);
+  const { landing_page_enabled } = useAppSelector((state) => state.setting);
   const { theme, setTheme } = useTheme();
   const themeBtnRef = useRef<HTMLButtonElement>(null);
   const [workspaceSwitcherOpen, setWorkspaceSwitcherOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const logoutRequestedRef = useRef(false);
 
   const darkMode = theme === "dark";
+
+  // Close the menu first; the confirmation opens once the menu has fully closed
+  // (see onCloseAutoFocus below), so the two never fight over focus or clicks.
+  const handleLogoutClick = () => {
+    logoutRequestedRef.current = true;
+    setProfileMenuOpen(false);
+  };
+
+  const handleLogoutCancel = () => {
+    if (isLoggingOut) return;
+    logoutRequestedRef.current = false;
+    setShowLogoutConfirm(false);
+  };
+
+  // The page is left as it is (with "Logging out..." on the button) until the
+  // fresh page load, so the user never sees a half-cleared, frozen screen.
+  const handleLogoutConfirm = async () => {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    await performLogout(landing_page_enabled ? ROUTES.Landing : ROUTES.Login);
+  };
 
   const handleThemeToggle = () => {
     if (!themeBtnRef.current) return;
@@ -91,15 +122,25 @@ const Header = () => {
               <LanguageDropdown />
               <CurrencyDropdown />
 
-              <DropdownMenu>
+              <DropdownMenu open={profileMenuOpen} onOpenChange={setProfileMenuOpen}>
                 <DropdownMenuTrigger asChild>
                   <Button className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg text-white flex items-center justify-center font-semibold hover:bg-primary transition-colors">
                     <span>{user ? user.name?.charAt(0)?.toUpperCase() : "U"}</span>
                   </Button>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end" sideOffset={8} className="p-0 border-none shadow-none bg-transparent">
-                  <Profile />
+                <DropdownMenuContent
+                  align="end"
+                  sideOffset={8}
+                  className="p-0 border-none shadow-none bg-transparent"
+                  onCloseAutoFocus={(e) => {
+                    if (!logoutRequestedRef.current) return;
+                    // Menu has finished closing: open the logout confirmation, which takes focus itself.
+                    e.preventDefault();
+                    setShowLogoutConfirm(true);
+                  }}
+                >
+                  <Profile onLogoutClick={handleLogoutClick} />
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -108,6 +149,19 @@ const Header = () => {
       </header>
 
       <WorkspaceSwitcherModal isOpen={workspaceSwitcherOpen} onClose={() => setWorkspaceSwitcherOpen(false)} />
+
+      <ConfirmModal
+        isOpen={showLogoutConfirm}
+        onClose={handleLogoutCancel}
+        onConfirm={handleLogoutConfirm}
+        isLoading={isLoggingOut}
+        title={t("logout_confirm_title")}
+        subtitle={t("logout_confirm_desc")}
+        confirmText={t("logout")}
+        cancelText={t("cancel")}
+        variant="danger"
+        loadingText={t("logging_out")}
+      />
 
       {/* Mobile search overlay — fixed outside header to avoid z-index stacking context of header z-30 */}
       {mobileSearchOpen && (

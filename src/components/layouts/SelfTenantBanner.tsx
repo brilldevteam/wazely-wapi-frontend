@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { LogOut, ShieldCheck } from "lucide-react";
 import { Button } from "@/src/elements/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/src/elements/ui/dropdown-menu";
+import { markLeavingToOtherApp } from "@/src/utils/logout";
 
 export default function SelfTenantBanner() {
   const { data: session }: any = useSession();
@@ -23,6 +24,7 @@ export default function SelfTenantBanner() {
       toast.success(result.message || "Returning to Admin Panel...");
 
       // Clear the current session on frontend
+      markLeavingToOtherApp();
       await signOut({ redirect: false });
 
       // Redirect back to admin panel with the restored token
