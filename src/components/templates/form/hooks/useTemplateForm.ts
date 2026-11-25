@@ -48,7 +48,6 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
     variables_example: [],
     marketing_type: "none" as MarketingType,
     offer_text: "",
-    status: "",
   });
 
   // Carousel card states
@@ -122,7 +121,6 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
       marketing_type,
       header_url: template.header?.media_url || "",
       offer_text: template.offer_text || "",
-      status: template.status || "",
     };
   };
 

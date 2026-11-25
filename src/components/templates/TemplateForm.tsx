@@ -123,18 +123,6 @@ const TemplateForm = ({ wabaId, templateId, adminTemplateId }: TemplateFormProps
               </div>
             </div>
 
-            {isInvalidButtons && (
-              <p className="text-xs font-bold text-rose-500 bg-rose-50 dark:bg-rose-500/10 border border-rose-100 dark:border-rose-500/20 rounded-lg px-4 py-2.5">
-                Saving is disabled until every button below has valid content (e.g. the Copy Code button needs a real code).
-              </p>
-            )}
-
-            {templateId && formData.status && !["draft", "rejected"].includes(String(formData.status).toLowerCase()) && (
-              <p className="text-xs font-bold text-amber-600 bg-amber-50 dark:bg-amber-500/10 border border-amber-100 dark:border-amber-500/20 rounded-lg px-4 py-2.5">
-                This template is currently &quot;{formData.status}&quot; on WhatsApp. Meta only allows editing the content/type of templates that are in Draft or Rejected status &mdash; changes here may be refused when submitted. Consider creating a new template instead.
-              </p>
-            )}
-
             <BasicInfoSection language={formData.language} setLanguage={(val) => setFormData((p: any) => ({ ...p, language: val }))} category={formData.category} setCategory={(val) => setFormData((p: any) => ({ ...p, category: val, marketing_type: val === "MARKETING" ? p.marketing_type : "none" }))} templateName={formData.template_name} setTemplateName={(val) => setFormData((p: any) => ({ ...p, template_name: val }))} marketingType={formData.marketing_type} setMarketingType={(val) => setFormData((p: any) => ({ ...p, marketing_type: val, interactive_type: "none", buttons: val === "coupon_code" ? [{ id: makeId(), type: "copy_code", text: "" }] : [] }))} offerText={formData.offer_text} setOfferText={(val) => setFormData((p: any) => ({ ...p, offer_text: val }))} languages={LANGUAGES} categories={CATEGORIES} isEditing={!!templateId} platform={platform} />
 
             {formData.category === "AUTHENTICATION" ? (
