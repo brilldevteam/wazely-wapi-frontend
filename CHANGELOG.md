@@ -17,6 +17,8 @@
 
 - Replace the customer subscription gateway checkout with a WhatsApp plan-request flow to +97460007544, allowing customers to send their receipt for super-admin verification and manual plan activation.
 - Add a dedicated light-mode Wazely CRM logo for mobile login screens and match its visible size with the dark-mode logo across small viewports.
+- Add reliable Location-header selection, a map-style preview, an interactive campaign location picker, and required coordinate validation.
+- Prevent Location headers from silently reverting to Text when editing templates.
 - Add a Text Direction (RTL/LTR) toolbar control to the Message Body editor, so Arabic/Hebrew and other right-to-left content can be set explicitly per paragraph and is preserved through plain-text delivery to WhatsApp via invisible Unicode direction marks, with the live preview matching the editor exactly.
 - Fix Coupon Code marketing templates silently saving as Standard by requiring a valid Copy Code button before the template can be saved, instead of allowing it to save with no button or an invalid placeholder example.
 - Warn upfront when editing a template that isn't Draft/Rejected, since WhatsApp rejects structural edits on Approved/Pending templates, and explain why Save is disabled when a button has invalid content.

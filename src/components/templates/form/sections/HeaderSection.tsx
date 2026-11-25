@@ -39,17 +39,25 @@ export const HeaderSection = ({ templateType, setTemplateType, headerText, setHe
             <Input
               placeholder="Type your header here..."
               value={headerText || ""}
+              disabled={!['none', 'text'].includes(templateType)}
               onChange={(e) => {
-                setHeaderText(e.target.value.slice(0, 60));
+                const value = e.target.value.slice(0, 60);
+                setHeaderText(value);
+                setHeaderFile(null);
+                setTemplateType(value.trim() ? "text" : "none");
               }}
               className="h-12 border-slate-200 dark:border-(--card-border-color) rounded-lg bg-(--input-color) dark:bg-(--page-body-bg) focus:bg-white dark:focus:bg-(--page-body-bg) transition-all font-medium"
             />
           </CharacterCountWrapper>
-          <p className="text-[11px] text-slate-400">Max 60 characters. Variables are not allowed in headers.</p>
+          <p className="text-[11px] text-slate-400">
+            {!['none', 'text'].includes(templateType)
+              ? `${templateType.toUpperCase()} is selected, so a text header cannot be added.`
+              : "Max 60 characters. Variables are not allowed in headers."}
+          </p>
         </div>
 
         <div className="space-y-4">
-          <Label className="text-sm font-bold text-slate-700 dark:text-slate-300">Media Header</Label>
+          <Label className="text-sm font-bold text-slate-700 dark:text-slate-300">Header Type</Label>
           <div className="grid grid-cols-4 gap-2 [@media(max-width:435px)]:grid-cols-2">
             {templateTypes
               .filter((t) => t.value !== "text" && t.value !== "none")
@@ -62,6 +70,7 @@ export const HeaderSection = ({ templateType, setTemplateType, headerText, setHe
                     if (templateType === type.value) {
                       setTemplateType("none");
                     } else {
+                      setHeaderText("");
                       setTemplateType(type.value);
                     }
                   }}
@@ -74,6 +83,12 @@ export const HeaderSection = ({ templateType, setTemplateType, headerText, setHe
           </div>
         </div>
       </div>
+
+      {templateType === "location" && (
+        <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm text-slate-600 dark:text-slate-300">
+          Location selected. The latitude, longitude, name, and address are entered later when creating or sending the campaign.
+        </div>
+      )}
 
       {templateType !== "text" && templateType !== "none" && templateType !== "location" && (
         <div className="pt-6 border-t border-slate-50 dark:border-(--card-border-color)">
