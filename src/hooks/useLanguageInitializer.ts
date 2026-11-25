@@ -36,22 +36,27 @@ export const useLanguageInitializer = (): boolean => {
             }
           } catch {
             if (savedLocale !== "en") {
-              await i18n.changeLanguage("en");
-              dispatch(setRTL(false));
-              return;
+              if (!i18n.hasResourceBundle(savedLocale, "translation")) {
+                await i18n.changeLanguage("en");
+                dispatch(setRTL(false));
+                return;
+              }
             }
           }
 
+          dispatch(setRTL(currentLanguage.is_rtl || i18n.dir(savedLocale) === "rtl"));
           if (i18n.language !== savedLocale) {
             await i18n.changeLanguage(savedLocale);
           }
         } else {
-          if (savedLocale !== "en") {
-            await i18n.changeLanguage("en");
-          }
+          const locale = savedLocale === "ar" ? "ar" : "en";
+          await i18n.changeLanguage(locale);
+          dispatch(setRTL(locale === "ar"));
         }
       } catch {
-        // Error handling
+        const locale = savedLocale === "ar" ? "ar" : "en";
+        await i18n.changeLanguage(locale);
+        dispatch(setRTL(locale === "ar"));
       } finally {
         setIsLanguageReady(true);
       }

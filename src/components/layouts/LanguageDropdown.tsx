@@ -2,8 +2,8 @@
 
 import { Button } from "@/src/elements/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/src/elements/ui/dropdown-menu";
-import { languageApi, useGetAllLanguagesQuery, useLazyGetTranslationsQuery } from "@/src/redux/api/languageApi";
-import { useAppDispatch } from "@/src/redux/hooks";
+import { type Language, useGetAllLanguagesQuery, useLazyGetTranslationsQuery } from "@/src/redux/api/languageApi";
+import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
 import { setRTL } from "@/src/redux/reducers/layoutSlice";
 import { loadTranslations } from "@/src/utils/i18nLoader";
 import { Check, Loader2 } from "lucide-react";
@@ -15,11 +15,15 @@ import { Flag } from "../shared/Flag";
 import { getResolvedImageUrl } from "@/src/utils/image";
 
 const LANGUAGE_STORAGE_KEY = "selected_language";
-const ImageBaseUrl = process.env.NEXT_PUBLIC_STORAGE_URL ?? "";
+const loginLanguages: Language[] = [
+  { _id: "en", locale: "en", name: "English", is_rtl: false, is_active: true },
+  { _id: "ar", locale: "ar", name: "العربية", is_rtl: true, is_active: true },
+];
 
-const LanguageDropdown = ({ onDark = false }: { onDark?: boolean }) => {
+const LanguageDropdown = ({ onDark = false, showLabel = false }: { onDark?: boolean; showLabel?: boolean }) => {
   const dispatch = useAppDispatch();
-  const { i18n } = useTranslation();
+  const isRTL = useAppSelector((state) => state.layout.isRTL);
+  const { i18n, t } = useTranslation();
   const currentLocale = i18n.language || i18n.resolvedLanguage || "en";
   const [isChanging, setIsChanging] = useState(false);
 
@@ -27,43 +31,49 @@ const LanguageDropdown = ({ onDark = false }: { onDark?: boolean }) => {
 
   const [getTranslations] = useLazyGetTranslationsQuery();
 
-  const activeLanguages = useMemo(() => languagesData?.data?.languages ?? [], [languagesData]);
+  const activeLanguages = useMemo(() => {
+    const languages = languagesData?.data?.languages ?? [];
+    return showLabel ? [...languages, ...loginLanguages.filter((fallback) => !languages.some((lang) => lang.locale === fallback.locale))] : languages;
+  }, [languagesData, showLabel]);
 
   const currentLang = useMemo(() => activeLanguages.find((l) => l.locale === currentLocale), [activeLanguages, currentLocale]);
 
-  const handleLanguageChange = async (locale: string, langId: string, isRtl: boolean) => {
+  const handleLanguageChange = async (locale: string, isRtl: boolean) => {
     if (locale === currentLocale || isChanging) return;
 
     setIsChanging(true);
     try {
-      const result = await getTranslations(locale).unwrap();
+      const result = await getTranslations(locale).unwrap().catch((error: unknown) => {
+        if (locale === "en" || locale === "ar") return undefined;
+        throw error;
+      });
       if (result?.success && result.data) {
         // Only apply 'front' translations for the frontend
         const frontTranslations = result.data.front?.translation || result.data.front || result.data;
         loadTranslations(locale, frontTranslations);
-      } else {
+      } else if (locale !== "en" && locale !== "ar") {
         throw new Error("Empty translation response");
       }
 
       await i18n.changeLanguage(locale);
       localStorage.setItem(LANGUAGE_STORAGE_KEY, locale);
 
-      dispatch(setRTL(isRtl));
+      dispatch(setRTL(isRtl || i18n.dir(locale) === "rtl"));
 
-      toast.success(`Language changed to ${locale.toUpperCase()}`);
+
     } catch {
-      toast.error("Failed to change language. Please try again.");
+      toast.error(t("login_language_failed", "Failed to change language. Please try again."));
     } finally {
       setIsChanging(false);
     }
   };
 
-  const isBusy = isChanging || isLoadingLanguages;
+  const isBusy = isChanging || (isLoadingLanguages && !showLabel);
 
   return (
-    <DropdownMenu>
+    <DropdownMenu dir={isRTL ? "rtl" : "ltr"}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" disabled={isBusy} className={`bg-transparent shadow-sm flex items-center gap-1.5 px-2 sm:px-3 py-2.5 rounded-lg cursor-pointer transition-colors border-none disabled:opacity-50 disabled:cursor-not-allowed ${onDark ? "text-white hover:bg-white/10 hover:text-white!" : "text-slate-900 dark:text-amber-50 hover:bg-gray-100 dark:bg-(--page-body-bg) dark:hover:bg-(--table-hover)"}`}>
+        <Button variant="ghost" aria-label={t("language")} disabled={isBusy} className={`bg-transparent shadow-sm flex items-center gap-1.5 px-2 sm:px-3 py-2.5 rounded-lg cursor-pointer transition-colors border-none disabled:opacity-50 disabled:cursor-not-allowed ${onDark ? "text-white hover:bg-white/10 hover:text-white!" : "text-slate-900 dark:text-amber-50 hover:bg-gray-100 dark:bg-(--page-body-bg) dark:hover:bg-(--table-hover)"}`}>
           {isBusy ? (
             <Loader2 size={20} className="animate-spin" />
           ) : currentLang?.flag ? (
@@ -73,7 +83,7 @@ const LanguageDropdown = ({ onDark = false }: { onDark?: boolean }) => {
           ) : (
             <Flag countryCode={currentLang?.locale === "en" ? "us" : currentLang?.locale || ""} size={18} />
           )}
-          <span className="text-sm font-medium hidden sm:inline uppercase">{currentLocale}</span>
+          <span className={showLabel ? "text-sm font-medium" : "text-sm font-medium hidden sm:inline uppercase"}>{showLabel ? currentLang?.name || currentLocale : currentLocale}</span>
         </Button>
       </DropdownMenuTrigger>
 
@@ -84,7 +94,7 @@ const LanguageDropdown = ({ onDark = false }: { onDark?: boolean }) => {
           activeLanguages.map((lang) => {
             const isActive = currentLocale.toLowerCase() === lang.locale.toLowerCase();
             return (
-              <DropdownMenuItem key={lang._id} disabled={isChanging} onClick={() => handleLanguageChange(lang.locale, lang._id, lang.is_rtl)} className={`cursor-pointer rounded-md flex items-center gap-2.5 p-2 mb-0.5 last:mb-0 transition-colors ${isActive ? "bg-green-50 text-primary dark:bg-primary-darker/20 dark:text-primary focus:bg-green-50 dark:focus:bg-primary-darker/20" : "hover:bg-slate-50 dark:hover:bg-(--dark-sidebar) focus:bg-slate-50 dark:focus:bg-(--focus-bg-color)/30"}`}>
+              <DropdownMenuItem key={lang._id} disabled={isChanging} onClick={() => handleLanguageChange(lang.locale, lang.is_rtl)} className={`cursor-pointer rounded-md flex items-center gap-2.5 p-2 mb-0.5 last:mb-0 transition-colors ${isActive ? "bg-green-50 text-primary dark:bg-primary-darker/20 dark:text-primary focus:bg-green-50 dark:focus:bg-primary-darker/20" : "hover:bg-slate-50 dark:hover:bg-(--dark-sidebar) focus:bg-slate-50 dark:focus:bg-(--focus-bg-color)/30"}`}>
                 <div className="w-6 h-4 relative rounded-xs overflow-hidden border border-slate-200 dark:border-slate-700 shrink-0">{lang.flag ? <Image src={getResolvedImageUrl(lang.flag)} alt={lang.name} fill className="object-cover" unoptimized /> : <Flag countryCode={lang.locale === "en" ? "us" : lang.locale} size={18} />}</div>
 
                 <span className="flex-1 text-sm font-medium">{lang.name}</span>

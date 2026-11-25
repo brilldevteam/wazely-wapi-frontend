@@ -1,29 +1,25 @@
 "use client";
 
 import { Button } from "@/src/elements/ui/button";
-import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
-import { setRTL } from "@/src/redux/reducers/layoutSlice";
-import { Moon, PilcrowLeft, PilcrowRight, Sun } from "lucide-react";
+import LanguageDropdown from "@/src/components/layouts/LanguageDropdown";
+import { useTranslation } from "react-i18next";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useSyncExternalStore } from "react";
 
-export const AuthControls = () => {
-  const dispatch = useAppDispatch();
-  const { isRTL } = useAppSelector((state) => state.layout);
-  const { theme, setTheme } = useTheme();
+const subscribeToMount = () => () => {};
+
+export const AuthControls = ({ showLanguage = false }: { showLanguage?: boolean }) => {
+  const { t } = useTranslation();
+  const { resolvedTheme, setTheme } = useTheme();
   const themeBtnRef = useRef<HTMLButtonElement>(null);
-  const [mounted, setMounted] = useState(false);
-
-  // Avoid hydration mismatch
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(subscribeToMount, () => true, () => false);
 
   if (!mounted) {
     return null;
   }
 
-  const darkMode = theme === "dark";
+  const darkMode = resolvedTheme === "dark";
 
   const handleThemeToggle = () => {
     if (!themeBtnRef.current) return;
@@ -60,15 +56,15 @@ export const AuthControls = () => {
   };
 
   return (
-    <div className="absolute top-4 right-4 z-50 flex items-center bg-white/60 dark:bg-(--table-hover)! rounded-lg border border-slate-200/50 dark:border-(--card-border-color) shadow-xs transition-all duration-300">
-      {/* Dark / Light Mode Toggle */}
+    <div className="absolute top-4 end-4 z-50 flex items-center bg-white/60 dark:bg-(--table-hover)! rounded-lg border border-slate-200/50 dark:border-(--card-border-color) shadow-xs transition-all duration-300">
+      {showLanguage && <LanguageDropdown showLabel />}
       <Button
         ref={themeBtnRef}
         variant="ghost"
         size="icon"
         onClick={handleThemeToggle}
         className="w-9 h-9 rounded-lg cursor-pointer transition-all hover:scale-105 active:scale-95 text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:text-white dark:hover:text-primary dark:hover:bg-(--table-hover)"
-        title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+        aria-label={darkMode ? t("login_light_theme", "Switch to light mode") : t("login_dark_theme", "Switch to dark mode")}
       >
         {darkMode ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
       </Button>

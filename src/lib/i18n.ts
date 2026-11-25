@@ -1,6 +1,7 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
+import arLoginTranslation from "@/src/locales/ar/translation.json";
 import enTranslation from "@/src/locales/en/translation.json";
 
 const getSavedLanguage = (): string => {
@@ -14,6 +15,7 @@ const getSavedLanguage = (): string => {
 
 i18n.use(initReactI18next).init({
   resources: {
+    ar: { translation: arLoginTranslation },
     en: { translation: enTranslation as Record<string, unknown> },
   },
   lng: getSavedLanguage(),

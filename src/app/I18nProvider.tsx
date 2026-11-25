@@ -6,15 +6,19 @@ import { useAppSelector } from "../redux/hooks";
 import { useLanguageInitializer } from "../hooks/useLanguageInitializer";
 import Loading from "./loading";
 
+import { useTranslation } from "react-i18next";
 import { usePathname } from "next/navigation";
 
 const I18nProvider = ({ children }: { children: ReactNode }) => {
   const { isRTL } = useAppSelector((state) => state.layout);
   const isLanguageReady = useLanguageInitializer();
   const pathname = usePathname();
+  const { i18n } = useTranslation();
+  const locale = i18n.language || "en";
 
   useEffect(() => {
-    const isAuthPage = pathname?.startsWith("/auth");
+    const isAuthPage = pathname?.startsWith("/auth") && pathname !== "/auth/login";
+    document.documentElement.lang = locale;
     const isLandingPage = pathname === "/" || pathname === "/landing";
     const isIntegrationToolsPage = pathname?.startsWith("/integration_tools");
 
@@ -29,7 +33,7 @@ const I18nProvider = ({ children }: { children: ReactNode }) => {
         document.documentElement.classList.remove("rtl");
       }
     }
-  }, [isRTL, pathname]);
+  }, [isRTL, pathname, locale]);
 
   if (!isLanguageReady) {
     return <Loading />;

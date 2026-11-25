@@ -20,7 +20,8 @@ import { Skeleton } from "@/src/elements/ui/skeleton";
 import { AuthControls } from "./common/AuthControls";
 
 export const LoginPage = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRTL = useAppSelector((state) => state.layout.isRTL);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [getWorkspaces] = useLazyGetWorkspacesQuery();
@@ -40,7 +41,7 @@ export const LoginPage = () => {
   const roles = rolesRes?.data?.roles || [];
 
   const { authPageSetup } = useAppSelector((state) => state.setting);
-  const authContent = authPageSetup?.login_page;
+  const authContent = i18n.language === "en" ? authPageSetup?.login_page : undefined;
   const isAuthSetupLoading = !authPageSetup;
 
   // Fallback content
@@ -100,7 +101,7 @@ export const LoginPage = () => {
     const selectedRoleId = roleType === "user" ? userRole?._id : agentRole?._id;
 
     if (!selectedRoleId) {
-      setError("Role information not loaded yet. Please try again.");
+      setError("role-unavailable");
       setIsLoading(false);
       return;
     }
@@ -179,8 +180,8 @@ export const LoginPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-100 via-white-50 to-primary/5 flex items-center dark:bg-none dark:bg-(--page-body-bg) justify-center p-4 relative overflow-hidden">
-      <AuthControls />
+    <div dir={isRTL ? "rtl" : "ltr"} className="min-h-screen pt-16 bg-linear-to-br from-slate-100 via-white-50 to-primary/5 flex items-center dark:bg-none dark:bg-(--page-body-bg) justify-center px-4 pb-4 relative overflow-hidden">
+      <AuthControls showLanguage />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 -left-32 w-96 h-96 bg-[var(--primary-opacity-30)]/30 dark:bg-primary/15 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-blue-200/30 dark:bg-blue-600/15 rounded-full blur-3xl"></div>
@@ -188,7 +189,7 @@ export const LoginPage = () => {
 
       <div className="relative z-10 w-full max-w-md lg:max-w-6xl">
         <div className="grid lg:grid-cols-2 gap-0 items-center">
-          <div className="hidden lg:flex flex-col justify-center p-12 bg-linear-to-br from-primary via-primary-dark to-primary-darker h-full rounded-tr-none rounded-br-none rounded-3xl relative overflow-hidden min-h-175">
+          <div className="hidden lg:flex flex-col justify-center p-12 bg-linear-to-br from-primary via-primary-dark to-primary-darker h-full rounded-3xl rounded-e-none relative overflow-hidden min-h-175">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32"></div>
             <div className="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full -ml-40 -mb-40"></div>
             <div className="absolute top-1/2 right-10 w-2 h-32 bg-white/10 rotate-12"></div>
@@ -253,8 +254,8 @@ export const LoginPage = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-(--card-color) rounded-3xl lg:rounded-l-none lg:rounded-r-3xl shadow-2xl p-4 sm:p-12 min-h-175 flex flex-col justify-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-primary/20 to-primary/10 dark:from-primary/30 dark:to-primary/20 opacity-50 dark:opacity-100 rounded-bl-full"></div>
+          <div className="bg-white dark:bg-(--card-color) rounded-3xl lg:rounded-s-none shadow-2xl p-4 sm:p-12 min-h-175 flex flex-col justify-center relative overflow-hidden">
+            <div className="absolute top-0 end-0 w-32 h-32 bg-linear-to-br from-primary/20 to-primary/10 dark:from-primary/30 dark:to-primary/20 opacity-50 dark:opacity-100 rounded-es-full"></div>
             <div className="relative z-10 max-w-md mx-auto w-full">
               <div className="lg:hidden flex items-center gap-3 mb-8">
                 <div className="flex h-10 items-center dark:hidden">
@@ -277,19 +278,19 @@ export const LoginPage = () => {
                 <div className="text-slate-500 dark:text-slate-400">{isAuthSetupLoading ? <Skeleton className="h-5 w-64" /> : content.subtitle}</div>
               </div>
 
-              {error && <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">{error}</div>}
+              {error && <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm" role="alert">{error === "role-unavailable" ? t("login_role_unavailable", "Role information not loaded yet. Please try again.") : error}</div>}
 
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="space-y-3 flex flex-col">
-                  <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">{t("select_role", "Choose your workspace")}</Label>
+                  <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">{t("login_workspace", t("select_role", "Choose your workspace"))}</Label>
                   <div className="grid grid-cols-2 gap-3 p-1 bg-slate-100 dark:bg-(--page-body-bg) rounded-xl relative">
-                    <Button type="button" onClick={() => setRoleType("user")} className={`relative z-10! flex items-center justify-center gap-2! py-2.5! rounded-lg! text-sm! font-medium! transition-all duration-300 ${roleType === "user" ? "text-primary! dark:text-primary! bg-white! dark:bg-(--card-color)! shadow-sm!" : "text-slate-500! dark:text-slate-400! bg-[unset]! hover:text-slate-700! dark:hover:text-slate-300!"}`}>
+                    <Button type="button" aria-pressed={roleType === "user"} onClick={() => setRoleType("user")} className={`relative z-10! flex items-center justify-center gap-2! py-2.5! rounded-lg! text-sm! font-medium! transition-all duration-300 ${roleType === "user" ? "text-primary! dark:text-primary! bg-white! dark:bg-(--card-color)! shadow-sm!" : "text-slate-500! dark:text-slate-400! bg-[unset]! hover:text-slate-700! dark:hover:text-slate-300!"}`}>
                       <User className={`w-4 h-4 transition-transform duration-300 ${roleType === "user" ? "scale-110" : "scale-100"}`} />
-                      User
+                      {t("login_user", "User")}
                     </Button>
-                    <Button type="button" onClick={() => setRoleType("agent")} className={`relative z-10! flex items-center justify-center gap-2! py-2.5! rounded-lg! text-sm! font-medium! transition-all duration-300 ${roleType === "agent" ? "  bg-white! text-violet-700! dark:bg-(--card-color)! dark:text-violet-400! shadow-sm!" : "text-slate-500! dark:text-slate-400! bg-[unset]! hover:text-slate-700! dark:hover:text-slate-300!"}`}>
+                    <Button type="button" aria-pressed={roleType === "agent"} onClick={() => setRoleType("agent")} className={`relative z-10! flex items-center justify-center gap-2! py-2.5! rounded-lg! text-sm! font-medium! transition-all duration-300 ${roleType === "agent" ? "  bg-white! text-violet-700! dark:bg-(--card-color)! dark:text-violet-400! shadow-sm!" : "text-slate-500! dark:text-slate-400! bg-[unset]! hover:text-slate-700! dark:hover:text-slate-300!"}`}>
                       <ShieldCheck className={`w-4 h-4 transition-transform duration-300 ${roleType === "agent" ? "scale-110" : "scale-100"}`} />
-                      Agent
+                      {t("login_agent", "Agent")}
                     </Button>
                   </div>
                 </div>
@@ -299,8 +300,8 @@ export const LoginPage = () => {
                     {t("email_address")}
                   </Label>
                   <div className="relative group">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 transition-colors" />
-                    <Input id="email" type="email" placeholder={t("email_placeholder")} value={email} onChange={(e) => setEmail(e.target.value)} className="pl-12 h-11 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-primary rounded-lg text-base" required />
+                    <Mail className="absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 transition-colors" />
+                    <Input id="email" type="email" dir={email ? "ltr" : undefined} placeholder={t("email_placeholder")} value={email} onChange={(e) => setEmail(e.target.value)} className={`${isRTL ? "pr-12" : "pl-12"} h-11 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-primary rounded-lg text-base`} required />
                   </div>
                 </div>
 
@@ -309,9 +310,9 @@ export const LoginPage = () => {
                     {t("password")}
                   </Label>
                   <div className="relative group">
-                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 transition-colors" />
-                    <Input id="password" type={showPassword ? "text" : "password"} placeholder={t("password_placeholder")} value={password} onChange={(e) => setPassword(e.target.value)} className="pl-12 pr-12 bg-(--input-color) dark:bg-(--page-body-bg) h-11 border border-(--input-border-color) focus:border-primary rounded-lg text-base" required />
-                    <Button type="button" onClick={() => setShowPassword(!showPassword)} className="bg-transparent hover:bg-transparent absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
+                    <Lock className="absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 transition-colors" />
+                    <Input id="password" type={showPassword ? "text" : "password"} placeholder={t("password_placeholder")} value={password} onChange={(e) => setPassword(e.target.value)} className="px-12 bg-(--input-color) dark:bg-(--page-body-bg) h-11 border border-(--input-border-color) focus:border-primary rounded-lg text-base" required />
+                    <Button type="button" aria-label={showPassword ? t("login_hide_password", "Hide password") : t("login_show_password", "Show password")} onClick={() => setShowPassword(!showPassword)} className="bg-transparent hover:bg-transparent absolute end-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </Button>
                   </div>
@@ -363,10 +364,10 @@ export const LoginPage = () => {
                     </div>
                     <div className="flex gap-3">
                       <div className="flex-1 p-3 bg-(--light-primary) rounded-lg border border-primary-opacity-20 justify-center flex cursor-pointer dark:bg-transparent dark:border-(--card-border-color)" onClick={fillDemoCredentials}>
-                        <p className="text-sm font-semibold text-primary dark:text-gray-400">Demo User</p>
+                        <p className="text-sm font-semibold text-primary dark:text-gray-400">{t("login_demo_user", "Demo User")}</p>
                       </div>
                       <div className="flex-1 p-3 bg-violet-500/10 text-violet-500 rounded-lg border border-violet-200 justify-center flex cursor-pointer dark:bg-transparent dark:border-(--card-border-color)" onClick={fillAgentCredentials}>
-                        <p className="text-sm font-semibold text-violet-500 dark:text-gray-400">Demo Agent</p>
+                        <p className="text-sm font-semibold text-violet-500 dark:text-gray-400">{t("login_demo_agent", "Demo Agent")}</p>
                       </div>
                     </div>
                   </>
@@ -376,7 +377,7 @@ export const LoginPage = () => {
               {allow_user_signup && (
                 <div className="mt-8 text-center">
                   <div className="text-slate-600 dark:text-slate-400">
-                    {isAuthSetupLoading ? <Skeleton className="h-4 w-32 inline-block mr-2" /> : content.signup_text}{" "}
+                    {isAuthSetupLoading ? <Skeleton className="h-4 w-32 inline-block me-2" /> : content.signup_text}{" "}
                     <Button onClick={onNavigateToRegister} className="p-0 bg-transparent hover:bg-transparent font-semibold text-primary hover:text-primary transition-colors">
                       {isAuthSetupLoading ? <Skeleton className="h-4 w-24 inline-block" /> : content.signup_link_text}
                     </Button>
