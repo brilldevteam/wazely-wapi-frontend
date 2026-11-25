@@ -48,7 +48,6 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
     variables_example: [],
     marketing_type: "none" as MarketingType,
     offer_text: "",
-    status: "",
   });
 
   // Carousel card states
@@ -122,7 +121,6 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
       marketing_type,
       header_url: template.header?.media_url || "",
       offer_text: template.offer_text || "",
-      status: template.status || "",
     };
   };
 
@@ -655,7 +653,7 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
       toast.success("Template saved successfully");
       router.push(`${ROUTES.MessageTemplates}?platform=${platform}`);
     } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to save template");
+      toast.error(err?.data?.message || err?.data?.error || "Failed to save template");
     }
   };
 

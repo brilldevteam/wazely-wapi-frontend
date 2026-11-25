@@ -58,8 +58,18 @@ export const isMarketingTemplate = (template: any): boolean => {
 
 export const hasMediaTemplateHeader = (template: any): boolean => {
   if (!template) return false;
-  const header = template.header;
-  return header?.format === "media";
+  return getTemplateHeaderFormat(template) === "media";
+};
+
+export const getTemplateHeaderFormat = (template: any): string => {
+  if (!template) return "none";
+
+  const format = String(template.header?.format || "").toLowerCase();
+  const mediaType = String(template.header?.media_type || "").toLowerCase();
+
+  // Older location templates may have been stored as a media header.
+  if (format === "location" || mediaType === "location") return "location";
+  return format || "none";
 };
 
 export const formatExpirationTime = (minutes: number | string | undefined): string => {
