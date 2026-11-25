@@ -129,12 +129,12 @@ export function DataTable<T>({
   return (
     <div
       className={cn(
-        "bg-white dark:bg-(--card-color) rounded-lg border border-slate-200/60 dark:border-(--card-border-color) shadow-sm overflow-hidden",
+        "rounded-lg border border-slate-200/60 dark:border-(--card-border-color) shadow-sm overflow-hidden",
         className,
       )}
     >
       <Table>
-        <TableHeader className="bg-gray-50 dark:bg-(--card-color) border-b border-slate-200/60 dark:border-(--card-border-color)">
+        <TableHeader className=" border-b border-slate-200/60 dark:border-(--card-border-color)">
           <TableRow className="hover:bg-transparent border-none">
             {enableSelection && (
               <TableHead className="w-12.5 px-6 py-4">
@@ -228,9 +228,9 @@ export function DataTable<T>({
                   key={rowIndex}
                   onClick={() => onRowClick?.(item)}
                   className={cn(
-                    "hover:bg-slate-50/50 dark:hover:bg-(--table-hover) dark:bg-(--card-color) transition-all group/row",
+                    "hover:bg-slate-50/50 dark:hover:bg-(--table-hover) transition-all group/row",
                     onRowClick && "cursor-pointer",
-                    isSelected && "bg-(--input-color) dark:bg-emerald-500/5",
+                    isSelected && "bg-(--input-color) dark:bg-primary/5",
                   )}
                 >
                   {enableSelection && (
@@ -282,7 +282,7 @@ export function DataTable<T>({
                               }
                               disabled={is_demo_mode}
                               className={cn(
-                                "p-2! hover:bg-emerald-50! bg-[unset]! dark:hover:bg-(--table-hover)! rounded-lg! transition-all text-slate-400! hover:text-primary! border-none! opacity-0! group-hover/row:opacity-100! shrink-0",
+                                "p-2! hover:bg-light-primary! bg-[unset]! dark:hover:bg-(--table-hover)! rounded-lg! transition-all text-slate-400! hover:text-primary! border-none! opacity-0! group-hover/row:opacity-100! shrink-0",
                                 is_demo_mode &&
                                   "cursor-not-allowed opacity-50 group-hover/row:opacity-50",
                               )}

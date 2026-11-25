@@ -83,5 +83,22 @@ export const plainTextToDirectionalHtml = (text: string): string => {
     .join("");
 };
 
+/**
+ * Restores direction on the `<p>` blocks that whatsAppToHtml() builds from saved WhatsApp text:
+ * a block starting with RLM/LRM gets `dir` + `text-align` back (the same shape the CKEditor
+ * TextDirection plugin upcasts) so each paragraph reopens in the editor with its chosen direction.
+ * Like plainTextToDirectionalHtml, content without any direction mark is returned untouched.
+ */
+const MARKED_PARAGRAPH_PATTERN = new RegExp(`<p>([${LRM}${RLM}])`, "g");
+
+export const restoreDirectionFromMarks = (html: string): string => {
+  if (!html || !DIRECTION_MARK_PATTERN.test(html)) return html;
+
+  return html.replace(MARKED_PARAGRAPH_PATTERN, (_match, mark: string) => {
+    const dir = mark === RLM ? "rtl" : "ltr";
+    return `<p dir="${dir}" style="text-align:${dir === "rtl" ? "right" : "left"}">`;
+  });
+};
+
 /** Strips direction marks for contexts that must show/measure the literal message (e.g. the character counter). */
 export const stripDirectionMarks = (text: string): string => text.replace(DIRECTION_MARK_PATTERN_GLOBAL, "");

@@ -186,7 +186,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onSend, onCancel, isSendi
               )}
 
               {(isRecording || audioBlob) && (
-                <Button onClick={restartRecording} disabled={isSending} className="p-2! rounded-full! bg-[unset]! text-slate-400! hover:text-primary! hover:bg-emerald-50! dark:hover:bg-emerald-900/10! transition-all active:scale-95" title="Restart recording">
+                <Button onClick={restartRecording} disabled={isSending} className="p-2! rounded-full! bg-[unset]! text-slate-400! hover:text-primary! hover:bg-light-primary! dark:hover:bg-primary-darker/10! transition-all active:scale-95" title="Restart recording">
                   <RotateCcw size={18} />
                 </Button>
               )}
@@ -196,7 +196,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onSend, onCancel, isSendi
       </div>
 
       <div className="z-10 bg-white dark:bg-(--card-color) rounded-full p-1">
-        <Button onClick={handleSend} disabled={isRecording || !audioBlob || !!error || isSending} className={cn("h-12 w-12 rounded-lg  flex items-center justify-center transition-all duration-300 shadow-lg", !isRecording && audioBlob && !error && !isSending ? "bg-primary text-white scale-110 shadow-emerald-500/30 hover:shadow-emerald-500/50" : "bg-slate-100 text-slate-300 dark:bg-(--page-body-bg) dark:text-slate-600 shadow-none")}>
+        <Button onClick={handleSend} disabled={isRecording || !audioBlob || !!error || isSending} className={cn("h-12 w-12 rounded-lg  flex items-center justify-center transition-all duration-300 shadow-lg", !isRecording && audioBlob && !error && !isSending ? "bg-primary text-white scale-110 shadow-primary/30 hover:shadow-primary/50" : "bg-slate-100 text-slate-300 dark:bg-(--page-body-bg) dark:text-slate-600 shadow-none")}>
           {isSending ? (
             <Loader2 className="animate-spin text-slate-400 dark:text-slate-500" size={22} />
           ) : (

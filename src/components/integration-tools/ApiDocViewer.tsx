@@ -45,7 +45,7 @@ const ApiDocViewer: React.FC<ApiDocViewerData> = ({ sectionId }) => {
     <div className="p-4 md:p-8 pb-20 overflow-y-auto h-full space-y-8 md:space-y-9 animate-in fade-in slide-in-from-bottom-4 duration-500 custom-scrollbar">
       <div className="space-y-4">
         <div className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-3 flex-wrap">
-          <Terminal className="text-primary h-10 w-10 p-2 bg-emerald-50 dark:bg-emerald-500/10 rounded-lg shrink-0" />
+          <Terminal className="text-primary h-10 w-10 p-2 bg-primary/10 dark:bg-primary/10 rounded-lg shrink-0" />
           <div className="flex flex-col min-w-0">
             {section.title}
             <div className="text-sm text-slate-600 dark:text-gray-400 max-w-2xl font-normal">
@@ -80,7 +80,7 @@ const ApiDocViewer: React.FC<ApiDocViewerData> = ({ sectionId }) => {
                   className={cn(
                     "px-3 py-1 rounded-lg text-xs font-medium tracking-widest text-white shadow-sm",
                     endpoint.method === "POST"
-                      ? "bg-primary shadow-emerald-500/20"
+                      ? "bg-primary shadow-primary/20"
                       : endpoint.method === "GET"
                         ? "bg-blue-500 shadow-blue-500/20"
                         : "bg-orange-500 shadow-orange-500/20",
@@ -94,14 +94,14 @@ const ApiDocViewer: React.FC<ApiDocViewerData> = ({ sectionId }) => {
                   </code>
                   <Button
                     onClick={(e) => handleCopy(e, endpoint.path)}
-                    className="p-2! bg-[unset]! h-7.75 hover:bg-emerald-50 dark:hover:bg-(--table-hover) rounded-lg transition-all text-slate-400 hover:text-primary shrink-0"
+                    className="p-2! bg-[unset]! h-7.75 hover:bg-light-primary dark:hover:bg-(--table-hover) rounded-lg transition-all text-slate-400 hover:text-primary shrink-0"
                     title="Copy api"
                   >
                     <Copy size={15} />
                   </Button>
                 </div>
                 <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-wider">
-                  <BadgeCheck size={14} className="text-emerald-500" />
+                  <BadgeCheck size={14} className="text-primary" />
                   Auth Required
                 </div>
               </div>
@@ -122,7 +122,7 @@ const ApiDocViewer: React.FC<ApiDocViewerData> = ({ sectionId }) => {
                 {endpoint.response && (
                   <div className="space-y-3">
                     <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                      <Check size={16} className="text-emerald-500" /> Example
+                      <Check size={16} className="text-primary" /> Example
                       Response
                     </h4>
                     <CodeBlock

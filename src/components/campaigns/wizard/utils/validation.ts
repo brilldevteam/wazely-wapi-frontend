@@ -41,6 +41,9 @@ export const validateWizardStep = (
       ) {
         return "Latitude and Longitude are required for Location templates";
       }
+      if (!values.location_data?.name?.trim() || !values.location_data?.address?.trim()) {
+        return "Location Name and Address are required by WhatsApp for Location templates";
+      }
     }
     if (
       template.header?.format === "media" &&

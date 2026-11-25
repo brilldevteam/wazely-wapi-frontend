@@ -15,7 +15,7 @@ export default function SalesCTA({
   return (
     <section className="py-[calc(20px+(50-20)*((100vw-320px)/(1920-320)))] bg-white">
       <div className="container mx-auto px-[calc(8px+(24-8)*((100vw-320px)/(1920-320)))] md:px-12 xl:px-16">
-        <div className="max-w-6xl mx-auto rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 p-[calc(10px+(30-10)*((100vw-320px)/(1920-320)))] text-white text-center relative overflow-hidden shadow-2xl shadow-emerald-950/20">
+        <div className="max-w-6xl mx-auto rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 p-[calc(10px+(30-10)*((100vw-320px)/(1920-320)))] text-white text-center relative overflow-hidden shadow-2xl shadow-primary-darker/20">
           <div
             className="absolute top-[-50%] left-[-50%] w-[100%] h-[100%] rounded-full blur-[130px] pointer-events-none"
             style={{ backgroundColor: primaryColor, opacity: 0.15 }}

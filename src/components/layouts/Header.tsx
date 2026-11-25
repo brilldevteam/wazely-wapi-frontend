@@ -13,18 +13,49 @@ import Profile from "./Profile";
 import SearchBar from "./SearchBar";
 import WorkspaceSwitcherModal from "@/src/components/workspace/WorkspaceSwitcherModal";
 import SelfTenantBanner from "./SelfTenantBanner";
+import ConfirmModal from "@/src/shared/ConfirmModal";
+import { ROUTES } from "@/src/constants";
+import { performLogout } from "@/src/utils/logout";
+import { useTranslation } from "react-i18next";
 
 const Header = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const { sidebarToggle, isRTL } = useAppSelector((state) => state.layout);
   const { selectedWorkspace } = useAppSelector((state) => state.workspace);
+  const { landing_page_enabled } = useAppSelector((state) => state.setting);
   const { theme, setTheme } = useTheme();
   const themeBtnRef = useRef<HTMLButtonElement>(null);
   const [workspaceSwitcherOpen, setWorkspaceSwitcherOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const logoutRequestedRef = useRef(false);
 
   const darkMode = theme === "dark";
+
+  // Close the menu first; the confirmation opens once the menu has fully closed
+  // (see onCloseAutoFocus below), so the two never fight over focus or clicks.
+  const handleLogoutClick = () => {
+    logoutRequestedRef.current = true;
+    setProfileMenuOpen(false);
+  };
+
+  const handleLogoutCancel = () => {
+    if (isLoggingOut) return;
+    logoutRequestedRef.current = false;
+    setShowLogoutConfirm(false);
+  };
+
+  // The page is left as it is (with "Logging out..." on the button) until the
+  // fresh page load, so the user never sees a half-cleared, frozen screen.
+  const handleLogoutConfirm = async () => {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    await performLogout(landing_page_enabled ? ROUTES.Landing : ROUTES.Login);
+  };
 
   const handleThemeToggle = () => {
     if (!themeBtnRef.current) return;
@@ -73,7 +104,7 @@ const Header = () => {
 
             <div className="flex items-center gap-1 xs:gap-1.5 sm:gap-3 ml-0 min-[1025px]:ml-3 sm:ml-6 rtl:mr-3 rtl:ml-0 min-w-0">
               {/* Mobile-only search icon */}
-              <Button variant="ghost" size="icon" onClick={() => setMobileSearchOpen(true)} className="w-9 h-9 sm:w-10 sm:h-10 p-2 sm:p-2.5 rounded-lg transition-all duration-200 cursor-pointer dark:bg-(--page-body-bg) dark:text-gray-500 dark:hover:text-white dark:hover:bg-(--focus-bg-color) bg-white text-slate-500 hover:text-success-green hover:bg-green-50 shadow-sm border border-slate-100 dark:border-none min-[1025px]:hidden" title="Search">
+              <Button variant="ghost" size="icon" onClick={() => setMobileSearchOpen(true)} className="w-9 h-9 sm:w-10 sm:h-10 p-2 sm:p-2.5 rounded-lg transition-all duration-200 cursor-pointer dark:bg-(--page-body-bg) dark:text-gray-500 dark:hover:text-white dark:hover:bg-(--table-hover) bg-white text-slate-500 hover:text-primary hover:bg-primary/10 shadow-sm border border-slate-100 dark:border-none min-[1025px]:hidden" title="Search">
                 <Search size={18} />
               </Button>
               <SelfTenantBanner />
@@ -82,24 +113,34 @@ const Header = () => {
                 <span className="truncate hidden sm:inline">{selectedWorkspace?.name ?? "Workspace"}</span>
               </Button>
 
-              <Button variant="ghost" size="icon" onClick={() => dispatch(setRTL())} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg cursor-pointer transition-all [@media(max-width:575px)]:hidden ${isRTL ? "bg-emerald-50 text-primary hover:bg-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-400" : "text-slate-500 shadow-sm hover:bg-slate-100 dark:text-gray-500 dark:bg-(--page-body-bg) dark:hover:bg-(--table-hover)"}`} title={isRTL ? "Switch to LTR" : "Switch to RTL"}>
+              <Button variant="ghost" size="icon" onClick={() => dispatch(setRTL())} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg cursor-pointer transition-all [@media(max-width:575px)]:hidden ${isRTL ? "bg-light-primary text-primary hover:bg-[var(--primary-opacity-20)] dark:bg-primary-darker/20 dark:text-primary" : "text-slate-500 shadow-sm hover:bg-slate-100 dark:text-gray-500 dark:bg-(--page-body-bg) dark:hover:bg-(--table-hover)"}`} title={isRTL ? "Switch to LTR" : "Switch to RTL"}>
                 {!isRTL ? <PilcrowRight size={18} className={`sm:w-5 sm:h-5 transition-transform duration-300`} /> : <PilcrowLeft size={18} className={`sm:w-5 sm:h-5 transition-transform duration-300`} />}
               </Button>
-              <Button ref={themeBtnRef} onClick={handleThemeToggle} className={`w-9 h-9 sm:w-10 sm:h-10 p-2 sm:p-2.5 rounded-lg transition-all duration-200 cursor-pointer dark:bg-(--page-body-bg) dark:text-gray-500 dark:hover:text-white dark:hover:bg-(--focus-bg-color) bg-white text-slate-500 hover:text-success-green hover:bg-green-50 shadow-sm border border-slate-100 dark:border-none`}>
+              <Button ref={themeBtnRef} onClick={handleThemeToggle} className={`w-9 h-9 sm:w-10 sm:h-10 p-2 sm:p-2.5 rounded-lg transition-all duration-200 cursor-pointer dark:bg-(--page-body-bg) dark:text-gray-500 dark:hover:text-white dark:hover:bg-(--table-hover) bg-white text-slate-500 hover:text-primary hover:bg-primary/10 shadow-sm border border-slate-100 dark:border-none`}>
                 {darkMode ? <Sun className="w-4.5 h-4.5 sm:w-5 sm:h-5" /> : <Moon className="w-4.5 h-4.5 sm:w-5 sm:h-5" />}
               </Button>
               <LanguageDropdown />
               <CurrencyDropdown />
 
-              <DropdownMenu>
+              <DropdownMenu open={profileMenuOpen} onOpenChange={setProfileMenuOpen}>
                 <DropdownMenuTrigger asChild>
-                  <Button className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg text-white flex items-center justify-center font-semibold hover:bg-green-700 transition-colors">
+                  <Button className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg text-white flex items-center justify-center font-semibold hover:bg-primary transition-colors">
                     <span>{user ? user.name?.charAt(0)?.toUpperCase() : "U"}</span>
                   </Button>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end" sideOffset={8} className="p-0 border-none shadow-none bg-transparent">
-                  <Profile />
+                <DropdownMenuContent
+                  align="end"
+                  sideOffset={8}
+                  className="p-0 border-none shadow-none bg-transparent"
+                  onCloseAutoFocus={(e) => {
+                    if (!logoutRequestedRef.current) return;
+                    // Menu has finished closing: open the logout confirmation, which takes focus itself.
+                    e.preventDefault();
+                    setShowLogoutConfirm(true);
+                  }}
+                >
+                  <Profile onLogoutClick={handleLogoutClick} />
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -108,6 +149,19 @@ const Header = () => {
       </header>
 
       <WorkspaceSwitcherModal isOpen={workspaceSwitcherOpen} onClose={() => setWorkspaceSwitcherOpen(false)} />
+
+      <ConfirmModal
+        isOpen={showLogoutConfirm}
+        onClose={handleLogoutCancel}
+        onConfirm={handleLogoutConfirm}
+        isLoading={isLoggingOut}
+        title={t("logout_confirm_title")}
+        subtitle={t("logout_confirm_desc")}
+        confirmText={t("logout")}
+        cancelText={t("cancel")}
+        variant="danger"
+        loadingText={t("logging_out")}
+      />
 
       {/* Mobile search overlay — fixed outside header to avoid z-index stacking context of header z-30 */}
       {mobileSearchOpen && (

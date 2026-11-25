@@ -31,7 +31,9 @@ export const getResolvedImageUrl = (src: any, fallbackSrc?: string): string => {
         return fallbackSrc || defaultPlaceholder;
       }
 
-      if (sourceString.startsWith("uploads/")) {
+      if (sourceString.includes("/uploads/")) {
+        sourceString = sourceString.substring(sourceString.indexOf("/uploads/"));
+      } else if (sourceString.startsWith("uploads/")) {
         sourceString = "/" + sourceString;
       }
 

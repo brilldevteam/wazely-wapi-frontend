@@ -16,7 +16,7 @@ const ApiKeyConfig: React.FC<ApiKeyConfigProps> = ({ value, onChange }) => {
     <>
       <Card className="border dark:border-(--card-border-color) shadow-sm bg-white dark:bg-(--card-color)">
         <CardHeader className="flex flex-row items-center gap-4 pb-0!">
-          <div className="p-3 rounded-lg bg-primary text-white shadow-lg shadow-emerald-500/20">
+          <div className="p-3 rounded-lg bg-primary text-white shadow-lg shadow-primary/20">
             <Key size={24} />
           </div>
           <div className="flex-1">

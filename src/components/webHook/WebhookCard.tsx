@@ -49,7 +49,7 @@ const WebhookCard = ({ webhook, onEdit, onToggle, onDelete, onViewPayload, local
       <div className="sm:p-6 p-4 pb-4 flex items-start justify-between gap-4">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <h3 className="text-base font-extrabold text-slate-900 dark:text-white tracking-tight uppercase group-hover:text-emerald-600 transition-colors">{webhook?.webhook_name}</h3>
+            <h3 className="text-base font-extrabold text-slate-900 dark:text-white tracking-tight uppercase group-hover:text-primary transition-colors">{webhook?.webhook_name}</h3>
             <Badge variant="outline" className="text-[10px] font-bold h-5 px-2 bg-slate-50 dark:bg-(--page-body-bg) text-slate-400 border-slate-100 dark:border-(--card-border-color) tracking-widest uppercase">
               {webhook?.platform || "CUSTOM"}
             </Badge>
@@ -119,7 +119,7 @@ const WebhookCard = ({ webhook, onEdit, onToggle, onDelete, onViewPayload, local
 
       <div className="sm:px-6 px-4 space-y-6 flex-1">
         <div className="flex flex-wrap gap-2 pt-1">
-          <Badge variant="secondary" className={cn("border-none font-extrabold text-[10px] px-3 py-1 rounded-full tracking-wider shadow-sm", (localStatus ?? webhook.is_active) ? "bg-primary/10 text-emerald-600 dark:text-emerald-400" : "bg-slate-100 text-slate-400 dark:bg-(--page-body-bg)")}>
+          <Badge variant="secondary" className={cn("border-none font-extrabold text-[10px] px-3 py-1 rounded-full tracking-wider shadow-sm", (localStatus ?? webhook.is_active) ? "bg-primary/10 text-primary dark:text-primary" : "bg-slate-100 text-slate-400 dark:bg-(--page-body-bg)")}>
             {(localStatus ?? webhook.is_active) ? t("active").toUpperCase() : t("inactive").toUpperCase()}
           </Badge>
           <Badge variant="secondary" className={cn("border-none font-extrabold text-[10px] px-3 py-1 rounded-full tracking-wider shadow-sm", !isConfigured ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : "bg-blue-500/10 text-blue-600 dark:text-blue-400")}>
@@ -141,7 +141,7 @@ const WebhookCard = ({ webhook, onEdit, onToggle, onDelete, onViewPayload, local
           <div className="relative overflow-hidden group/copy">
             <div className="w-full bg-slate-900/5 dark:bg-(--page-body-bg) p-4 py-4 rounded-lg border border-slate-100/80 dark:border-(--card-border-color) font-mono text-[11px] text-slate-600 dark:text-slate-400 break-all pr-12 leading-relaxed shadow-inner group-hover/copy:border-primary/30 transition-colors">{webhookUrl}</div>
             <div className="absolute right-2 top-1.5 bottom-1.5 flex items-center">
-              <Button variant="ghost" size="icon" onClick={() => !is_demo_mode && handleCopy()} disabled={is_demo_mode} className={cn("h-8 w-8 bg-white dark:bg-(--page-body-bg) text-slate-400 hover:text-primary hover:bg-emerald-50 dark:hover:bg-primary/10 rounded-lg transition-all border border-slate-100 dark:border-(--card-border-color) shadow-md transform translate-x-1 group-hover/copy:translate-x-0 opacity-0 group-hover/copy:opacity-100", is_demo_mode && "cursor-not-allowed")}>
+              <Button variant="ghost" size="icon" onClick={() => !is_demo_mode && handleCopy()} disabled={is_demo_mode} className={cn("h-8 w-8 bg-white dark:bg-(--page-body-bg) text-slate-400 hover:text-primary hover:bg-light-primary dark:hover:bg-primary/10 rounded-lg transition-all border border-slate-100 dark:border-(--card-border-color) shadow-md transform translate-x-1 group-hover/copy:translate-x-0 opacity-0 group-hover/copy:opacity-100", is_demo_mode && "cursor-not-allowed")}>
                 {copied ? <Check size={14} className="text-primary animate-in zoom-in-50" /> : <Copy size={14} />}
               </Button>
             </div>
@@ -162,14 +162,14 @@ const WebhookCard = ({ webhook, onEdit, onToggle, onDelete, onViewPayload, local
               </div>
             </div>
           ) : (
-            <div className="p-4 rounded-2xl bg-linear-to-br from-emerald-50/50 to-teal-50/50 dark:from-primary/5 dark:to-teal-500/5 border border-emerald-100/50 dark:border-primary/10 flex items-center justify-between shadow-sm group-hover:shadow-md transition-shadow">
+            <div className="p-4 rounded-2xl bg-linear-to-br from-emerald-50/50 to-teal-50/50 dark:from-primary/5 dark:to-teal-500/5 border border-[var(--primary-opacity-20)]/50 dark:border-primary/10 flex items-center justify-between shadow-sm group-hover:shadow-md transition-shadow">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-white dark:bg-(--dark-body) flex items-center justify-center text-primary shadow-sm ring-1 ring-emerald-100 dark:ring-primary/20">
+                <div className="w-9 h-9 rounded-full bg-white dark:bg-(--dark-body) flex items-center justify-center text-primary shadow-sm ring-1 ring-[var(--primary-opacity-20)] dark:ring-primary/20">
                   <CheckCircle2 size={18} />
                 </div>
                 <div className="space-y-0.5">
-                  <p className="text-[11px] font-extrabold text-emerald-700 dark:text-emerald-400 uppercase">{t("successfully_receiving_data")}</p>
-                  <p className="text-[9px] text-emerald-600/60 dark:text-emerald-400/40 font-medium tracking-tight">Active synchronization</p>
+                  <p className="text-[11px] font-extrabold text-primary-dark dark:text-primary uppercase">{t("successfully_receiving_data")}</p>
+                  <p className="text-[9px] text-primary/60 dark:text-primary/40 font-medium tracking-tight">Active synchronization</p>
                 </div>
               </div>
             </div>

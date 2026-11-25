@@ -206,7 +206,7 @@ const AppointmentBookingList: React.FC = () => {
             <Button
               variant="outline"
               size="sm"
-              className="w-9 h-9 border-none text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all"
+              className="w-9 h-9 border-none text-primary hover:text-primary hover:bg-light-primary rounded-lg transition-all"
               onClick={() => setPaymentBooking(item)}
               title={t("send_payment_link")}
             >

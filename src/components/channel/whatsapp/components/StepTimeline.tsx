@@ -39,11 +39,11 @@ export default function StepTimeline({
                 className="bg-white sm:p-6 p-4 rounded-lg border border-slate-200/80 shadow-sm relative group"
               >
                 <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm mb-4 border border-[#0596694d]"
+                  className="w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm mb-4 border border-[var(--primary-opacity-30)]"
                   style={{
-                    backgroundColor: isLast ? primaryColor + "1a" : "#0596691a",
-                    borderColor: isLast ? primaryColor + "4d" : "#0596694d",
-                    color: isLast ? primaryColor : "#059669",
+                    backgroundColor: isLast ? primaryColor + "1a" : "var(--primary-opacity-20)",
+                    borderColor: isLast ? primaryColor + "4d" : "var(--primary-opacity-30)",
+                    color: isLast ? primaryColor : "var(--primary)",
                   }}
                 >
                   {idx < 9 ? `0${idx + 1}` : idx + 1}

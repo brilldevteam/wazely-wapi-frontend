@@ -111,6 +111,8 @@ export interface SettingResponse {
   widget_facebook_url?: string;
   widget_sms_url?: string;
   omnichannel_platforms?: string[];
+  theme_primary_color?: string;
+  theme_light_background_color?: string;
 }
 
 export interface UserSetting {

@@ -41,6 +41,14 @@ export const whatsappApi = baseApi.enhanceEndpoints({ addTagTypes: ["Whatsapp", 
       },
       providesTags: ["WhatsappConnections"],
     }),
+    updateWhatsAppConnection: builder.mutation<{ success: boolean; message?: string }, { id: string; name: string }>({
+      query: ({ id, name }) => ({
+        url: `/whatsapp/connect/${id}`,
+        method: "PUT",
+        body: { name },
+      }),
+      invalidatesTags: ["WhatsappConnections"],
+    }),
     connectWhatsAppDelete: builder.mutation<{ success: boolean; message: string }, { ids: string[] }>({
       query: (body) => ({
         url: "/whatsapp/connections",
@@ -98,7 +106,8 @@ export const whatsappApi = baseApi.enhanceEndpoints({ addTagTypes: ["Whatsapp", 
   }),
 });
 
-export const { 
+export const {
+  useUpdateWhatsAppConnectionMutation, 
   useConnectionMutation, 
   useConnectWhatsAppMutation, 
   useGetStatusQuery, 

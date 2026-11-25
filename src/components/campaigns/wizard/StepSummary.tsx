@@ -39,6 +39,8 @@ import {
   SegmentsResponse,
 } from "@/src/types/campaign";
 
+import { calculateAudienceCount } from "./utils/audience";
+
 const StepSummary = ({ formik, template }: StepSummaryProps) => {
   const { t } = useTranslation();
   const { values } = formik;
@@ -75,6 +77,26 @@ const StepSummary = ({ formik, template }: StepSummaryProps) => {
   const { data: segmentsResult } = useGetSegmentsQuery({});
   const segments = (segmentsResult as SegmentsResponse)?.data?.segments || [];
 
+  const totalAudienceCount = useMemo(() => {
+    return calculateAudienceCount({
+      recipient_type: values.recipient_type,
+      avoid_unsubscribers: values.avoid_unsubscribers,
+      specific_contacts: values.specific_contacts,
+      tag_ids: values.tag_ids,
+      segment_ids: values.segment_ids,
+      contacts,
+      segments,
+    });
+  }, [
+    values.recipient_type,
+    values.avoid_unsubscribers,
+    values.specific_contacts,
+    values.tag_ids,
+    values.segment_ids,
+    contacts,
+    segments,
+  ]);
+
   const platformLabel = useMemo(() => {
     switch (values.platform) {
       case "telegram":
@@ -106,21 +128,21 @@ const StepSummary = ({ formik, template }: StepSummaryProps) => {
         (values.specific_contacts?.length || 0) - 5,
       );
       const moreStr = remainingCount > 0 ? ` ${t("campaign_wizard_summary_contacts_more", { count: remainingCount })}` : "";
-      return t("campaign_wizard_summary_contacts_selected", { count: values.specific_contacts?.length || 0, names: selectedNames.join(", ") }) + moreStr;
+      return t("campaign_wizard_summary_contacts_selected", { count: values.specific_contacts?.length || 0, names: selectedNames.join(", ") }) + moreStr + ` (${t("campaign_wizard_summary_total_contacts_suffix", { count: totalAudienceCount, defaultValue: `Total: ${totalAudienceCount} contacts` })})`;
     }
 
     if (values.recipient_type === "tags") {
       const selectedNames = values.tag_ids.map(
         (id) => tags.find((t: Tag) => t._id === id)?.label || id,
       );
-      return t("campaign_wizard_summary_tags_selected", { count: values.tag_ids?.length || 0, names: selectedNames.join(", ") });
+      return t("campaign_wizard_summary_tags_selected", { count: values.tag_ids?.length || 0, names: selectedNames.join(", ") }) + ` (${t("campaign_wizard_summary_total_contacts_suffix", { count: totalAudienceCount, defaultValue: `Total: ${totalAudienceCount} contacts` })})`;
     }
 
     if (values.recipient_type === "segments") {
       const selectedNames = (values.segment_ids || []).map(
         (id) => segments.find((s: Segment) => s._id === id)?.name || id,
       );
-      return t("campaign_wizard_summary_segments_selected", { count: (values.segment_ids || [])?.length || 0, names: selectedNames.join(", ") });
+      return t("campaign_wizard_summary_segments_selected", { count: (values.segment_ids || [])?.length || 0, names: selectedNames.join(", ") }) + ` (${t("campaign_wizard_summary_total_contacts_suffix", { count: totalAudienceCount, defaultValue: `Total: ${totalAudienceCount} contacts` })})`;
     }
 
     return t("campaign_wizard_summary_no_audience");
@@ -133,6 +155,7 @@ const StepSummary = ({ formik, template }: StepSummaryProps) => {
     contacts,
     tags,
     segments,
+    totalAudienceCount,
     t,
   ]);
 
@@ -359,9 +382,17 @@ const StepSummary = ({ formik, template }: StepSummaryProps) => {
                   {t("campaign_wizard_summary_avoid_unsubscribers")}
                 </span>
                 <span
-                  className={`font-bold ${values.avoid_unsubscribers ? "text-emerald-500" : "text-amber-500"}`}
+                  className={`font-bold ${values.avoid_unsubscribers ? "text-primary" : "text-amber-500"}`}
                 >
                   {values.avoid_unsubscribers ? t("campaign_wizard_summary_yes") : t("campaign_wizard_summary_no")}
+                </span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-primary/5 dark:bg-(--page-body-bg) rounded-lg border border-primary/20">
+                <span className="text-slate-700 dark:text-slate-200 font-bold text-xs">
+                  {t("campaign_wizard_summary_total_contacts", "Total Target Contacts:")}
+                </span>
+                <span className="font-black text-primary text-xs px-2.5 py-1 bg-primary/10 dark:bg-primary/20 rounded-full border border-primary/20">
+                  {totalAudienceCount} {t("contacts_label", "Contacts")}
                 </span>
               </div>
               <div className="pt-2">
@@ -417,7 +448,7 @@ const StepSummary = ({ formik, template }: StepSummaryProps) => {
                   {t("campaign_wizard_summary_preview_title")}
                 </h3>
               </div>
-              <div className="p-4 bg-emerald-50/40 dark:bg-(--page-body-bg) rounded-lg border border-emerald-100 dark:border-emerald-950 max-h-55 overflow-y-auto no-scrollbar">
+              <div className="p-4 bg-light-primary/40 dark:bg-(--page-body-bg) rounded-lg border border-[var(--primary-opacity-20)] dark:border-primary-darker max-h-55 overflow-y-auto no-scrollbar">
                 {template.header?.text && (
                   <p className="font-bold text-slate-800 dark:text-slate-200 text-sm mb-1.5 border-b pb-1 dark:border-slate-850">
                     {template.header.text}

@@ -134,7 +134,7 @@ const PipelineBoard: React.FC = () => {
       case "form_submission":
         return "bg-purple-100 text-purple-700 dark:bg-purple-500/10 dark:text-purple-400";
       case "agent":
-        return "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400";
+        return "bg-[var(--primary-opacity-20)] text-primary-dark dark:bg-primary/10 dark:text-primary";
       default:
         return "bg-slate-100 text-slate-700 dark:bg-slate-500/10 dark:text-slate-400";
     }

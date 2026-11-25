@@ -1,4 +1,4 @@
-export type PaymentGatewayType = "razorpay" | "stripe" | "paypal";
+export type PaymentGatewayType = "razorpay" | "stripe" | "paypal" | "midtrans" | "mollie";
 
 export interface RazorpayCredentials {
   key_id: string;
@@ -16,7 +16,18 @@ export interface PaypalCredentials {
   mode: "sandbox" | "live";
 }
 
-export type PaymentGatewayCredentials = RazorpayCredentials | StripeCredentials | PaypalCredentials;
+export interface MidtransCredentials {
+  merchant_id: string;
+  client_key: string;
+  server_key: string;
+  mode: "sandbox" | "live";
+}
+
+export interface MollieCredentials {
+  api_key: string;
+}
+
+export type PaymentGatewayCredentials = RazorpayCredentials | StripeCredentials | PaypalCredentials | MidtransCredentials | MollieCredentials;
 
 export interface PaymentGateway {
   _id: string;

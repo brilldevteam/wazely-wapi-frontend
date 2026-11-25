@@ -52,13 +52,13 @@ export const getPageColumns = (
       header: t("instagram_connected"),
       className: "min-w-[140px] [@media(max-width:1755px)]:min-w-[220px]",
       accessorKey: "is_instagram_connected",
-      cell: (item) => <div className="flex items-center gap-2">{item.is_instagram_connected ? <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 gap-1.5 px-2.5 py-0.5 font-bold">{t("yes")}</Badge> : <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 gap-1.5 px-2.5 py-0.5 font-bold">{t("no")}</Badge>}</div>,
+      cell: (item) => <div className="flex items-center gap-2">{item.is_instagram_connected ? <Badge className="bg-primary/10 text-primary border-primary/20 gap-1.5 px-2.5 py-0.5 font-bold">{t("yes")}</Badge> : <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 gap-1.5 px-2.5 py-0.5 font-bold">{t("no")}</Badge>}</div>,
     },
     {
       header: t("whatsapp_connected"),
       className: "min-w-[140px] [@media(max-width:1755px)]:min-w-[220px]",
       accessorKey: "is_whatsapp_connected",
-      cell: (item) => <div className="flex items-center gap-2">{item.is_whatsapp_connected ? <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 gap-1.5 px-2.5 py-0.5 font-bold">{t("yes")}</Badge> : <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 gap-1.5 px-2.5 py-0.5 font-bold">{t("no")}</Badge>}</div>,
+      cell: (item) => <div className="flex items-center gap-2">{item.is_whatsapp_connected ? <Badge className="bg-primary/10 text-primary border-primary/20 gap-1.5 px-2.5 py-0.5 font-bold">{t("yes")}</Badge> : <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 gap-1.5 px-2.5 py-0.5 font-bold">{t("no")}</Badge>}</div>,
     },
     {
       header: t("instagram_username"),
@@ -83,7 +83,7 @@ export const getPageColumns = (
       cell: (item) => (
         <div className="flex items-center gap-2">
           {item.is_active ? (
-            <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 gap-1.5 px-2.5 py-0.5 font-bold">
+            <Badge className="bg-primary/10 text-primary border-primary/20 gap-1.5 px-2.5 py-0.5 font-bold">
               <CheckCircle2 size={12} /> {t("connected")}
             </Badge>
           ) : (
@@ -175,7 +175,7 @@ export const getAdAccountColumns = (t: any, router: AppRouterInstance): Column<a
     cell: (item) => (
       <div className="flex items-center gap-2">
         {item.has_payment_method ? (
-          <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 gap-1.5 px-2.5 py-0.5 font-bold">
+          <Badge className="bg-primary/10 text-primary border-primary/20 gap-1.5 px-2.5 py-0.5 font-bold">
             <CheckCircle2 size={12} /> {t("yes")}
           </Badge>
         ) : (
@@ -188,7 +188,7 @@ export const getAdAccountColumns = (t: any, router: AppRouterInstance): Column<a
     header: t("status"),
     className: "min-w-[120px] [@media(max-width:1755px)]:min-w-[140px]",
     accessorKey: "account_status",
-    cell: (item) => <Badge className={cn("font-bold px-2.5 py-0.5", item.account_status === 1 ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" : "bg-red-500/10 text-red-600 border-red-500/20")}>{item.status_label || (item.account_status === 1 ? t("active") : t("disabled"))}</Badge>,
+    cell: (item) => <Badge className={cn("font-bold px-2.5 py-0.5", item.account_status === 1 ? "bg-primary/10 text-primary border-primary/20" : "bg-red-500/10 text-red-600 border-red-500/20")}>{item.status_label || (item.account_status === 1 ? t("active") : t("disabled"))}</Badge>,
   },
   {
     header: t("actions"),
@@ -234,7 +234,7 @@ export const getCampaignColumns = (t: any, router: AppRouterInstance, onDelete: 
     cell: (item) => {
       const status = item.status?.toUpperCase();
       const styles: Record<string, string> = {
-        ACTIVE: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
+        ACTIVE: "bg-primary/10 text-primary border-primary/20",
         PAUSED: "bg-amber-500/10 text-amber-600 border-amber-500/20",
         ARCHIVED: "bg-slate-500/10 text-slate-600 border-slate-500/20",
         DELETED: "bg-rose-500/10 text-rose-600 border-rose-500/20",
@@ -318,8 +318,8 @@ export const getAdSetColumns = (t: any, router: AppRouterInstance, onDelete: (id
     className: "min-w-[120px] [@media(max-width:1199px)]:min-w-[125px]",
     accessorKey: "status",
     cell: (item) => (
-      <Badge variant="outline" className={cn("capitalize font-bold border-none px-0", item.status === "ACTIVE" ? "text-emerald-500" : "text-slate-400")}>
-        <div className={cn("w-1.5 h-1.5 rounded-full mr-2", item.status === "ACTIVE" ? "bg-emerald-500" : "bg-slate-300")} />
+      <Badge variant="outline" className={cn("capitalize font-bold border-none px-0", item.status === "ACTIVE" ? "text-primary" : "text-slate-400")}>
+        <div className={cn("w-1.5 h-1.5 rounded-full mr-2", item.status === "ACTIVE" ? "bg-primary" : "bg-slate-300")} />
         {item.status?.toLowerCase()}
       </Badge>
     ),
@@ -369,8 +369,8 @@ export const getAdColumns = (t: any, router: AppRouterInstance, onDelete: (id: s
     className: "min-w-[120px]",
     accessorKey: "status",
     cell: (item) => (
-      <Badge variant="outline" className={cn("capitalize font-bold border-none px-0", item.status === "ACTIVE" ? "text-emerald-500" : "text-slate-400")}>
-        <div className={cn("w-1.5 h-1.5 rounded-full mr-2", item.status === "ACTIVE" ? "bg-emerald-500" : "bg-slate-300")} />
+      <Badge variant="outline" className={cn("capitalize font-bold border-none px-0", item.status === "ACTIVE" ? "text-primary" : "text-slate-400")}>
+        <div className={cn("w-1.5 h-1.5 rounded-full mr-2", item.status === "ACTIVE" ? "bg-primary" : "bg-slate-300")} />
         {item.status?.toLowerCase()}
       </Badge>
     ),

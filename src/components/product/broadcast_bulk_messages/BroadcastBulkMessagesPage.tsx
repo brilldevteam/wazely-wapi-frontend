@@ -78,8 +78,16 @@ const BroadcastBulkMessagesPage = ({
   };
 
   return (
-    <div className="relative overflow-x-hidden bg-[#FCFCFD] text-slate-800 font-sans">
-      <div className="absolute top-[3%] left-[-15%] w-[60vw] h-[60vw] rounded-full bg-emerald-400/10 blur-[130px] pointer-events-none" />
+    <div 
+      className="relative overflow-x-hidden bg-[#FCFCFD] text-slate-800 font-sans"
+      style={{
+        "--primary": "#059669",
+        "--primary-rgb": "5, 150, 105",
+        "--light-primary": "#05966926",
+        "--primary-opacity-20": "rgba(5, 150, 105, 0.2)",
+      } as React.CSSProperties}
+    >
+      <div className="absolute top-[3%] left-[-15%] w-[60vw] h-[60vw] rounded-full bg-primary/10 blur-[130px] pointer-events-none" />
       <div className="absolute top-[40%] right-[-10%] w-[55vw] h-[55vw] rounded-full bg-teal-400/10 blur-[120px] pointer-events-none" />
       <div
         className="absolute inset-0 opacity-40 pointer-events-none -z-10"
@@ -95,7 +103,7 @@ const BroadcastBulkMessagesPage = ({
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-[calc(16px+(48-16)*((100vw-320px)/(1920-320)))] items-center">
             <div className="flex flex-col text-center lg:text-left items-center lg:items-start z-10">
               {hero.badge && (
-                <div className="inline-flex items-center gap-2.5 px-4 py-2 mb-6 rounded-full bg-emerald-100 uppercase tracking-wide">
+                <div className="inline-flex items-center gap-2.5 px-4 py-2 mb-6 rounded-full bg-[var(--primary-opacity-20)] uppercase tracking-wide">
                   <span className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse" />
                   <span className="text-sm font-bold text-primary font-mono">
                     {hero.badge}

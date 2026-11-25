@@ -107,8 +107,8 @@ const SendPaymentLinkModal: React.FC<SendPaymentLinkModalProps> = ({
             </Select>
           </div>
 
-          <div className="p-4 bg-emerald-50 dark:bg-emerald-900/10 rounded-lg border border-emerald-100 dark:border-emerald-900/20">
-            <p className="text-xs text-emerald-800 dark:text-emerald-300 font-medium leading-relaxed">
+          <div className="p-4 bg-light-primary dark:bg-primary-darker/10 rounded-lg border border-[var(--primary-opacity-20)] dark:border-primary-darker/20">
+            <p className="text-xs text-primary-darker dark:text-emerald-300 font-medium leading-relaxed">
               {t("send_payment_info_note", {
                 defaultValue:
                   "This will send a WhatsApp message to the customer with a secure payment link.",

@@ -46,8 +46,6 @@ const SocialAutomationForm: React.FC = () => {
 
   // Read URL parameters passed from SocialAutomationGrid
   const automationId = searchParams.get("automation_id") || "";
-  console.log("[SocialAutomationForm] Parsed automation_id:", automationId, "from URL searchParams:", searchParams.toString());
-
   const [platform, setPlatform] = useState<"facebook" | "instagram">("facebook");
   const [mediaType, setMediaType] = useState<"post" | "story" | "reel">("post");
   const [mediaId, setMediaId] = useState("");

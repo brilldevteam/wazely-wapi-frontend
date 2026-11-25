@@ -59,7 +59,7 @@ export const PhoneSimulator: React.FC<PhoneSimulatorProps> = ({
             <div className="flex flex-col">
               <span className="text-xs font-bold leading-tight">{pDetails.name} Sandbox</span>
               <div className="flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                 <span className="text-[9px] opacity-80 font-medium">online</span>
               </div>
             </div>

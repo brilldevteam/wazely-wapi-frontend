@@ -2,7 +2,7 @@ import { Clock, DollarSign, HelpCircle, Info, Link, MessageSquare } from "lucide
 
 export const statusColors: Record<string, string> = {
     pending: "bg-amber-500/10 text-amber-600 border-amber-500/20",
-    confirmed: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
+    confirmed: "bg-primary/10 text-primary border-primary/20",
     canceled: "bg-red-500/10 text-red-600 border-red-500/20",
     rescheduled: "bg-blue-500/10 text-blue-600 border-blue-500/20",
     booked: "bg-primary/10 text-primary border-primary/20",
@@ -10,14 +10,14 @@ export const statusColors: Record<string, string> = {
 
  export  const paymentColors: Record<string, string> = {
     unpaid: "bg-slate-500/10 text-slate-600 border-slate-500/20",
-    paid: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
+    paid: "bg-primary/10 text-primary border-primary/20",
     partially_paid: "bg-indigo-500/10 text-indigo-600 border-indigo-500/20",
   };
 
 
   export const statuses = [
     { value: "pending", label: "booking_status_pending", color: "bg-amber-500/10 text-amber-600 border-amber-500/20 hover:bg-amber-500/20" },
-    { value: "confirmed", label: "booking_status_confirmed", color: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 hover:bg-emerald-500/20" },
+    { value: "confirmed", label: "booking_status_confirmed", color: "bg-primary/10 text-primary border-primary/20 hover:bg-primary/20" },
     { value: "booked", label: "booking_status_booked", color: "bg-primary/10 text-primary border-primary/20 hover:bg-primary/20" },
     { value: "rescheduled", label: "booking_status_rescheduled", color: "bg-blue-500/10 text-blue-600 border-blue-500/20 hover:bg-blue-500/20" },
     { value: "canceled", label: "booking_status_canceled", color: "bg-red-500/10 text-red-600 border-red-500/20 hover:bg-red-500/20" },

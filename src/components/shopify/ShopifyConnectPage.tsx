@@ -158,7 +158,7 @@ const ShopifyConnectPage: React.FC = () => {
             className={cn(
               "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold border",
               isConnected
-                ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/30"
+                ? "bg-light-primary dark:bg-primary/10 text-primary dark:text-primary border-[var(--primary-opacity-30)] dark:border-primary/30"
                 : "bg-slate-100 dark:bg-(--dark-body) text-slate-500 border-slate-200 dark:border-(--card-border-color)",
             )}
           >

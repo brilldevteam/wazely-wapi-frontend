@@ -28,7 +28,7 @@ export default function BroadcastTemplates({
       <div className="container mx-auto px-[calc(8px+(24-8)*((100vw-320px)/(1920-320)))] md:px-12 xl:px-16">
         <div className="bg-white border border-slate-200/60 rounded-lg sm:p-6 p-4 max-w-7xl mx-auto shadow-sm">
           <div className="text-center max-w-4xl mx-auto mb-[calc(16px+(40-16)*((100vw-320px)/(1920-320)))]">
-            <span className="text-sm font-bold text-primary font-mono inline-block bg-emerald-100 px-4 py-1.5 rounded-full uppercase tracking-wide">
+            <span className="text-sm font-bold text-primary font-mono inline-block bg-[var(--primary-opacity-20)] px-4 py-1.5 rounded-full uppercase tracking-wide">
               {templateTypes.badge || "Template Builder"}
             </span>
             <h3 className="text-[calc(20px+8*((100vw-320px)/1600))] font-black text-slate-900 tracking-tight mt-2.5 mb-1">
@@ -56,7 +56,7 @@ export default function BroadcastTemplates({
                 >
                   <div className="flex items-center gap-3.5">
                     <div
-                      className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${selectedType === idx ? "bg-emerald-50 text-primary" : "bg-slate-100 text-slate-500"}`}
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${selectedType === idx ? "bg-light-primary text-primary" : "bg-slate-100 text-slate-500"}`}
                     >
                       {ICON_MAP[type.icon] || <Tag size={18} />}
                     </div>

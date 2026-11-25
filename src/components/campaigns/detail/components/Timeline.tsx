@@ -24,7 +24,7 @@ export const Timeline = ({ events }: TimelineProps) => {
             let dotColor = "bg-blue-500 ring-blue-100 dark:ring-blue-900/30";
             if (event.type === "delivered" || event.type === "sent") {
               dotColor =
-                "bg-emerald-500 ring-emerald-100 dark:ring-emerald-900/30";
+                "bg-primary ring-[var(--primary-opacity-20)] dark:ring-primary-darker/30";
             } else if (event.type === "read") {
               dotColor = "bg-indigo-50 ring-indigo-100 dark:ring-indigo-900/30";
             } else if (event.type === "failed") {

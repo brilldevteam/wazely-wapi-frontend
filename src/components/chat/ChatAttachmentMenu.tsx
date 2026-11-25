@@ -47,7 +47,7 @@ const ChatAttachmentMenu = ({ onFileSelect, onMediaLibraryOpen, onLocationClick,
       <PopoverContent className="w-52 p-2 dark:bg-(--page-body-bg)" side="top" align="start">
         <div className="flex flex-col gap-1">
           <Button className="flex items-center bg-[unset]! justify-start gap-3 p-2! hover:bg-slate-100! dark:hover:bg-(--table-hover)! rounded-lg! transition-colors text-sm! text-slate-700! dark:text-slate-300!" onClick={() => onInteractiveClick("button")}>
-            <MessageSquare size={18} className="text-emerald-500" />
+            <MessageSquare size={18} className="text-primary" />
             <span>Button message</span>
           </Button>
 
@@ -93,7 +93,7 @@ const ChatAttachmentMenu = ({ onFileSelect, onMediaLibraryOpen, onLocationClick,
                 onPaymentLinkClick();
               }}
             >
-              <CreditCard size={18} className="text-emerald-500" />
+              <CreditCard size={18} className="text-primary" />
               <span>Send payment link</span>
             </Button>
           )}

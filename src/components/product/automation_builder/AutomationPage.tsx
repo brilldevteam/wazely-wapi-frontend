@@ -28,7 +28,7 @@ export default function AutomationPage({ pageData }: AutomationPageProps) {
   const dc = isPageValid ? page.dynamic_content : {};
 
   const colorConfig = page?.color_config || {};
-  const primaryColor = colorConfig.primary_color || "#059669";
+  const primaryColor = colorConfig.primary_color || "#967205";
 
   const hero = {
     badge: dc.hero?.badge || "No-Code Chatbot Builder",

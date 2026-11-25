@@ -15,8 +15,6 @@ export const sanitizeCampaignPayload = (
     delete payload.recurring_pattern;
     delete payload.cron_expression;
     delete payload.recurring_end_date;
-    delete payload.batch_size;
-    delete payload.pause_between_batches;
   } else {
     if (payload.recurring_pattern !== "custom_cron") {
       delete payload.cron_expression;
@@ -24,12 +22,13 @@ export const sanitizeCampaignPayload = (
     if (!payload.recurring_end_date) {
       delete payload.recurring_end_date;
     }
-    if (!payload.batch_size) {
-      delete payload.batch_size;
-    }
-    if (!payload.pause_between_batches) {
-      delete payload.pause_between_batches;
-    }
+  }
+
+  if (!payload.batch_size) {
+    delete payload.batch_size;
+  }
+  if (!payload.pause_between_batches) {
+    delete payload.pause_between_batches;
   }
 
   if (payload.recipient_type === "all_contacts") {

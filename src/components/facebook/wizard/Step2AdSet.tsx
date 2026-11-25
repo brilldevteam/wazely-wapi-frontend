@@ -32,7 +32,7 @@ export const Step2AdSet: React.FC = () => {
   return (
     <div className="space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
       <div className="flex flex-col gap-1 mb-4 sm:mb-6">
-        <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-500">
+        <div className="flex items-center gap-2 text-primary dark:text-primary">
           <Settings size={18} className="sm:w-5 sm:h-5" />
           <h2 className="text-lg sm:text-xl font-bold">{t("ad_set_info")}</h2>
         </div>
@@ -69,7 +69,7 @@ export const Step2AdSet: React.FC = () => {
 
       <div className="p-4 sm:p-6 rounded-lg border border-slate-200/60 dark:border-(--card-border-color) bg-slate-50/30 dark:bg-(--card-color) space-y-6 sm:space-y-10">
         <div className="flex items-center gap-3 mb-2 sm:mb-4">
-          <div className="w-1 h-5 sm:w-1.5 sm:h-6 bg-emerald-600 rounded-full"></div>
+          <div className="w-1 h-5 sm:w-1.5 sm:h-6 bg-primary rounded-full"></div>
           <h3 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
             {t("targeting_configuration")}
           </h3>
@@ -152,7 +152,7 @@ export const Step2AdSet: React.FC = () => {
                       : currentGenders.filter((g: number) => g !== 1);
                     setFieldValue("ad_sets[0].targeting.genders", nextGenders);
                   }}
-                  className="w-4 h-4 sm:w-5 sm:h-5 border-slate-300 dark:border-(--card-border-color) data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
+                  className="w-4 h-4 sm:w-5 sm:h-5 border-slate-300 dark:border-(--card-border-color) data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                 />
                 <Label
                   htmlFor="gender-male"
@@ -176,7 +176,7 @@ export const Step2AdSet: React.FC = () => {
                       : currentGenders.filter((g: number) => g !== 2);
                     setFieldValue("ad_sets[0].targeting.genders", nextGenders);
                   }}
-                  className="w-4 h-4 sm:w-5 sm:h-5 border-slate-300 dark:border-(--card-border-color) data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
+                  className="w-4 h-4 sm:w-5 sm:h-5 border-slate-300 dark:border-(--card-border-color) data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                 />
                 <Label
                   htmlFor="gender-female"
@@ -208,7 +208,7 @@ export const Step2AdSet: React.FC = () => {
                     onCheckedChange={(checked) =>
                       handlePlatformToggle(platform.value, !!checked)
                     }
-                    className="w-4 h-4 sm:w-5 sm:h-5 border-slate-300 dark:border-(--card-border-color) data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
+                    className="w-4 h-4 sm:w-5 sm:h-5 border-slate-300 dark:border-(--card-border-color) data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                   />
                   <Label
                     htmlFor={`platform-${platform.value}`}

@@ -6,18 +6,29 @@ const BACKEND_API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const session = await getServerSession(authoption);
     const token = session?.accessToken as string;
-    const body = await req.json();
-    const { id } = await params;
+    const contentType = req.headers.get("content-type") || "";
+    let bodyData: any;
+    const headers: Record<string, string> = {};
+
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    if (contentType.includes("multipart/form-data")) {
+      bodyData = await req.formData();
+    } else {
+      const jsonBody = await req.json();
+      bodyData = JSON.stringify(jsonBody);
+      headers["Content-Type"] = "application/json";
+    }
 
     const response = await fetch(`${BACKEND_API_URL}/subscription/${id}/change-plan`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-      body: JSON.stringify(body),
+      headers,
+      body: bodyData,
     });
 
     const data = await response.json();

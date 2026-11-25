@@ -153,12 +153,12 @@ export function AdvancedConditionNode({ data, id }: any) {
         </NodeField>
 
         <div className="pt-2 border-t border-slate-100 dark:border-(--card-border-color) space-y-2 mt-2">
-          <div className="relative flex items-center justify-between p-2.5 rounded-lg bg-[#F0FDF4] border border-[#DCFCE7] dark:bg-emerald-950/20 dark:border-emerald-900/30">
+          <div className="relative flex items-center justify-between p-2.5 rounded-lg bg-[#F0FDF4] border border-[#DCFCE7] dark:bg-primary-darker/20 dark:border-primary-darker/30">
             <div className="flex items-center gap-2.5">
               <div className="w-5 h-5 rounded-full bg-[#22C55E] flex items-center justify-center shadow-sm">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
               </div>
-              <span className="text-[11px] font-bold text-[#166534] dark:text-emerald-400 uppercase tracking-widest">IF &middot; TRUE</span>
+              <span className="text-[11px] font-bold text-[#166534] dark:text-primary uppercase tracking-widest">IF &middot; TRUE</span>
             </div>
             <Handle
               type="source"

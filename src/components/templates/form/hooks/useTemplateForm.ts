@@ -4,10 +4,10 @@ import { useGetAdminTemplateByIdQuery } from "@/src/redux/api/adminTemplateApi";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useMemo } from "react";
 import { toast } from "sonner";
-import TurndownService from "turndown";
+import { htmlToWhatsApp, whatsAppToHtml } from "@/src/utils/templateFormatter";
 import { AuthFormData, ButtonTemplate, CardButtonValue, MarketingType, MediaCard, ProductCard, UseTemplateFormProps } from "@/src/types/components/template";
 import { ROUTES } from "@/src/constants";
-import { applyDirectionMarksToHtml, plainTextToDirectionalHtml } from "@/src/utils/textDirection";
+import { applyDirectionMarksToHtml, restoreDirectionFromMarks } from "@/src/utils/textDirection";
 
 export const makeId = () => Math.random().toString(36).substr(2, 9);
 
@@ -24,9 +24,6 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
   const router = useRouter();
   const searchParams = useSearchParams();
   const platform = searchParams.get("platform") || "whatsapp";
-
-  const turndownService = new TurndownService({ emDelimiter: "_" });
-  turndownService.escape = (text) => text;
 
   const [createTemplate, { isLoading: isCreating }] = useCreateTemplateMutation();
   const [updateTemplate, { isLoading: isEditing }] = useUpdateTemplateMutation();
@@ -111,7 +108,7 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
       template_name: template.template_name || "",
       template_type: template.header?.format === "media" ? (template.header.media_type?.toLowerCase() || "none") : (template.header?.format?.toLowerCase() || (tType === "carousel_media" ? "image" : "none")),
       header_text: template.header?.text || "",
-      message_body: plainTextToDirectionalHtml(template.message_body || ""),
+      message_body: restoreDirectionFromMarks(whatsAppToHtml(template.message_body || "")),
       footer_text: template.footer_text || "",
       interactive_type: template.buttons?.length
         ? (template.buttons.some((b: any) => b.type === "quick_reply" || b.type === "catalog")
@@ -408,17 +405,18 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
 
   // AI success handler
   const handleAISuccess = (aiData: any) => {
+    const formattedBody = aiData.message_body ? whatsAppToHtml(aiData.message_body) : "";
     setFormData((prev: any) => ({
       ...prev,
       template_name: aiData.template_name || prev.template_name,
       category: aiData.category || prev.category,
       language: aiData.language || prev.language,
       header_text: aiData.header_text || prev.header_text,
-      message_body: aiData.message_body || prev.message_body,
+      message_body: formattedBody || prev.message_body,
       footer_text: aiData.footer_text || prev.footer_text,
       template_type: aiData.header_text ? "text" : "none",
     }));
-    if (aiData.message_body) handleBodyChange(aiData.message_body);
+    if (formattedBody) handleBodyChange(formattedBody);
   };
 
   // Submit
@@ -434,7 +432,7 @@ export const useTemplateForm = ({ wabaId, templateId, adminTemplateId }: UseTemp
     if (formData.marketing_type === "carousel_product" && productCards.length < 2) return toast.error("At least 2 product cards required");
     if (formData.marketing_type === "carousel_media" && mediaCards.length < 2) return toast.error("At least 2 media cards required");
 
-    const messageBody = turndownService.turndown(applyDirectionMarksToHtml(formData.message_body));
+    const messageBody = htmlToWhatsApp(applyDirectionMarksToHtml(formData.message_body));
 
     // Authentication template
     if (formData.category === "AUTHENTICATION") {

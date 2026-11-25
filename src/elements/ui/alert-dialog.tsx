@@ -49,7 +49,7 @@ function AlertDialogContent({
         data-slot="alert-dialog-content"
         data-size={size}
         className={cn(
-          "bg-background dark:bg-(--card-color) dark:border-(--card-border-color) data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 group/alert-dialog-content fixed top-[50%] left-[50%] z-[1100] grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg dark:focus-visible:outline-none border p-4 sm:p-6 shadow-lg duration-200 data-[size=sm]:max-w-xs custom-scrollbar data-[size=default]:sm:max-w-lg",
+          "bg-background dark:bg-(--dark-body) dark:border-(--card-border-color) data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 group/alert-dialog-content fixed top-[50%] left-[50%] z-[1100] grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg dark:focus-visible:outline-none border p-4 sm:p-6 shadow-lg duration-200 data-[size=sm]:max-w-xs custom-scrollbar data-[size=default]:sm:max-w-lg [&_input:focus-visible]:border-primary [&_input:focus-visible]:ring-1 [&_input:focus-visible]:ring-primary/30 [&_textarea:focus-visible]:border-primary [&_textarea:focus-visible]:ring-1 [&_textarea:focus-visible]:ring-primary/30",
           className
         )}
         {...props}

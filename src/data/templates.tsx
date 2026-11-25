@@ -10,7 +10,8 @@ export const LANGUAGES = [
   { label: "French", value: "fr" },
   { label: "German", value: "de" },
   { label: "Italian", value: "it" },
-  { label: "Portuguese", value: "pt" },
+  { label: "Portuguese (Brazil)", value: "pt_BR" },
+  { label: "Portuguese (Portugal)", value: "pt_PT" },
   { label: "Arabic", value: "ar" },
   { label: "Bengali", value: "bn" },
   { label: "Marathi", value: "mr" },
@@ -19,6 +20,7 @@ export const LANGUAGES = [
   { label: "Urdu", value: "ur" },
   { label: "Japanese", value: "ja" },
   { label: "Chinese", value: "zh_CN" },
+  { label: "Hebrew", value: "he" },
 ];
 
 export const CATEGORIES = [
@@ -76,11 +78,11 @@ export const templateChannels = [
       id: "whatsapp",
       title: "WhatsApp Templates",
       description: "Design and manage rich WhatsApp message templates for marketing campaigns, utility notifications, and customer engagement.",
-      icon: <MessageSquare className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />,
-      colorClass: "hover:border-emerald-500/50 hover:shadow-emerald-500/8 bg-gradient-to-br from-emerald-500/5 via-white to-white dark:from-slate-900 dark:via-(--card-color) dark:to-(--card-color)",
+      icon: <MessageSquare className="w-6 h-6 text-primary dark:text-primary" />,
+      colorClass: "hover:border-primary/50 hover:shadow-primary/8 bg-gradient-to-br from-emerald-500/5 via-white to-white dark:from-slate-900 dark:via-(--card-color) dark:to-(--card-color)",
       iconBgColor: "rgba(16, 185, 129, 0.1)",
       iconBorderColor: "rgba(16, 185, 129, 0.2)",
-      btnColor: "#059669",
+      btnColor: "var(--primary)",
     },
     {
       id: "telegram",

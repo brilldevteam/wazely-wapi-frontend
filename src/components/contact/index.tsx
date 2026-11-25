@@ -590,9 +590,9 @@ const ContactPage = () => {
 
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="outline" className={`flex items-center gap-2.5 px-4.5! py-5 h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group ml-auto sm:ml-0 ${isUnsubscribed === true ? "bg-emerald-50! dark:bg-emerald-900/20! dark:border-emerald-900/20! border-emerald-200! text-emerald-600!" : "bg-white dark:bg-(--card-color) border-slate-200 dark:border-(--card-border-color) text-slate-600 dark:text-gray-400"}`} onClick={() => setIsUnsubscribed(isUnsubscribed === true ? undefined : true)} disabled={isLoading}>
+                <Button variant="outline" className={`flex items-center gap-2.5 px-4.5! py-5 h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group ml-auto sm:ml-0 ${isUnsubscribed === true ? "bg-light-primary! dark:bg-primary-darker/20! dark:border-primary-darker/20! border-[var(--primary-opacity-30)]! text-primary!" : "bg-white dark:bg-(--card-color) border-slate-200 dark:border-(--card-border-color) text-slate-600 dark:text-gray-400"}`} onClick={() => setIsUnsubscribed(isUnsubscribed === true ? undefined : true)} disabled={isLoading}>
                   {isUnsubscribed === true ? (
-                    <UserCheck className="w-5 h-5 text-emerald-600" />
+                    <UserCheck className="w-5 h-5 text-primary" />
                   ) : (
                     <UserX className="w-5 h-5 text-slate-400 dark:text-amber-50" />
                   )}

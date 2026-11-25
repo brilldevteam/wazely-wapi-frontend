@@ -1,15 +1,17 @@
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { authoption } from "../auth/[...nextauth]/authOption";
 
 const BACKEND_API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authoption);
     const token = session?.accessToken as string;
 
-    const response = await fetch(`${BACKEND_API_URL}/plan`, {
+    // Pass page/limit through; without them the API returns only the first 10 plans.
+    const query = request.nextUrl.searchParams.toString();
+    const response = await fetch(`${BACKEND_API_URL}/plan${query ? `?${query}` : ""}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

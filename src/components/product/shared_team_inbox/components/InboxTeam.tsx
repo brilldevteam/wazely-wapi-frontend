@@ -19,7 +19,7 @@ export default function InboxTeam({ team, primaryColor }: InboxTeamProps) {
       {/* Subtle background blob */}
       <div
         className="absolute right-[-10%] bottom-[-5%] w-[35vw] h-[35vw] rounded-full blur-[90px] pointer-events-none"
-        style={{ backgroundColor: "#059669", opacity: 0.05 }}
+        style={{ backgroundColor: "var(--primary)", opacity: 0.05 }}
       />
 
       <div className="container mx-auto px-[calc(8px+(24-8)*((100vw-320px)/(1920-320)))] md:px-12 xl:px-16">
@@ -56,7 +56,7 @@ export default function InboxTeam({ team, primaryColor }: InboxTeamProps) {
               {teamCards.map((card: any, idx: number) => {
                 const IconComp = getIconComponent(card.icon);
                 const bgColors = [
-                  "bg-emerald-50 text-primary",
+                  "bg-light-primary text-primary",
                   "bg-teal-50 text-teal-600",
                   "bg-purple-50 text-purple-600",
                 ];

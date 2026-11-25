@@ -89,7 +89,7 @@ const IntegrationTools = () => {
         <div className="lg:hidden flex items-center gap-3 px-4 py-3 border-b border-slate-200 dark:border-(--card-border-color) bg-white dark:bg-(--card-color) shrink-0">
           <Button
             onClick={() => setSidebarOpen(true)}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 text-primary border border-emerald-100 dark:border-emerald-500/20 text-sm font-semibold hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition-colors shadow-sm"
+            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-light-primary dark:bg-primary/10 text-primary border border-[var(--primary-opacity-20)] dark:border-primary/20 text-sm font-semibold hover:bg-[var(--primary-opacity-20)] dark:hover:bg-primary/20 transition-colors shadow-sm"
             aria-label="Open API menu"
           >
             <LayoutList size={16} />

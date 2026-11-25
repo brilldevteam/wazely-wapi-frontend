@@ -142,7 +142,7 @@ const ChatThemePage = () => {
           <h1 className="text-2xl font-bold tracking-tight text-primary">{t("chat_theme_page_title")}</h1>
           <p className="text-slate-500 text-sm dark:text-gray-500">{t("chat_theme_page_description")}</p>
         </div>
-        <Button onClick={handleSave} disabled={isUpdating} className="bg-primary text-white h-11 px-6 rounded-lg shadow-lg shadow-emerald-500/20 active:scale-95 transition-all">
+        <Button onClick={handleSave} disabled={isUpdating} className="bg-primary text-white h-11 px-6 rounded-lg shadow-lg shadow-primary/20 active:scale-95 transition-all">
           {isUpdating ? <Loader2 size={18} className="mr-2 animate-spin" /> : <Save size={18} className="mr-2" />}
           {isUpdating ? t("saving") || "Saving..." : t("save_changes") || "Save Changes"}
         </Button>

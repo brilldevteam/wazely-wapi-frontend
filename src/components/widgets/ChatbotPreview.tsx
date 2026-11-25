@@ -53,7 +53,12 @@ const ChatbotPreview: React.FC<ChatbotPreviewProps> = ({ data, bodyBgImagePrevie
                 <p className="font-bold text-sm leading-tight truncate">{data.header_text || "Chat with us"}</p>
                 <p className="text-[10px] opacity-80 mt-0.5 font-medium">Welcome to our live chat</p>
               </div>
-              <Button onClick={() => setIsOpen(false)} className="w-7 h-7 rounded-full hover:bg-black/10 flex items-center justify-center transition-colors">
+              <Button
+                style={{
+                  color: data.header_background_color || "var(--primary)",
+                  backgroundColor: data.header_text_color || "var(--background)",
+                }}
+                onClick={() => setIsOpen(false)} className="w-7 h-7  rounded-full hover:bg-black/10 flex items-center justify-center transition-colors">
                 <X size={16} />
               </Button>
             </div>
@@ -80,7 +85,7 @@ const ChatbotPreview: React.FC<ChatbotPreviewProps> = ({ data, bodyBgImagePrevie
 
               <div className="pt-2 pb-1 shrink-0">
                 <Button
-                  className="w-full py-3 px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-lg shadow-emerald-900/10 hover:brightness-110"
+                  className="w-full py-3 px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-lg shadow-primary-darker/10 hover:brightness-110"
                   style={{
                     backgroundColor: data.start_chat_button_background || "var(--primary)",
                     color: data.start_chat_button_text_color || "var(--background)",

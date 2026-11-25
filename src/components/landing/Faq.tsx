@@ -71,9 +71,10 @@ const Faq: React.FC<FaqProps> = ({ data }) => {
                 }`}
               >
                 <div className="px-6">
-                  <p className="text-slate-600 leading-relaxed text-sm">
-                    {item.description}
-                  </p>
+                  <div
+                    className="text-slate-600 leading-relaxed text-sm dynamic-content"
+                    dangerouslySetInnerHTML={{ __html: item.description }}
+                  />
                 </div>
               </div>
             </div>

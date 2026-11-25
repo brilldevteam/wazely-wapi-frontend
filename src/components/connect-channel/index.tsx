@@ -142,8 +142,8 @@ const ConnectChannel = () => {
                   </div>
 
                   {isTelegramConnected ? (
-                    <Badge variant="success" className="px-3.5 py-1.5 gap-1.5 flex items-center bg-green-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 border border-green-100 dark:border-emerald-500/20 font-bold text-xs tracking-wider rounded-full">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <Badge variant="success" className="px-3.5 py-1.5 gap-1.5 flex items-center bg-green-50 text-primary-dark dark:bg-primary-darker/30 dark:text-primary border border-green-100 dark:border-primary/20 font-bold text-xs tracking-wider rounded-full">
+                      <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                       Connected
                     </Badge>
                   ) : (
@@ -216,8 +216,8 @@ const ConnectChannel = () => {
                   </div>
 
                   {isFacebookConnected ? (
-                    <Badge variant="success" className="px-3.5 py-1.5 gap-1.5 flex items-center bg-green-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 border border-green-100 dark:border-emerald-500/20 font-bold text-xs tracking-wider rounded-full">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <Badge variant="success" className="px-3.5 py-1.5 gap-1.5 flex items-center bg-green-50 text-primary-dark dark:bg-primary-darker/30 dark:text-primary border border-green-100 dark:border-primary/20 font-bold text-xs tracking-wider rounded-full">
+                      <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                       Connected
                     </Badge>
                   ) : (
@@ -287,8 +287,8 @@ const ConnectChannel = () => {
                   </div>
 
                   {isInstagramConnected ? (
-                    <Badge variant="success" className="px-3.5 py-1.5 gap-1.5 flex items-center bg-green-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 border border-green-100 dark:border-emerald-500/20 font-bold text-xs tracking-wider rounded-full">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <Badge variant="success" className="px-3.5 py-1.5 gap-1.5 flex items-center bg-green-50 text-primary-dark dark:bg-primary-darker/30 dark:text-primary border border-green-100 dark:border-primary/20 font-bold text-xs tracking-wider rounded-full">
+                      <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                       Connected
                     </Badge>
                   ) : (
@@ -359,8 +359,8 @@ const ConnectChannel = () => {
                 </div>
 
                 {isTwitterConnected ? (
-                  <Badge variant="success" className="px-3.5 py-1.5 gap-1.5 flex items-center bg-green-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 border border-green-100 dark:border-emerald-500/20 font-bold text-xs tracking-wider rounded-full">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <Badge variant="success" className="px-3.5 py-1.5 gap-1.5 flex items-center bg-green-50 text-primary-dark dark:bg-primary-darker/30 dark:text-primary border border-green-100 dark:border-primary/20 font-bold text-xs tracking-wider rounded-full">
+                    <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                     Connected
                   </Badge>
                 ) : (

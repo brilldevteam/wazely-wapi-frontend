@@ -59,7 +59,7 @@ export const campaignApi = baseApi.enhanceEndpoints({ addTagTypes: ["Campaign"] 
         url: `/campaigns/${id}/toggle-pause`,
         method: "POST",
       }),
-      invalidatesTags: (result, error, id) => ["Campaign", { type: "Campaign", id }],
+      invalidatesTags: ["Campaign"],
     }),
     resendCampaign: builder.mutation({
       query: ({ id, ...body }) => ({
@@ -97,6 +97,7 @@ export const campaignApi = baseApi.enhanceEndpoints({ addTagTypes: ["Campaign"] 
 export const {
   useGetCampaignsQuery,
   useGetCampaignByIdQuery,
+  useLazyGetCampaignByIdQuery,
   useCreateCampaignMutation,
   useUpdateCampaignMutation,
   useDeleteCampaignMutation,

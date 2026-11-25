@@ -27,7 +27,7 @@ export default function AutomationCatalog({ flowNodes, primaryColor }: Automatio
       <div className="container mx-auto px-[calc(8px+(24-8)*((100vw-320px)/(1920-320)))] md:px-12 xl:px-16 text-left">
 
         <div className="text-center max-w-4xl mx-auto mb-[calc(20px+(48-20)*((100vw-320px)/(1920-320)))]">
-          <span className="text-xs bg-emerald-100 px-4 py-1.5 rounded-full uppercase tracking-wide font-bold text-primary font-mono" style={{ color: primaryColor }}>
+          <span className="text-xs bg-[var(--primary-opacity-20)] px-4 py-1.5 rounded-full uppercase tracking-wide font-bold text-primary font-mono" style={{ color: primaryColor }}>
             {flowNodes.badge || "Visual Blocks Directory"}
           </span>
           <h2 className="text-[calc(20px+12*((100vw-320px)/1600))] font-black text-slate-900 tracking-tight leading-tight mt-2.5">

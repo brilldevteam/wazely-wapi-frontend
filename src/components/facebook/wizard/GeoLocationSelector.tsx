@@ -100,7 +100,7 @@ const GeoLocationSelector: React.FC<GeoLocationSelectorProps> = ({
 
         const response = await fetch(
           `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(countryName)}&limit=1`,
-          { headers: { "User-Agent": "CRM-Ads-Wizard" } },
+          { headers: { "User-Agent": "CRM-Ads-Wizard" }, referrerPolicy: "strict-origin-when-cross-origin" },
         );
         const data = await response.json();
         if (data && data.length > 0) {
@@ -125,7 +125,7 @@ const GeoLocationSelector: React.FC<GeoLocationSelectorProps> = ({
     try {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=3&addressdetails=1`,
-        { headers: { "User-Agent": "CRM-Ads-Wizard" } },
+        { headers: { "User-Agent": "CRM-Ads-Wizard" }, referrerPolicy: "strict-origin-when-cross-origin" },
       );
       const data = await response.json();
       const countryCode = data?.address?.country_code?.toUpperCase();
@@ -220,7 +220,7 @@ const GeoLocationSelector: React.FC<GeoLocationSelectorProps> = ({
     <div className="space-y-6">
       <div className="space-y-3">
         <Label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
-          <Globe size={14} className="text-emerald-500" />
+          <Globe size={14} className="text-primary" />
           {t("location_targeting")}
         </Label>
         <div className="relative group">
@@ -229,11 +229,11 @@ const GeoLocationSelector: React.FC<GeoLocationSelectorProps> = ({
             selected={selectedCountries}
             onChange={onChange}
             placeholder={t("select_countries")}
-            className="min-h-12 bg-white dark:bg-(--page-body-bg) border-slate-200 dark:border-(--card-border-color) focus:ring-emerald-500/20"
+            className="min-h-12 bg-white dark:bg-(--page-body-bg) border-slate-200 dark:border-(--card-border-color) focus:ring-primary/20"
           />
           {(isLoading || isLocating) && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2">
-              <Loader2 className="w-4 h-4 animate-spin text-emerald-500" />
+              <Loader2 className="w-4 h-4 animate-spin text-primary" />
             </div>
           )}
         </div>
@@ -250,7 +250,8 @@ const GeoLocationSelector: React.FC<GeoLocationSelectorProps> = ({
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+            referrerPolicy="strict-origin-when-cross-origin"
           />
           <ChangeView center={mapCenter} zoom={mapZoom} />
           <MapEvents onMapClick={handleMapClick} />
@@ -267,14 +268,14 @@ const GeoLocationSelector: React.FC<GeoLocationSelectorProps> = ({
           <div className="bg-white/90 dark:bg-(--dark-body) backdrop-blur-sm px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2">
             {isLocating ? (
               <>
-                <Loader2 size={12} className="animate-spin text-emerald-500" />
+                <Loader2 size={12} className="animate-spin text-primary" />
                 <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                   {t("identifying_country")}
                 </span>
               </>
             ) : (
               <>
-                <MapPin size={14} className="text-emerald-500" />
+                <MapPin size={14} className="text-primary" />
                 <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                   {selectedCountries.length} {t("locations_selected")}
                 </span>

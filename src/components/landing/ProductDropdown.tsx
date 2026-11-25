@@ -18,13 +18,15 @@ const getMenuIcon = (iconName?: string) => {
 
 const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const children = item.children || [];
+  const children = (item.children || []).filter((child) => child.status !== false);
+
+  const isAnchorLink = (path?: string) => {
+    if (!path) return false;
+    return path.startsWith("#") || (!path.startsWith("/") && !path.startsWith("http://") && !path.startsWith("https://") && !path.startsWith("mailto:") && !path.startsWith("tel:"));
+  };
 
   const handleLinkClick = (child: MenuItem, e: React.MouseEvent) => {
-    if (
-      child.path &&
-      (child.path.startsWith("#") || !child.path.startsWith("/"))
-    ) {
+    if (child.path && isAnchorLink(child.path)) {
       e.preventDefault();
       const cleanId = child.path.replace("#", "");
       scrollToSection(cleanId);
@@ -78,7 +80,7 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
                         </span>
                         {child.badge_text && (
                           <span
-                            className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
+                            className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-primary!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
                           >
                             {child.badge_text}
                           </span>
@@ -136,7 +138,7 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
                           </span>
                           {child.badge_text && (
                             <span
-                              className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
+                              className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-primary!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
                             >
                               {child.badge_text}
                             </span>
@@ -214,7 +216,7 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
                       </span>
                       {child.badge_text && (
                         <span
-                          className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
+                          className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-primary!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
                         >
                           {child.badge_text}
                         </span>
@@ -279,7 +281,7 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
                       </span>
                       {child.badge_text && (
                         <span
-                          className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
+                          className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-primary!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
                         >
                           {child.badge_text}
                         </span>
@@ -331,7 +333,7 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
                       </span>
                       {child.badge_text && (
                         <span
-                          className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
+                          className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-primary!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
                         >
                           {child.badge_text}
                         </span>
@@ -386,7 +388,7 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
                     </span>
                     {child.badge_text && (
                       <span
-                        className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
+                        className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-primary!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
                       >
                         {child.badge_text}
                       </span>
@@ -414,7 +416,7 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
         <span>{item.title}</span>
         {item.badge_text && (
           <span
-            className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${item.badge_color === "green" ? "bg-emerald-500!" : item.badge_color === "black" ? "bg-black!" : item.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
+            className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${item.badge_color === "green" ? "bg-primary!" : item.badge_color === "black" ? "bg-black!" : item.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
           >
             {item.badge_text}
           </span>
@@ -469,7 +471,7 @@ const ProductDropdown = ({ item, scrollToSection }: ProductDropdownProps) => {
                   </span>
                   {child.badge_text && (
                     <span
-                      className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-emerald-500!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
+                      className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white! ${child.badge_color === "green" ? "bg-primary!" : child.badge_color === "black" ? "bg-black!" : child.badge_color === "yellow" ? "bg-amber-500!" : "bg-red-500!"}`}
                     >
                       {child.badge_text}
                     </span>

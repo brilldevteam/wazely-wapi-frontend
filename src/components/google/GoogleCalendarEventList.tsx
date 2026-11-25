@@ -29,7 +29,8 @@ import {
   Plus,
   Trash2,
 } from "lucide-react";
-import React, { useMemo, useState } from "react";
+import { useAppSelector } from "@/src/redux/hooks";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import EventModal from "./EventModal";
@@ -38,7 +39,19 @@ const GoogleCalendarEventList: React.FC<GoogleCalendarEventListProps> = ({
   calendarId,
 }) => {
   const { t } = useTranslation();
+  const { sidebarToggle } = useAppSelector((state) => state.layout);
   const [viewMode, setViewMode] = useState<"table" | "calendar">("table");
+  const calendarRef = useRef<FullCalendar | null>(null);
+
+  useEffect(() => {
+    if (viewMode === "calendar" && calendarRef.current) {
+      const calendarApi = calendarRef.current.getApi();
+      const timer = setTimeout(() => {
+        calendarApi.updateSize();
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, [sidebarToggle, viewMode]);
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [page, setPage] = useState(1);
@@ -275,7 +288,7 @@ const GoogleCalendarEventList: React.FC<GoogleCalendarEventListProps> = ({
           className={cn(
             "px-3 py-3 h-auto rounded-md transition-all gap-2",
             viewMode === "table"
-              ? "bg-white dark:bg-(--card-color) text-emerald-600 shadow-sm font-bold"
+              ? "bg-white dark:bg-(--card-color) text-primary shadow-sm font-bold"
               : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200",
           )}
         >
@@ -289,7 +302,7 @@ const GoogleCalendarEventList: React.FC<GoogleCalendarEventListProps> = ({
           className={cn(
             "px-3 py-3 h-auto rounded-md transition-all gap-2",
             viewMode === "calendar"
-              ? "bg-white dark:bg-(--card-color) text-emerald-600 shadow-sm font-bold"
+              ? "bg-white dark:bg-(--card-color) text-primary shadow-sm font-bold"
               : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200",
           )}
         >
@@ -299,7 +312,7 @@ const GoogleCalendarEventList: React.FC<GoogleCalendarEventListProps> = ({
       </div>
       <Button
         onClick={() => handleOpenModal()}
-        className="flex items-center gap-2.5 px-4.5! py-5 bg-emerald-600 hover:bg-emerald-700 text-white h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group"
+        className="flex items-center gap-2.5 px-4.5! py-5 bg-primary hover:bg-primary text-white h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group"
       >
         <Plus className="w-5 h-5" />
         <span>{t("google_account_calendar_add_event_btn")}</span>
@@ -358,6 +371,7 @@ const GoogleCalendarEventList: React.FC<GoogleCalendarEventListProps> = ({
         ) : (
           <div className="sm:p-6 p-4 full-calendar-container">
             <FullCalendar
+              ref={calendarRef}
               plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
               initialView="dayGridMonth"
               headerToolbar={{

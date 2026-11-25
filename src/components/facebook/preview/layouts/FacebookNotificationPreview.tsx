@@ -13,7 +13,7 @@ export const FacebookNotificationPreview: React.FC<
       <div className="absolute top-0 left-0 right-0 h-10 bg-slate-50 dark:bg-(--card-color) border-b border-slate-100 dark:border-(--card-border-color) flex items-center px-4 gap-4">
         <div className="w-3 h-3 rounded-full bg-rose-400" />
         <div className="w-3 h-3 rounded-full bg-amber-400" />
-        <div className="w-3 h-3 rounded-full bg-emerald-400" />
+        <div className="w-3 h-3 rounded-full bg-primary" />
       </div>
       <div className="mt-10 sm:p-6 p-4 space-y-6 custom-scrollbar overflow-auto h-[545px]">
         <div className="space-y-3 opacity-20">

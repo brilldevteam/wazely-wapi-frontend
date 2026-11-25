@@ -13,7 +13,7 @@ export const tabs = [
 ];
 
 export const CHANNELS = [
-  { id: "whatsapp", label: "WhatsApp", icon: MessageCircle, color: "#25D366", bg: "bg-gradient-to-br from-[#25D366] to-[#128C7E] text-white border-transparent shadow-emerald-500/10 shadow-lg" },
+  { id: "whatsapp", label: "WhatsApp", icon: MessageCircle, color: "#25D366", bg: "bg-gradient-to-br from-[#25D366] to-[#128C7E] text-white border-transparent shadow-primary/10 shadow-lg" },
   { id: "telegram", label: "Telegram", icon: Send, color: "#229ED9", bg: "bg-gradient-to-br from-[#229ED9] to-[#0088cc] text-white border-transparent shadow-sky-500/10 shadow-lg" },
   { id: "facebook", label: "Facebook", icon: Facebook, color: "#1877F2", bg: "bg-gradient-to-br from-[#1877F2] to-[#0056b3] text-white border-transparent shadow-blue-500/10 shadow-lg" },
   { id: "instagram", label: "Instagram", icon: Instagram, color: "#E1306C", bg: "bg-gradient-to-tr from-[#833AB4] via-[#FD1D1D] to-[#F56040] text-white border-transparent shadow-pink-500/10 shadow-lg" },

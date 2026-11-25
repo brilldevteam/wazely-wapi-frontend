@@ -74,8 +74,8 @@ const InteractiveMessageModal = ({
                 className={cn(
                   "p-2 rounded-lg",
                   type === "button"
-                    ? "bg-emerald-50 dark:bg-emerald-500/10 text-primary"
-                    : "bg-blue-50 dark:bg-emerald-500/10 text-primary",
+                    ? "bg-light-primary dark:bg-primary/10 text-primary"
+                    : "bg-blue-50 dark:bg-primary/10 text-primary",
                 )}
               >
                 {type === "button" ? (
@@ -144,8 +144,8 @@ const InteractiveMessageModal = ({
               className={cn(
                 "rounded-lg flex-1 sm:flex-none sm:min-w-32 gap-2 font-bold shadow-lg transition-all active:scale-95",
                 type === "button"
-                  ? "bg-primary text-white shadow-emerald-500/20"
-                  : "bg-primary hover:bg-primary text-white shadow-emerald-500/20",
+                  ? "bg-primary text-white shadow-primary/20"
+                  : "bg-primary hover:bg-primary text-white shadow-primary/20",
               )}
             >
               {isSending ? (

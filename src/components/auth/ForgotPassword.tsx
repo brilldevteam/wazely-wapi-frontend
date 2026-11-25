@@ -78,22 +78,22 @@ export const ForgotPasswordPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-emerald-50 dark:bg-none dark:bg-(--page-body-bg) flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-primary/5 dark:bg-none dark:bg-(--page-body-bg) flex items-center justify-center p-4 relative overflow-hidden">
       <AuthControls />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-emerald-200/30 dark:bg-emerald-600/15 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-[var(--primary-opacity-30)]/30 dark:bg-primary/15 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-blue-200/30 dark:bg-blue-600/15 rounded-full blur-3xl"></div>
       </div>
 
       <div className="relative z-10 w-full max-w-md lg:max-w-5xl">
         <div className="grid lg:grid-cols-5 gap-0 items-stretch">
-          <div className="hidden lg:flex flex-col justify-center p-10 bg-linear-to-br from-slate-900 via-slate-800 to-emerald-900 rounded-l-3xl relative overflow-hidden lg:col-span-2 min-h-162.5">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full -mr-24 -mt-24"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/5 rounded-full -ml-32 -mb-32"></div>
+          <div className="hidden lg:flex flex-col justify-center p-10 bg-linear-to-br from-slate-900 via-slate-800 to-primary-darker rounded-l-3xl relative overflow-hidden lg:col-span-2 min-h-162.5">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-primary/10 rounded-full -mr-24 -mt-24"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/5 rounded-full -ml-32 -mb-32"></div>
 
             <div className="relative z-10 space-y-10">
               <div className="flex items-center gap-3">
-                <DynamicLogo />
+                <DynamicLogo logoType="dark" />
               </div>
 
               <div>
@@ -122,10 +122,10 @@ export const ForgotPasswordPage = () => {
                   return (
                     <div key={index} className="flex items-start gap-4">
                       <div className="relative">
-                        <div className="w-12 h-12 bg-emerald-500/20 rounded-lg flex items-center justify-center border border-emerald-500/30">
-                          <Icon className="w-6 h-6 text-emerald-300" />
+                        <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center border border-primary/30">
+                          <Icon className="w-6 h-6 text-primary" />
                         </div>
-                        {index < steps.length - 1 && <div className="absolute top-12 left-1/2 -translate-x-1/2 w-0.5 h-10 bg-emerald-500/20"></div>}
+                        {index < steps.length - 1 && <div className="absolute top-12 left-1/2 -translate-x-1/2 w-0.5 h-10 bg-primary/20"></div>}
                       </div>
                       <div className="pt-2">
                         <p className="text-white font-semibold mb-1">{step.title}</p>
@@ -138,7 +138,7 @@ export const ForgotPasswordPage = () => {
 
               <div className="space-y-4">
                 {isAuthSetupLoading ? (
-                  <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-5">
+                  <div className="bg-primary/10 border border-primary/20 rounded-lg p-5">
                     <div className="flex items-start gap-3">
                       <Skeleton className="w-5 h-5 rounded-full bg-white/20 shrink-0" />
                       <div className="space-y-2 w-full">
@@ -149,11 +149,11 @@ export const ForgotPasswordPage = () => {
                   </div>
                 ) : (
                   content.side_panel.footer.map((footerItem, index) => (
-                    <div key={index} className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-5">
+                    <div key={index} className="bg-primary/10 border border-primary/20 rounded-lg p-5">
                       <div className="flex items-start gap-3">
-                        <Shield className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                        <Shield className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                         <div>
-                          <p className="text-emerald-200 text-sm font-medium mb-1">
+                          <p className="text-white/70 text-sm font-medium mb-1">
                             {footerItem.title}
                           </p>
                           <div className="text-slate-300 text-xs space-y-1">
@@ -171,7 +171,7 @@ export const ForgotPasswordPage = () => {
           </div>
 
           <div className="bg-white dark:bg-(--card-color) rounded-3xl lg:rounded-l-none lg:rounded-r-3xl shadow-2xl p-4 sm:p-6 flex flex-col justify-center relative lg:col-span-3 min-h-162.5 overflow-hidden">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-linear-to-br from-emerald-100/40 to-teal-100/40 dark:from-emerald-500/20 dark:to-teal-500/20 rounded-bl-full"></div>
+            <div className="absolute top-0 right-0 w-40 h-40 bg-linear-to-br from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 rounded-bl-full"></div>
 
             <div className="relative z-10 max-w-lg mx-auto w-full">
               <Button onClick={onNavigateToLogin} className="bg-transparent hover:bg-gray-100 dark:hover:bg-(--table-hover) flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white mb-8 transition-colors group">
@@ -183,6 +183,7 @@ export const ForgotPasswordPage = () => {
 
               <div className="lg:hidden flex items-center gap-3 mb-8">
                 <DynamicLogo
+                  logoType="light"
                   width={140}
                   height={40}
                   className="h-10 w-auto object-contain"
@@ -205,13 +206,13 @@ export const ForgotPasswordPage = () => {
                     {t("email_address")}
                   </Label>
                   <div className="relative group">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-emerald-600 transition-colors" />
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                     <Input id="email" type="email" placeholder={t("email_placeholder")} value={formik.values.email} onChange={formik.handleChange} onBlur={formik.handleBlur} className="pl-12 h-11 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-primary rounded-lg text-base" />
                   </div>
                   {formik.touched.email && formik.errors.email ? <p className="text-sm text-red-500 mt-2">{formik.errors.email}</p> : <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">{t("enter_email_help")}</p>}
                 </div>
 
-                <Button type="submit" className="w-full h-13 bg-primary text-white rounded-lg shadow-lg shadow-emerald-500/30 transition-all text-base font-semibold" disabled={isLoading || isAuthSetupLoading}>
+                <Button type="submit" className="w-full h-13 bg-primary text-white rounded-lg shadow-lg shadow-primary/30 transition-all text-base font-semibold" disabled={isLoading || isAuthSetupLoading}>
                   {isLoading ? (
                     <div className="flex items-center gap-2">
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -233,7 +234,7 @@ export const ForgotPasswordPage = () => {
                 <div className="text-center pt-2">
                   <div className="text-slate-600 dark:text-slate-400 text-sm">
                     {isAuthSetupLoading ? <Skeleton className="h-4 w-32 inline-block mr-2" /> : content.remember_password_text}{" "}
-                    <Button onClick={onNavigateToLogin} className="bg-transparent hover:bg-transparent px-0 font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">
+                    <Button onClick={onNavigateToLogin} className="bg-transparent hover:bg-transparent px-0 font-semibold text-primary hover:text-primary-dark transition-colors">
                       {isAuthSetupLoading ? <Skeleton className="h-4 w-24 inline-block" /> : content.login_link_text}
                     </Button>
                   </div>

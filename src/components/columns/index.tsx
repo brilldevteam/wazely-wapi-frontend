@@ -122,8 +122,8 @@ const Columns = () => {
       sortKey: "required",
       cell: (field) => (
         <div className="flex items-center gap-2">
-          <div className={cn("w-1.5 h-1.5 rounded-full ring-4", field.required ? "bg-emerald-500 ring-emerald-500/10" : "bg-slate-300 ring-slate-100 dark:ring-slate-800/10")} />
-          <span className={cn("text-xs font-bold", field.required ? "text-emerald-600" : "text-slate-500")}>{field.required ? "YES" : "NO"}</span>
+          <div className={cn("w-1.5 h-1.5 rounded-full ring-4", field.required ? "bg-primary ring-primary/10" : "bg-slate-300 ring-slate-100 dark:ring-slate-800/10")} />
+          <span className={cn("text-xs font-bold", field.required ? "text-primary" : "text-slate-500")}>{field.required ? "YES" : "NO"}</span>
         </div>
       ),
     },
@@ -133,8 +133,8 @@ const Columns = () => {
       sortKey: "is_active",
       cell: (field) => (
         <div className="flex items-center gap-2">
-          <div className={cn("w-1.5 h-1.5 rounded-full ring-4", field.is_active ? "bg-emerald-500 ring-emerald-500/10" : "bg-slate-300 ring-slate-100 dark:ring-slate-800/10")} />
-          <span className={cn("text-xs font-bold", field.is_active ? "text-emerald-600" : "text-slate-500")}>{field.is_active ? "ACTIVE" : "INACTIVE"}</span>
+          <div className={cn("w-1.5 h-1.5 rounded-full ring-4", field.is_active ? "bg-primary ring-primary/10" : "bg-slate-300 ring-slate-100 dark:ring-slate-800/10")} />
+          <span className={cn("text-xs font-bold", field.is_active ? "text-primary" : "text-slate-500")}>{field.is_active ? "ACTIVE" : "INACTIVE"}</span>
         </div>
       ),
     },

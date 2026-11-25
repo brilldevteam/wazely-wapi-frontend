@@ -142,7 +142,7 @@ export function WebhookNode({ data, id }: any) {
                       setCopiedVar(variable);
                       setTimeout(() => setCopiedVar(null), 2000);
                     }}
-                    className={`text-[9px] px-1.5 py-0.5 rounded transition-all border ${copiedVar === variable ? "bg-emerald-500 border-emerald-600 text-white" : "bg-gray-100 dark:bg-(--page-body-bg) text-gray-600 dark:text-gray-400 hover:bg-indigo-100 hover:text-indigo-600 dark:hover:bg-(--table-hover) dark:hover:text-indigo-400 border-gray-200 dark:border-(--card-border-color)"}`}
+                    className={`text-[9px] px-1.5 py-0.5 rounded transition-all border ${copiedVar === variable ? "bg-primary border-primary text-white" : "bg-gray-100 dark:bg-(--page-body-bg) text-gray-600 dark:text-gray-400 hover:bg-indigo-100 hover:text-indigo-600 dark:hover:bg-(--table-hover) dark:hover:text-indigo-400 border-gray-200 dark:border-(--card-border-color)"}`}
                     title="Click to copy"
                   >
                     {copiedVar === variable ? "Copied!" : variable}

@@ -160,7 +160,7 @@ const Sidebar = ({ onMenuClick }: SidebarProps) => {
     return item;
   });
 
-  const sections = ["overview_sidebar_title", "communication_sidebar_title", "instagram_sidebar_title", "facebook_sidebar_title", "telegram_sidebar_title", "twitter_sidebar_title", "shopify_sidebar_title", "contacts_audience_sidebar_title", "automation_sidebar_title", "operations_sidebar_title", "marketing_sidebar_title", "tools_sidebar_title", "team_management_sidebar_title", "setup_integration_sidebar_title", "billing_settings_sidebar_title"];
+  const sections = ["overview_sidebar_title", "communication_sidebar_title", "instagram_sidebar_title", "facebook_sidebar_title", "telegram_sidebar_title", "twitter_sidebar_title", "social_media_sidebar_title", "shopify_sidebar_title", "contacts_audience_sidebar_title", "automation_sidebar_title", "operations_sidebar_title", "marketing_sidebar_title", "tools_sidebar_title", "team_management_sidebar_title", "setup_integration_sidebar_title", "billing_settings_sidebar_title"];
   const filteredSections = sections;
   const [clickedItemId, setClickedItemId] = useState<string | null>(null);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -329,12 +329,12 @@ const Sidebar = ({ onMenuClick }: SidebarProps) => {
   };
 
   const sidebarContent = (
-    <div className="h-full flex flex-col bg-white dark:bg-(--card-color) border-r border-gray-200 dark:border-(--card-border-color)">
-      <div className={`flex items-center justify-center h-18 border-b border-gray-200 dark:border-(--card-border-color) transition-all duration-300 ${isVisuallyExpanded ? "px-6" : "px-3"}`}>
+    <div className="h-full flex flex-col bg-white dark:bg-(--page-body-bg) border-r border-gray-200 dark:border-(--card-border-color)">
+      <div className={`flex items-center justify-center h-17 transition-all border-b duration-300 ${isVisuallyExpanded ? "px-6" : "px-3"}`}>
         <div className={`flex items-center w-full overflow-hidden justify-between`}>
           <div className="flex items-center gap-3 overflow-hidden">{sidebarLogo === null ? <div className="h-10 w-28 bg-gray-200 dark:bg-white/10 animate-pulse rounded-md" /> : <Image src={sidebarLogo} alt={app_name || "logo"} width={140} height={40} unoptimized className={`max-h-10 object-contain transition-all duration-300 ${isVisuallyExpanded ? "w-auto" : "w-full max-w-10"}`} />}</div>
 
-          <div className="absolute -right-3.25 rtl:right-auto rtl:-left-2.25 p-1.5 rounded-md bg-primary text-white hover:bg-emerald-600 top-13.75 shadow-sm transition-all duration-300 hidden min-[1025px]:block cursor-pointer z-50 hover:scale-105 active:scale-95" onClick={() => dispatch(setSidebarToggle())}>
+          <div className="absolute -right-3.25 rtl:right-auto rtl:-left-2.25 p-1.5 rounded-md bg-primary text-white hover:bg-primary top-13.75 shadow-sm transition-all duration-300 hidden min-[1025px]:block cursor-pointer z-50 hover:scale-105 active:scale-95" onClick={() => dispatch(setSidebarToggle())}>
             {!sidebarToggle ? <ChevronLeft size={18} className="rtl:rotate-180" /> : <ChevronRight size={18} className="rtl:rotate-180" />}
           </div>
 
@@ -375,6 +375,8 @@ const Sidebar = ({ onMenuClick }: SidebarProps) => {
                             ? "bg-gradient-to-r from-[#95BF47] to-[#5e8e3e] bg-clip-text text-transparent"
                             : section === "twitter_sidebar_title"
                             ? "bg-gradient-to-r from-black via-slate-800 to-gray-600 dark:from-white dark:via-slate-200 dark:to-slate-400 bg-clip-text text-transparent"
+                            : section === "social_media_sidebar_title"
+                            ? "bg-gradient-to-r from-[#1877F2] via-[#E1306C] to-[#F56040] bg-clip-text text-transparent"
                             : "text-slate-400 dark:text-gray-400"
                         }`}>
                           {t(section)}

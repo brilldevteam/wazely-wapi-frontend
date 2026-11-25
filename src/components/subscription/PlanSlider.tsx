@@ -11,6 +11,8 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useAppSelector } from "@/src/redux/hooks";
+import { isFeaturePlatformAllowed } from "@/src/utils";
 
 const getPlanTheme = (planName: string) => {
   const name = planName.toLowerCase();
@@ -20,7 +22,7 @@ const getPlanTheme = (planName: string) => {
       color: "amber",
       border: "border-amber-100 ring-amber-500/20",
       bg: "bg-amber-50/40",
-      badge: "bg-amber-500",
+      badge: "bg-amber-500 border-amber-500 text-white",
       button: "bg-amber-600 hover:bg-amber-700 shadow-amber-500/20",
       text: "text-amber-600",
       icon: <Rocket className="h-5 w-5" />,
@@ -32,7 +34,7 @@ const getPlanTheme = (planName: string) => {
       color: "violet",
       border: "border-violet-100 ring-violet-500/20",
       bg: "bg-violet-50/40",
-      badge: "bg-violet-500",
+      badge: "bg-violet-500/10 border-violet-300 text-violet-700 dark:text-violet-300",
       button: "bg-violet-600 hover:bg-violet-700 shadow-violet-500/20",
       text: "text-violet-600",
       icon: <Crown className="h-5 w-5" />,
@@ -44,7 +46,7 @@ const getPlanTheme = (planName: string) => {
       color: "indigo",
       border: "border-indigo-100 ring-indigo-500/20",
       bg: "bg-indigo-50/40",
-      badge: "bg-indigo-500",
+      badge: "bg-indigo-500 border-indigo-500 text-white",
       button: "bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/20",
       text: "text-indigo-600",
       icon: <Zap className="h-5 w-5" />,
@@ -53,10 +55,10 @@ const getPlanTheme = (planName: string) => {
 
   return {
     color: "emerald",
-    border: "border-emerald-200 ring-emerald-500/20",
-    bg: "bg-emerald-50/40",
-    badge: "bg-emerald-500/20",
-    button: "bg-primary shadow-emerald-500/20",
+    border: "border-[var(--primary-opacity-30)] ring-primary/20",
+    bg: "bg-light-primary/40",
+    badge: "bg-primary/20 border-primary/80 text-primary",
+    button: "bg-primary shadow-primary/20",
     text: "text-primary",
     icon: <Target className="h-5 w-5" />,
   };
@@ -64,6 +66,8 @@ const getPlanTheme = (planName: string) => {
 
 const PlanSlider: React.FC<PlanSliderProps> = ({ plans, activePlanId, mode = "none", onSubscribe, isFreeTrial }) => {
   const { t } = useTranslation();
+  const { setting } = useAppSelector((state) => state.setting);
+  const omnichannelPlatforms = setting?.omnichannel_platforms;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const swiperRef = React.useRef<any>(null);
   const [expandedPlans, setExpandedPlans] = useState<Record<string, boolean>>({});
@@ -101,7 +105,7 @@ const PlanSlider: React.FC<PlanSliderProps> = ({ plans, activePlanId, mode = "no
           modules={[Navigation, Pagination]}
           centeredSlides={true}
           grabCursor={true}
-          loop={plans.length > 3}
+          loop={false}
           slideToClickedSlide={true}
           pagination={{ clickable: true, dynamicBullets: true }}
           className="pb-12!"
@@ -124,7 +128,7 @@ const PlanSlider: React.FC<PlanSliderProps> = ({ plans, activePlanId, mode = "no
                   <Card className={cn("relative flex flex-col h-fit transition-all duration-500 overflow-hidden rounded-lg border dark:border-(--card-border-color) bg-white dark:bg-(--card-color) shadow-sm cursor-pointer", isActive ? cn("shadow-xl scale-105 z-20", theme.border) : "scale-95 opacity-60")}>
                     {plan.is_featured && (
                       <div className="absolute top-0 right-0 z-10">
-                        <Badge className={cn("border border-primary/80 font-bold text-[10px] px-3 py-1 rounded-full text-primary", theme.badge)}>{t("most_popular")}</Badge>
+                        <Badge className={"border border-primary/80 bg-primary/20 text-primary font-bold text-[10px] px-3 py-1 rounded-full"}>{t("most_popular")}</Badge>
                       </div>
                     )}
 
@@ -160,7 +164,10 @@ const PlanSlider: React.FC<PlanSliderProps> = ({ plans, activePlanId, mode = "no
                         <ul className="space-y-2.5">
                           {(() => {
                             const featureEntries = Object.entries(plan.features || {}).filter(
-                              ([key]) => !["_id", "__v", "id"].includes(key)
+                              ([key]) => {
+                                if (["_id", "__v", "id"].includes(key)) return false;
+                                return isFeaturePlatformAllowed(key, omnichannelPlatforms);
+                              }
                             );
                             const FEATURE_LIMIT = 12;
                             const isExpanded = !!expandedPlans[plan._id];
@@ -168,15 +175,34 @@ const PlanSlider: React.FC<PlanSliderProps> = ({ plans, activePlanId, mode = "no
 
                             return (
                               <>
-                                {displayedFeatures.map(([key, value]) => (
-                                  <li key={key} className="flex items-center text-[11px]">
-                                    <CheckCircle2 className={cn("mr-2.5 h-3.5 w-3.5 shrink-0 transition-colors", isActive ? theme.text : "text-slate-200")} />
-                                    <div className="flex flex-1 justify-between gap-3 items-center">
-                                      <span className={cn("font-medium capitalize truncate", isActive ? "text-slate-600 dark:text-slate-300" : "text-slate-300")}>{t(`plan_features_${key}`) || key.replace(/_/g, " ")}</span>
-                                      <span className={cn("font-bold shrink-0", isActive ? "text-slate-900 dark:text-white" : "text-slate-300")}>{typeof value === "boolean" ? (value ? t("yes") || "Yes" : t("no") || "No") : value === null ? "—" : value}</span>
-                                    </div>
-                                  </li>
-                                ))}
+                                {displayedFeatures.map(([key, value]) => {
+                                  const isBooleanFeature =
+                                    ["rest_api", "whatsapp_webhook", "auto_replies", "analytics", "priority_support", "free_trial"].includes(key) ||
+                                    key.startsWith("omnichannel_") ||
+                                    key.startsWith("fb_") ||
+                                    key.startsWith("ig_") ||
+                                    key.startsWith("tg_") ||
+                                    key.startsWith("tw_");
+
+                                  const displayValue = 
+                                    typeof value === "boolean"
+                                      ? (value ? t("yes") || "Yes" : t("no") || "No")
+                                      : (value === null || value === undefined)
+                                        ? "—"
+                                        : ((value === 0 || value === "0" || (typeof value === "number" && value <= 0)) && !isBooleanFeature)
+                                          ? "Unlimited"
+                                          : value;
+
+                                  return (
+                                    <li key={key} className="flex items-center text-[11px]">
+                                      <CheckCircle2 className={cn("mr-2.5 h-3.5 w-3.5 shrink-0 transition-colors", isActive ? theme.text : "text-slate-200")} />
+                                      <div className="flex flex-1 justify-between gap-3 items-center">
+                                        <span className={cn("font-medium capitalize truncate", isActive ? "text-slate-600 dark:text-slate-300" : "text-slate-300")}>{t(`plan_features_${key}`) || key.replace(/_/g, " ")}</span>
+                                        <span className={cn("font-bold shrink-0", isActive ? "text-slate-900 dark:text-white" : "text-slate-300")}>{displayValue}</span>
+                                      </div>
+                                    </li>
+                                  );
+                                })}
 
                                 {featureEntries.length > FEATURE_LIMIT && (
                                   <Button variant="unstyled"

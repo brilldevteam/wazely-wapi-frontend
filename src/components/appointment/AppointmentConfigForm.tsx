@@ -642,11 +642,11 @@ const AppointmentConfigForm: React.FC = () => {
     };
     try {
       if (isEdit) {
-        await updateConfig({ id, ...payload } as any).unwrap();
-        toast.success(t("appointment_update_success"));
+        const response = await updateConfig({ id, ...payload } as any).unwrap();
+        toast.success(response.message || t("appointment_update_success"));
       } else {
-        await createConfig(payload as any).unwrap();
-        toast.success(t("appointment_create_success"));
+        const response = await createConfig(payload as any).unwrap();
+        toast.success(response.message || t("appointment_create_success"));
       }
       router.push(ROUTES.AppointmentBooking);
     } catch {

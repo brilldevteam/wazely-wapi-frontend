@@ -97,7 +97,7 @@ const SubscriptionCard = () => {
             {plan?.billing_cycle === "lifetime" ? (
               <div className="flex items-center gap-2 py-1 mb-2">
                 <span className="text-xs font-bold text-slate-500 dark:text-slate-400">{t("plan_billing_lifetime") || "Lifetime"}</span>
-                <span className="text-xs font-medium text-emerald-500">&bull; {t("one_time_payment") || "One-time payment"}</span>
+                <span className="text-xs font-medium text-primary">&bull; {t("one_time_payment") || "One-time payment"}</span>
               </div>
             ) : (
               <>
@@ -117,7 +117,7 @@ const SubscriptionCard = () => {
                         const daysLeft = differenceInDays(new Date(subscription?.current_period_end), new Date());
                         if (daysLeft <= 10) return "bg-red-400";
                         if (daysLeft <= 30) return "bg-amber-500";
-                        return "bg-emerald-500";
+                        return "bg-primary";
                       })()
                     )}
                     style={{

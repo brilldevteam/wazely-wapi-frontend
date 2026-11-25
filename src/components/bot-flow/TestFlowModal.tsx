@@ -330,11 +330,11 @@ export default function TestFlowModal({
       default:
         return {
           name: "WhatsApp",
-          color: "bg-[#059669]",
+          color: "bg-primary",
           icon: <MessageSquare size={14} className="text-white" />,
-          avatarColor: "bg-emerald-500",
+          avatarColor: "bg-primary",
           userBubbleColor:
-            "bg-[#e2f7cb] dark:bg-emerald-900 text-gray-800 dark:text-gray-100",
+            "bg-[#e2f7cb] dark:bg-primary-darker text-gray-800 dark:text-gray-100",
         };
     }
   }, [platform]);

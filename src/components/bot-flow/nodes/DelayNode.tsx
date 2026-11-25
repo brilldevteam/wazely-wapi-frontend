@@ -31,10 +31,10 @@ export function DelayNode({ data, id }: any) {
       id={id}
       title="Wait Timer"
       icon={<Clock size={18} />}
-      iconBgColor="bg-emerald-800"
+      iconBgColor="bg-primary-darker"
       iconColor="text-white"
-      borderColor="border-emerald-200"
-      handleColor="bg-emerald-500!"
+      borderColor="border-[var(--primary-opacity-30)]"
+      handleColor="bg-primary!"
     >
       <NodeField label="Wait Duration (ms)">
         <div className="flex items-center gap-3">

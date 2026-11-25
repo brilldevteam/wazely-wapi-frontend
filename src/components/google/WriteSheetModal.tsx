@@ -122,7 +122,7 @@ const WriteSheetModal: React.FC<WriteSheetModalProps> = ({
                     variant="outline"
                     size="sm"
                     onClick={addColumn}
-                    className="h-8 gap-1.5 font-bold text-xs border-emerald-500/30 text-primary hover:bg-emerald-50"
+                    className="h-8 gap-1.5 font-bold text-xs border-primary/30 text-primary hover:bg-light-primary"
                   >
                     <Plus size={14} /> {t("add_column")}
                   </Button>
@@ -209,7 +209,7 @@ const WriteSheetModal: React.FC<WriteSheetModalProps> = ({
                     variant="ghost"
                     size="sm"
                     onClick={addRow}
-                    className="w-full h-8 gap-1.5 font-bold text-xs text-slate-500 hover:text-primary hover:bg-emerald-50"
+                    className="w-full h-8 gap-1.5 font-bold text-xs text-slate-500 hover:text-primary hover:bg-light-primary"
                   >
                     <Plus size={14} /> {t("add_row")}
                   </Button>

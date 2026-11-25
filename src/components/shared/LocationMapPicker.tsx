@@ -18,6 +18,7 @@ const LeafletMapInner = dynamic(
 const LocationMapPicker: React.FC<LocationMapPickerProps> = ({
   value,
   onChange,
+  required = false,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -43,7 +44,7 @@ const LocationMapPicker: React.FC<LocationMapPickerProps> = ({
       try {
         const res = await fetch(
           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,
-          { headers: { "User-Agent": "CRM-Chat-App" } },
+          { headers: { "User-Agent": "CRM-Chat-App" }, referrerPolicy: "strict-origin-when-cross-origin" },
         );
         const data = await res.json();
         const displayName: string =
@@ -54,6 +55,7 @@ const LocationMapPicker: React.FC<LocationMapPickerProps> = ({
           data.address?.road ||
           data.address?.suburb ||
           data.address?.city ||
+          displayName.split(",")[0] ||
           "";
         onChange({
           latitude: lat.toFixed(6),
@@ -91,7 +93,7 @@ const LocationMapPicker: React.FC<LocationMapPickerProps> = ({
     try {
       const res = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=1`,
-        { headers: { "User-Agent": "CRM-Chat-App" } },
+        { headers: { "User-Agent": "CRM-Chat-App" }, referrerPolicy: "strict-origin-when-cross-origin" },
       );
       const data = await res.json();
       if (data && data.length > 0) {
@@ -209,7 +211,7 @@ const LocationMapPicker: React.FC<LocationMapPickerProps> = ({
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1">
           <Label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-            Name (Optional)
+            Name{required ? " *" : " (Optional)"}
           </Label>
           <Input
             value={value.name || ""}
@@ -220,7 +222,7 @@ const LocationMapPicker: React.FC<LocationMapPickerProps> = ({
         </div>
         <div className="space-y-1">
           <Label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-            Address (Optional)
+            Address{required ? " *" : " (Optional)"}
           </Label>
           <Input
             value={value.address || ""}

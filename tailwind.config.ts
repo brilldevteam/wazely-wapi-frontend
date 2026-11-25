@@ -8,9 +8,11 @@ const config: Config = {
   ],
   theme: {
     fontFamily: {
+      sans: ["var(--font-global-sans)", "sans-serif"],
       rubik: ["var(--font-rubik)"],
       roboto: ["var(--font-roboto)"],
       fontAwesome: ["var(--font-awesome)"],
+      montserrat: ["var(--font-global-sans)", "sans-serif"],
     },
     screens: {
       xl1800: { max: "1800px" },

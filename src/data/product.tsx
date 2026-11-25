@@ -73,7 +73,7 @@ export const bgColors = [
   "bg-rose-50 border-rose-100/60 text-rose-600",
   "bg-purple-50 border-purple-100/60 text-purple-600",
   "bg-blue-50 border-blue-100/60 text-blue-600",
-  "bg-emerald-50 border-emerald-100/60 text-emerald-600",
+  "bg-light-primary border-[var(--primary-opacity-20)]/60 text-primary",
 ];
 
 export const bookingSteps = [
@@ -415,7 +415,7 @@ export const automationFaqItems = [
 
 export const FEATURE_ICONS = [
   <ShieldCheck key="0" size={20} className="text-blue-600" />,
-  <Users key="1" size={20} className="text-emerald-600" />,
+  <Users key="1" size={20} className="text-primary" />,
   <Calendar key="2" size={20} className="text-purple-600" />,
   <Link2 key="3" size={20} className="text-amber-600" />,
   <BarChart3 key="4" size={20} className="text-rose-600" />,
@@ -424,7 +424,7 @@ export const FEATURE_ICONS = [
 
 export const FEATURE_ICON_STYLES = [
   "bg-blue-50 border-blue-100",
-  "bg-emerald-50 border-emerald-100",
+  "bg-light-primary border-[var(--primary-opacity-20)]",
   "bg-purple-50 border-purple-100",
   "bg-amber-50 border-amber-100",
   "bg-rose-50 border-rose-100",

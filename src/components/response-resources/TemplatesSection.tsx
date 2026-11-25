@@ -105,7 +105,7 @@ const TemplatesSection: React.FC<TemplatesSectionProps> = ({
     switch (s) {
       case "APPROVED":
         return (
-          <Badge className="bg-emerald-50 text-primary border-emerald-100 dark:border-primary dark:bg-transparent hover:bg-emerald-50 px-2 py-0.5 text-[10px] font-bold">
+          <Badge className="bg-light-primary text-primary border-[var(--primary-opacity-20)] dark:border-primary dark:bg-transparent hover:bg-light-primary px-2 py-0.5 text-[10px] font-bold">
             APPROVED
           </Badge>
         );

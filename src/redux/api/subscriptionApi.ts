@@ -40,11 +40,27 @@ export const subscriptionApi = baseApi.enhanceEndpoints({ addTagTypes: ["Subscri
       }),
       invalidatesTags: ["Subscription"],
     }),
-    changePlanSubscription: builder.mutation<CreateSubscriptionResponse, { id: string; new_plan_id: string }>({
-      query: ({ id, new_plan_id }) => ({
+    createMidtransSubscription: builder.mutation<CreateSubscriptionResponse, { plan_id: string }>({
+      query: (body) => ({
+        url: "/subscription/create-midtrans",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Subscription"],
+    }),
+    createMollieSubscription: builder.mutation<CreateSubscriptionResponse, { plan_id: string }>({
+      query: (body) => ({
+        url: "/subscription/create-mollie",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Subscription"],
+    }),
+    changePlanSubscription: builder.mutation<CreateSubscriptionResponse, { id: string; body: any }>({
+      query: ({ id, body }) => ({
         url: `/subscription/${id}/change-plan`,
         method: "POST",
-        body: { new_plan_id },
+        body,
       }),
       invalidatesTags: ["Subscription"],
     }),
@@ -56,7 +72,15 @@ export const subscriptionApi = baseApi.enhanceEndpoints({ addTagTypes: ["Subscri
       }),
       invalidatesTags: ["Subscription"],
     }),
+    getMyBillingHistory: builder.query<any, any>({
+      query: (params) => ({
+        url: "/subscription/my-billing-history",
+        method: "GET",
+        params,
+      }),
+      providesTags: ["Subscription"],
+    }),
   }),
 });
 
-export const { useGetUserSubscriptionQuery, useCreateStripeSubscriptionMutation, useCreateRazorpaySubscriptionMutation, useCreateManualSubscriptionMutation, useCreatePayPalSubscriptionMutation, useChangePlanSubscriptionMutation, useCancelSubscriptionMutation } = subscriptionApi;
+export const { useGetUserSubscriptionQuery, useCreateStripeSubscriptionMutation, useCreateRazorpaySubscriptionMutation, useCreateManualSubscriptionMutation, useCreatePayPalSubscriptionMutation, useCreateMidtransSubscriptionMutation, useCreateMollieSubscriptionMutation, useChangePlanSubscriptionMutation, useCancelSubscriptionMutation, useGetMyBillingHistoryQuery } = subscriptionApi;

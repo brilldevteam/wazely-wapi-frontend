@@ -40,7 +40,7 @@ export const FooterSection = ({ footerText, setFooterText }: FooterSectionProps)
       </div>
       <div className="space-y-4">
         <CharacterCountWrapper current={footerText?.length || 0} max={60}>
-          <Input ref={inputRef} placeholder="Enter footer text..." value={footerText || ""} onChange={(e) => setFooterText(e.target.value.slice(0, 60))} className="h-12 border-slate-200 dark:border-(--card-border-color) rounded-lg bg-(--input-color) dark:bg-(--page-body-bg) focus:bg-white dark:focus:bg-(--page-body-bg) focus:border-emerald-500/50 transition-all font-medium" />
+          <Input ref={inputRef} placeholder="Enter footer text..." value={footerText || ""} onChange={(e) => setFooterText(e.target.value.slice(0, 60))} className="h-12 border-slate-200 dark:border-(--card-border-color) rounded-lg bg-(--input-color) dark:bg-(--page-body-bg) focus:bg-white dark:focus:bg-(--page-body-bg) focus:border-primary/50 transition-all font-medium" />
         </CharacterCountWrapper>
 
         <div className="space-y-2">

@@ -2,7 +2,6 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import "@xyflow/react/dist/style.css";
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
-import { Mona_Sans } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { ReactNode } from "react";
 import { Toaster } from "sonner";
@@ -26,10 +25,7 @@ import I18nProvider from "./I18nProvider";
 import ReduxProvider from "./ReduxProvider";
 import { ThemeProvider } from "./ThemeProvider";
 
-const geistSans = Mona_Sans({
-  variable: "--font-mona-sans",
-  subsets: ["latin"],
-});
+import { globalSans } from "./fonts";
 
 // const geistMono = Geist_Mono({
 //   variable: "--font-geist-mono",
@@ -49,7 +45,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <link rel="manifest" href={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/manifest.json`} />
         <link rel="apple-touch-icon" href={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/assets/logos/app.png`} />
       </head>
-      <body className={`${geistSans.variable} antialiased h-full custom-scrollbar`} suppressHydrationWarning>
+      <body className={`${globalSans.variable} antialiased h-full custom-scrollbar`} suppressHydrationWarning>
         <ThemeProvider>
           <TooltipProvider>
             <ReduxProvider>

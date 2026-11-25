@@ -27,10 +27,10 @@ const ManagePlanModal = ({ isOpen, onOpenChange, onUpgrade, onDowngrade, onCance
               onOpenChange(false);
             }}
             disabled={isUpgradeDisabled}
-            className={cn("w-full h-[80px] flex items-center justify-between p-4 rounded-xl transition-all group border", isUpgradeDisabled ? "bg-slate-50 dark:bg-(--dark-body) border-slate-100 dark:border-slate-800/40 text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-60" : "bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border-emerald-100/50 dark:border-emerald-500/20")}
+            className={cn("w-full h-[80px] flex items-center justify-between p-4 rounded-xl transition-all group border", isUpgradeDisabled ? "bg-slate-50 dark:bg-(--dark-body) border-slate-100 dark:border-slate-800/40 text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-60" : "bg-light-primary dark:bg-primary/10 hover:bg-[var(--primary-opacity-20)] dark:hover:bg-primary/20 text-primary-dark dark:text-primary border-[var(--primary-opacity-20)]/50 dark:border-primary/20")}
           >
             <div className="flex items-center gap-4">
-              <div className={cn("p-2.5 bg-white dark:bg-(--dark-body) rounded-lg shadow-sm transition-colors", !isUpgradeDisabled && "group-hover:bg-emerald-50 dark:group-hover:bg-emerald-500/20")}>
+              <div className={cn("p-2.5 bg-white dark:bg-(--dark-body) rounded-lg shadow-sm transition-colors", !isUpgradeDisabled && "group-hover:bg-light-primary dark:group-hover:bg-primary/20")}>
                 <ArrowUpCircle className="h-6 w-6" />
               </div>
               <div className="text-left">

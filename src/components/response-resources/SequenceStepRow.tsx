@@ -67,7 +67,7 @@ const SequenceStepRow: React.FC<SequenceStepRowProps> = ({ step, index, onEdit, 
           className={cn(
             "p-2 rounded-lg transition-colors",
             isToggling ? "opacity-50 cursor-not-allowed" : "",
-            step.is_active ? "text-green-500 bg-unset hover:bg-green-50 dark:hover:bg-emerald-900/20" : "text-slate-300 bg-unset hover:bg-slate-50"
+            step.is_active ? "text-green-500 bg-unset hover:bg-green-50 dark:hover:bg-primary-darker/20" : "text-slate-300 bg-unset hover:bg-slate-50"
           )}
           title={step.is_active ? "Pause Step" : "Activate Step"}
         >

@@ -36,7 +36,14 @@ export const MaterialPreviewModal: React.FC<MaterialPreviewModalProps> = ({ isOp
     buttons = material.buttons || [];
     mediaUrl = material.header?.media_url || undefined;
 
-    if (material.is_limited_time_offer) {
+    const isCallPermission =
+      material.call_permission === "true" ||
+      material.call_permission === true ||
+      material.template_type === "call_permission";
+
+    if (isCallPermission) {
+      marketingType = "call_permission";
+    } else if (material.is_limited_time_offer) {
       marketingType = "limited_time_offer";
     } else if (category === "AUTHENTICATION") {
       marketingType = "authentication";

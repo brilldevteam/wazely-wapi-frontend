@@ -65,9 +65,9 @@ export const HeaderSection = ({ templateType, setTemplateType, headerText, setHe
                       setTemplateType(type.value);
                     }
                   }}
-                  className={`flex flex-col items-center justify-center gap-1.5! p-3! rounded-lg! border transition-all h-19.75 font-bold! text-[10px]! uppercase tracking-wider ${templateType === type.value ? "border-primary! bg-emerald-50/50! text-primary! dark:bg-(--table-hover)!" : "border-slate-150! dark:border-(--table-hover)! bg-slate-50/20! dark:bg-(--table-hover)! text-slate-400! dark:text-gray-500! hover:border-primary! dark:hover:border-(--card-border-color)!"}`}
+                  className={`flex flex-col items-center justify-center gap-1.5! p-3! rounded-lg! border transition-all h-19.75 font-bold! text-[10px]! uppercase tracking-wider ${templateType === type.value ? "border-primary! bg-primary/10! text-primary! dark:bg-(--table-hover)!" : "border-slate-150! dark:border-(--table-hover)! bg-slate-50/20! dark:bg-(--table-hover)! text-slate-400! dark:text-gray-500! hover:border-primary! dark:hover:border-(--card-border-color)!"}`}
                 >
-                  <div className={`p-1.5 rounded-lg ${templateType === type.value ? "bg-emerald-100 dark:bg-(--card-color)" : "bg-white dark:bg-transparent shadow-xs"}`}>{type.icon}</div>
+                  <div className={`p-1.5 rounded-lg ${templateType === type.value ? "bg-primary/10 dark:bg-(--card-color)" : "bg-white dark:bg-transparent shadow-xs"}`}>{type.icon}</div>
                   {type.label}
                 </Button>
               ))}
@@ -79,16 +79,16 @@ export const HeaderSection = ({ templateType, setTemplateType, headerText, setHe
         <div className="pt-6 border-t border-slate-50 dark:border-(--card-border-color)">
           <Input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept={templateType === "image" ? "image/*" : templateType === "video" ? "video/*" : templateType === "document" ? ".pdf,.doc,.docx" : "*"} />
           {headerFile || mediaUrl ? (
-            <div className="flex items-center justify-between p-4 bg-emerald-50/50 dark:bg-emerald-500/5 border border-emerald-100 dark:border-emerald-500/20 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="flex items-center justify-between p-4 bg-light-primary/50 dark:bg-primary/5 border border-primary/10 dark:border-primary/20 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-300">
               <div className="flex items-center gap-4 min-w-0">
-                <div className="w-12 h-12 rounded-lg bg-emerald-100 dark:bg-emerald-500/20 flex items-center justify-center shadow-sm shrink-0">
-                  <div className="text-emerald-600 dark:text-emerald-400">{templateTypes.find((t) => t.value === templateType)?.icon}</div>
+                <div className="w-12 h-12 rounded-lg bg-primary/10 dark:bg-primary/20 flex items-center justify-center shadow-sm shrink-0">
+                  <div className="text-primary dark:text-primary">{templateTypes.find((t) => t.value === templateType)?.icon}</div>
                 </div>
                 <div className="flex flex-col min-w-0">
                   <span className="text-sm font-bold text-slate-800 dark:text-slate-200 truncate">
                     {headerFile ? headerFile.name : "Current media header"}
                   </span>
-                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider">
+                  <span className="text-[10px] text-primary dark:text-primary font-bold uppercase tracking-wider">
                     {headerFile ? `${(headerFile.size / (1024 * 1024)).toFixed(2)} MB • Ready` : "Active on Meta"}
                   </span>
                 </div>
@@ -97,7 +97,7 @@ export const HeaderSection = ({ templateType, setTemplateType, headerText, setHe
                  <Button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="p-2.5! text-slate-500! dark:text-gray-500! hover:text-primary! hover:bg-emerald-50! rounded-lg! bg-[unset]! transition-all"
+                  className="p-2.5! text-slate-500! dark:text-gray-500! hover:text-primary! hover:bg-light-primary! rounded-lg! bg-[unset]! transition-all"
                   title="Change file"
                 >
                   <Plus size={20} />

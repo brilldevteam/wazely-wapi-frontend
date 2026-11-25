@@ -13,14 +13,20 @@ export const TemplatePreviewModal = ({ isOpen, onClose, template }: TemplatePrev
   let marketingType: MarketingType = "none";
   const category = template.category?.toUpperCase();
 
-  if (template.is_limited_time_offer) {
+  const isCallPermission =
+    (template as any).call_permission === "true" ||
+    (template as any).call_permission === true ||
+    (template as any).template_type === "call_permission";
+
+  if (isCallPermission) {
+    marketingType = "call_permission";
+  } else if (template.is_limited_time_offer) {
     marketingType = "limited_time_offer";
   } else if (category === "AUTHENTICATION") {
     marketingType = "authentication" as any;
-  } else if (category === "MARKETING") {
+  } else if (category === "MARKETING" || !category) {
     const hasCopyCode = template.buttons?.some((b) => b.type === "copy_code");
     const hasCatalog = template.buttons?.some((b) => b.type === "catalog");
-    const isCallPermission = (template as any).call_permission === "true" || (template as any).call_permission === true;
     const isCarousel = (template as any).template_type === "carousel" || !!(template as any).carousel_cards;
 
     if (isCarousel) {
@@ -30,8 +36,6 @@ export const TemplatePreviewModal = ({ isOpen, onClose, template }: TemplatePrev
       else if (header?.format === "image" || header?.format === "video") marketingType = "carousel_media";
     } else if (hasCatalog) {
       marketingType = "catalog";
-    } else if (isCallPermission) {
-      marketingType = "call_permission";
     } else if (hasCopyCode && !template.header && !template.footer_text) {
       marketingType = "coupon_code";
     }
