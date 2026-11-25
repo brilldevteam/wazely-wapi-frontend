@@ -4,21 +4,16 @@ import { Input } from "@/src/elements/ui/input";
 import { cn } from "@/src/lib/utils";
 import { Clock, UsersRound } from "lucide-react";
 import React, { useState } from "react";
-import ToggleSwitch from "./ToggleSwitch";
 
-export const WAIT_HOURS_MIN = 1;
-export const WAIT_HOURS_MAX = 168;
 export const MAX_CHATS_MIN = 1;
 export const MAX_CHATS_MAX = 1000;
-export const DEFAULT_WAIT_HOURS = 6;
 export const DEFAULT_MAX_CHATS = 10;
 
 interface AssignmentRulesCardProps {
-  queueEnabled: boolean;
-  waitHours: number;
   maxOpenChats: number; // 0 = no limit
+  assignmentStrategy: "round_robin" | "least_open";
   disabled?: boolean;
-  onChange: (changes: { assignment_queue_enabled?: boolean; assignment_wait_hours?: number; max_open_chats_per_agent?: number }) => void;
+  onChange: (changes: { assignment_queue_enabled?: boolean; assignment_wait_hours?: number; max_open_chats_per_agent?: number; assignment_strategy?: "round_robin" | "least_open" }) => void;
 }
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
@@ -66,7 +61,7 @@ const NumberBox = ({ value, min, max, disabled, onCommit, ariaLabel }: { value: 
  * "Assign Random Agent" steps): wait for an agent, and an optional limit of
  * open chats per agent.
  */
-const AssignmentRulesCard: React.FC<AssignmentRulesCardProps> = ({ queueEnabled, waitHours, maxOpenChats, disabled, onChange }) => {
+const AssignmentRulesCard: React.FC<AssignmentRulesCardProps> = ({ maxOpenChats, assignmentStrategy, disabled, onChange }) => {
   const isLimited = maxOpenChats > 0;
 
   return (
@@ -78,33 +73,18 @@ const AssignmentRulesCard: React.FC<AssignmentRulesCardProps> = ({ queueEnabled,
         </p>
       </div>
 
-      {/* Wait for an agent */}
-      <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-(--card-border-color)/50">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex items-start gap-3 min-w-0">
-            <div className={cn("mt-0.5 p-2 rounded-lg bg-slate-100 dark:bg-(--dark-body)", queueEnabled ? "text-primary" : "text-slate-400")}>
-              <Clock size={15} />
-            </div>
-            <div className="min-w-0">
-              <p className={cn("text-sm font-bold", queueEnabled ? "text-slate-800 dark:text-white" : "text-slate-500 dark:text-slate-400")}>Wait for an available agent</p>
-              <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 leading-relaxed">
-                If nobody is available, the chat waits and is assigned automatically as soon as an agent comes online or switches to Available — oldest chat first.
-              </p>
-            </div>
-          </div>
-          <ToggleSwitch checked={queueEnabled} onChange={(v) => onChange({ assignment_queue_enabled: v })} disabled={disabled} />
-        </div>
+      <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-(--card-border-color)/50 flex items-start gap-3">
+        <div className="mt-0.5 p-2 rounded-lg bg-primary/10 text-primary"><Clock size={15} /></div>
+        <div><p className="text-sm font-bold text-slate-800 dark:text-white">Always wait for an available agent</p><p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 leading-relaxed">When nobody is eligible, the chat remains in the queue until an agent comes online, becomes Available, starts their shift, or frees capacity.</p></div>
+      </div>
 
-        {queueEnabled && (
-          <div className="mt-4 ms-0 sm:ms-11 flex flex-wrap items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-            <span>Keep waiting for</span>
-            <NumberBox value={waitHours} min={WAIT_HOURS_MIN} max={WAIT_HOURS_MAX} disabled={disabled} ariaLabel="Waiting time in hours" onCommit={(n) => onChange({ assignment_wait_hours: n })} />
-            <span>hours</span>
-            <p className="basis-full text-xs text-slate-400 dark:text-slate-500">
-              After this the chat stops waiting and stays in Unassigned for you to assign. (1–168 hours)
-            </p>
-          </div>
-        )}
+      <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-(--card-border-color)/50">
+        <p className="text-sm font-bold text-slate-800 dark:text-white">Distribution method</p>
+        <p className="text-xs text-slate-400 mt-0.5">Choose a fair rotation or give the next chat to the least-loaded eligible agent.</p>
+        <div className="mt-3 inline-flex rounded-lg border border-slate-200 dark:border-(--card-border-color) p-1 gap-1">
+          <button type="button" disabled={disabled} onClick={() => onChange({ assignment_strategy: "round_robin" })} className={cn("px-3 py-2 rounded-md text-xs font-bold", assignmentStrategy === "round_robin" ? "bg-primary text-white" : "text-slate-500")}>Round-robin</button>
+          <button type="button" disabled={disabled} onClick={() => onChange({ assignment_strategy: "least_open" })} className={cn("px-3 py-2 rounded-md text-xs font-bold", assignmentStrategy === "least_open" ? "bg-primary text-white" : "text-slate-500")}>Least open chats</button>
+        </div>
       </div>
 
       {/* Max open chats per agent */}

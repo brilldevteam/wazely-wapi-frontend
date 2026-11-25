@@ -8,10 +8,12 @@ import { Switch } from "@/src/elements/ui/switch";
 import { Textarea } from "@/src/elements/ui/textarea";
 import { cn } from "@/src/lib/utils";
 import { useGetTeamsQuery } from "@/src/redux/api/teamApi";
+import { useGetShiftsQuery } from "@/src/redux/api/shiftApi";
 import PlanFeature from "@/src/shared/PlanFeature";
 import { CountryCodeSelect } from "@/src/components/shared/CountryCodeSelect";
 import { AgentFormdDataProps, AgentInput } from "@/src/types/agent";
 import { Team } from "@/src/types/components";
+import { AgentShift } from "@/src/types/shift";
 import { AgentSchema } from "@/src/utils/validationSchema";
 import { useFormik } from "formik";
 import { ArrowLeft, Eye, EyeOff, FileText, Loader2, Lock, Mail, Phone, Save, User } from "lucide-react";
@@ -26,6 +28,7 @@ const AgentForm: React.FC<AgentFormdDataProps> = ({ agent, onSave, onCancel, isL
   const isEditing = !!agent;
   const [showPassword, setShowPassword] = React.useState(false);
   const { data: teamsData } = useGetTeamsQuery({ limit: 100 });
+  const { data: shiftsData } = useGetShiftsQuery();
 
 
   const formik = useFormik({
@@ -39,13 +42,15 @@ const AgentForm: React.FC<AgentFormdDataProps> = ({ agent, onSave, onCancel, isL
       status: agent?.status ?? true,
       is_phoneno_hide: agent?.is_phoneno_hide ?? false,
       team_id: typeof agent?.team_id === "object" ? (agent.team_id as Team)?._id : agent?.team_id || "",
+      shift_id: typeof agent?.shift_id === "object" ? (agent.shift_id as AgentShift)?._id : agent?.shift_id || "none",
       isEditing: isEditing,
     },
     validationSchema: AgentSchema,
     enableReinitialize: true,
     onSubmit: async (values) => {
       const { isEditing: _, ...rest } = values;
-      const payload: AgentInput = rest;
+      void _;
+      const payload: AgentInput = { ...rest, shift_id: rest.shift_id === "none" ? "" : rest.shift_id };
       if (isEditing && !payload.password) {
         delete payload.password;
       }
@@ -57,7 +62,7 @@ const AgentForm: React.FC<AgentFormdDataProps> = ({ agent, onSave, onCancel, isL
     if (formik.submitCount > 0 && Object.keys(formik.errors).length > 0) {
       toast.error(t("please_fill_required_fields_correctly", "Please fill all required fields correctly."));
     }
-  }, [formik.submitCount,formik.errors]);
+  }, [formik.submitCount, formik.errors, t]);
 
   return (
     <div className="mx-auto animate-in fade-in slide-in-from-bottom-6 duration-700">
@@ -216,6 +221,23 @@ const AgentForm: React.FC<AgentFormdDataProps> = ({ agent, onSave, onCancel, isL
                   {formik.touched.team_id && formik.errors.team_id && <p className="text-[11px] text-red-500 ml-4 tracking-tighter">{formik.errors.team_id as string}</p>}
                 </div>
               </PlanFeature>
+
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="shift_id" className="text-sm font-medium text-slate-800 dark:text-white">Work schedule</Label>
+                  <Button type="button" onClick={() => window.open("/agent_shifts", "_blank")} className="text-[12px]! font-bold! text-primary! bg-primary/5! px-2! py-1! rounded! hover:bg-primary/10! h-6.5!">+ Manage shifts</Button>
+                </div>
+                <Select value={formik.values.shift_id} onValueChange={(value) => formik.setFieldValue("shift_id", value)}>
+                  <SelectTrigger className="h-11 py-6 rounded-lg border border-(--input-border-color) dark:border-(--card-border-color) bg-(--input-color) dark:bg-(--page-body-bg)">
+                    <SelectValue placeholder="Select a shift" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">No shift — eligible at any time</SelectItem>
+                    {shiftsData?.data?.filter((shift) => shift.status === "active").map((shift) => <SelectItem key={shift._id} value={shift._id}>{shift.name} · {shift.timezone}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+                <p className="text-[11px] text-slate-500">Agents without a shift can receive chats whenever they are Online and Available.</p>
+              </div>
 
               <div className="sm:p-6 p-4 rounded-lg bg-indigo-50/50 dark:bg-(--table-hover) dark:border-none border border-indigo-100/50 dark:border-(--card-border-color)">
                 <div className="flex gap-3">

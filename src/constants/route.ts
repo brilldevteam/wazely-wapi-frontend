@@ -43,6 +43,7 @@ export const ROUTES = {
   Teams: "/organization_teams",
   TeamsCreate: "/organization_teams/create",
   Agents: "/agents",
+  Shifts: "/agent_shifts",
   AgentsCreate: "/agents/create",
   AgentsTask: "/agents/task",
   BotFlow: "/automation_builder",

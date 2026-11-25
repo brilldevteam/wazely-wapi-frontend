@@ -22,7 +22,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import ConfigRow from "./waba-config/ConfigRow";
 import ToggleSwitch from "./waba-config/ToggleSwitch";
-import AssignmentRulesCard, { DEFAULT_WAIT_HOURS } from "./waba-config/AssignmentRulesCard";
+import AssignmentRulesCard from "./waba-config/AssignmentRulesCard";
 
 const isConfigFieldEnabled = (val: any) => {
   return !!(val && typeof val === "object" && val.id);
@@ -63,8 +63,7 @@ const WabaConfigSection: React.FC<WabaConfigSectionProps> = ({ wabaId }) => {
         fallback_message: d.fallback_message ?? null,
         reengagement_message: d.reengagement_message ?? null,
         round_robin_assignment: d.round_robin_assignment ?? false,
-        assignment_queue_enabled: d.assignment_queue_enabled ?? true,
-        assignment_wait_hours: d.assignment_wait_hours ?? DEFAULT_WAIT_HOURS,
+        assignment_strategy: d.assignment_strategy ?? "round_robin",
         max_open_chats_per_agent: d.max_open_chats_per_agent ?? 0,
       };
 
@@ -86,6 +85,7 @@ const WabaConfigSection: React.FC<WabaConfigSectionProps> = ({ wabaId }) => {
         toast.success(response.message || "Configuration saved");
       } catch (err: any) {
         toast.error(err?.data?.message || "Failed to save configuration");
+        throw err;
       }
     },
     [wabaId, updateConfig],
@@ -118,9 +118,13 @@ const WabaConfigSection: React.FC<WabaConfigSectionProps> = ({ wabaId }) => {
     setLocalConfig((prev) => ({ ...prev, ...changes }));
   };
 
-  const handleSave = () => {
-    saveConfig(localConfig);
-    setInitialConfig(localConfig);
+  const handleSave = async () => {
+    try {
+      await saveConfig(localConfig);
+      setInitialConfig(localConfig);
+    } catch {
+      // The error toast is shown by saveConfig; preserve the unsaved state.
+    }
   };
 
   const handleDiscard = () => {
@@ -237,9 +241,8 @@ const WabaConfigSection: React.FC<WabaConfigSectionProps> = ({ wabaId }) => {
         </div>
 
         <AssignmentRulesCard
-          queueEnabled={localConfig.assignment_queue_enabled ?? true}
-          waitHours={localConfig.assignment_wait_hours ?? DEFAULT_WAIT_HOURS}
           maxOpenChats={localConfig.max_open_chats_per_agent ?? 0}
+          assignmentStrategy={localConfig.assignment_strategy ?? "round_robin"}
           disabled={isSaving}
           onChange={handleAssignmentRules}
         />

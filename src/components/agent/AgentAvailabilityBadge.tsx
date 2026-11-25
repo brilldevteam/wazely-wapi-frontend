@@ -16,6 +16,10 @@ const AgentAvailabilityBadge = ({ agent }: { agent: Agent }) => {
     return <span className="text-xs font-semibold text-slate-400">{t("availability_inactive", "Inactive")}</span>;
   }
 
+  if (agent.is_online && agent.availability_status !== "away" && agent.is_on_shift === false) {
+    return <span className="inline-flex items-center gap-1.5 text-xs font-bold text-violet-700 bg-violet-50 dark:bg-violet-500/10 dark:text-violet-400 px-2.5 py-1 rounded-full"><span className="w-2 h-2 rounded-full bg-violet-500" />Off shift</span>;
+  }
+
   if (agent.is_online && agent.availability_status !== "away") {
     return (
       <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 dark:bg-emerald-500/10 dark:text-emerald-400 px-2.5 py-1 rounded-full">

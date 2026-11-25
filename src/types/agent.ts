@@ -6,6 +6,7 @@ import { Agent } from "./components";
 export type AgentInput = Omit<Agent, "created_at" | "updated_at" | "role" | "_id"> & {
   password?: string;
   team_id?: string;
+  shift_id?: string;
 };
 
 export interface AgentKanbanStatus {

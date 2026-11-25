@@ -17,6 +17,7 @@ import { useState } from "react";
 import { BaseNode } from "./BaseNode";
 import { NodeField } from "./NodeField";
 import { Button } from "@/src/elements/ui/button";
+import { Switch } from "@/src/elements/ui/switch";
 
 
 export function AssignRandomAgentNode({ data, id }: any) {
@@ -60,7 +61,7 @@ export function AssignRandomAgentNode({ data, id }: any) {
   return (
     <BaseNode
       id={id}
-      title="Assign Random Agent"
+      title="Assign Available Agent"
       icon={<Shuffle size={18} />}
       iconBgColor="bg-amber-500"
       iconColor="text-white"
@@ -125,11 +126,13 @@ export function AssignRandomAgentNode({ data, id }: any) {
           </NodeField>
         )}
 
+        {mode === "all" && <div className="flex items-center justify-between gap-3 p-2.5 rounded-md border border-gray-200 dark:border-(--card-border-color)"><div><p className="text-xs font-semibold">Include business owner</p><p className="text-[10px] text-gray-500">Off by default. Agents are assigned first.</p></div><Switch checked={data.include_owner === true} onCheckedChange={(include_owner) => updateNodeData({ include_owner })}/></div>}
+
         {/* Contextual hint */}
         <div className="flex items-center gap-2 p-2 bg-amber-50 dark:bg-amber-900/10 rounded-md border border-amber-100 dark:border-amber-900/20">
           <p className="text-[10px] leading-tight text-amber-700 dark:text-amber-400">
             {mode === "all"
-              ? "A random agent will be picked from all available agents using round-robin rotation."
+              ? "The next eligible agent will be selected using the configured distribution rules."
               : selectedTeam
                 ? `A random agent from the "${selectedTeam.name}" team will be assigned using round-robin rotation.`
                 : "A random agent will be picked from the selected team using round-robin rotation."}
