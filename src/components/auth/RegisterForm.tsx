@@ -22,7 +22,9 @@ import { Skeleton } from "@/src/elements/ui/skeleton";
 import { AuthControls } from "./common/AuthControls";
 
 export const RegisterPage = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRTL = useAppSelector((state) => state.layout.isRTL);
+  const isEnglish = i18n.language === "en";
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
@@ -50,7 +52,7 @@ export const RegisterPage = () => {
     ? `/page/${setting.signup_agree_page.slug}`
     : "/page/privacy-policy";
 
-  const authContent = authPageSetup?.register_page;
+  const authContent = isEnglish ? authPageSetup?.register_page : undefined;
   const isAuthSetupLoading = !authPageSetup;
 
   // Fallback content
@@ -175,17 +177,17 @@ export const RegisterPage = () => {
 
   if (!allow_user_signup) {
     return (
-      <div className="w-full h-full min-h-screen flex items-center justify-center bg-linear-to-br from-slate-100 via-white-50 to-primary/5 dark:bg-none dark:bg-(--page-body-bg)">
-        <AuthControls />
+      <div dir={isRTL ? "rtl" : "ltr"} className="relative w-full h-full min-h-screen pt-16 flex items-center justify-center bg-linear-to-br from-slate-100 via-white-50 to-primary/5 dark:bg-none dark:bg-(--page-body-bg)">
+        <AuthControls showLanguage />
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 -left-32 w-96 h-96 bg-[var(--primary-opacity-30)]/30 dark:bg-primary/15 rounded-full blur-3xl"></div>
           <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-blue-200/30 dark:bg-blue-600/15 rounded-full blur-3xl"></div>
         </div>
         <div className="flex flex-col items-center justify-center">
-          <h1 className="font-semibold text-2xl">Registration Disabled</h1>
-          <p className="w-[60%] text-slate-700 py-2 mb-3 text-center">New account registration is currently disabled. Please contact your administrator to get access.</p>
+          <h1 className="font-semibold text-2xl">{t("registration_disabled", "Registration Disabled")}</h1>
+          <p className="w-[60%] text-slate-700 py-2 mb-3 text-center">{t("registration_disabled_help", "New account registration is currently disabled. Please contact your administrator to get access.")}</p>
           <Button color="primary" className="px-5 rounded-md" onClick={() => router.push(ROUTES.Login)}>
-            Back to Login
+            {t("back_to_login", "Back to Login")}
           </Button>
         </div>
       </div>
@@ -193,8 +195,8 @@ export const RegisterPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-primary/5 dark:bg-none dark:bg-(--page-body-bg) flex items-center justify-center p-4 relative overflow-hidden">
-      <AuthControls />
+    <div dir={isRTL ? "rtl" : "ltr"} className="min-h-screen bg-linear-to-br from-slate-50 via-white to-primary/5 dark:bg-none dark:bg-(--page-body-bg) flex items-center justify-center px-4 pb-4 pt-16 relative overflow-hidden">
+      <AuthControls showLanguage />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 -left-32 w-96 h-96 bg-[var(--primary-opacity-30)]/30 dark:bg-primary/15 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-blue-200/30 dark:bg-blue-600/15 rounded-full blur-3xl"></div>
@@ -202,7 +204,7 @@ export const RegisterPage = () => {
 
       <div className="relative z-10 w-full max-w-2xl lg:max-w-7xl">
         <div className="grid lg:grid-cols-5 gap-0 items-stretch">
-          <div className="hidden lg:flex flex-col justify-between p-10 bg-linear-to-br from-slate-900 via-slate-800 to-primary-darker rounded-l-3xl relative overflow-hidden lg:col-span-2">
+          <div className="hidden lg:flex flex-col justify-between p-10 bg-linear-to-br from-slate-900 via-slate-800 to-primary-darker rounded-s-3xl relative overflow-hidden lg:col-span-2">
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full -mr-32 -mt-32"></div>
             <div className="absolute bottom-0 left-0 w-80 h-80 bg-primary/5 rounded-full -ml-40 -mb-40"></div>
             <div className="absolute top-1/3 right-8 w-1 h-40 bg-primary/20 rotate-12"></div>
@@ -282,8 +284,8 @@ export const RegisterPage = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-(--card-color) rounded-3xl lg:rounded-l-none lg:rounded-r-3xl shadow-2xl p-8 lg:p-10 flex flex-col justify-center relative lg:col-span-3 min-h-200 overflow-hidden">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-linear-to-br from-primary/20 to-primary/10 dark:from-primary/30 dark:to-primary/20 opacity-40 dark:opacity-100 rounded-bl-[100px]"></div>
+          <div className="bg-white dark:bg-(--card-color) rounded-3xl lg:rounded-s-none shadow-2xl p-8 lg:p-10 flex flex-col justify-center relative lg:col-span-3 min-h-200 overflow-hidden">
+            <div className="absolute top-0 end-0 w-40 h-40 bg-linear-to-br from-primary/20 to-primary/10 dark:from-primary/30 dark:to-primary/20 opacity-40 dark:opacity-100 rounded-es-[100px]"></div>
 
             <div className="relative z-10 max-w-2xl mx-auto w-full">
               <div className="lg:hidden flex items-center gap-3 mb-8">
@@ -302,8 +304,8 @@ export const RegisterPage = () => {
                       {t("full_name")}
                     </Label>
                     <div className="relative group">
-                      <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
-                      <Input id="fullName" name="fullName" placeholder={t("full_name_placeholder")} value={formik.values.fullName} onChange={formik.handleChange} onBlur={formik.handleBlur} className="pl-12 h-11 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-primary rounded-lg" />
+                      <User className="absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                      <Input id="fullName" name="fullName" placeholder={t("full_name_placeholder")} value={formik.values.fullName} onChange={formik.handleChange} onBlur={formik.handleBlur} className="ps-12 h-11 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-primary rounded-lg" />
                     </div>
                     {formik.touched.fullName && formik.errors.fullName && <p className="text-red-500 text-xs mt-1">{formik.errors.fullName}</p>}
                   </div>
@@ -313,8 +315,8 @@ export const RegisterPage = () => {
                       {t("email_address")}
                     </Label>
                     <div className="relative group">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
-                      <Input id="email" name="email" type="email" placeholder={t("email_placeholder")} value={formik.values.email} onChange={formik.handleChange} onBlur={formik.handleBlur} className="pl-12 h-11 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-primary rounded-lg" />
+                      <Mail className="absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                      <Input id="email" name="email" type="email" placeholder={t("email_placeholder")} value={formik.values.email} onChange={formik.handleChange} onBlur={formik.handleBlur} className="ps-12 h-11 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-primary rounded-lg" />
                     </div>
                     {formik.touched.email && formik.errors.email && <p className="text-red-500 text-xs mt-1">{formik.errors.email}</p>}
                   </div>
@@ -326,8 +328,8 @@ export const RegisterPage = () => {
                       {t("phone_number")}
                     </Label>
                     <div className="relative group">
-                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
-                      <Input id="phone" name="phone" type="number" placeholder={t("phone_placeholder")} value={formik.values.phone} onChange={(e) => formik.setFieldValue("phone", e.target.value.replace(/\D/g, ""))} onBlur={formik.handleBlur} className="pl-12 h-12 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-primary rounded-lg" />
+                      <Phone className="absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                      <Input id="phone" name="phone" type="number" placeholder={t("phone_placeholder")} value={formik.values.phone} onChange={(e) => formik.setFieldValue("phone", e.target.value.replace(/\D/g, ""))} onBlur={formik.handleBlur} className="ps-12 h-12 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-primary rounded-lg" />
                     </div>
                     {formik.touched.phone && formik.errors.phone && <p className="text-red-500 text-xs mt-1">{formik.errors.phone}</p>}
                   </div>
@@ -348,9 +350,9 @@ export const RegisterPage = () => {
                       {t("password")}
                     </Label>
                     <div className="relative group">
-                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
-                      <Input id="password" name="password" type={showPassword ? "text" : "password"} placeholder={t("password_placeholder")} value={formik.values.password} onChange={formik.handleChange} onBlur={formik.handleBlur} className="pl-12 pr-12 h-12 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-primary rounded-lg" />
-                      <Button type="button" onClick={() => setShowPassword(!showPassword)} className="bg-transparent hover:bg-transparent absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                      <Lock className="absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                      <Input id="password" name="password" type={showPassword ? "text" : "password"} placeholder={t("password_placeholder")} value={formik.values.password} onChange={formik.handleChange} onBlur={formik.handleBlur} className="px-12 h-12 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-primary rounded-lg" />
+                      <Button type="button" onClick={() => setShowPassword(!showPassword)} className="bg-transparent hover:bg-transparent absolute end-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                         {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                       </Button>
                     </div>
@@ -362,9 +364,9 @@ export const RegisterPage = () => {
                       {t("confirm_password")}
                     </Label>
                     <div className="relative group">
-                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
-                      <Input id="confirmPassword" name="confirmPassword" type={showConfirmPassword ? "text" : "password"} placeholder={t("confirm_password_placeholder")} value={formik.values.confirmPassword} onChange={formik.handleChange} onBlur={formik.handleBlur} className="pl-12 pr-12 h-12 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-primary rounded-lg" />
-                      <Button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="bg-transparent hover:bg-transparent absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                      <Lock className="absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                      <Input id="confirmPassword" name="confirmPassword" type={showConfirmPassword ? "text" : "password"} placeholder={t("confirm_password_placeholder")} value={formik.values.confirmPassword} onChange={formik.handleChange} onBlur={formik.handleBlur} className="px-12 h-12 bg-(--input-color) dark:bg-(--page-body-bg) border border-(--input-border-color) focus:border-primary rounded-lg" />
+                      <Button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="bg-transparent hover:bg-transparent absolute end-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                         {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                       </Button>
                     </div>
@@ -417,7 +419,7 @@ export const RegisterPage = () => {
                   ) : (
                     <div className="flex items-center justify-center gap-2">
                       {content.button_text}
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1 transition-transform" />
                     </div>
                   )}
                 </Button>

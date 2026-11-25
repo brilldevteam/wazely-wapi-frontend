@@ -17,7 +17,7 @@ const I18nProvider = ({ children }: { children: ReactNode }) => {
   const locale = i18n.language || "en";
 
   useEffect(() => {
-    const isAuthPage = pathname?.startsWith("/auth") && pathname !== "/auth/login";
+    const isAuthPage = pathname?.startsWith("/auth") && pathname !== "/auth/login" && pathname !== "/auth/register";
     document.documentElement.lang = locale;
     const isLandingPage = pathname === "/" || pathname === "/landing";
     const isIntegrationToolsPage = pathname?.startsWith("/integration_tools");
