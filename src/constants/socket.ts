@@ -12,6 +12,7 @@ export const SOCKET = {
     Whatsapp_Typing: "whatsapp:typing",
     Agent_Presence: "agent:presence",
     Chat_Assigned: "chat:assigned",
+    Chat_Queue_Updated: "chat:queue-updated",
   },
   Emitters: {
     Message_Delivered: "message-delivered",

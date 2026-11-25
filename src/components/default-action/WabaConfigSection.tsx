@@ -22,6 +22,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import ConfigRow from "./waba-config/ConfigRow";
 import ToggleSwitch from "./waba-config/ToggleSwitch";
+import AssignmentRulesCard, { DEFAULT_WAIT_HOURS } from "./waba-config/AssignmentRulesCard";
 
 const isConfigFieldEnabled = (val: any) => {
   return !!(val && typeof val === "object" && val.id);
@@ -62,6 +63,9 @@ const WabaConfigSection: React.FC<WabaConfigSectionProps> = ({ wabaId }) => {
         fallback_message: d.fallback_message ?? null,
         reengagement_message: d.reengagement_message ?? null,
         round_robin_assignment: d.round_robin_assignment ?? false,
+        assignment_queue_enabled: d.assignment_queue_enabled ?? true,
+        assignment_wait_hours: d.assignment_wait_hours ?? DEFAULT_WAIT_HOURS,
+        max_open_chats_per_agent: d.max_open_chats_per_agent ?? 0,
       };
 
       setLocalConfig(config);
@@ -108,6 +112,10 @@ const WabaConfigSection: React.FC<WabaConfigSectionProps> = ({ wabaId }) => {
 
   const handleRoundRobin = (v: boolean) => {
     setLocalConfig((prev) => ({ ...prev, round_robin_assignment: v }));
+  };
+
+  const handleAssignmentRules = (changes: Partial<WabaConfigPayload>) => {
+    setLocalConfig((prev) => ({ ...prev, ...changes }));
   };
 
   const handleSave = () => {
@@ -214,7 +222,7 @@ const WabaConfigSection: React.FC<WabaConfigSectionProps> = ({ wabaId }) => {
                       Sequential assignment
                     </p>
                     <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 leading-relaxed">
-                      Automatically assign incoming chats to agents in rotation
+                      Automatically assign incoming chats, in rotation, to agents who are online and Available
                     </p>
                   </div>
                 </div>
@@ -227,6 +235,14 @@ const WabaConfigSection: React.FC<WabaConfigSectionProps> = ({ wabaId }) => {
             </div>
           </div>
         </div>
+
+        <AssignmentRulesCard
+          queueEnabled={localConfig.assignment_queue_enabled ?? true}
+          waitHours={localConfig.assignment_wait_hours ?? DEFAULT_WAIT_HOURS}
+          maxOpenChats={localConfig.max_open_chats_per_agent ?? 0}
+          disabled={isSaving}
+          onChange={handleAssignmentRules}
+        />
       </div>
 
       {/* Save Changes Floating Bar */}

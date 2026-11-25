@@ -764,12 +764,14 @@ export const useSocketHandler = () => {
   // got the chat is told straight away, even before the customer writes again.
   const handleChatAssigned = useCallback(
     (data: { user_id?: string; agent_id?: string; contact_id?: string; contact_name?: string; source?: string }) => {
-      const isCorrectUser = !data.user_id || data.user_id === user?.id || data.user_id === selectedWorkspace?.user_id;
+      // The server only sends this to the business's own room, so a chat assigned to me
+      // is always mine — even right after login, before a workspace is selected.
+      const isForMe = !!user?.id && String(data.agent_id) === String(user.id);
+      const isCorrectUser = isForMe || !data.user_id || data.user_id === user?.id || data.user_id === selectedWorkspace?.user_id;
       if (!isCorrectUser) return;
 
       dispatch(chatApi.util.invalidateTags(["Chats"]));
 
-      const isForMe = !!user?.id && String(data.agent_id) === String(user.id);
       const assignedMyself = data.source === "manual" && !isAgent;
       if (!isForMe || assignedMyself) return;
 
@@ -808,6 +810,16 @@ export const useSocketHandler = () => {
     [dispatch, user, selectedWorkspace, isAgent, userSetting, sendNotification, router]
   );
 
+  // A chat started or stopped waiting for an agent: refresh the "Waiting" labels.
+  const handleQueueUpdated = useCallback(
+    (data: { user_id?: string }) => {
+      const isCorrectUser = !data.user_id || data.user_id === user?.id || data.user_id === selectedWorkspace?.user_id;
+      if (!isCorrectUser || isAgent) return;
+      dispatch(chatApi.util.invalidateTags(["Chats"]));
+    },
+    [dispatch, user, selectedWorkspace, isAgent]
+  );
+
   // Someone in the business went online/offline or changed Available/Away.
   const handleAgentPresence = useCallback(
     (data: { user_id?: string; agent_id?: string }) => {
@@ -835,6 +847,7 @@ export const useSocketHandler = () => {
     socket.on('agent:escalation', handleAgentEscalation);
     socket.on(SOCKET.Listeners.Chat_Assigned, handleChatAssigned);
     socket.on(SOCKET.Listeners.Agent_Presence, handleAgentPresence);
+    socket.on(SOCKET.Listeners.Chat_Queue_Updated, handleQueueUpdated);
 
     return () => {
       socket.off(SOCKET.Listeners.Whatsapp_Message, handleMessage);
@@ -844,8 +857,9 @@ export const useSocketHandler = () => {
       socket.off('agent:escalation', handleAgentEscalation);
       socket.off(SOCKET.Listeners.Chat_Assigned, handleChatAssigned);
       socket.off(SOCKET.Listeners.Agent_Presence, handleAgentPresence);
+      socket.off(SOCKET.Listeners.Chat_Queue_Updated, handleQueueUpdated);
     };
-  }, [handleMessage, handleStatusUpdate, handleConnectionUpdate, handleSnoozeReminder, handleAgentEscalation, handleChatAssigned, handleAgentPresence, user?.id, selectedWorkspace?.user_id]);
+  }, [handleMessage, handleStatusUpdate, handleConnectionUpdate, handleSnoozeReminder, handleAgentEscalation, handleChatAssigned, handleAgentPresence, handleQueueUpdated, user?.id, selectedWorkspace?.user_id]);
 
   useEffect(() => {
     return () => {

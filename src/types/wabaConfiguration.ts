@@ -20,6 +20,12 @@ export interface WabaConfigPayload {
   fallback_message?: ReplyRef | null;
   reengagement_message?: ReplyRef | null;
   round_robin_assignment?: boolean;
+  /** Wait for an available agent when nobody can take the chat (default true). */
+  assignment_queue_enabled?: boolean;
+  /** Hours a chat may wait for an agent, 1–168 (default 6). */
+  assignment_wait_hours?: number;
+  /** 0 = no limit, otherwise max open chats an agent can have before getting new ones. */
+  max_open_chats_per_agent?: number;
 }
 
 export interface WabaConfigData extends WabaConfigPayload {

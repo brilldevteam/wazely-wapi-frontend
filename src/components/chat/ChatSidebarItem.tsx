@@ -10,6 +10,7 @@ import {
 } from "@/src/types/components/chat";
 import { getInitials } from "@/src/utils";
 import { maskSensitiveData } from "@/src/utils/masking";
+import { formatDistanceToNowStrict } from "date-fns";
 import { CircleCheck, Pin } from "lucide-react";
 import Image from "next/image";
 import React from "react";
@@ -192,6 +193,14 @@ const ChatSidebarItem: React.FC<ChatSidebarItemProps> = ({
               {contact.chat_status === "resolved" && (
                 <Badge className="h-4 px-1.5 text-[8px] bg-[var(--primary-opacity-20)] text-primary-dark border-[var(--primary-opacity-30)] dark:bg-primary/10 dark:text-primary dark:border-primary/20 font-bold uppercase tracking-tighter">
                   Resolved
+                </Badge>
+              )}
+              {!isAgent && chat.assignment_waiting_since && (
+                <Badge
+                  title={`Waiting for an agent since ${new Date(chat.assignment_waiting_since).toLocaleString()}`}
+                  className="h-4 px-1.5 text-[8px] bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20 font-bold uppercase tracking-tighter shrink-0"
+                >
+                  Waiting · {formatDistanceToNowStrict(new Date(chat.assignment_waiting_since))}
                 </Badge>
               )}
             </div>

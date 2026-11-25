@@ -193,6 +193,8 @@ export interface RecentChatResponseItem {
   };
   is_pinned?: boolean;
   is_snoozed?: boolean;
+  /** Set while the chat waits in the auto-assignment queue for an agent. */
+  assignment_waiting_since?: string | null;
 }
 
 export interface RecentChatData {
