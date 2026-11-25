@@ -20,6 +20,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import AgentKanbanActionModal from "./AgentKanbanActionModal";
+import AgentAvailabilityBadge from "./AgentAvailabilityBadge";
 import { useFeatureAccess } from "@/src/hooks/useFeatureAccess";
 
 const AgentPage = () => {
@@ -49,6 +50,7 @@ const AgentPage = () => {
   const initialColumns = useMemo(() => {
     return [
       { id: "Agent Info", label: "Agent Info", isVisible: true },
+      { id: "Availability", label: "Availability", isVisible: true },
       { id: "Contact Details", label: "Contact Details", isVisible: true },
       { id: "Note", label: "Note", isVisible: true },
       { id: "Hide Phone", label: "Hide Phone", isVisible: true },
@@ -167,6 +169,11 @@ const AgentPage = () => {
             </div>
           </div>
         ),
+      },
+      {
+        header: "Availability",
+        className: "[@media(max-width:1920px)]:min-w-[170px]",
+        cell: (row: Agent) => <AgentAvailabilityBadge agent={row} />,
       },
       {
         header: "Contact Details",

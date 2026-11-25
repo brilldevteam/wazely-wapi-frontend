@@ -13,6 +13,7 @@ import Profile from "./Profile";
 import SearchBar from "./SearchBar";
 import WorkspaceSwitcherModal from "@/src/components/workspace/WorkspaceSwitcherModal";
 import SelfTenantBanner from "./SelfTenantBanner";
+import AvailabilityToggle from "./AvailabilityToggle";
 import ConfirmModal from "@/src/shared/ConfirmModal";
 import { ROUTES } from "@/src/constants";
 import { performLogout } from "@/src/utils/logout";
@@ -112,6 +113,8 @@ const Header = () => {
                 <Building2 size={20} className="text-primary shrink-0" />
                 <span className="truncate hidden sm:inline">{selectedWorkspace?.name ?? "Workspace"}</span>
               </Button>
+
+              <AvailabilityToggle />
 
               <Button variant="ghost" size="icon" onClick={() => dispatch(setRTL())} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg cursor-pointer transition-all [@media(max-width:575px)]:hidden ${isRTL ? "bg-light-primary text-primary hover:bg-[var(--primary-opacity-20)] dark:bg-primary-darker/20 dark:text-primary" : "text-slate-500 shadow-sm hover:bg-slate-100 dark:text-gray-500 dark:bg-(--page-body-bg) dark:hover:bg-(--table-hover)"}`} title={isRTL ? "Switch to LTR" : "Switch to RTL"}>
                 {!isRTL ? <PilcrowRight size={18} className={`sm:w-5 sm:h-5 transition-transform duration-300`} /> : <PilcrowLeft size={18} className={`sm:w-5 sm:h-5 transition-transform duration-300`} />}

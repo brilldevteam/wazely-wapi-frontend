@@ -60,6 +60,8 @@ export interface Tag {
   updated_at: string;
 }
 
+export type AvailabilityStatus = "available" | "away";
+
 export interface Agent {
   _id: string;
   id?: string;
@@ -73,6 +75,9 @@ export interface Agent {
   is_phoneno_hide?: boolean;
   role: string;
   team_id?: string | Team;
+  is_online?: boolean;
+  availability_status?: AvailabilityStatus;
+  last_seen?: string | null;
   created_at: string;
   updated_at: string;
 }

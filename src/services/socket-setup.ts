@@ -5,7 +5,7 @@ export const socket: Socket = io(process.env.NEXT_PUBLIC_SOCKET_URL || "", {
   autoConnect: false,
   transports: ["polling", "websocket"],
   reconnection: true,
-  reconnectionAttempts: 5,
+  reconnectionAttempts: Infinity,
   reconnectionDelay: 1000,
   reconnectionDelayMax: 5000,
   timeout: 20000,

@@ -15,6 +15,8 @@ import { useNotifications } from "./useNotifications";
 import { selectChat } from "@/src/redux/reducers/messenger/chatSlice";
 import { useRouter } from "next/navigation";
 import { whatsappApi } from "@/src/redux/api/whatsappApi";
+import { agentApi } from "@/src/redux/api/agentApi";
+import { authApi } from "@/src/redux/api/authApi";
 import { useGetWorkspacesQuery } from "@/src/redux/api/workspaceApi";
 import { setWorkspace } from "@/src/redux/reducers/workspaceSlice";
 import { MessageSquareWarning, AlertTriangle, X } from "lucide-react";
@@ -757,6 +759,69 @@ export const useSocketHandler = () => {
     }
   }, [dispatch, user, selectedWorkspace]);
 
+  // A chat was assigned (automatically or by hand). Everyone in the business reloads
+  // their chat list (Assigned/Unassigned tabs, the agent's own list); the person who
+  // got the chat is told straight away, even before the customer writes again.
+  const handleChatAssigned = useCallback(
+    (data: { user_id?: string; agent_id?: string; contact_id?: string; contact_name?: string; source?: string }) => {
+      const isCorrectUser = !data.user_id || data.user_id === user?.id || data.user_id === selectedWorkspace?.user_id;
+      if (!isCorrectUser) return;
+
+      dispatch(chatApi.util.invalidateTags(["Chats"]));
+
+      const isForMe = !!user?.id && String(data.agent_id) === String(user.id);
+      const assignedMyself = data.source === "manual" && !isAgent;
+      if (!isForMe || assignedMyself) return;
+
+      const notificationSettings = userSetting?.data;
+      if (!(notificationSettings?.notifications_enabled ?? true)) return;
+
+      const name = data.contact_name || "a customer";
+      try {
+        const tone = notificationSettings?.notification_tone || "default";
+        const audio = new Audio(tone === "default" ? "/assets/sounds/default.mp3" : `/assets/sounds/${tone}.mp3`);
+        audio.play().catch(() => {});
+      } catch {}
+
+      sendNotification("New chat assigned to you", {
+        body: `Chat with ${name}`,
+        tag: `assigned-${data.contact_id}`,
+        renotify: true,
+        onClick: () => {
+          window.focus();
+          router.push(ROUTES.WAChat);
+        },
+      } as any);
+
+      toast.info("New chat assigned to you", {
+        description: `Chat with ${name}`,
+        duration: 5000,
+        position: "top-right",
+        action: { label: "Open", onClick: () => router.push(ROUTES.WAChat) },
+        style: {
+          background: "var(--card-color)",
+          color: "var(--foreground)",
+          border: "1px solid var(--border)",
+        },
+      });
+    },
+    [dispatch, user, selectedWorkspace, isAgent, userSetting, sendNotification, router]
+  );
+
+  // Someone in the business went online/offline or changed Available/Away.
+  const handleAgentPresence = useCallback(
+    (data: { user_id?: string; agent_id?: string }) => {
+      const isCorrectUser = !data.user_id || data.user_id === user?.id || data.user_id === selectedWorkspace?.user_id;
+      if (!isCorrectUser) return;
+
+      dispatch(agentApi.util.invalidateTags(["Agent"]));
+      if (user?.id && String(data.agent_id) === String(user.id)) {
+        dispatch(authApi.util.invalidateTags(["Availability"]));
+      }
+    },
+    [dispatch, user, selectedWorkspace]
+  );
+
   useEffect(() => {
     const currentUserId = user?.id || selectedWorkspace?.user_id;
     if (currentUserId) {
@@ -768,6 +833,8 @@ export const useSocketHandler = () => {
     socket.on(SOCKET.Listeners.Whatsapp_Connection_Update, handleConnectionUpdate);
     socket.on('snooze_reminder', handleSnoozeReminder);
     socket.on('agent:escalation', handleAgentEscalation);
+    socket.on(SOCKET.Listeners.Chat_Assigned, handleChatAssigned);
+    socket.on(SOCKET.Listeners.Agent_Presence, handleAgentPresence);
 
     return () => {
       socket.off(SOCKET.Listeners.Whatsapp_Message, handleMessage);
@@ -775,8 +842,10 @@ export const useSocketHandler = () => {
       socket.off(SOCKET.Listeners.Whatsapp_Connection_Update, handleConnectionUpdate);
       socket.off('snooze_reminder', handleSnoozeReminder);
       socket.off('agent:escalation', handleAgentEscalation);
+      socket.off(SOCKET.Listeners.Chat_Assigned, handleChatAssigned);
+      socket.off(SOCKET.Listeners.Agent_Presence, handleAgentPresence);
     };
-  }, [handleMessage, handleStatusUpdate, handleConnectionUpdate, handleSnoozeReminder, handleAgentEscalation, user?.id, selectedWorkspace?.user_id]);
+  }, [handleMessage, handleStatusUpdate, handleConnectionUpdate, handleSnoozeReminder, handleAgentEscalation, handleChatAssigned, handleAgentPresence, user?.id, selectedWorkspace?.user_id]);
 
   useEffect(() => {
     return () => {

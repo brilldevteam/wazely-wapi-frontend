@@ -1,7 +1,13 @@
 import { ChangePasswordPayload, ForgotPasswordRequest, GenericResponse, RegisterPayload, RegisterResponse, ResendOtpRequest, ResetPasswordRequest, UpdateProfilePayload, VerifyOtpRequest, User, GetRolesResponse, PermissionGroup, ResetPasswordViaTokenRequest, AuthPageSetupResponse } from "@/src/types/auth";
 import { baseApi } from "./baseApi";
+import { AvailabilityStatus } from "@/src/types/components";
 
-export const authApi = baseApi.enhanceEndpoints({ addTagTypes: ["User"] }).injectEndpoints({
+export interface AvailabilityResponse {
+  success: boolean;
+  data: { availability_status: AvailabilityStatus; is_online: boolean };
+}
+
+export const authApi = baseApi.enhanceEndpoints({ addTagTypes: ["User", "Availability", "Agent"] }).injectEndpoints({
   endpoints: (builder) => ({
     register: builder.mutation<RegisterResponse, RegisterPayload>({
       query: (data) => ({
@@ -119,7 +125,19 @@ export const authApi = baseApi.enhanceEndpoints({ addTagTypes: ["User"] }).injec
         body: data,
       }),
     }),
+    getAvailability: builder.query<AvailabilityResponse, void>({
+      query: () => "/auth/availability",
+      providesTags: ["Availability"],
+    }),
+    updateAvailability: builder.mutation<AvailabilityResponse & { message: string }, { availability_status: AvailabilityStatus }>({
+      query: (data) => ({
+        url: "/auth/availability",
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Availability", "Agent"],
+    }),
   }),
 });
 
-export const { useRegisterMutation, useForgotPasswordMutation, useVerifyOtpMutation, useResetPasswordMutation, useResetPasswordViaTokenMutation, useResendOTPMutation, useUpdateProfileMutation, useChangePasswordMutation, useGetProfileQuery, useGetIsDemoModeQuery, useGetRolesQuery, useGetMyPermissionsQuery, useGetAuthPageSetupQuery, useBackToAdminMutation, useVerifySignUpOTPMutation, useResendSignUpOTPMutation } = authApi;
+export const { useRegisterMutation, useForgotPasswordMutation, useVerifyOtpMutation, useResetPasswordMutation, useResetPasswordViaTokenMutation, useResendOTPMutation, useUpdateProfileMutation, useChangePasswordMutation, useGetProfileQuery, useGetIsDemoModeQuery, useGetRolesQuery, useGetMyPermissionsQuery, useGetAuthPageSetupQuery, useBackToAdminMutation, useVerifySignUpOTPMutation, useResendSignUpOTPMutation, useGetAvailabilityQuery, useUpdateAvailabilityMutation } = authApi;

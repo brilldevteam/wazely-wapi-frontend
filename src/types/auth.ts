@@ -46,6 +46,8 @@ export interface User {
   is_phoneno_hide?: boolean;
   permissions?: string[];
   isSelfTenant?: boolean;
+  availability_status?: "available" | "away";
+  is_online?: boolean;
 }
 
 export interface LoginRequest {
