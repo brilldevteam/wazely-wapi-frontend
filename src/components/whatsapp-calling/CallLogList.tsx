@@ -60,7 +60,7 @@ const CallLogList = () => {
           <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-md">
             <User size={14} className="text-slate-500" />
           </div>
-          <span className="font-medium text-sm">{maskSensitiveData(row.contact_id.phone_number, "phone", is_demo_mode)}</span>
+          <span className="font-medium text-sm">{maskSensitiveData(row.contact_id?.phone_number || "N/A", "phone", is_demo_mode)}</span>
         </div>
       ),
     },
@@ -75,7 +75,7 @@ const CallLogList = () => {
     {
       header: "Status",
       cell: (row) => (
-        <Badge variant="outline" className={cn("capitalize", row.status === "completed" ? "bg-emerald-50 text-primary border-primary/50" : "bg-amber-50 text-amber-600 border-amber-100")}>
+        <Badge variant="outline" className={cn("capitalize", row.status === "completed" ? "bg-light-primary text-primary border-primary/50" : "bg-amber-50 text-amber-600 border-amber-100")}>
           {row.status}
         </Badge>
       ),

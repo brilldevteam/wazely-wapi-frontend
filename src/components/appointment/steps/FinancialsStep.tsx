@@ -239,15 +239,15 @@ const FinancialsStep: React.FC<FinancialsStepProps> = ({
         </div>
 
         {formData.accept_partial_payment && (
-          <div className="space-y-3 sm:p-6 p-4 bg-emerald-50/50 dark:bg-(--page-body-bg) rounded-lg border border-emerald-100 dark:border-(--card-border-color) animate-in zoom-in-95 duration-300">
-            <Label className="text-sm font-bold text-emerald-900 dark:text-emerald-300">
+          <div className="space-y-3 sm:p-6 p-4 bg-light-primary/50 dark:bg-(--page-body-bg) rounded-lg border border-[var(--primary-opacity-20)] dark:border-(--card-border-color) animate-in zoom-in-95 duration-300">
+            <Label className="text-sm font-bold text-primary-darker dark:text-emerald-300">
               {t("partial_amount")}
             </Label>
             <div className="relative">
               <CurrencyIcon
                 fromCode={formData.currency || "INR"}
                 className={cn(
-                  "absolute left-3 top-1/2 -translate-y-1/2 text-emerald-500",
+                  "absolute left-3 top-1/2 -translate-y-1/2 text-primary",
                   errors.partial_payment_amount && "text-red-500",
                 )}
               />
@@ -260,7 +260,7 @@ const FinancialsStep: React.FC<FinancialsStepProps> = ({
                   "pl-9 h-11! bg-white dark:bg-(--card-color)",
                   errors.partial_payment_amount
                     ? "border-red-400 ring-2 ring-red-500/10"
-                    : "border-emerald-200",
+                    : "border-[var(--primary-opacity-30)]",
                 )}
               />
             </div>
@@ -269,7 +269,7 @@ const FinancialsStep: React.FC<FinancialsStepProps> = ({
                 {errors.partial_payment_amount}
               </p>
             )}
-            <p className="text-xs text-emerald-600 dark:text-emerald-400">
+            <p className="text-xs text-primary dark:text-primary">
               {t("partial_payment_help_text", {
                 defaultValue:
                   "Customers will pay this amount during booking, and the remainder later.",

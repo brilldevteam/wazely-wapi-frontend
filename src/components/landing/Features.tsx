@@ -150,7 +150,7 @@ function FeatureRow({ feature, index, isEven, isAuthenticated, user, route }: an
         className={`${isEven ? "reveal-left" : "reveal-right"} ${!isEven ? "lg:order-2" : ""}`}
         style={{ transitionDelay: "0ms" }}
       >
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-lg bg-gradient-to-br from-primary to-emerald-400 text-white mb-[calc(7px+(24-7)*((100vw-320px)/(1920-320)))] shadow-lg shadow-primary/25">
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-lg bg-primary text-white mb-[calc(7px+(24-7)*((100vw-320px)/(1920-320)))] shadow-lg shadow-primary/25">
           <CheckCircle2 className="w-7 h-7" />
         </div>
 
@@ -212,13 +212,7 @@ function CtaRow({ ctaButton, isAuthenticated, user, route }: any) {
       <Button
         className="group bg-primary hover:bg-primary/90 text-white px-8! py-4! h-12! rounded-lg font-bold text-lg transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/25 inline-flex items-center gap-2"
         onClick={() => {
-          if (isAuthenticated) {
-            const isAgent = user?.role === "agent";
-            const targetLink = isAgent ? ROUTES.WAChat : ctaButton.link;
-            route.push(targetLink);
-          } else {
-            route.push(ROUTES.Login);
-          }
+          route.push(ctaButton.link || "");
         }}
       >
         {ctaButton.text}

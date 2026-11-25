@@ -14,8 +14,8 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, onExport, ti
       title: "Excel",
       description: "Download data as .xlsx format",
       icon: FileSpreadsheet,
-      color: "text-emerald-600",
-      bgColor: "bg-emerald-50 dark:bg-emerald-500/10",
+      color: "text-primary",
+      bgColor: "bg-light-primary dark:bg-primary/10",
     },
     {
       id: "csv",
@@ -37,7 +37,7 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, onExport, ti
 
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
-      <AlertDialogContent className="p-0! max-h-[90dvh] overflow-y-auto border-none bg-white dark:bg-(--card-color)">
+      <AlertDialogContent className="p-0! max-h-[90dvh] overflow-y-auto border-none bg-white dark:bg-(--dark-body)">
         <div className="sm:p-6 p-4 pb-0! space-y-6">
           <AlertDialogHeader className="flex flex-row items-center justify-between space-y-0">
             <div>

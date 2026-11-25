@@ -118,7 +118,7 @@ const ImportJobTable: React.FC = () => {
     switch (status) {
       case "completed":
         return (
-          <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 gap-1.5 px-2.5 py-0.5 font-bold">
+          <Badge className="bg-primary/10 text-primary border-primary/20 gap-1.5 px-2.5 py-0.5 font-bold">
             <CheckCircle2 size={12} /> Completed
           </Badge>
         );
@@ -201,7 +201,7 @@ const ImportJobTable: React.FC = () => {
                 className={cn(
                   "h-full transition-all duration-500",
                   item.status === "completed"
-                    ? "bg-emerald-500"
+                    ? "bg-primary"
                     : item.status === "failed"
                       ? "bg-red-500"
                       : "bg-primary animate-pulse",

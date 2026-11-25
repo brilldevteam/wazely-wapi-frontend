@@ -82,7 +82,7 @@ export default function AnnouncementModal() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
           </div>
         ) : (
-          <div className="w-full h-[120px] bg-gradient-to-br from-emerald-400 to-teal-600 dark:from-emerald-600 dark:to-teal-800 flex flex-col items-center justify-center text-white shrink-0 relative">
+          <div className="w-full h-[120px] bg-gradient-to-br from-primary to-teal-600 dark:from-primary dark:to-teal-800 flex flex-col items-center justify-center text-white shrink-0 relative">
             {/* Soft decorative background circles */}
             <div className="absolute w-24 h-24 rounded-full bg-white/10 -top-8 -left-8 pointer-events-none" />
             <div className="absolute w-24 h-24 rounded-full bg-white/5 -bottom-8 -right-8 pointer-events-none" />
@@ -108,7 +108,7 @@ export default function AnnouncementModal() {
             <ul className="space-y-2 mb-5">
               {bullets.map((bullet: string, idx: number) => (
                 <li key={idx} className="flex gap-2.5 items-start text-sm text-zinc-700 dark:text-zinc-300">
-                  <span className="w-5 h-5 rounded-full bg-emerald-500/15 text-emerald-500 flex items-center justify-center mt-0.5 shrink-0">
+                  <span className="w-5 h-5 rounded-full bg-primary/15 text-primary flex items-center justify-center mt-0.5 shrink-0">
                     <Check size={11} className="stroke-[3]" />
                   </span>
                   <span className="flex-1 break-words">{bullet}</span>

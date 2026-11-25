@@ -28,8 +28,8 @@ export const STATUS_CONFIG = [
     key: "confirmed",
     label: "Order Confirmed",
     description: "Order is verified and currently under processing",
-    icon: <CheckCircle2 size={18} className="text-emerald-500" />,
-    color: "bg-emerald-500/10",
+    icon: <CheckCircle2 size={18} className="text-primary" />,
+    color: "bg-primary/10",
   },
   {
     key: "ready_to_ship",
@@ -66,7 +66,7 @@ export const TEMPLATE_VARIABLES = [
 
 export const statusOptions = [
   { value: "pending", label: "status_pending", icon: Clock, color: "text-amber-500" },
-  { value: "confirmed", label: "status_confirmed", icon: CheckCircle2, color: "text-emerald-500" },
+  { value: "confirmed", label: "status_confirmed", icon: CheckCircle2, color: "text-primary" },
   { value: "ready_to_ship", label: "status_ready_to_ship", icon: Package, color: "text-blue-500" },
   { value: "on_the_way", label: "status_on_the_way", icon: Truck, color: "text-indigo-500" },
   { value: "shipped", label: "status_shipped", icon: Ship, color: "text-purple-500" },

@@ -722,7 +722,7 @@ const ChatSidebar = () => {
             variant="ghost"
             size="icon"
             onClick={() => setIsFilterModalOpen(true)}
-            className={`h-9 w-9 rounded-lg border border-transparent ${activeFilterCount > 0 ? "bg-emerald-100 text-(--chat-theme-color) dark:bg-emerald-900/30 dark:text-(--chat-theme-color)" : "bg-slate-50 text-slate-500 dark:bg-(--page-body-bg) dark:text-gray-500 hover:bg-slate-100 dark:hover:bg-(--table-hover)"}`}
+            className={`h-9 w-9 rounded-lg border border-transparent ${activeFilterCount > 0 ? "bg-[var(--primary-opacity-20)] text-(--chat-theme-color) dark:bg-primary-darker/30 dark:text-(--chat-theme-color)" : "bg-slate-50 text-slate-500 dark:bg-(--page-body-bg) dark:text-gray-500 hover:bg-slate-100 dark:hover:bg-(--table-hover)"}`}
             style={
               activeFilterCount > 0
                 ? {

@@ -113,16 +113,16 @@ export const ResetPasswordPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-emerald-50 dark:bg-none dark:bg-(--page-body-bg) flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-primary/5 dark:bg-none dark:bg-(--page-body-bg) flex items-center justify-center p-4 relative overflow-hidden">
       <AuthControls />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-emerald-200/30 dark:bg-emerald-600/15 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-[var(--primary-opacity-30)]/30 dark:bg-primary/15 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-blue-200/30 dark:bg-blue-600/15 rounded-full blur-3xl"></div>
       </div>
 
       <div className="relative z-10 w-full max-w-md lg:max-w-6xl">
         <div className="grid lg:grid-cols-2 gap-0 items-stretch">
-          <div className="hidden lg:flex flex-col justify-center p-12 bg-linear-to-br from-emerald-600 via-teal-600 to-emerald-700 rounded-l-3xl relative overflow-hidden min-h-175">
+          <div className="hidden lg:flex flex-col justify-center p-12 bg-linear-to-br from-primary via-primary-dark to-primary-darker rounded-l-3xl relative overflow-hidden min-h-175">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
             <div className="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full -ml-40 -mb-40"></div>
             <div className="absolute top-1/2 right-8 w-1 h-40 bg-white/20 rotate-12"></div>
@@ -130,7 +130,7 @@ export const ResetPasswordPage = () => {
 
             <div className="relative z-10 space-y-8">
               <div className="flex items-center gap-3 mb-6">
-                <DynamicLogo />
+                <DynamicLogo logoType="dark" />
               </div>
 
               <div>
@@ -148,7 +148,7 @@ export const ResetPasswordPage = () => {
                     content.side_panel.title
                   )}
                 </h2>
-                <div className="text-emerald-50 text-lg">{isAuthSetupLoading ? <Skeleton className="h-6 w-full bg-white/20" /> : content.side_panel.description}</div>
+                <div className="text-white/60 text-lg">{isAuthSetupLoading ? <Skeleton className="h-6 w-full bg-white/20" /> : content.side_panel.description}</div>
               </div>
 
               <div className="space-y-4">
@@ -170,10 +170,10 @@ export const ResetPasswordPage = () => {
                         <Sparkles className="w-5 h-5 text-yellow-300" />
                         {bullet.title}
                       </h3>
-                      <ul className="space-y-3 text-emerald-50">
+                      <ul className="space-y-3 text-white/70">
                         {bullet.points.map((point, i) => (
                           <li key={i} className="flex items-start gap-2 text-sm">
-                            <span className="text-emerald-300 mt-0.5">✓</span>
+                            <span className="text-white mt-0.5">✓</span>
                             {point}
                           </li>
                         ))}
@@ -184,7 +184,7 @@ export const ResetPasswordPage = () => {
               </div>
 
               <div>
-                <p className="text-emerald-100 font-semibold mb-4">{t("account_security_title")}</p>
+                <p className="text-[var(--primary-opacity-20)] font-semibold mb-4">{t("account_security_title")}</p>
                 <div className="grid grid-cols-2 gap-3">
                   {isAuthSetupLoading
                     ? Array(4)
@@ -194,7 +194,7 @@ export const ResetPasswordPage = () => {
                       <div key={index} className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-3 text-center">
                         <p className="text-white text-sm">{item.title}</p>
                         {item.points.map((point, pIndex) => (
-                          <p key={pIndex} className="text-emerald-100 text-[10px] mt-1 opacity-70">
+                          <p key={pIndex} className="text-[var(--primary-opacity-20)] text-[10px] mt-1 opacity-70">
                             {point}
                           </p>
                         ))}
@@ -206,11 +206,11 @@ export const ResetPasswordPage = () => {
           </div>
 
           <div className="bg-white dark:bg-(--card-color) rounded-3xl lg:rounded-l-none lg:rounded-r-3xl shadow-2xl p-4 sm:p-12 min-h-175 flex flex-col justify-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-emerald-100 to-teal-100 dark:from-emerald-500/20 dark:to-teal-500/20 opacity-50 dark:opacity-100 rounded-bl-full"></div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-primary/20 to-primary/10 dark:from-primary/30 dark:to-primary/20 opacity-50 dark:opacity-100 rounded-bl-full"></div>
 
             <div className="relative z-10 max-w-md mx-auto w-full">
               <div className="lg:hidden flex items-center gap-3 mb-8">
-                <DynamicLogo width={140} height={40} className="h-10 w-auto object-contain" skeletonClassName="h-10 w-32" />
+                <DynamicLogo logoType="light" width={140} height={40} className="h-10 w-auto object-contain" skeletonClassName="h-10 w-32" />
               </div>
 
               {!resetSuccess ? (
@@ -263,14 +263,14 @@ export const ResetPasswordPage = () => {
                       <div className="grid grid-cols-1 gap-2">
                         {passwordRequirements.map((req, index) => (
                           <div key={index} className="flex items-center gap-2.5 text-sm">
-                            {req.met ? <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" /> : <div className="w-4 h-4 rounded-full border-2 border-slate-300 dark:border-slate-600 shrink-0"></div>}
-                            <span className={req.met ? "text-emerald-700 dark:text-emerald-400 font-medium" : "text-slate-600 dark:text-slate-400"}>{req.label}</span>
+                            {req.met ? <CheckCircle2 className="w-4 h-4 text-primary dark:text-primary shrink-0" /> : <div className="w-4 h-4 rounded-full border-2 border-slate-300 dark:border-slate-600 shrink-0"></div>}
+                            <span className={req.met ? "text-primary dark:text-primary font-medium" : "text-slate-600 dark:text-slate-400"}>{req.label}</span>
                           </div>
                         ))}
                       </div>
                     </div>
 
-                    <Button type="submit" className="w-full h-13 bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 transition-all text-base font-semibold" disabled={isLoading || !allRequirementsMet || !passwordsMatch || isAuthSetupLoading}>
+                    <Button type="submit" className="w-full h-13 bg-linear-to-r from-primary to-primary hover:from-primary-dark hover:to-primary-dark text-white rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all text-base font-semibold" disabled={isLoading || !allRequirementsMet || !passwordsMatch || isAuthSetupLoading}>
                       {isLoading ? (
                         <div className="flex items-center gap-2">
                           <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -286,7 +286,7 @@ export const ResetPasswordPage = () => {
                     <div className="text-center pt-2">
                       <div className="text-slate-600 dark:text-slate-400 text-sm">
                         {isAuthSetupLoading ? <Skeleton className="h-4 w-32 inline-block mr-2" /> : content.back_to_login_text}{" "}
-                        <Button type="button" onClick={handleLoginRedirect} className="bg-transparent hover:bg-transparent px-0 font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">
+                        <Button type="button" onClick={handleLoginRedirect} className="bg-transparent hover:bg-transparent px-0 font-semibold text-primary hover:text-primary-dark transition-colors">
                           {isAuthSetupLoading ? <Skeleton className="h-4 w-24 inline-block" /> : content.login_link_text}
                         </Button>
                       </div>
@@ -295,8 +295,8 @@ export const ResetPasswordPage = () => {
                 </>
               ) : (
                 <div className="text-center space-y-6">
-                  <div className="inline-flex items-center justify-center w-20 h-20 bg-emerald-100 rounded-2xl mb-2 animate-bounce">
-                    <CheckCircle2 className="w-10 h-10 text-emerald-600" />
+                  <div className="inline-flex items-center justify-center w-20 h-20 bg-[var(--primary-opacity-20)] rounded-2xl mb-2 animate-bounce">
+                    <CheckCircle2 className="w-10 h-10 text-primary" />
                   </div>
 
                   <div>
@@ -304,7 +304,7 @@ export const ResetPasswordPage = () => {
                     <p className="text-slate-600 dark:text-slate-400 text-lg">{t("password_reset_success_desc")}</p>
                   </div>
 
-                  <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg p-5">
+                  <div className="bg-light-primary dark:bg-primary-darker/20 border border-[var(--primary-opacity-30)] dark:border-primary-darker rounded-lg p-5">
                     <div className="flex items-center justify-center gap-2 text-primary mb-2">
                       <ShieldCheck className="w-5 h-5" />
                       <p className="font-semibold">{t("account_secure_msg")}</p>
@@ -312,7 +312,7 @@ export const ResetPasswordPage = () => {
                     <p className="text-primary text-sm">{t("redirecting_login")}</p>
                   </div>
 
-                  <Button onClick={handleLoginRedirect} className="w-full h-12 bg-primary text-white rounded-lg shadow-lg shadow-emerald-500/30">
+                  <Button onClick={handleLoginRedirect} className="w-full h-12 bg-primary text-white rounded-lg shadow-lg shadow-primary/30">
                     {t("continue_login")}
                   </Button>
                 </div>

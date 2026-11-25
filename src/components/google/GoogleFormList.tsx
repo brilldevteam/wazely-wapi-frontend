@@ -188,7 +188,7 @@ const GoogleFormList: React.FC<GoogleFormListProps> = ({ paramsPromise }) => {
                     <div className="flex gap-2 items-center mt-1">
                       <span>Status:</span>
                       {form.is_linked ? (
-                        <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-bold px-2 py-0.5">
+                        <Badge className="bg-primary/10 text-primary border-primary/20 font-bold px-2 py-0.5">
                           Synced
                         </Badge>
                       ) : (

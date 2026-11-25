@@ -316,6 +316,21 @@ export interface Campaign {
   is_paused?: boolean;
   is_published?: boolean;
   stats: CampaignStats;
+  batch_stats?: {
+    total_batches: number;
+    current_batch: number;
+    completed_batches: number;
+    pending_batches: number;
+    next_batch_starts_at?: string | null;
+    batch_history: {
+      batch_number: number;
+      messages_count: number;
+      processed_count: number;
+      started_at?: string;
+      completed_at?: string | null;
+      status: "pending" | "running" | "completed" | "failed";
+    }[];
+  };
   recipients?: Recipient[];
   error_log?: {
     timestamp: string;

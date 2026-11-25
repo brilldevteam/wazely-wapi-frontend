@@ -2,6 +2,11 @@
 "use client";
 
 import { useCreateChatbotMutation, useDeleteChatbotMutation, useGetChatbotsQuery, useUpdateChatbotMutation } from "@/src/redux/api/chatbotApi";
+import { useAppSelector } from "@/src/redux/hooks";
+import { useRouter } from "next/navigation";
+import { ROUTES } from "@/src/constants";
+import { Button } from "@/src/elements/ui/button";
+import { Bot } from "lucide-react";
 import CommonHeader from "@/src/shared/CommonHeader";
 import ConfirmModal from "@/src/shared/ConfirmModal";
 import { Chatbot } from "@/src/types/chatbot";
@@ -13,13 +18,18 @@ import ChatbotGrid from "./ChatbotGrid";
 import ChatbotTrainSection from "./ChatbotTrainSection";
 
 const ChatbotSection: React.FC<ChatbotSectionProps> = ({ wabaId, onToggleSidebar }) => {
+  const router = useRouter();
+  const { selectedWorkspace } = useAppSelector((state: any) => state.workspace);
+  const isBaileys = selectedWorkspace?.waba_type === "baileys";
+  const isConnected = isBaileys ? !!selectedWorkspace?.waba_id && selectedWorkspace?.connection_status === "connected" : !!selectedWorkspace?.waba_id;
+
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editItem, setEditItem] = useState<Chatbot | null>(null);
-  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);  
   const [trainingChatbot, setTrainingChatbot] = useState<Chatbot | null>(null);
 
-  const { data: chatbotsData, isLoading, refetch } = useGetChatbotsQuery({ waba_id: wabaId }, { skip: !wabaId });
+  const { data: chatbotsData, isLoading, refetch } = useGetChatbotsQuery({ waba_id: wabaId }, { skip: !wabaId || !isConnected });
   const [createChatbot, { isLoading: isCreating }] = useCreateChatbotMutation();
   const [updateChatbot, { isLoading: isUpdating }] = useUpdateChatbotMutation();
   const [deleteChatbot, { isLoading: isDeleting }] = useDeleteChatbotMutation();
@@ -52,6 +62,40 @@ const ChatbotSection: React.FC<ChatbotSectionProps> = ({ wabaId, onToggleSidebar
       toast.error(error?.data?.message || "Failed to delete chatbot");
     }
   };
+
+  if (!isConnected) {
+    return (
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <div className="p-4 pt-0! sm:p-6 pb-0">
+          <CommonHeader
+            title="AI Chatbots"
+            description="Manage your AI-powered assistants in one place"
+            onToggleSidebar={onToggleSidebar}
+          />
+        </div>
+        <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 text-center animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="w-20 h-20 rounded-lg bg-slate-50 dark:bg-(--page-body-bg) border border-slate-100 dark:border-(--card-border-color) shadow-sm flex items-center justify-center text-slate-300 mb-6 transition-transform">
+            <div className="rounded-lg shadow-inner shadow-slate-100 dark:shadow-none">
+              <Bot size={32} className="text-slate-400" />
+            </div>
+          </div>
+          <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">
+            No WABA Connected
+          </h3>
+          <p className="text-slate-500 dark:text-slate-400 max-w-sm mx-auto leading-relaxed text-sm">
+            Please connect a WhatsApp Business Account to create and configure AI chatbot assistants.
+          </p>
+          <Button
+            onClick={() => router.push(ROUTES.WABAConnection)}
+            variant="outline"
+            className="mt-8 h-11 px-6 rounded-lg border-primary text-primary hover:bg-primary/5 font-semibold transition-all"
+          >
+            Connect WABA
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   if (trainingChatbot) {
     return (

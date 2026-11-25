@@ -100,10 +100,10 @@ const WebhookModal = ({ isOpen, onClose, onSubmit, webhook, isLoading }: Webhook
                   <SelectValue placeholder="Select method" />
                 </SelectTrigger>
                 <SelectContent className="dark:bg-(--card-color) dark:border-(--card-border-color) border-slate-200 shadow-xl rounded-lg">
-                  <SelectItem value="POST" className="cursor-pointer hover:bg-emerald-50 dark:hover:bg-(--table-hover) transition-colors py-2 px-3 rounded-md mx-1 my-0.5">
+                  <SelectItem value="POST" className="cursor-pointer hover:bg-light-primary dark:hover:bg-(--table-hover) transition-colors py-2 px-3 rounded-md mx-1 my-0.5">
                     POST
                   </SelectItem>
-                  <SelectItem value="GET" className="cursor-pointer hover:bg-emerald-50 dark:hover:bg-(--table-hover) transition-colors py-2 px-3 rounded-md mx-1 my-0.5">
+                  <SelectItem value="GET" className="cursor-pointer hover:bg-light-primary dark:hover:bg-(--table-hover) transition-colors py-2 px-3 rounded-md mx-1 my-0.5">
                     GET
                   </SelectItem>
                 </SelectContent>

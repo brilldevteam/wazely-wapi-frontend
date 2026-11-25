@@ -59,28 +59,38 @@ const PaymentTransactionList: React.FC = () => {
       {
         header: t("order_id"),
         accessorKey: "gateway_order_id",
-        className: "min-w-[180px]",
+        className: "min-w-[180px] max-w-[220px]",
         sortable: true,
         sortKey: "gateway_order_id",
-         copyable: true,
+        copyable: true,
         copyField: "gateway_order_id",
         cell: (item) => (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-slate-500 dark:text-slate-400">{item.gateway_order_id || "N/A"}</span>
+          <div className="flex items-center gap-2 min-w-0 max-w-[180px]">
+            <span
+              className="text-sm text-slate-500 dark:text-slate-400 truncate"
+              title={item.gateway_order_id || "N/A"}
+            >
+              {item.gateway_order_id || "N/A"}
+            </span>
           </div>
         ),
       },
       {
         header: t("payment_link"),
         accessorKey: "payment_link",
-        className: "min-w-[180px]",
+        className: "min-w-[180px] max-w-[280px]",
         sortable: true,
         sortKey: "payment_link",
         copyable: true,
         copyField: "payment_link",
         cell: (item) => (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-slate-500 dark:text-slate-400">{item.payment_link || "N/A"}</span>
+          <div className="flex items-center gap-2 min-w-0 max-w-[240px]">
+            <span
+              className="text-sm text-slate-500 dark:text-slate-400 truncate"
+              title={item.payment_link || "N/A"}
+            >
+              {item.payment_link || "N/A"}
+            </span>
           </div>
         ),
       },
@@ -117,7 +127,7 @@ const PaymentTransactionList: React.FC = () => {
         sortKey: "status",
         cell: (item) => {
           const statusColors: Record<string, string> = {
-            paid: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
+            paid: "bg-primary/10 text-primary border-primary/20",
             pending: "bg-amber-500/10 text-amber-600 border-amber-500/20",
             failed: "bg-red-500/10 text-red-600 border-red-500/20",
             refunded: "bg-blue-500/10 text-blue-600 border-blue-500/20",

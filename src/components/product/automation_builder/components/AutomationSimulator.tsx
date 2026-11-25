@@ -95,7 +95,7 @@ export default function AutomationSimulator({ primaryColor }: AutomationSimulato
       case "trigger":
         return <Play size={size} className="text-blue-500" />;
       case "message":
-        return <MessageSquare size={size} className="text-emerald-500" />;
+        return <MessageSquare size={size} className="text-primary" />;
       case "input":
         return <HelpCircle size={size} className="text-purple-500" />;
       case "condition":
@@ -114,7 +114,7 @@ export default function AutomationSimulator({ primaryColor }: AutomationSimulato
       case "trigger":
         return "border-blue-500/30 bg-blue-500/5";
       case "message":
-        return "border-emerald-500/30 bg-emerald-500/5";
+        return "border-primary/30 bg-primary/5";
       case "input":
         return "border-purple-500/30 bg-purple-500/5";
       case "condition":
@@ -136,7 +136,7 @@ export default function AutomationSimulator({ primaryColor }: AutomationSimulato
           <div className="flex gap-1.5">
             <span className="w-3 h-3 rounded-full bg-rose-400/80" />
             <span className="w-3 h-3 rounded-full bg-amber-400/80" />
-            <span className="w-3 h-3 rounded-full bg-emerald-400/80" />
+            <span className="w-3 h-3 rounded-full bg-primary/80" />
           </div>
           <span className="text-[11px] font-black text-slate-400 font-mono tracking-wider ml-2">FLOW BUILDER SIMULATOR</span>
         </div>

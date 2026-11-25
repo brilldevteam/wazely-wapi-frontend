@@ -1,5 +1,6 @@
 import { CampaignFormValues, Template } from "@/src/types/components";
 import {
+  getTemplateHeaderFormat,
   getTemplateVariables,
   isMarketingTemplate,
 } from "@/src/utils/template";
@@ -25,6 +26,7 @@ export const validateWizardStep = (
   }
 
   if (stepId === "variables" && template) {
+    const headerFormat = getTemplateHeaderFormat(template);
     const vars = getTemplateVariables(template);
     for (const v of vars) {
       const varName = typeof v === "string" ? v : (v as { key: string }).key;
@@ -34,20 +36,23 @@ export const validateWizardStep = (
     if (isMarketingTemplate(template) && !values.coupon_code) {
       return "Coupon code is required";
     }
-    if (template.header?.format === "location") {
+    if (headerFormat === "location") {
       if (
         !values.location_data?.latitude ||
         !values.location_data?.longitude
       ) {
         return "Latitude and Longitude are required for Location templates";
       }
+      if (!values.location_data?.name?.trim() || !values.location_data?.address?.trim()) {
+        return "Location Name and Address are required by WhatsApp for Location templates";
+      }
     }
     if (
-      template.header?.format === "media" &&
+      headerFormat === "media" &&
       !values.media_url &&
       !values.media_file
     ) {
-      return `Please select ${template.header.media_type || "header"} media for this template`;
+      return `Please select ${template.header?.media_type || "header"} media for this template`;
     }
     if (template.template_type === "carousel_media") {
       const cards = values.carousel_cards_data || [];

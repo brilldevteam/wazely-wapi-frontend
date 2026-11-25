@@ -14,6 +14,8 @@ const HowItWorks: React.FC<PlatformProps> = ({ data }) => {
   const { isAuthenticated } = useAppSelector((state) => state.auth);
   const steps = data.items || [];
 
+  if (steps.length === 0) return null;
+
   return (
     <section id="how-it-works" className="py-[calc(20px+(50-20)*((100vw-320px)/(1920-320)))] bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -46,7 +48,7 @@ const HowItWorks: React.FC<PlatformProps> = ({ data }) => {
               <div className="relative h-full flex flex-col justify-between bg-white rounded-lg shadow-lg border border-slate-100 hover:shadow-xl transition-shadow">
                 <div className="p-[calc(15px+(32-15)*((100vw-320px)/(1920-320)))] pb-0!">
                   {/* Step Number */}
-                  <div className="flex items-center justify-center w-16 h-16 rounded-lg bg-gradient-to-br from-primary to-emerald-400 text-white font-black text-2xl mb-6 shadow-lg shadow-primary/25">
+                  <div className="flex items-center justify-center w-16 h-16 rounded-lg bg-primary text-white font-black text-2xl mb-6 shadow-lg shadow-primary/25">
                     {String(index + 1).padStart(2, "0")}
                   </div>
 

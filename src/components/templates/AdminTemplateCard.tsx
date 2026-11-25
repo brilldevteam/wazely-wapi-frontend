@@ -3,6 +3,7 @@
 import { Badge } from "@/src/elements/ui/badge";
 import { Button } from "@/src/elements/ui/button";
 import { AdminTemplateCardProps } from "@/src/types/components/template";
+import { formatTemplateCardSummary } from "@/src/utils/templateFormatter";
 import { CheckCircle2, Eye } from "lucide-react";
 
 export const AdminTemplateCard = ({ template, onPreview, onUse, isUsing }: AdminTemplateCardProps) => {
@@ -14,11 +15,18 @@ export const AdminTemplateCard = ({ template, onPreview, onUse, isUsing }: Admin
     <div className="group relative bg-white dark:bg-(--card-color) rounded-lg border border-slate-100 dark:border-(--card-border-color) shadow-sm hover:shadow-xl dark:translate-y-0 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer h-full flex flex-col" onClick={() => onPreview(template)}>
       <div className="p-5 flex items-center justify-between gap-3 border-b border-slate-50 dark:border-(--card-border-color)">
         <h3 className="font-bold text-slate-800 dark:text-white text-sm truncate uppercase tracking-tight flex-1">{template.template_name}</h3>
-        <Badge className="bg-emerald-50 text-emerald-600 border-emerald-100 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-400 hover:bg-emerald-50 px-2 py-0.5 text-[10px] font-bold shrink-0">ADMIN</Badge>
+        <Badge className="bg-light-primary text-primary border-[var(--primary-opacity-20)] dark:border-primary/30 dark:bg-primary/10 dark:text-primary hover:bg-light-primary px-2 py-0.5 text-[10px] font-bold shrink-0">ADMIN</Badge>
       </div>
 
       <div className="p-5 flex-1 bg-slate-50/30 dark:bg-(--card-color)">
-        <p className="text-sm text-slate-500 dark:text-gray-500 line-clamp-3 leading-relaxed wrap-break-word">{template.message_body || <span className="italic opacity-50">No text content</span>}</p>
+        {template.message_body ? (
+          <div
+            className="text-sm text-slate-500 dark:text-gray-500 line-clamp-3 leading-relaxed wrap-break-word whitespace-pre-line [&_p]:my-0"
+            dangerouslySetInnerHTML={{ __html: formatTemplateCardSummary(template.message_body) }}
+          />
+        ) : (
+          <p className="text-sm text-slate-500 dark:text-gray-500 italic opacity-50">No text content</p>
+        )}
       </div>
 
       <div className="p-4 px-5 bg-white dark:bg-(--card-color) border-t border-slate-50 dark:border-(--card-border-color) flex items-center justify-between gap-2">
@@ -44,7 +52,7 @@ export const AdminTemplateCard = ({ template, onPreview, onUse, isUsing }: Admin
 
         <Button
           variant="outline"
-          className="h-10 px-4 rounded-lg border-slate-200 bg-white shadow-lg hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 hover:scale-105 transition-all text-sm font-semibold gap-2"
+          className="h-10 px-4 rounded-lg border-slate-200 bg-white shadow-lg hover:border-primary hover:text-primary hover:bg-light-primary hover:scale-105 transition-all text-sm font-semibold gap-2"
           onClick={(e) => {
             e.stopPropagation();
             onUse(template._id);

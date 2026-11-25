@@ -37,10 +37,10 @@ export async function PATCH(
     const data = await response.json();
 
     return NextResponse.json(data, { status: response.status });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error toggling automation pause status:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to toggle automation pause status' },
+      { success: false, error: error?.message || 'Failed to toggle automation pause status' },
       { status: 500 }
     );
   }

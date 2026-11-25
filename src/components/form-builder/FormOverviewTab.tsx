@@ -71,7 +71,7 @@ const FormOverviewTab: React.FC<FormOverviewTabProps> = ({ form, stepsCount }) =
               <span className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1">
                 {form.enable_recaptcha ? (
                   <>
-                    <Check size={14} className="text-emerald-500" /> Yes
+                    <Check size={14} className="text-primary" /> Yes
                   </>
                 ) : (
                   <>
@@ -164,7 +164,7 @@ const FormOverviewTab: React.FC<FormOverviewTabProps> = ({ form, stepsCount }) =
               <span className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1">
                 {form.flow.is_flow_enabled ? (
                   <>
-                    <CheckCircle2 size={14} className="text-emerald-500" /> Enabled
+                    <CheckCircle2 size={14} className="text-primary" /> Enabled
                   </>
                 ) : (
                   <>
@@ -194,7 +194,7 @@ const FormOverviewTab: React.FC<FormOverviewTabProps> = ({ form, stepsCount }) =
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex flex-col gap-1 p-3 rounded bg-slate-50 dark:bg-(--page-body-bg) border border-slate-100 dark:border-(--card-border-color)">
             <span className="text-[11px] text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
-              <ClipboardList size={12} className="text-emerald-500" />
+              <ClipboardList size={12} className="text-primary" />
               Submissions Count
             </span>
             <span className="font-mono text-lg font-bold text-slate-800 dark:text-slate-200">

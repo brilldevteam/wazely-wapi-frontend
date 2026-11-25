@@ -114,7 +114,7 @@ const WorkingHoursForm: React.FC<WorkingHoursFormProps> = ({ wabaId }) => {
           <Button
             onClick={handleSave}
             disabled={isSaving || isFetching}
-            className="h-11 px-8 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-600/20 active:scale-95 transition-all border-none gap-2"
+            className="h-11 px-8 rounded-lg bg-primary hover:bg-primary text-white font-bold shadow-lg shadow-primary/20 active:scale-95 transition-all border-none gap-2"
           >
             {isSaving ? (
               <Loader2 className="animate-spin" size={18} />

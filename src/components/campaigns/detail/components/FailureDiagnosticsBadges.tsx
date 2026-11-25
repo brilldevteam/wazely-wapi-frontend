@@ -10,8 +10,8 @@ export const FailureDiagnosticsBadges = ({
   if (!list || list.length === 0) {
     return (
       <div className="flex items-center py-2">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-750 dark:bg-emerald-950/20 dark:text-emerald-400 border border-emerald-250 dark:border-emerald-900/50">
-          <CheckCircle2 size={13} className="text-emerald-500" />
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-light-primary text-emerald-750 dark:bg-primary-darker/20 dark:text-primary border border-emerald-250 dark:border-primary-darker/50">
+          <CheckCircle2 size={13} className="text-primary" />
           No failures detected
         </span>
       </div>

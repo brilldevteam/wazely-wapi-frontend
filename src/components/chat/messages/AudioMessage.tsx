@@ -1,16 +1,18 @@
-import { ImageBaseUrl } from "@/src/constants/route";
+import { getResolvedImageUrl } from "@/src/utils/image";
 import { AudioMessageProps } from "@/src/types/components/chat";
 import React from "react";
 import BaseMessage from "./BaseMessage";
 
 const AudioMessage: React.FC<AudioMessageProps> = ({ message, isWindowExpired }) => {
+  const resolvedUrl = getResolvedImageUrl(message.fileUrl);
+
   return (
     <BaseMessage message={message} isWindowExpired={isWindowExpired}>
       <div className="flex flex-col gap-2 w-full min-w-[200px] sm:min-w-[350px]">
         {message.fileUrl && (
           <div className="bg-slate-50 dark:bg-(--card-color) rounded-lg p-3 border border-slate-100 dark:border-(--card-border-color)">
             <audio
-              src={message.fileUrl.startsWith("http") ? message.fileUrl : `${ImageBaseUrl}${message.fileUrl}`}
+              src={resolvedUrl}
               controls
               className="w-full h-10 custom-audio-player"
             />

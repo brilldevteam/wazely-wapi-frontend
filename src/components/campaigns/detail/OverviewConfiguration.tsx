@@ -39,7 +39,7 @@ export const OverviewConfiguration = ({
                   className={cn(
                     "uppercase font-black text-[9px] px-2.5 py-0.5 rounded-md border",
                     campaign.status === "completed"
-                      ? "bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-900/50"
+                      ? "bg-light-primary text-primary border-[var(--primary-opacity-30)] dark:bg-primary-darker/30 dark:border-primary-darker/50"
                       : "bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950/30 dark:border-blue-900/50",
                   )}
                 >

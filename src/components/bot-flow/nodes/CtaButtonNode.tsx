@@ -117,7 +117,7 @@ export function CtaButtonNode({ data, id }: any) {
             </p>
             <Button
               size="sm"
-              className="w-full bg-emerald-600 hover:bg-emerald-700 h-8 text-[11px] font-bold text-white shadow-sm transition-all active:scale-95"
+              className="w-full bg-primary hover:bg-primary h-8 text-[11px] font-bold text-white shadow-sm transition-all active:scale-95"
             >
               {data.button_text || "Visit our site"}
             </Button>

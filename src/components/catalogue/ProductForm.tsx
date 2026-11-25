@@ -172,7 +172,7 @@ const ProductForm = ({ initialData, onSubmit, isLoading, title }: ProductFormPro
 
           <section className="bg-white dark:bg-(--card-color) rounded-lg border border-slate-200/60 dark:border-(--card-border-color) shadow-sm p-4 sm:p-6 space-y-6">
             <div className="flex items-center gap-3 pb-2 border-b border-slate-50 dark:border-(--card-border-color)">
-              <div className="p-2 bg-emerald-500/10 rounded-lg text-primary">
+              <div className="p-2 bg-primary/10 rounded-lg text-primary">
                 <DollarSign size={20} />
               </div>
               <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Pricing & Inventory</h2>

@@ -98,16 +98,6 @@ const Connect: React.FC<ConnectProps> = ({ data }) => {
                   </div>
                 </div>
               )}
-
-              <div className="flex items-center gap-4 p-4 bg-white rounded-xl border border-slate-200">
-                <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10 text-primary shrink-0">
-                  <MapPin size={20} strokeWidth={2.5} />
-                </div>
-                <div>
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Response Time</p>
-                  <p className="text-md font-medium text-slate-900">Usually within 2 hours</p>
-                </div>
-              </div>
             </div>
           </div>
 

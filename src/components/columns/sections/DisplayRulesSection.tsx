@@ -13,10 +13,10 @@ const DisplayRulesSection: React.FC<DisplayRulesSectionProps> = ({
   return (
     <div className="bg-white dark:bg-(--page-body-bg) p-4 rounded-lg border border-(--input-border-color) dark:border-(--card-border-color) shadow-sm space-y-4 relative overflow-hidden">
       <div className="flex items-center gap-2 mb-1">
-        <div className="p-1.5 bg-emerald-100 dark:bg-emerald-900/40 rounded-md">
+        <div className="p-1.5 bg-primary/10 dark:bg-primary/10 rounded-md">
           <LayoutTemplate
             size={16}
-            className="text-emerald-600 dark:text-emerald-400"
+            className="text-primary dark:text-primary"
           />
         </div>
         <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200">
@@ -55,9 +55,9 @@ const DisplayRulesSection: React.FC<DisplayRulesSectionProps> = ({
           />
         </div>
 
-        <div className="group p-3 border border-(--input-border-color) rounded-xl flex items-center justify-between dark:border-(--card-border-color) bg-gray-50/50 dark:bg-black/20 hover:border-emerald-200 dark:hover:border-emerald-900/50 transition-colors">
+        <div className="group p-3 border border-(--input-border-color) rounded-xl flex items-center justify-between dark:border-(--card-border-color) bg-gray-50/50 dark:bg-black/20 hover:border-[var(--primary-opacity-30)] dark:hover:border-primary-darker/50 transition-colors">
           <div className="space-y-0.5">
-            <p className="text-sm font-semibold flex items-center gap-1.5 text-gray-800 dark:text-gray-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+            <p className="text-sm font-semibold flex items-center gap-1.5 text-gray-800 dark:text-gray-200 group-hover:text-primary dark:group-hover:text-primary transition-colors">
               <Eye size={14} className="text-primary" />
               Visible
             </p>

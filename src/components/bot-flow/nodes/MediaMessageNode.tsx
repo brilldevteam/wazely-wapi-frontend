@@ -89,7 +89,7 @@ export function MediaMessageNode({ data, id }: any) {
       borderColor="border-violet-200"
       handleColor="bg-violet-500!"
       errors={errors}
-      showOutHandle={false}
+      showOutHandle={true}
     >
       <NodeField label="Content Format" required>
         <div className="grid grid-cols-2 gap-2 mt-1">

@@ -139,7 +139,7 @@ const GoogleSheetList: React.FC<GoogleSheetListProps> = ({ paramsPromise }) => {
         sortKey: "name",
         cell: (item) => (
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600">
+            <div className="w-8 h-8 rounded-lg bg-[var(--primary-opacity-20)] dark:bg-primary-darker/30 flex items-center justify-center text-primary">
               <FileSpreadsheet size={16} />
             </div>
             <div className="font-bold text-slate-700 dark:text-slate-200">
@@ -189,7 +189,7 @@ const GoogleSheetList: React.FC<GoogleSheetListProps> = ({ paramsPromise }) => {
             <Button
               variant="outline"
               size="sm"
-              className="w-10 h-10 border-none text-emerald-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all dark:hover:bg-emerald-900/20 shadow-xs"
+              className="w-10 h-10 border-none text-primary hover:text-primary hover:bg-light-primary rounded-lg transition-all dark:hover:bg-primary-darker/20 shadow-xs"
               onClick={() => setWriteSheetId(item._id)}
               title={t("google_account_write_sheet")}
             >
@@ -228,14 +228,14 @@ const GoogleSheetList: React.FC<GoogleSheetListProps> = ({ paramsPromise }) => {
       <Button
         onClick={() => setIsSyncModalOpen(true)}
         variant="outline"
-        className="flex items-center gap-2.5 px-4.5! py-5 border-emerald-600 text-emerald-600 hover:bg-emerald-50 h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group dark:hover:bg-emerald-900/20"
+        className="flex items-center gap-2.5 px-4.5! py-5 border-primary text-primary hover:bg-light-primary h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group dark:hover:bg-primary-darker/20"
       >
         <RefreshCw className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />
         <span>{t("google_account_sync_sheets")}</span>
       </Button>
       <Button
         onClick={() => setIsAddModalOpen(true)}
-        className="flex items-center gap-2.5 px-4.5! py-5 bg-emerald-600 hover:bg-emerald-700 text-white h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group"
+        className="flex items-center gap-2.5 px-4.5! py-5 bg-primary  text-white h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group"
       >
         <Plus className="w-5 h-5" />
         <span>{t("google_account_add_sheet")}</span>

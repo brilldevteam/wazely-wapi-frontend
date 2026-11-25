@@ -44,12 +44,12 @@ const WabaSetupGuide = ({ isConnected }: WabaSetupGuideProps) => {
         </div>
 
         <div className="pt-1 space-y-4">
-          <div className="bg-emerald-50/50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/20 rounded-lg p-4 space-y-2">
-            <div className="flex items-center gap-2 text-emerald-500 dark:text-emerald-400">
+          <div className="bg-light-primary/50 dark:bg-primary-darker/10 border border-[var(--primary-opacity-20)] dark:border-primary-darker/20 rounded-lg p-4 space-y-2">
+            <div className="flex items-center gap-2 text-primary dark:text-primary">
               <AlertCircle size={18} className="rotate-180" />
               <h5 className="text-sm font-bold">{t("need_help")}</h5>
             </div>
-            <p className="text-[11px] text-emerald-600 dark:text-emerald-400/80 leading-relaxed font-medium">
+            <p className="text-[11px] text-primary dark:text-primary/80 leading-relaxed font-medium">
               {t("visit_instructions")}{" "}
               <Link href="https://developers.facebook.com/docs/whatsapp/cloud-api" target="_blank" rel="noopener noreferrer" className="text-blue-700 dark:text-blue-300 underline! decoration-blue-300 dark:decoration-blue-700 underline-offset-2 hover:text-blue-800 transition-colors">
                 {t("cloud_api_docs")}

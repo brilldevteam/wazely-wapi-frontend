@@ -49,12 +49,12 @@ const ProfileForm = () => {
 
   const formik = useFormik<UpdateProfilePayload>({
     initialValues: {
-      name: user?.name || "",
-      email: user?.email || "",
-      phone: user?.phone || "",
-      country: user?.country || "",
-      country_code: user?.country_code || "",
-      note: user?.note || "",
+      name: profileData?.user?.name || user?.name || "",
+      email: profileData?.user?.email || user?.email || "",
+      phone: profileData?.user?.phone || user?.phone || "",
+      country: profileData?.user?.country || user?.country || "",
+      country_code: profileData?.user?.country_code || user?.country_code || "",
+      note: profileData?.user?.note || user?.note || "",
     },
     enableReinitialize: true,
     validationSchema,

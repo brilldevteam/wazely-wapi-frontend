@@ -15,7 +15,7 @@ import CommonHeader from "@/src/shared/CommonHeader";
 import ConfirmModal from "@/src/shared/ConfirmModal";
 import { Plan } from "@/src/types/subscription";
 import { LayoutGrid, Settings2, ShieldCheck } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import ActivePlanCard from "./ActivePlanCard";
@@ -23,17 +23,30 @@ import BillingInfo from "./BillingInfo";
 import EmptyState from "./EmptyState";
 import ManagePlanModal from "./ManagePlanModal";
 import NoPlansState from "./NoPlansState";
-import PlanSlider from "./PlanSlider";
+import PlanComparisonTable from "./PlanComparisonTable";
 import SubscriptionModal from "./SubscriptionModal";
 import UsageStatsGrid from "./UsageStatsGrid";
 import Can from "../shared/Can";
+
+// Same billing tabs as the public pricing page. Free trial plans are listed under Monthly.
+const BILLING_TABS = [
+  { id: "monthly", label: "Monthly", badge: "" },
+  { id: "yearly", label: "Yearly", badge: "SAVE" },
+  { id: "lifetime", label: "One Time", badge: "" },
+] as const;
+type BillingTabId = (typeof BILLING_TABS)[number]["id"];
+
+const tabOfPlan = (plan: any): BillingTabId => {
+  const cycle = String(plan?.billing_cycle || "monthly").toLowerCase();
+  return cycle === "yearly" ? "yearly" : cycle === "lifetime" ? "lifetime" : "monthly";
+};
 
 const Subscription = () => {
   const { t } = useTranslation();
   const { data: subscriptionResponse, isLoading: isSubLoading } =
     useGetUserSubscriptionQuery();
   const { data: plansResponse, isLoading: isPlansLoading } =
-    useGetAllPlansQuery({});
+    useGetAllPlansQuery({ limit: 100 });
   const [cancelSubscription, { isLoading: isCancelling }] =
     useCancelSubscriptionMutation();
 
@@ -67,25 +80,43 @@ const Subscription = () => {
     setIsModalOpen(true);
   };
 
+  // Plans now come in Monthly / Yearly / One Time, so "cheaper" or "dearer" by price is
+  // not meaningful across cycles (a yearly price is always higher than a monthly one).
+  // Upgrade and Downgrade both open the full list with all billing tabs.
   const handleShowUpgrade = () => {
-    setFilterMode("upgrade");
+    setFilterMode("none");
     setShowAllPlans(true);
   };
 
   const handleShowDowngrade = () => {
-    setFilterMode("downgrade");
+    setFilterMode("none");
     setShowAllPlans(true);
   };
 
   const currentPlanPrice = (currentSubscription?.plan_id as any)?.price || 0;
 
-  const filteredPlans = showAllPlans
+  const plansForMode: Plan[] = showAllPlans
     ? filterMode === "upgrade"
       ? plans.filter((p: Plan) => p.price > currentPlanPrice)
       : filterMode === "downgrade"
         ? plans.filter((p: Plan) => p.price < currentPlanPrice)
         : plans
     : [];
+
+  // Only show tabs that have plans; start on the client's current billing cycle.
+  const availableTabs = useMemo(
+    () => BILLING_TABS.filter((tab) => plansForMode.some((p) => tabOfPlan(p) === tab.id)),
+    [plansForMode],
+  );
+  const [chosenTab, setChosenTab] = useState<BillingTabId | null>(null);
+  const preferredTab = chosenTab || (currentSubscription ? tabOfPlan(currentSubscription.plan_id) : "monthly");
+  const billingTab: BillingTabId = availableTabs.some((tab) => tab.id === preferredTab)
+    ? preferredTab
+    : availableTabs[0]?.id || "monthly";
+
+  const filteredPlans = plansForMode.filter((p) => tabOfPlan(p) === billingTab);
+  const currentPlanId = (currentSubscription?.plan_id as any)?._id;
+  const otherPlansCount = plans.filter((p: Plan) => (p as any)._id !== currentPlanId).length;
 
   const handleCancelSubscription = async () => {
     try {
@@ -214,13 +245,38 @@ const Subscription = () => {
       <div className="mx-auto">
         {showAllPlans ? (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {availableTabs.length > 1 && (
+              <div className="flex justify-center mb-8 mt-2">
+                <div className="inline-flex items-center gap-1 p-1 rounded-xl border border-slate-200 dark:border-(--card-border-color) bg-white dark:bg-(--card-color) shadow-sm">
+                  {availableTabs.map((tab) => (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => setChosenTab(tab.id)}
+                      className={cn(
+                        "relative px-5 h-9 rounded-lg text-sm font-bold transition-all",
+                        billingTab === tab.id
+                          ? "bg-primary text-white shadow-sm"
+                          : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white",
+                      )}
+                    >
+                      {tab.badge && (
+                        <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-1.5 py-px rounded-full bg-amber-400 text-[9px] font-black text-white tracking-wide">
+                          {tab.badge}
+                        </span>
+                      )}
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
             {filteredPlans.length > 0 ? (
-              <PlanSlider
+              <PlanComparisonTable
                 plans={filteredPlans}
+                billingTab={billingTab}
                 activePlanId={(currentSubscription?.plan_id as any)?._id}
-                mode={filterMode}
                 onSubscribe={handleSubscribe}
-                onBack={() => setShowAllPlans(!showAllPlans)}
                 isFreeTrial={isFreeTrialEnabled}
               />
             ) : (
@@ -279,12 +335,8 @@ const Subscription = () => {
         onUpgrade={handleShowUpgrade}
         onDowngrade={handleShowDowngrade}
         onCancel={() => setIsConfirmOpen(true)}
-        upgradePlansCount={
-          plans.filter((p: Plan) => p.price > currentPlanPrice).length
-        }
-        downgradePlansCount={
-          plans.filter((p: Plan) => p.price < currentPlanPrice).length
-        }
+        upgradePlansCount={otherPlansCount}
+        downgradePlansCount={otherPlansCount}
       />
 
       <ConfirmModal

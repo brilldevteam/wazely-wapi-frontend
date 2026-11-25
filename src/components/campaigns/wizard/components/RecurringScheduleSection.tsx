@@ -39,7 +39,7 @@ export const RecurringScheduleSection = ({
   };
 
   return (
-    <div className="p-4 sm:p-6 rounded-lg border border-emerald-500/20 space-y-6 animate-in fade-in slide-in-from-top-2 duration-300">
+    <div className="p-4 sm:p-6 rounded-lg border border-primary/20 space-y-6 animate-in fade-in slide-in-from-top-2 duration-300">
       <h3 className="font-bold text-lg text-primary">
         {t("campaign_wizard_schedule_recurring_title")}
       </h3>
@@ -68,7 +68,7 @@ export const RecurringScheduleSection = ({
               }
               showTime={true}
               disabled={{ before: new Date() }}
-              className="h-12 pl-10 font-bold text-sm border-[var(--primary-opacity-30)] bg-white dark:bg-(--page-body-bg) w-full"
+              className="h-12 pl-10 font-bold text-sm border-primary/30 bg-white dark:bg-(--page-body-bg) w-full"
             />
             <Calendar
               className="absolute left-3.5 top-1/2 -translate-y-1/2 text-primary pointer-events-none"
@@ -100,7 +100,7 @@ export const RecurringScheduleSection = ({
                 )
               }
               disabled={{ before: new Date() }}
-              className="h-12 pl-10 font-bold text-sm border-[var(--primary-opacity-30)] bg-white dark:bg-(--page-body-bg) w-full"
+              className="h-12 pl-10 font-bold text-sm border-primary/30 bg-white dark:bg-(--page-body-bg) w-full"
             />
             <Calendar
               className="absolute left-3.5 top-1/2 -translate-y-1/2 text-primary pointer-events-none"
@@ -125,7 +125,7 @@ export const RecurringScheduleSection = ({
               }
             }}
           >
-            <SelectTrigger className="h-12 py-5.5 font-semibold text-sm border-[var(--primary-opacity-30)] bg-white dark:bg-(--page-body-bg)">
+            <SelectTrigger className="h-12 py-5.5 font-semibold text-sm border-primary/30 bg-white dark:bg-(--page-body-bg)">
               <SelectValue placeholder={t("campaign_wizard_schedule_select_repeat_pattern")} />
             </SelectTrigger>
             <SelectContent className="dark:bg-(--page-body-bg)">
@@ -178,7 +178,7 @@ export const RecurringScheduleSection = ({
                 }
               }}
             >
-              <SelectTrigger className="h-12 py-5.5 font-semibold text-sm border-[var(--primary-opacity-30)] bg-white dark:bg-(--page-body-bg)">
+              <SelectTrigger className="h-12 py-5.5 font-semibold text-sm border-primary/30 bg-white dark:bg-(--page-body-bg)">
                 <SelectValue placeholder={t("campaign_wizard_schedule_select_cron_interval")} />
               </SelectTrigger>
               <SelectContent className="dark:bg-(--page-body-bg)">
@@ -208,7 +208,7 @@ export const RecurringScheduleSection = ({
               placeholder="e.g. 0 9 * * 1 (Every Monday at 9:00 AM)"
               value={formik.values.cron_expression || ""}
               onChange={formik.handleChange}
-              className="h-12 font-bold text-sm border-[var(--primary-opacity-30)] bg-white dark:bg-(--page-body-bg)"
+              className="h-12 font-bold text-sm border-primary/30 bg-white dark:bg-(--page-body-bg)"
             />
             <p className="text-[11px] text-slate-400 font-medium ml-1">
               {t("campaign_wizard_schedule_cron_format_desc")}

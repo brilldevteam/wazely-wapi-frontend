@@ -63,7 +63,7 @@ const AgentTaskListSidebar = ({ agentId, onSelectTask, onClose }: AgentTaskListS
       case "on_hold":
         return "bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-500/10 dark:text-blue-500 dark:border-blue-500/20  text-[10px] font-medium";
       case "completed":
-        return "bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-500 dark:border-emerald-500/20  text-[10px] font-medium";
+        return "bg-[var(--primary-opacity-20)] text-primary-dark border-[var(--primary-opacity-30)] dark:bg-primary/10 dark:text-primary dark:border-primary/20  text-[10px] font-medium";
       case "cancelled":
         return "bg-red-50 text-red-600 border-red-100 dark:bg-red-500/10 dark:text-red-500 dark:border-red-500/20 text-[10px]  font-medium";
       default:
@@ -115,23 +115,21 @@ const AgentTaskListSidebar = ({ agentId, onSelectTask, onClose }: AgentTaskListS
           <Input placeholder="Search tasks..." className="pl-9 h-11 bg-(--input-color) dark:bg-(--page-body-bg) border-(--input-border-color) dark:border-(--card-border-color) rounded-lg focus:ring-primary/10 transition-all font-medium" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
         </div>
 
-        <div className="flex gap-2 overflow-x-auto pb-1 custom-scrollbar">
-          <Badge variant={filter === "all" ? "default" : "outline"} className={`cursor-pointer px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filter === "all" ? "bg-primary dark:hover:bg-(--table-hover) dark:text-gray-400 dark:bg-(--page-body-bg)" : "text-slate-500 dark:text-gray-400 dark:border-none dark:bg-(--dark-body) border-slate-200"}`} onClick={() => setFilter("all")}>
-            All
-          </Badge>
-          <Badge variant={filter === "low" ? "default" : "outline"} className={`cursor-pointer px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filter === "low" ? "bg-primary dark:hover:bg-(--table-hover) dark:text-gray-400 dark:bg-(--page-body-bg)" : "text-slate-500 dark:text-gray-400 dark:border-none dark:bg-(--dark-body) border-slate-200"}`} onClick={() => setFilter("low")}>
-            Low
-          </Badge>
-          <Badge variant={filter === "medium" ? "default" : "outline"} className={`cursor-pointer px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filter === "medium" ? "bg-primary dark:hover:bg-(--table-hover) dark:text-gray-400 dark:bg-(--page-body-bg)" : "text-slate-500 dark:text-gray-400 dark:border-none dark:bg-(--dark-body) border-slate-200"}`} onClick={() => setFilter("medium")}>
-            Medium
-          </Badge>
-          <Badge variant={filter === "high" ? "default" : "outline"} className={`cursor-pointer px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filter === "high" ? "bg-primary dark:hover:bg-(--table-hover) dark:text-gray-400 dark:bg-(--page-body-bg)" : "text-slate-500 dark:text-gray-400 dark:border-none dark:bg-(--dark-body) border-slate-200"}`} onClick={() => setFilter("high")}>
-            High
-          </Badge>
+        {/* Same pill tabs as the WA Chat conversation filters */}
+        <div className="flex gap-2 overflow-x-auto py-1.5 table-custom-scrollbar">
+          {(["all", "low", "medium", "high"] as const).map((f) => (
+            <Button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`px-4 py-0! h-8! rounded-full text-xs font-bold transition-all whitespace-nowrap capitalize ${filter === f ? "bg-primary text-white shadow-sm hover:bg-primary" : "bg-slate-100 text-slate-500 dark:bg-(--page-body-bg) dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-(--table-hover)"}`}
+            >
+              {f}
+            </Button>
+          ))}
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-2.5 custom-scrollbar">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar p-2 flex flex-col gap-2">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-10 opacity-50">
             <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mb-2" />
@@ -145,7 +143,7 @@ const AgentTaskListSidebar = ({ agentId, onSelectTask, onClose }: AgentTaskListS
           tasks.map((task) => (
             <Fragment key={task._id}>
               <div
-                className={`p-4 my-0 transition-all cursor-pointer group relative overflow-hidden ${currentTaskId === task._id ? "bg-(--light-primary) dark:bg-(--dark-sidebar) shadow-lg shadow-primary/5 translate-x-1" : "border-transparent hover:bg-(--light-primary) dark:bg-(--page-body-bg) dark:hover:bg-(--table-hover) dark:hover:border-(--card-border-color) hover:border-primary"}`}
+                className={`p-3 rounded-lg border transition-all cursor-pointer group relative overflow-hidden ${currentTaskId === task._id ? "bg-(--light-primary) border-primary/20 dark:bg-(--dark-sidebar) dark:border-(--card-border-color)" : "border-transparent hover:bg-slate-50 dark:hover:bg-(--table-hover)"}`}
                 onClick={() => {
                   const params = new URLSearchParams(searchParams.toString());
                   params.set("taskId", task._id);
@@ -174,7 +172,6 @@ const AgentTaskListSidebar = ({ agentId, onSelectTask, onClose }: AgentTaskListS
                   </Button>
                 </div>
               </div>
-              <hr className="m-0" />
             </Fragment>
           ))
         )}

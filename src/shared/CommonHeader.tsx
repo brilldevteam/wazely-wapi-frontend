@@ -57,7 +57,7 @@ const CommonHeader = ({ backBtn, title, titleColor, description, onSearch, searc
             {rightContent}
             {onAddClick && (
               <Can permission={addPermission}>
-                <Button onClick={onAddClick} className="flex items-center gap-2.5 px-4.5! py-5 bg-primary text-white h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group ml-auto sm:ml-0 rtl:mr-auto rtl:sm:mr-0 rtl:ml-0 rtl:sm:ml-0" disabled={isLoading}>
+                <Button onClick={onAddClick} className="flex items-center gap-2.5 px-4.5! py-5 bg-primary! text-white h-12 rounded-lg font-medium cursor-pointer transition-all active:scale-95 group ml-auto sm:ml-0 rtl:mr-auto rtl:sm:mr-0 rtl:ml-0 rtl:sm:ml-0" disabled={isLoading}>
                   <Plus className="w-5 h-5 transition-transform" />
                   <span className="inline">{addLabel}</span>
                 </Button>
@@ -106,7 +106,7 @@ const CommonHeader = ({ backBtn, title, titleColor, description, onSearch, searc
               )}
               {onSync && (
                 <Can permission={syncPermission}>
-                  <Button variant="outline" size="sm" onClick={onSync} className="h-11 px-4.5 rounded-lg border-primary/20 bg-emerald-50/50 hover:bg-emerald-100 dark:bg-primary/10 dark:hover:bg-primary/20 text-primary transition-all active:scale-95 group shadow-sm" title="Sync">
+                  <Button variant="outline" size="sm" onClick={onSync} className="h-11 px-4.5 rounded-lg border-primary/20 bg-light-primary/50 hover:bg-[var(--primary-opacity-20)] dark:bg-primary/10 dark:hover:bg-primary/20 text-primary transition-all active:scale-95 group shadow-sm" title="Sync">
                     <RotateCw size={18} className={`group-hover:rotate-180 transition-transform duration-500`} />
                     <span className="hidden sm:inline font-bold">Sync</span>
                   </Button>
@@ -139,7 +139,7 @@ const CommonHeader = ({ backBtn, title, titleColor, description, onSearch, searc
                     <DropdownMenuSeparator className="bg-slate-100 dark:bg-(--card-color)" />
                     <div className="py-1">
                       {columns.map((column, index) => (
-                        <DropdownMenuCheckboxItem key={column.id || index} checked={column.isVisible} onCheckedChange={() => onColumnToggle(column.id)} disabled={column.isVisible && columns.filter((c) => c.isVisible).length === 1} className="rounded-lg mx-1 cursor-pointer focus:bg-emerald-50 focus:text-emerald-700 transition-colors disabled:pointer-events-none disabled:opacity-50">
+                        <DropdownMenuCheckboxItem key={column.id || index} checked={column.isVisible} onCheckedChange={() => onColumnToggle(column.id)} disabled={column.isVisible && columns.filter((c) => c.isVisible).length === 1} className="rounded-lg mx-1 cursor-pointer focus:bg-light-primary focus:text-primary-dark transition-colors disabled:pointer-events-none disabled:opacity-50">
                           {column.label}
                         </DropdownMenuCheckboxItem>
                       ))}

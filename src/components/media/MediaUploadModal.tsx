@@ -15,6 +15,32 @@ import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { useAppSelector } from "@/src/redux/hooks";
+import { useFeatureAccess } from "@/src/hooks/useFeatureAccess";
+
+const getFileType = (file: File): "image" | "video" | "audio" | "document" | "file" => {
+  const mime = file.type || "";
+  if (mime.startsWith("image/")) return "image";
+  if (mime.startsWith("video/")) return "video";
+  if (mime.startsWith("audio/")) return "audio";
+  if (
+    mime === "application/pdf" ||
+    mime.includes("document") ||
+    mime.includes("text") ||
+    mime.includes("sheet") ||
+    mime.includes("presentation")
+  ) {
+    return "document";
+  }
+  const extension = file.name.split(".").pop()?.toLowerCase();
+  if (extension) {
+    if (["jpg", "jpeg", "png", "webp", "gif", "svg"].includes(extension)) return "image";
+    if (["mp4", "mkv", "avi", "mov", "webm"].includes(extension)) return "video";
+    if (["mp3", "wav", "ogg", "aac", "m4a"].includes(extension)) return "audio";
+    if (["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt"].includes(extension)) return "document";
+  }
+  return "file";
+};
 
 const MediaUploadModal: React.FC<MediaUploadModalPropsData> = ({
   isOpen,
@@ -26,12 +52,104 @@ const MediaUploadModal: React.FC<MediaUploadModalPropsData> = ({
   const [createAttachment, { isLoading }] = useCreateAttachmentMutation();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const { user } = useAppSelector((state) => state.auth);
+  const { setting } = useAppSelector((state) => state.setting);
+  const { planFeatures } = useFeatureAccess();
+
+  const allowedTypesAccept = setting?.allowed_file_upload_types && setting.allowed_file_upload_types.length > 0
+    ? setting.allowed_file_upload_types.map((type) => type.startsWith(".") ? type : `.${type}`).join(",")
+    : "image/*,video/*,audio/*,.pdf,.doc,.docx,.zip,.json,.rar,.7z";
+
+  const isMediaSharingDisabled = setting?.allow_media_send === false;
+
+  const getFileLimitMB = (type: "image" | "video" | "audio" | "document" | "file"): number => {
+    if (!user?.isSelfTenant && planFeatures) {
+      const featureKey = `${type}_file_limit`;
+      const planLimit = planFeatures[featureKey] || planFeatures[`${type}_limit`] || planFeatures[type];
+      if (planLimit !== undefined && planLimit !== null && planLimit !== "") {
+        const val = Number(planLimit);
+        if (val > 0) {
+          return val;
+        }
+      }
+    }
+    if (setting) {
+      if (type === "document") return setting.document_file_limit || 10;
+      if (type === "audio") return setting.audio_file_limit || 10;
+      if (type === "video") return setting.video_file_limit || 10;
+      if (type === "image") return setting.image_file_limit || 5;
+    }
+    if (type === "image") return 5;
+    if (type === "file") return 25;
+    return 10;
+  };
+
+  const getMultipleFileShareLimit = (): number => {
+    if (!user?.isSelfTenant && planFeatures) {
+      const planLimit = planFeatures.multiple_file_share_limit;
+      if (planLimit !== undefined && planLimit !== null && planLimit !== "") {
+        const val = Number(planLimit);
+        if (val > 0) {
+          return val;
+        }
+      }
+    }
+    if (setting) {
+      return setting.multiple_file_share_limit || 10;
+    }
+    return 10;
+  };
+
   const addFilesToList = (fileList: FileList) => {
-    const newFiles: FileItem[] = Array.from(fileList).map((file) => ({
-      file,
-      previewUrl: URL.createObjectURL(file),
-    }));
-    setFiles((prev) => [...prev, ...newFiles]);
+    if (isMediaSharingDisabled) {
+      toast.error("Media sharing is disabled by the administrator.");
+      return;
+    }
+
+    const shareLimit = getMultipleFileShareLimit();
+    if (files.length + fileList.length > shareLimit) {
+      toast.error(
+        `You can only upload up to ${shareLimit} files at once.`
+      );
+      return;
+    }
+
+    const validFiles: FileItem[] = [];
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
+
+      if (setting?.allowed_file_upload_types && setting.allowed_file_upload_types.length > 0) {
+        const extension = file.name.split(".").pop()?.toLowerCase() || "";
+        const isAllowed = setting.allowed_file_upload_types.some((type) => {
+          const cleanType = type.startsWith(".") ? type.slice(1).toLowerCase() : type.toLowerCase();
+          return cleanType === extension;
+        });
+        if (!isAllowed) {
+          toast.error(
+            `${file.name} is not an allowed file type. Allowed: ${setting.allowed_file_upload_types.join(", ")}`
+          );
+          continue;
+        }
+      }
+
+      const fileType = getFileType(file);
+      const limitMB = getFileLimitMB(fileType);
+      const fileSizeMB = file.size / 1024 / 1024;
+      if (fileSizeMB > limitMB) {
+        toast.error(
+          `${file.name} is too large (${fileSizeMB.toFixed(2)} MB). Max allowed for ${fileType} is ${limitMB.toFixed(2)} MB.`
+        );
+        continue;
+      }
+      validFiles.push({
+        file,
+        previewUrl: URL.createObjectURL(file),
+      });
+    }
+
+    if (validFiles.length > 0) {
+      setFiles((prev) => [...prev, ...validFiles]);
+    }
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,7 +202,10 @@ const MediaUploadModal: React.FC<MediaUploadModalPropsData> = ({
       onClose();
       if (onUploadSuccess) onUploadSuccess();
     } catch (error: any) {
-      const errorMessage = error?.data?.message || t("file_upload_failed");
+      let errorMessage = error?.data?.message || t("file_upload_failed");
+      if (error?.status === 413) {
+        errorMessage = "File size is too large for the server to process. Please upload a smaller file.";
+      }
       toast.error(errorMessage);
     }
   };
@@ -113,7 +234,19 @@ const MediaUploadModal: React.FC<MediaUploadModalPropsData> = ({
 
         <p className="text-sm text-gray-500 mb-4">{t("upload_files_desc")}</p>
 
-        {files.length === 0 ? (
+        {isMediaSharingDisabled ? (
+          <div className="border border-dashed border-red-300 dark:border-red-900/50 bg-red-50/50 dark:bg-red-950/10 rounded-lg p-8 flex flex-col items-center justify-center text-center">
+            <div className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 w-16 h-16 rounded-full mb-4 flex items-center justify-center">
+              <X size={32} />
+            </div>
+            <h3 className="text-base font-semibold text-red-700 dark:text-red-400">
+              Media Sharing Disabled
+            </h3>
+            <p className="text-xs text-red-500 dark:text-red-400/80 mt-2 max-w-xs">
+              Media sharing and file uploading are currently disabled by the administrator.
+            </p>
+          </div>
+        ) : files.length === 0 ? (
           <div
             className="border border-dashed border-gray-300 dark:border-(--card-border-color) dark:hover:bg-(--table-hover) rounded-lg p-8 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors"
             onClick={() => fileInputRef.current?.click()}
@@ -127,9 +260,16 @@ const MediaUploadModal: React.FC<MediaUploadModalPropsData> = ({
             <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">
               {t("drag_and_drop")}
             </h3>
-            <p className="text-xs text-gray-400 text-center mt-1">
-              {t("max_size_note")}
-            </p>
+            <div className="w-full max-w-[320px] mt-2 flex flex-col items-center gap-1.5 select-none pointer-events-none">
+              <p className="text-[11px] text-gray-400 dark:text-gray-500 font-medium text-center leading-normal">
+                Max size: Image {getFileLimitMB("image").toFixed(0)}MB • Video {getFileLimitMB("video").toFixed(0)}MB • Audio {getFileLimitMB("audio").toFixed(0)}MB • Doc {getFileLimitMB("document").toFixed(0)}MB
+              </p>
+              {setting?.allowed_file_upload_types && setting.allowed_file_upload_types.length > 0 && (
+                <p className="text-[10px] text-gray-400/80 dark:text-gray-500/80 text-center break-words leading-normal max-w-full px-2">
+                  Formats: {setting.allowed_file_upload_types.join(", ")}
+                </p>
+              )}
+            </div>
             <p className="text-sm text-gray-500 my-2">{t("or_separator")}</p>
             <p className="text-sm text-gray-600 font-medium text-center dark:text-gray-400">
               {t("click_to_browse")}
@@ -140,7 +280,7 @@ const MediaUploadModal: React.FC<MediaUploadModalPropsData> = ({
               ref={fileInputRef}
               className="hidden"
               onChange={handleFileSelect}
-              accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.zip,.json,.rar,.7z"
+              accept={allowedTypesAccept}
               multiple
             />
           </div>
@@ -215,7 +355,7 @@ const MediaUploadModal: React.FC<MediaUploadModalPropsData> = ({
                 ref={fileInputRef}
                 className="hidden"
                 onChange={handleFileSelect}
-                accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.zip,.json,.rar,.7z"
+                accept={allowedTypesAccept}
                 multiple
               />
               <span className="text-xs text-gray-500 font-medium">

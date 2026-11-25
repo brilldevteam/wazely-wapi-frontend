@@ -1,23 +1,26 @@
 import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
-import { getSession, signOut } from "next-auth/react";
-import { setLogout } from "../reducers/authSlice";
-import { setRTL } from "../reducers/layoutSlice";
-import { resetChatState } from "../reducers/messenger/chatSlice";
-import { clearWorkspace } from "../reducers/workspaceSlice";
+import type { Session } from "next-auth";
+import { getSession } from "next-auth/react";
 import { ROUTES } from "@/src/constants";
+import { isLoggingOut, performLogout } from "@/src/utils/logout";
 
 const API_BASE_URL = typeof window === "undefined" ? process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api" : process.env.NEXT_PUBLIC_API_BASE_URL || "/api";
 
 const EXPIRATION_MESSAGES = ["Session expired or logged out", "Token is invalid or expired", "Session expired", "Token expired", "Please log in again", "Invalid token: user not found"];
 
-let sessionPromise: Promise<any> | null = null;
+let sessionPromise: Promise<Session | null> | null = null;
 
 const getCachedSession = async () => {
   if (typeof window === "undefined") return null;
 
   if (sessionPromise) return sessionPromise;
 
-  sessionPromise = getSession().finally(() => {
+  sessionPromise = getSession().then((session) => {
+    // Don't keep a session without a token (e.g. right after login), or the
+    // next requests go out unauthenticated for up to 2 seconds.
+    if (!session?.accessToken) sessionPromise = null;
+    return session;
+  }).finally(() => {
     setTimeout(() => {
       sessionPromise = null;
     }, 2000);
@@ -54,18 +57,17 @@ const isSessionExpired = (message: any): boolean => {
 const baseQueryWithLogout: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
   const result = await baseQuery(args, api, extraOptions);
 
-  if (result.error) {
+  // A logout is already running and the page is about to reload: ignore late errors.
+  if (result.error && !isLoggingOut()) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const data = result.error.data as any;
     const message = data?.error || data?.message || "";
 
     if (isSessionExpired(message)) {
-      api.dispatch(resetChatState());
-      api.dispatch(clearWorkspace());
-      api.dispatch(setLogout());
-      api.dispatch(setRTL(false));
-
-      signOut({ callbackUrl: ROUTES.Login, redirect: true });
+      // Same single logout as the Logout button: ends the session, clears saved
+      // user data and loads the login page fresh (runs only once, however many
+      // requests fail at the same time).
+      performLogout(ROUTES.Login);
     }
   }
 

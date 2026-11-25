@@ -24,14 +24,14 @@ const ToolCard = ({
   accentColor?: "emerald" | "indigo" | "purple" | "blue";
 }) => {
   const colors = {
-    emerald: "from-emerald-500/10 to-teal-500/5 text-emerald-600 border-emerald-100 dark:border-emerald-500/20",
+    emerald: "from-emerald-500/10 to-teal-500/5 text-primary border-[var(--primary-opacity-20)] dark:border-primary/20",
     indigo: "from-indigo-500/10 to-blue-500/5 text-indigo-600 border-indigo-100 dark:border-indigo-500/20",
     purple: "from-purple-500/10 to-violet-500/5 text-purple-600 border-purple-100 dark:border-purple-500/20",
     blue: "from-blue-500/10 to-sky-500/5 text-blue-600 border-blue-100 dark:border-blue-500/20",
   }[accentColor];
 
   const buttonColors = {
-    emerald: "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/20",
+    emerald: "bg-primary hover:bg-primary shadow-primary/20",
     indigo: "bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/20",
     purple: "bg-purple-600 hover:bg-purple-700 shadow-purple-500/20",
     blue: "bg-blue-600 hover:bg-blue-700 shadow-blue-500/20",
@@ -40,8 +40,8 @@ const ToolCard = ({
   return (
     <div className={`group relative h-full bg-white dark:bg-(--card-color) rounded-lg border sm:p-6 p-4 shadow transition-all hover:shadow-md dark:hover:shadow-none ${colors.split(" ")[2]}`}>
       <div className="relative z-10 flex flex-col h-full gap-6">
-        <div className={`w-14 h-14 rounded-xl bg-linear-to-br flex items-center justify-center ${colors.split(" ").slice(0, 2).join(" ")}`}>
-          <Icon size={28} className={colors.split(" ")[2]} />
+        <div className={`w-14 h-14 rounded-xl bg-linear-to-br flex items-center justify-center bg-primary/10`}>
+          <Icon size={28} className={"text-primary"} />
         </div>
 
         <div className="space-y-2 flex-1">
@@ -50,11 +50,11 @@ const ToolCard = ({
         </div>
 
         <div className="flex flex-wrap gap-3 pt-2">
-          <Button onClick={onManage} className="flex-1 flex items-center gap-2 px-6 py-5.5 bg-slate-50 dark:bg-(--page-body-bg) text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-(--table-hover) rounded-md text-sm font-bold transition-all border border-slate-200 dark:border-none">
+          <Button onClick={onManage} className="flex-1 flex items-center gap-2 px-6 py-5.5 bg-slate-50 dark:bg-(--page-body-bg) text-primary dark:text-primary hover:bg-slate-100 dark:hover:bg-(--table-hover) rounded-md text-sm font-bold transition-all border border-slate-200 dark:border-none">
             Manage
             <ExternalLink size={16} className="opacity-50" />
           </Button>
-          <Button onClick={onIntegrate} className={`flex-1 flex items-center gap-2 px-6 py-5.5 text-white rounded-md text-sm font-bold transition-all shadow-lg active:scale-95 ${buttonColors}`}>
+          <Button onClick={onIntegrate} className={`flex-1 flex items-center gap-2 px-6 py-5.5 text-white rounded-md text-sm font-bold transition-all shadow-lg active:scale-95 bg-primary `}>
             <Icon size={16} />
             Integrate
             <ArrowRight size={16} />

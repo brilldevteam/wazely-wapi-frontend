@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CloudUpload, X } from "lucide-react";
+import { CloudUpload, X, Info } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
 import { Button } from "@/src/elements/ui/button";
@@ -11,10 +11,12 @@ export const MediaHeaderEditor = ({
   mediaUrl,
   mediaFile,
   onChange,
+  mediaType,
 }: {
   mediaUrl: string;
   mediaFile?: File;
   onChange: (val: { link: string; localFile?: File }) => void;
+  mediaType?: string;
 }) => {
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
 
@@ -39,6 +41,15 @@ export const MediaHeaderEditor = ({
 
   return (
     <div className="space-y-3">
+      {mediaType && (
+        <div className="text-[11px] font-semibold text-primary dark:text-primary-light bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/30 rounded-lg p-2.5 flex items-start gap-2 shadow-xs">
+          <Info size={14} className="text-primary mt-0.5 shrink-0" />
+          <span>
+            Note: This template requires you to upload {["a", "e", "i", "o", "u"].includes(mediaType.toLowerCase().charAt(0)) ? "an" : "a"} <span className="font-bold underline capitalize">{mediaType.toLowerCase()}</span> file.
+          </span>
+        </div>
+      )}
+
       {mediaUrl ? (
         <div className="relative rounded-xl border border-slate-200 dark:border-(--card-border-color) overflow-hidden bg-slate-50 dark:bg-(--dark-body)">
           <div className="flex items-center gap-3 p-3">

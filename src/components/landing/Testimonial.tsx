@@ -111,7 +111,7 @@ const Testimonial: React.FC<TestimonialProps> = ({ data }) => {
                           <p className="text-xs text-slate-400 truncate">{item.user_post}</p>
                         )}
                       </div>
-                      <span className="ml-auto shrink-0 text-[10px] font-extrabold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-full">
+                      <span className="ml-auto shrink-0 text-[10px] font-extrabold text-primary bg-light-primary border border-[var(--primary-opacity-20)] px-2.5 py-1 rounded-full">
                         Verified
                       </span>
                     </div>

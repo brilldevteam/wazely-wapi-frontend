@@ -35,7 +35,7 @@ const WebhookPayloadModal = ({ isOpen, onClose, webhook }: WebhookPayloadModalPr
                 <InfoModal dataKey="webhook_payload" iconSize={18} className="mt-0.5 opacity-60 hover:opacity-100" />
               </DialogTitle>
             </div>
-            <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isLoading || isFetching} className="h-10 dark:bg-(--page-body-bg) px-4 gap-2 border-emerald-100 text-primary hover:bg-emerald-50 dark:border-primary/20 dark:hover:bg-primary/10 rounded-lg font-bold transition-all active:scale-95 shadow-sm">
+            <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isLoading || isFetching} className="h-10 dark:bg-(--page-body-bg) px-4 gap-2 border-[var(--primary-opacity-20)] text-primary hover:bg-light-primary dark:border-primary/20 dark:hover:bg-primary/10 rounded-lg font-bold transition-all active:scale-95 shadow-sm">
               <RefreshCw className={`h-4 w-4 ${isLoading || isFetching ? "animate-spin" : ""}`} />
               Sync Payload
             </Button>
@@ -71,7 +71,7 @@ const WebhookPayloadModal = ({ isOpen, onClose, webhook }: WebhookPayloadModalPr
                   Object.entries(flattenedPayload).map(([key, value]) => (
                     <div key={key} className="flex flex-col sm:flex-row sm:gap-4 border-b border-white/5 pb-3 last:border-0 last:pb-0">
                       <span className="text-slate-400 min-w-55 shrink-0 font-medium text-[12px]">{key}</span>
-                      <span className="text-emerald-400 break-all text-[13px]">{typeof value === "string" ? `"${value}"` : String(value)}</span>
+                      <span className="text-primary break-all text-[13px]">{typeof value === "string" ? `"${value}"` : String(value)}</span>
                     </div>
                   ))
                 ) : (
@@ -90,7 +90,7 @@ const WebhookPayloadModal = ({ isOpen, onClose, webhook }: WebhookPayloadModalPr
             <Button variant="ghost" onClick={onClose} className="flex-1 sm:flex-none h-11 rounded-lg px-6 text-slate-500 font-bold hover:bg-slate-100 dark:bg-(--page-body-bg) dark:text-white dark:hover:bg-(--table-hover) transition-all">
               Close Preview
             </Button>
-            <Button onClick={onClose} className="flex-1 sm:flex-none h-11 bg-primary hover:bg-primary text-white rounded-lg px-8 font-bold shadow-lg shadow-emerald-600/20 active:scale-95 transition-all border-none">
+            <Button onClick={onClose} className="flex-1 sm:flex-none h-11 bg-primary hover:bg-primary text-white rounded-lg px-8 font-bold shadow-lg shadow-primary/20 active:scale-95 transition-all border-none">
               Done
             </Button>
           </div>

@@ -293,6 +293,25 @@ const GeneralInfoStep: React.FC<GeneralInfoStepProps> = ({
           }
         />
       </div>
+
+      <div className="flex items-center justify-between sm:p-5 p-4 bg-slate-50 dark:bg-(--page-body-bg) rounded-lg border border-slate-200 dark:border-(--card-border-color) transition-all hover:border-primary/30">
+        <div className="space-y-1">
+          <Label className="text-base font-bold">
+            {t("appointment_status", { defaultValue: "Status" })}
+          </Label>
+          <p className="text-sm text-slate-500">
+            {t("appointment_status_desc", {
+              defaultValue: "Activate or deactivate this appointment booking",
+            })}
+          </p>
+        </div>
+        <Switch
+          checked={formData.status === "active"}
+          onCheckedChange={(checked) =>
+            handleSelectChange("status", checked ? "active" : "inactive")
+          }
+        />
+      </div>
     </div>
   );
 };

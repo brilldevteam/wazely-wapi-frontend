@@ -46,9 +46,9 @@ const Home: React.FC<HomeProps> = ({ data }) => {
 
       {/* Decorative background blobs */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-emerald-100/40 blur-3xl" />
+        <div className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-[var(--primary-opacity-20)]/40 blur-3xl" />
         <div className="absolute -top-20 right-0 w-[500px] h-[500px] rounded-full bg-teal-100/30 blur-3xl" />
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] rounded-full bg-emerald-50/50 blur-3xl" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] rounded-full bg-light-primary/50 blur-3xl" />
       </div>
 
       {/* Hero Section */}
@@ -80,13 +80,7 @@ const Home: React.FC<HomeProps> = ({ data }) => {
                 {data.primary_button?.text && (
                   <Button
                     className="group bg-primary hover:bg-primary/90 text-white px-8! py-4! h-12! rounded-lg font-bold text-lg transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/25 flex items-center justify-center gap-2"
-                    onClick={() => {
-                      if (isAuthenticated) {
-                        router.push(ROUTES.Dashboard);
-                      } else {
-                        router.push(ROUTES.Login);
-                      }
-                    }}
+                    onClick={() => router.push(data?.primary_button?.link || "")}
                   >
                     {data.primary_button.text}
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -123,7 +117,7 @@ const Home: React.FC<HomeProps> = ({ data }) => {
               <div className="relative rounded-lg overflow-hidden ">
                 <Images
                   src={data?.hero_image}
-                  fallbackSrc={"/assets/images/slider-1.png"}
+                  fallbackSrc={"/assets/images/default3.png"}
                   alt="App Dashboard"
                   width={800}
                   height={600}

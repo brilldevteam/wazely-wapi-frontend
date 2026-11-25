@@ -19,7 +19,18 @@ const authSlice = createSlice({
     },
     setCredentials: (state, action) => {
       const { user, token } = action.payload;
-      state.user = user;
+      if (state.user) {
+        state.user = {
+          ...state.user,
+          ...user,
+          phone: user.phone !== undefined ? user.phone : state.user.phone,
+          country: user.country !== undefined ? user.country : state.user.country,
+          country_code: user.country_code !== undefined ? user.country_code : state.user.country_code,
+          note: user.note !== undefined ? user.note : state.user.note,
+        };
+      } else {
+        state.user = user;
+      }
       state.token = token;
       state.isAuthenticated = true;
       state.isLoading = false;

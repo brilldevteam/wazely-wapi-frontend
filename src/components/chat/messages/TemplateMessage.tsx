@@ -145,7 +145,7 @@ const TemplateMessage: React.FC<TemplateMessageProps> = ({ message, isWindowExpi
       return (
         <div className="px-4 py-3 border-b border-slate-100 dark:border-white/10 bg-slate-50/50 dark:bg-white/5">
           <div className="flex items-center gap-3 p-2 rounded-lg bg-white dark:bg-black/20 border border-slate-200 dark:border-white/5">
-            <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600">
+            <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-[var(--primary-opacity-20)] dark:bg-primary-darker/30 text-primary">
               <FileText size={20} />
             </div>
             <div className="flex-1 min-w-0">
@@ -168,7 +168,7 @@ const TemplateMessage: React.FC<TemplateMessageProps> = ({ message, isWindowExpi
         {isLimitedTimeOffer && (
           <div className="dark:bg-(--card-color) p-3 border-b border-slate-100 dark:border-(--card-border-color) rounded-t-lg">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+              <div className="w-10 h-10 rounded-full bg-[var(--primary-opacity-20)] dark:bg-primary-darker/30 flex items-center justify-center text-primary dark:text-primary shrink-0">
                 <Gift size={20} />
               </div>
               <div className="flex-1 min-w-0">
@@ -182,8 +182,8 @@ const TemplateMessage: React.FC<TemplateMessageProps> = ({ message, isWindowExpi
         {isCatalog && (
           <div className="border-b border-slate-100 dark:border-slate-700">
             <div className="flex items-center gap-2.5 p-3">
-              <div className="w-12 h-12 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 flex items-center justify-center shrink-0 overflow-hidden">
-                <ShoppingBag size={20} className="text-emerald-500" />
+              <div className="w-12 h-12 rounded-lg bg-light-primary dark:bg-primary-darker/20 border border-[var(--primary-opacity-20)] dark:border-primary-darker flex items-center justify-center shrink-0 overflow-hidden">
+                <ShoppingBag size={20} className="text-primary" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-[12px] font-bold text-slate-800 dark:text-slate-200 leading-tight">View our catalog</p>
@@ -194,9 +194,9 @@ const TemplateMessage: React.FC<TemplateMessageProps> = ({ message, isWindowExpi
         )}
 
         {isAuthentication && (
-          <div className="p-3 flex items-center gap-2.5 border-b border-slate-100 dark:border-slate-700 bg-emerald-50/30 dark:bg-emerald-900/10">
-            <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center shrink-0">
-              <ShieldCheck size={15} className="text-emerald-600 dark:text-emerald-400" />
+          <div className="p-3 flex items-center gap-2.5 border-b border-slate-100 dark:border-slate-700 bg-light-primary/30 dark:bg-primary-darker/10">
+            <div className="w-8 h-8 rounded-full bg-[var(--primary-opacity-20)] dark:bg-primary-darker/30 flex items-center justify-center shrink-0">
+              <ShieldCheck size={15} className="text-primary dark:text-primary" />
             </div>
             <div>
               <p className="text-[12px] font-bold text-slate-800 dark:text-slate-200 leading-tight">OTP Verification</p>
@@ -265,7 +265,7 @@ const TemplateMessage: React.FC<TemplateMessageProps> = ({ message, isWindowExpi
                           </Button>
                         ))
                       ) : (
-                        <Button className="w-full py-1.5 text-[11px] font-bold text-sky-500 dark:text-sky-400 text-center opacity-50 cursor-default">View</Button>
+                        <Button className="w-full py-1.5 text-[11px] font-bold text-white dark:text-white text-center opacity-50 cursor-default">View</Button>
                       )}
                     </div>
                   </div>

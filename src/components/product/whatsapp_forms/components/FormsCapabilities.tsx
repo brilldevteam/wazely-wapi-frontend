@@ -20,7 +20,7 @@ export default function FormsCapabilities({
         <div className="max-w-6xl mx-auto">
           <div className="mb-[calc(14px+(56-14)*((100vw-320px)/(1920-320)))]">
             <span
-              className="text-xs bg-emerald-100 px-4 py-1.5 rounded-full uppercase tracking-wide font-bold text-primary font-mono"
+              className="text-xs bg-[var(--primary-opacity-20)] px-4 py-1.5 rounded-full uppercase tracking-wide font-bold text-primary font-mono"
               style={{ color: primaryColor }}
             >
               {capabilities.badge || "Capabilities"}

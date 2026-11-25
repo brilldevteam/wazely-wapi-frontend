@@ -40,19 +40,19 @@ export interface AppointmentConfig {
   send_confirmation_message: boolean;
   status: "active" | "inactive";
   waba_id: string;
-  
+
   success_template_id: string;
   confirm_template_id: string;
   cancel_template_id: string;
   reminder_template_id: string;
   reschedule_template_id: string;
-  
+
   variable_mappings: {
     [key: string]: {
       [key: string]: string;
     };
   };
-  
+
   appointment_fees: number;
   pre_paid_fees: number;
   tax_percentage: number;
@@ -66,17 +66,17 @@ export interface AppointmentConfig {
   payment_link_variable_mappings: {
     [key: string]: string;
   };
-  
+
   create_google_meet: boolean;
   google_account_id: string;
   calendar_id: string;
   sheet_id: string;
   sheet_name: string;
-  
+
   slots: AppointmentSlot[];
   intro_message: string;
   series_of_questions: AppointmentQuestion[];
-  
+
   created_at?: string;
   updated_at?: string;
   deleted_at?: string | null;
@@ -97,6 +97,7 @@ export interface AppointmentConfigsResponse {
 
 export interface AppointmentConfigResponse {
   success: boolean;
+  message: string;
   config: AppointmentConfig;
 }
 
@@ -152,7 +153,7 @@ export interface BookingDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   bookingId?: string;
-} 
+}
 
 
 export interface BookingStatusModalProps {

@@ -360,7 +360,7 @@ const SocialAutomationGrid: React.FC<SocialAutomationGridProps> = ({ platform, m
               ? (error as any).data?.error || "Unable to fetch media from Meta APIs. Make sure your account is connected."
               : "Unable to fetch media. Check your connection or plan permissions."}
           </p>
-          <Button onClick={() => loadMedia(selectedPageId)} className="bg-primary hover:bg-emerald-600 text-white font-medium px-6 py-2.5 rounded-lg shadow-sm">
+          <Button onClick={() => loadMedia(selectedPageId)} className="bg-primary hover:bg-primary text-white font-medium px-6 py-2.5 rounded-lg shadow-sm">
             Try Again
           </Button>
         </div>
@@ -483,8 +483,8 @@ const SocialAutomationGrid: React.FC<SocialAutomationGridProps> = ({ platform, m
                       variant={item.has_automation ? "outline" : "default"}
                       className={`flex-1 py-5 px-2 sm:px-3 lg:px-4 rounded-lg font-bold text-xs transition-all flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-xs active:scale-98 overflow-hidden
                         ${item.has_automation
-                          ? "border-emerald-500/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/5 dark:hover:bg-emerald-500/10"
-                          : "bg-primary hover:bg-emerald-600 text-white"
+                          ? "border-primary/30 text-primary dark:text-primary hover:bg-primary/5 dark:hover:bg-primary/10"
+                          : "bg-primary hover:bg-primary text-white"
                         }`}
                     >
                       {item.has_automation ? (

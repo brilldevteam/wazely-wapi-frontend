@@ -72,3 +72,43 @@ export const getUrlWithBasePath = (path: string): string => {
   }
   return path;
 };
+
+export const isFeaturePlatformAllowed = (key: string, omnichannelPlatforms?: string[]) => {
+  if (key === "omnichannel_twitter" || key.startsWith("tw_")) {
+    return false;
+  }
+
+  const isPlatformFeature =
+    key === "omnichannel_facebook" ||
+    key.startsWith("fb_") ||
+    key === "facebook_lead" ||
+    key === "facebookAds_campaign" ||
+    key === "omnichannel_instagram" ||
+    key.startsWith("ig_") ||
+    key === "omnichannel_telegram" ||
+    key.startsWith("tg_");
+
+  if (!omnichannelPlatforms) {
+    return !isPlatformFeature;
+  }
+
+  if (
+    key === "omnichannel_facebook" ||
+    key.startsWith("fb_") ||
+    key === "facebook_lead" ||
+    key === "facebookAds_campaign"
+  ) {
+    return omnichannelPlatforms.includes("facebook");
+  }
+
+  if (key === "omnichannel_instagram" || key.startsWith("ig_")) {
+    return omnichannelPlatforms.includes("instagram");
+  }
+
+  if (key === "omnichannel_telegram" || key.startsWith("tg_")) {
+    return omnichannelPlatforms.includes("telegram");
+  }
+
+  return true;
+};
+

@@ -68,7 +68,7 @@ const AgentTaskComments = ({ taskId, comments }: AgentTaskCommentsProps) => {
   };
 
   return (
-    <div className="flex flex-col max-h-142.5 h-full relative">
+    <div className="flex flex-col flex-1 min-h-0 h-full relative">
       <div className="flex-1 overflow-y-auto sm:p-6 p-4 pb-4 space-y-6 custom-scrollbar">
         {comments.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 opacity-30 grayscale">

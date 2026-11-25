@@ -4,14 +4,14 @@ import { Input } from "@/src/elements/ui/input";
 import { Label } from "@/src/elements/ui/label";
 import { useGetCustomFieldsQuery } from "@/src/redux/api/customFieldApi";
 import { useGetTemplateQuery } from "@/src/redux/api/templateApi";
-import { CampaignFormValues, Template, TemplateCarouselCard, CustomField } from "@/src/types/components";
+import { CampaignFormValues, TemplateCarouselCard, CustomField } from "@/src/types/components";
 import { FormikProps } from "formik";
 import { Image as ImageIcon, Layout, ShoppingBag, Sparkles, Tag, Ticket, Timer, MapPin, Loader2 } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { CarouselMediaEditor } from "./CarouselMediaEditor";
 import { CarouselProductEditor } from "./CarouselProductEditor";
 import { CatalogProductPicker } from "./CatalogProductPicker";
-import { formatExpirationTime, getTemplateVariables, hasMediaTemplateHeader, isMarketingTemplate } from "@/src/utils/template";
+import { formatExpirationTime, getTemplateHeaderFormat, getTemplateVariables, hasMediaTemplateHeader, isMarketingTemplate } from "@/src/utils/template";
 import { SectionCard, SectionHeading, VariableRow } from "./VariableMappingComponents";
 import LocationMapPicker from "@/src/components/shared/LocationMapPicker";
 import { CampaignCard, CarouselProduct } from "@/src/types/campaign";
@@ -128,7 +128,8 @@ const StepVariablesMapping = ({ formik }: { formik: FormikProps<CampaignFormValu
   const isCatalog = template?.template_type === "catalog";
   const isCarouselProduct = template?.template_type === "carousel_product" || (template?.template_type === "carousel" && (template?.carousel_cards?.[0]?.components?.[0]?.format === "product" || template?.carousel_cards?.[0]?.components?.find((c) => c.type === "header")?.format === "product"));
   const isCarouselMedia = template?.template_type === "carousel_media" || (template?.template_type === "carousel" && !isCarouselProduct);
-  const hasExtraFields = isCouponType || isLimitedOffer || isCatalog || isCarouselMedia || isCarouselProduct || template?.header?.format === "location";
+  const isLocationHeader = getTemplateHeaderFormat(template) === "location";
+  const hasExtraFields = isCouponType || isLimitedOffer || isCatalog || isCarouselMedia || isCarouselProduct || isLocationHeader;
   const hasVariables = variables.length > 0;
   const hasMediaHeader = hasMediaTemplateHeader(template);
 
@@ -176,7 +177,7 @@ const StepVariablesMapping = ({ formik }: { formik: FormikProps<CampaignFormValu
 
         {/* No variables and no extra fields */}
         {!hasVariables && !hasExtraFields && (
-          <div className="bg-emerald-50/50 dark:bg-(--dark-body) dark:border-none rounded-lg border border-emerald-100 p-10 text-center space-y-4">
+          <div className="bg-light-primary/50 dark:bg-(--dark-body) dark:border-none rounded-lg border border-primary/20 p-10 text-center space-y-4">
             <Sparkles className="mx-auto text-primary" size={40} />
             <p className="text-primary font-bold mb-1 text-sm">{t("campaign_wizard_variables_no_variables")}</p>
             <p className="text-xs text-slate-400 font-medium">{t("campaign_wizard_variables_proceed_recipients")}</p>
@@ -242,6 +243,7 @@ const StepVariablesMapping = ({ formik }: { formik: FormikProps<CampaignFormValu
               <MediaHeaderEditor
                 mediaUrl={formik.values.media_url}
                 mediaFile={formik.values.media_file}
+                mediaType={template?.header?.media_type}
                 onChange={(val) => {
                   formik.setFieldValue("media_url", val.link);
                   formik.setFieldValue("media_file", val.localFile);
@@ -252,10 +254,11 @@ const StepVariablesMapping = ({ formik }: { formik: FormikProps<CampaignFormValu
         )}
 
         {/* LOCATION HEADER — interactive map */}
-        {template?.header?.format === "location" && (
+        {isLocationHeader && (
           <SectionCard>
             <SectionHeading icon={<MapPin className="text-primary w-5 h-5" />} label={t("campaign_wizard_location_info_title")} sub={t("campaign_wizard_location_info_desc")} />
             <LocationMapPicker
+              required
               value={{
                 latitude: formik.values.location_data?.latitude || "",
                 longitude: formik.values.location_data?.longitude || "",

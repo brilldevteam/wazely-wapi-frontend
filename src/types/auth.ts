@@ -173,6 +173,7 @@ export interface DynamicLogoProps {
   height?: number;
   className?: string;
   skeletonClassName?: string;
+  logoType?: "light" | "dark";
 }
 
 export interface AuthPageSetupBullet {

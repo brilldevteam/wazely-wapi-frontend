@@ -45,7 +45,9 @@ const initialState: SettingState & Partial<SettingResponse> & { subscription: Su
   widget_instagram_url: "",
   widget_facebook_url: "",
   widget_sms_url: "",
-  omnichannel_platforms: []
+  omnichannel_platforms: [],
+  theme_primary_color: "",
+  theme_light_background_color: ""
 };
 
 const settingSlice = createSlice({
@@ -87,13 +89,15 @@ const settingSlice = createSlice({
       state.cookie_enabled = settings.cookie_enabled;
       state.isSettingsLoaded = true;
       state.app_loader = settings.app_loader;
-      state.widget_enabled = settings.widget_enabled ?? true;
+      state.widget_enabled = settings.widget_enabled ?? true; 
       state.widget_whatsapp_url = settings.widget_whatsapp_url || "";
       state.widget_telegram_url = settings.widget_telegram_url || "";
       state.widget_instagram_url = settings.widget_instagram_url || "";
       state.widget_facebook_url = settings.widget_facebook_url || "";
       state.widget_sms_url = settings.widget_sms_url || "";
       state.omnichannel_platforms = settings.omnichannel_platforms || [];
+      state.theme_primary_color = settings.theme_primary_color || "";
+      state.theme_light_background_color = settings.theme_light_background_color || "";
 
       if (typeof window !== "undefined") {
         try {

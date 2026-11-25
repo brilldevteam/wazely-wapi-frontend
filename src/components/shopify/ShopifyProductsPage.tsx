@@ -204,7 +204,7 @@ export const ShopifyProductsPage: React.FC = () => {
               variant="outline"
               size="icon"
               onClick={() => handleOpenPushModal(product)}
-              className="w-10 h-10 border-none text-primary hover:text-primary hover:bg-emerald-50 rounded-lg dark:hover:bg-primary/20 transition-all"
+              className="w-10 h-10 border-none text-primary hover:text-primary hover:bg-light-primary rounded-lg dark:hover:bg-primary/20 transition-all"
               title="Push to WhatsApp"
             >
               <SendHorizontal size={16} className="-rotate-45" />

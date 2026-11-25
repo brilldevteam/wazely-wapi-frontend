@@ -110,7 +110,7 @@ export function ButtonMessageNode({ data, id }: any) {
   };
 
   return (
-    <BaseNode id={id} title="Quick Reply" icon={<CheckSquare size={18} />} iconBgColor="bg-emerald-600" iconColor="text-white" borderColor="border-emerald-200" handleColor="bg-emerald-500!" errors={errors} showOutHandle={false}>
+    <BaseNode id={id} title="Quick Reply" icon={<CheckSquare size={18} />} iconBgColor="bg-primary" iconColor="text-white" borderColor="border-[var(--primary-opacity-30)]" handleColor="bg-primary!" errors={errors} showOutHandle={false}>
       <NodeField label="Header Image (optional)">
         <div className="space-y-2">
           <Label className="text-[10px] font-medium text-muted-foreground flex items-center justify-between mb-1">
@@ -176,7 +176,7 @@ export function ButtonMessageNode({ data, id }: any) {
 
         {(data.buttons || []).map((btn: any, index: number) => (
           <div key={index} className="relative group rounded-lg border border-gray-100 bg-gray-50/50 p-3 pt-6 dark:bg-(--card-color) dark:border-(--card-border-color)">
-            <Handle type="source" id={`src-btn-${index}`} position={Position.Right} style={{ top: "50%" }} className="w-3! h-3! bg-emerald-500! border-2! border-white! dark:border-(--card-border-color)! shadow-sm z-50" />
+            <Handle type="source" id={`src-btn-${index}`} position={Position.Right} style={{ top: "50%" }} className="w-3! h-3! bg-primary! border-2! border-white! dark:border-(--card-border-color)! shadow-sm z-50" />
 
             <Button variant="ghost" size="icon" onClick={() => removeButton(index)} className="absolute -right-1.5 -top-2 rounded-md text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">
               <X size={12} />
@@ -192,7 +192,7 @@ export function ButtonMessageNode({ data, id }: any) {
         ))}
 
         {(!data.buttons || data.buttons.length < 3) && (
-          <Button onClick={addButton} variant="outline" className="w-full h-9 border-dashed border-gray-200 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:border-dark-accent dark:text-emerald-500 dark:hover:bg-emerald-900/10 text-[11px] font-semibold">
+          <Button onClick={addButton} variant="outline" className="w-full h-9 border-dashed border-gray-200 text-primary hover:text-primary-dark hover:bg-light-primary dark:border-dark-accent dark:text-primary dark:hover:bg-primary-darker/10 text-[11px] font-semibold">
             <Plus className="mr-1.5 h-3 w-3" /> Add Quick Option
           </Button>
         )}

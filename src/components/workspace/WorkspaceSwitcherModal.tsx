@@ -70,7 +70,7 @@ export default function WorkspaceSwitcherModal({ isOpen, onClose }: WorkspaceSwi
   return (
     <>
       <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-        <SheetContent side={isRTL ? "left" : "right"} className="w-[320px] dark:bg-(--card-color) max-w-[100vw] sm:w-95 sm:max-w-95 p-0 pb-5 flex flex-col gap-0">
+        <SheetContent side={isRTL ? "left" : "right"} className="w-[320px] dark:bg-(--dark-body) max-w-[100vw] sm:w-95 sm:max-w-95 p-0 pb-5 flex flex-col gap-0">
           <SheetHeader className="px-5 py-4 border-b dark:border-(--card-border-color)">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -117,7 +117,7 @@ export default function WorkspaceSwitcherModal({ isOpen, onClose }: WorkspaceSwi
 
                 return (
                   <div key={ws._id} className={`w-full relative group p-1`}>
-                    <div onClick={() => handleSelect(ws)} className={`w-full text-start flex items-start gap-3 p-3.5 rounded-xl border transition-all duration-200 cursor-pointer ${isActive ? "border-primary/80 dark:border-primary bg-primary/10 dark:bg-emerald-900/15" : "border-slate-200 dark:border-white/10 hover:border-primary/10 dark:hover:border-emerald-500/30 hover:bg-slate-50 dark:hover:bg-white/5"}`}>
+                    <div onClick={() => handleSelect(ws)} className={`w-full text-start flex items-start gap-3 p-3.5 rounded-xl border transition-all duration-200 cursor-pointer ${isActive ? "border-primary/80 dark:border-primary bg-primary/10 dark:bg-primary-darker/15" : "border-slate-200 dark:border-white/10 hover:border-primary/10 dark:hover:border-primary/30 hover:bg-slate-50 dark:hover:bg-white/5"}`}>
                       <div className={`h-9 w-9 rounded-lg flex items-center justify-center shrink-0 font-bold text-sm ${isActive ? "bg-primary text-white" : "bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-gray-300"}`}>{ws.name.charAt(0).toUpperCase()}</div>
 
                       <div className="flex-1 min-w-0 pe-12">

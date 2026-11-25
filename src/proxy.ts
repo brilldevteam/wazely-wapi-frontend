@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { ROUTES } from "./constants";
+import { ROUTES, isGuestPath } from "./constants";
 import { getUrlWithBasePath } from "./utils";
 
 export async function proxy(req: NextRequest) {
@@ -10,13 +10,7 @@ export async function proxy(req: NextRequest) {
 
   const isAuthenticated = !!token;
 
-  if (pathname === "/") {
-    const destination = isAuthenticated
-      ? ROUTES.Dashboard
-      : ROUTES.Landing;
 
-    return NextResponse.redirect(new URL(getUrlWithBasePath(destination), req.url));
-  }
 
   const isAuthPage = pathname.startsWith("/auth");
   const isImpersonate = pathname === "/auth/impersonate";
@@ -27,16 +21,11 @@ export async function proxy(req: NextRequest) {
     );
   }
 
-  const isGuestAllowed =
-    pathname.startsWith(ROUTES.Landing) ||
-    pathname.startsWith("/auth") ||
-    pathname.startsWith("/page") ||
-    pathname.startsWith("/product") ||
-    pathname.startsWith("/channel");
+  const isGuestAllowed = isGuestPath(pathname);
 
   if (!isAuthenticated && !isGuestAllowed) {
     return NextResponse.redirect(
-      new URL(getUrlWithBasePath(ROUTES.Landing), req.url)
+      new URL(getUrlWithBasePath(ROUTES.Login), req.url)
     );
   }
 

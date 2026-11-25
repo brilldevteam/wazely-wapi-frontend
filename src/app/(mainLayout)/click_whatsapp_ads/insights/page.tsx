@@ -13,7 +13,7 @@ export default function FacebookInsightsPage() {
       <Suspense
         fallback={
           <div className="flex flex-col items-center justify-center min-h-100 gap-4">
-            <RotateCw className="w-8 h-8 text-emerald-500 animate-spin" />
+            <RotateCw className="w-8 h-8 text-primary animate-spin" />
             <p className="text-sm font-medium text-slate-500">Loading insights...</p>
           </div>
         }

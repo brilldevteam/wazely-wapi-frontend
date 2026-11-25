@@ -84,7 +84,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 
   return (
     <AlertDialog open={isOpen} onOpenChange={!isLoading ? onClose : undefined}>
-      <AlertDialogContent className="sm:max-w-md! max-w-[calc(100%-2rem)] border-none dark:bg-landing-card-dark overflow-visible rounded-lg shadow-2xl">
+      <AlertDialogContent className="sm:max-w-md! max-w-[calc(100%-2rem)] border-none dark:bg-(--dark-body) overflow-visible rounded-lg shadow-2xl">
         {showIcon && (
           <div className="flex justify-center absolute -top-10 left-1/2 -translate-x-1/2 z-50">
             <div className="relative">

@@ -12,7 +12,7 @@ const StepHeader = ({ step, router, setStep, type }: StepHeaderProps) => (
         variant="ghost"
         size="icon"
         onClick={() => (step === 1 ? router.push(ROUTES.Webhooks) : setStep(1))}
-        className="rounded-lg bg-white dark:bg-(--page-body-bg) hover:bg-emerald-50 dark:hover:bg-emerald-500/10 h-10 w-10 transition-colors shadow-xs"
+        className="rounded-lg bg-white dark:bg-(--page-body-bg) hover:bg-light-primary dark:hover:bg-primary/10 h-10 w-10 transition-colors shadow-xs"
       >
         <ArrowLeft size={20} />
       </Button>
