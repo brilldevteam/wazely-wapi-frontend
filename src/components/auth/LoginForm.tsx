@@ -7,10 +7,11 @@ import { useGetIsDemoModeQuery, useGetRolesQuery } from "@/src/redux/api/authApi
 import { useLazyGetWorkspacesQuery } from "@/src/redux/api/workspaceApi";
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
 import { setWorkspace } from "@/src/redux/reducers/workspaceSlice";
-import { getStorage } from "@/src/utils";
+import { getStorage, getUrlWithBasePath } from "@/src/utils";
 import { Label } from "@radix-ui/react-label";
 import { Eye, EyeOff, Lock, Mail, MessageSquare, Shield, ShieldCheck, TrendingUp, User, Users } from "lucide-react";
 import { signIn } from "next-auth/react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -255,8 +256,21 @@ export const LoginPage = () => {
           <div className="bg-white dark:bg-(--card-color) rounded-3xl lg:rounded-l-none lg:rounded-r-3xl shadow-2xl p-4 sm:p-12 min-h-175 flex flex-col justify-center relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-emerald-100 to-blue-100 dark:from-emerald-500/20 dark:to-blue-500/20 opacity-50 dark:opacity-100 rounded-bl-full"></div>
             <div className="relative z-10 max-w-md mx-auto w-full">
-              <div className="lg:hidden flex items-center gap-3 mb-8">
-                <DynamicLogo width={140} height={40} className="h-10 w-auto object-contain" skeletonClassName="h-10 w-32" />
+              <div className="mb-8 flex items-center lg:hidden">
+                <div className="h-10 w-[180px] overflow-hidden dark:hidden">
+                  <Image
+                    src={getUrlWithBasePath("/assets/logos/wazely-crm-light-mobile.png")}
+                    alt="Wazely CRM"
+                    width={180}
+                    height={60}
+                    className="relative -top-2.5 h-auto w-[180px] max-w-none"
+                    unoptimized
+                    priority
+                  />
+                </div>
+                <div className="hidden h-10 w-[180px] dark:block">
+                  <DynamicLogo width={180} height={40} className="h-auto w-[180px] object-contain object-left" skeletonClassName="h-10 w-[180px]" />
+                </div>
               </div>
               <div className="mb-8">
                 <h2 className="text-3xl text-slate-900 dark:text-white font-bold mb-2">{isAuthSetupLoading ? <Skeleton className="h-9 w-48" /> : content.title}</h2>
