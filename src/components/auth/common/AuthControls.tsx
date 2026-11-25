@@ -56,7 +56,7 @@ export const AuthControls = ({ showLanguage = false }: { showLanguage?: boolean 
   };
 
   return (
-    <div className="absolute top-4 end-4 z-50 flex items-center bg-white/60 dark:bg-(--table-hover)! rounded-lg border border-slate-200/50 dark:border-(--card-border-color) shadow-xs transition-all duration-300">
+    <div className="absolute top-4 end-4 z-50 flex items-center gap-1.5 bg-white/60 dark:bg-(--table-hover)! rounded-lg border border-slate-200/50 dark:border-(--card-border-color) shadow-xs transition-all duration-300">
       {showLanguage && <LanguageDropdown showLabel />}
       <Button
         ref={themeBtnRef}
