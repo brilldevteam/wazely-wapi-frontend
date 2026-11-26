@@ -15,6 +15,8 @@ import { AgentFormdDataProps, AgentInput } from "@/src/types/agent";
 import { Team } from "@/src/types/components";
 import { AgentShift } from "@/src/types/shift";
 import { AgentSchema } from "@/src/utils/validationSchema";
+import { getUrlWithBasePath } from "@/src/utils";
+import { ROUTES } from "@/src/constants/route";
 import { useFormik } from "formik";
 import { ArrowLeft, Eye, EyeOff, FileText, Loader2, Lock, Mail, Phone, Save, User } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -225,7 +227,7 @@ const AgentForm: React.FC<AgentFormdDataProps> = ({ agent, onSave, onCancel, isL
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="shift_id" className="text-sm font-medium text-slate-800 dark:text-white">Work schedule</Label>
-                  <Button type="button" onClick={() => window.open("/agent_shifts", "_blank")} className="text-[12px]! font-bold! text-primary! bg-primary/5! px-2! py-1! rounded! hover:bg-primary/10! h-6.5!">+ Manage shifts</Button>
+                  <Button type="button" onClick={() => window.open(getUrlWithBasePath(ROUTES.Shifts), "_blank")} className="text-[12px]! font-bold! text-primary! bg-primary/5! px-2! py-1! rounded! hover:bg-primary/10! h-6.5!">+ Manage shifts</Button>
                 </div>
                 <Select value={formik.values.shift_id} onValueChange={(value) => formik.setFieldValue("shift_id", value)}>
                   <SelectTrigger className="h-11 py-6 rounded-lg border border-(--input-border-color) dark:border-(--card-border-color) bg-(--input-color) dark:bg-(--page-body-bg)">
@@ -233,10 +235,10 @@ const AgentForm: React.FC<AgentFormdDataProps> = ({ agent, onSave, onCancel, isL
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">No shift — eligible at any time</SelectItem>
-                    {shiftsData?.data?.filter((shift) => shift.status === "active").map((shift) => <SelectItem key={shift._id} value={shift._id}>{shift.name} · {shift.timezone}</SelectItem>)}
+                    {shiftsData?.data?.map((shift) => <SelectItem key={shift._id} value={shift._id}>{shift.name} · {shift.timezone}{shift.status === "inactive" ? " (inactive)" : ""}</SelectItem>)}
                   </SelectContent>
                 </Select>
-                <p className="text-[11px] text-slate-500">Agents without a shift can receive chats whenever they are Online and Available.</p>
+                <p className="text-[11px] text-slate-500">Agents without a shift can receive chats whenever they are Online and Available. An inactive shift pauses automatic assignment for its agents.</p>
               </div>
 
               <div className="sm:p-6 p-4 rounded-lg bg-indigo-50/50 dark:bg-(--table-hover) dark:border-none border border-indigo-100/50 dark:border-(--card-border-color)">

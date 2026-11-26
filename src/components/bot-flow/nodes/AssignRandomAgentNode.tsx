@@ -126,7 +126,7 @@ export function AssignRandomAgentNode({ data, id }: any) {
           </NodeField>
         )}
 
-        {mode === "all" && <div className="flex items-center justify-between gap-3 p-2.5 rounded-md border border-gray-200 dark:border-(--card-border-color)"><div><p className="text-xs font-semibold">Include business owner</p><p className="text-[10px] text-gray-500">Off by default. Agents are assigned first.</p></div><Switch checked={data.include_owner === true} onCheckedChange={(include_owner) => updateNodeData({ include_owner })}/></div>}
+        {mode === "all" && <div className="flex items-center justify-between gap-3 p-2.5 rounded-md border border-gray-200 dark:border-(--card-border-color)"><div><p className="text-xs font-semibold">Include business owner</p><p className="text-[10px] text-gray-500">The owner is excluded unless this switch is turned on.</p></div><Switch checked={data.include_owner === true} onCheckedChange={(include_owner) => updateNodeData({ include_owner })}/></div>}
 
         {/* Contextual hint */}
         <div className="flex items-center gap-2 p-2 bg-amber-50 dark:bg-amber-900/10 rounded-md border border-amber-100 dark:border-amber-900/20">
@@ -134,8 +134,8 @@ export function AssignRandomAgentNode({ data, id }: any) {
             {mode === "all"
               ? "The next eligible agent will be selected using the configured distribution rules."
               : selectedTeam
-                ? `A random agent from the "${selectedTeam.name}" team will be assigned using round-robin rotation.`
-                : "A random agent will be picked from the selected team using round-robin rotation."}
+                ? `The next available agent from the "${selectedTeam.name}" team will be assigned using the configured distribution method.`
+                : "The next available agent will be selected from the team using the configured distribution method."}
           </p>
         </div>
       </div>

@@ -756,7 +756,7 @@ export const NODETEMPLATES = [
   {
     id: "assign_random_agent",
     label: "Assign Available Agent",
-    description: "Round-robin assign to a random agent or team member",
+    description: "Assign to the next available agent or team member",
     icon: <UserRoundPen />,
     color: "#d97706",
     category: "CRM",
