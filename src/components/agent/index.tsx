@@ -207,7 +207,8 @@ const AgentPage = () => {
       {
         header: "Shift",
         className: "[@media(max-width:1920px)]:min-w-[180px]",
-        cell: (row: Agent) => <span className="text-sm font-medium text-slate-600 dark:text-slate-300">{typeof row.shift_id === "object" ? row.shift_id?.name : "Any time"}</span>,
+        // shift_id is null (shift removed), missing (never set), an id, or the populated shift.
+        cell: (row: Agent) => <span className="text-sm font-medium text-slate-600 dark:text-slate-300">{row.shift_id && typeof row.shift_id === "object" ? row.shift_id.name : "Any time"}</span>,
       },
       {
         header: "Hide Phone",

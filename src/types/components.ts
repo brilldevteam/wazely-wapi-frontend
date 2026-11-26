@@ -75,7 +75,7 @@ export interface Agent {
   is_phoneno_hide?: boolean;
   role: string;
   team_id?: string | Team;
-  shift_id?: string | import("./shift").AgentShift;
+  shift_id?: string | import("./shift").AgentShift | null;
   is_on_shift?: boolean;
   is_online?: boolean;
   availability_status?: AvailabilityStatus;

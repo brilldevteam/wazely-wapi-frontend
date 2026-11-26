@@ -24,6 +24,13 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+// The agent's shift as a picker value: the shift id, or "none" when there is no shift.
+// A removed shift comes back as null, and typeof null is "object", so check for it first.
+const toShiftSelectValue = (shift: string | AgentShift | null | undefined): string => {
+  if (!shift) return "none";
+  return typeof shift === "object" ? shift._id : shift;
+};
+
 const AgentForm: React.FC<AgentFormdDataProps> = ({ agent, onSave, onCancel, isLoading }) => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -44,7 +51,7 @@ const AgentForm: React.FC<AgentFormdDataProps> = ({ agent, onSave, onCancel, isL
       status: agent?.status ?? true,
       is_phoneno_hide: agent?.is_phoneno_hide ?? false,
       team_id: typeof agent?.team_id === "object" ? (agent.team_id as Team)?._id : agent?.team_id || "",
-      shift_id: typeof agent?.shift_id === "object" ? (agent.shift_id as AgentShift)?._id : agent?.shift_id || "none",
+      shift_id: toShiftSelectValue(agent?.shift_id),
       isEditing: isEditing,
     },
     validationSchema: AgentSchema,

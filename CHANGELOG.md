@@ -14,6 +14,7 @@
 - Rename the automation step to "Assign Available Agent" and add an "Include business owner" switch (off by default).
 
 ### Fixes
+- Fix agents whose shift was removed showing a blank Shift column instead of "Any time", and a blank Work schedule picker instead of "No shift" when editing them.
 - Fix logout freezing the page: logout now ends the server session, clears saved user data and loads the login page fresh; other open tabs log out too, and expired sessions go to the login page cleanly.
 - Keep the live socket reconnecting after a server restart instead of giving up after 5 tries.
 - Only mark Predefined Actions settings as saved when the save succeeds.
