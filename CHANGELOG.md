@@ -3,6 +3,8 @@
 ## Wazely CRM rollout updates - 2026-11-26
 
 ### Agent shifts and automatic chat assignment
+- Improve the All day control so users can return directly to custom working hours on desktop and narrow mobile screens.
+- Change the remaining automatic-assignment guidance to use "Assign Available Agent" consistently instead of describing the selection as random.
 - Add an Agent Shifts page (Team Management → Shifts) to create, edit and delete shifts with any IANA timezone, working days, multiple time ranges, overnight ranges and an "All day" option (with "Set hours" to switch back). Deleting uses the standard confirmation dialog and shows how many agents use the shift.
 - Add a "Work schedule" (shift) selector to the agent form; inactive shifts are shown as "(inactive)" and explained as pausing automatic assignment.
 - Add an Available / Away switch in the header, synced across tabs.
