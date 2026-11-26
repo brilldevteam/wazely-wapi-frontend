@@ -58,7 +58,7 @@ const NumberBox = ({ value, min, max, disabled, onCommit, ariaLabel }: { value: 
 
 /**
  * Rules for automatic chat assignment (Sequential assignment and flow
- * "Assign Random Agent" steps): wait for an agent, and an optional limit of
+ * "Assign Available Agent" steps): wait for an agent, and an optional limit of
  * open chats per agent.
  */
 const AssignmentRulesCard: React.FC<AssignmentRulesCardProps> = ({ maxOpenChats, assignmentStrategy, disabled, onChange }) => {
@@ -69,7 +69,7 @@ const AssignmentRulesCard: React.FC<AssignmentRulesCardProps> = ({ maxOpenChats,
       <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-3 border-b border-slate-100 dark:border-(--card-border-color)/50">
         <p className="text-sm font-bold text-slate-800 dark:text-white">Auto-assignment rules</p>
         <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 leading-relaxed">
-          Used when chats are assigned automatically — by Sequential assignment or a flow&apos;s &quot;Assign Random Agent&quot; step. Only agents who are online and set to Available get chats.
+          Used when chats are assigned automatically — by Sequential assignment or a flow&apos;s &quot;Assign Available Agent&quot; step. Only agents who are online and set to Available get chats.
         </p>
       </div>
 
